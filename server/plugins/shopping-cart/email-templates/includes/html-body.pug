@@ -1,0 +1,43 @@
+mixin style-tags
+  style.
+    html {
+      margin:0;
+      padding:0;
+      height:100% !important;
+      margin:0;
+      padding:0;
+      width:100% !important;
+      background-color: #F9F9F9 !important;
+    }
+		
+    body {
+      margin:0;
+      padding:0;
+      height:100% !important;
+      margin:0;
+      padding:0;
+      width:100% !important;
+      background-color: #F9F9F9 !important;
+      -webkit-text-size-adjust:100%;
+      -ms-text-size-adjust:100%;
+
+      @media only screen and (max-width: 480px) {
+        -webkit-text-size-adjust:none !important;
+        width:100% !important;
+        min-width:100% !important;
+      }
+    }
+		
+    |<!--[if (gte mso 9)|(IE)]>
+    style.
+      .u-textFallback {
+        font-family: Arial, Helvetica, sans-serif !important;
+      }
+    |<![endif]-->
+
+
+html
+  body
+    meta(content="telephone=no" name="format-detection")
+    link(href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet")
+    +style-tags

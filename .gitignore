@@ -1,0 +1,28 @@
+# dependencies
+node_modules
+
+# logs
+npm-debug.log
+
+# Nuxt build
+.nuxt
+
+# Nuxt generate
+dist
+
+
+test/client/unit/coverage
+test/client/e2e/reports
+tmp/*
+*.env
+app.yaml
+wdio
+hs_err_pid*
+
+.DS_Store
+.idea
+.editorconfig
+cloud_sql_proxy
+
+# Logs:
+*.log*

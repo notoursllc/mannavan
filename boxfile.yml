@@ -1,0 +1,34 @@
+run.config:
+  engine: nodejs
+  engine.config:
+    runtime: nodejs-8.9
+    python_version: python-2.7
+
+  extra_packages:
+    - nginx
+
+  extra_steps:
+    - npm install
+
+  cache_dirs:
+    - node_modules
+
+  # Enable filesystem watcher
+  fs_watch: true
+
+deploy.config:
+  before_live:
+    web.main:
+      - npm run knex:migrate
+
+data.db:
+  image: nanobox/postgresql:9.6
+
+web.main:
+  start:
+    nginx: nginx -c /app/nanobox_config/nginx.conf
+    node: npm start
+
+  writable_dirs:
+    - tmp
+    - logs

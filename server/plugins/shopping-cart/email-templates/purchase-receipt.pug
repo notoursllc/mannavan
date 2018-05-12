@@ -1,0 +1,122 @@
+- var baseUrl = "https://www.gmnst.com"
+
+
+//- IE Conditional Comment Opening
+mixin ie-open(props)
+  - props = props || {};
+  - table = props.table ? 'width="' + props.table + '"' : '';
+  - cell = props.cell ? 'width="' + props.cell + '"' : '';
+  |<!--[if (gte mso 9)|(IE)]>
+  |<table cellspacing="0" cellpadding="0" border="0" !{table} align="center">
+  |<tr>
+  |<td valign="top" !{cell}>
+  |<![endif]-->
+
+
+//- IE Conditional Comment Seperator
+mixin ie-col(props)
+  - props = props || {};
+  - cell = props.cell ? 'width="' + props.cell + '"' : '';
+  |<!--[if (gte mso 9)|(IE)]>
+  |</td>
+  |<td valign="top" !{cell}>
+  |<![endif]-->
+
+
+//- IE Conditional Comment Closing Partial
+mixin ie-close(props)
+  - props = props || {};
+  |<!--[if (gte mso 9)|(IE)]>
+  |</td>
+  |</tr>
+  |</table>
+  |<![endif]-->
+
+
+mixin link(path, linkText)
+  - url = baseUrl + path;
+  |<a href="!{url}">!{linkText}</a>
+
+
+mixin header
+  +ie-open(({cell: 300}))
+  div(style="display: inline-block;")
+    a(href=baseUrl)
+      img(src=baseUrl + '/images/logo_header.png' alt="gmnst.com" style="border-style: none; outline: none")
+  +ie-col(({cell: 300}))
+  div(style="display: inline-block;")
+    table(cellspacing="0" cellpadding="0" border="0" width="100%")
+      tr
+        td(style="text-align:right; font-size:18px; padding:7px 20px; font-family:Montserrat, Arial, sans-serif; line-height:1.7") Order Confirmation
+  +ie-close
+
+
+mixin greeting
+  table(cellspacing="0" cellpadding="0" border="0" width="100%")
+    tr: td(style="font-size:18px; line-height:30px; color:#ed198a") Thank you!
+    tr: td
+      | You ordered
+      |
+      +link(`/order-details/${transactionId}`, orderTitle)
+      |.
+
+
+mixin details
+  table(cellspacing="0" cellpadding="0" border="0" width="100%")
+    tr
+      td(style="padding-top:20px")
+
+        table(cellspacing="0" cellpadding="0" border="0" width="100%")
+          tr
+            td(style="padding-bottom:5px")
+              | Order
+              |
+              +link(`/order-details/${transactionId}`, transactionId)
+
+        include includes/pink-table.pug
+          table
+            tr: td
+              include includes/shipping-table-mini.pug
+            tr: td(style="padding-top:20px")
+              include includes/totals-table.pug
+
+
+mixin signature
+  table(cellspacing="0" cellpadding="0" border="0" width="100%")
+    tr: td(style="padding:20px 0 20px 0; font-weight:bold; border-bottom:1px solid rgb(234,234,234);") Gmnst.com
+
+
+mixin disclaimer
+  p(style="margin:10px 0 8px 0")
+    | By placing your order, you agree to gmnst.com’s
+    +link('/privacy', 'Privacy Notice')
+    |
+    | and
+    +link('/conditions-of-use', 'Conditions of Use')
+    |.
+    |
+    | Unless otherwise noted, items sold by gmnst.com are subject to sales tax in select states in accordance with the applicable laws of that state.
+
+  p(style="margin:0 0 8px 0") This email was sent from a notification-only address that cannot accept incoming email. Please do not reply to this message.
+
+
+//- MARKUP
+
+//- Pseudo Header
+include includes/html-body.pug
+    table(cellspacing="0" cellpadding="0" border="0" width="100%")
+      //- Open Centered Content Wrapper
+      tr: td(style="padding: 0 20px")
+        +ie-open({table: 602})
+        table(cellspacing="0" cellpadding="0" border="0" width="100%" align="center" style="max-width: 602px")
+          tr: td(style="font-size: 0; text-align: center; padding: 16px 0; border-bottom:1px solid rgb(234,234,234);")
+            +header
+          tr: td
+            +greeting
+          tr: td
+            +details
+          tr: td
+            +signature
+          tr: td(style="color:#999; font-size:10px")
+            +disclaimer
+        +ie-close

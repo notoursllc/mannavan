@@ -1,0 +1,360 @@
+<script>
+import Vue from 'vue'
+import { mapState, mapGetters } from 'vuex'
+import { Button } from 'element-ui'
+import product_mixin from '@/mixins/product_mixin'
+import AppFooter from '@/components/AppFooter'
+
+Vue.use(Button);
+
+export default {
+    components: {
+        AppFooter
+    },
+
+    mixins: [
+        product_mixin
+    ],
+
+    data: function() {
+        return {
+            year: new Date().getFullYear()
+        }
+    },
+
+    methods: {
+        getIconClassForProductType(type) {
+            switch(type) {
+                case 'hats':
+                    return 'icon-cap';
+
+                case 'tops':
+                    return 'icon-tshirt';
+
+                default:
+                    return '';
+            }
+        }
+    },
+
+    computed: {
+        ...mapGetters({
+            numCartItems: 'shoppingcart/numItems',
+        })
+    }
+}
+</script>
+
+
+<template>
+    <div class="layoutContainer">
+
+        <aside class="navbar-container">
+            <div class="navbar-header">
+                <nuxt-link
+                    :to="{ name: 'index' }"
+                    tag="span"
+                    class="cursorPointer">
+                    <img src="/images/logo_victory.svg" class="logo" />
+                </nuxt-link>
+            </div>
+
+            <nuxt-link
+                v-for="(obj, key) in getProductSubTypeData()"
+                :key="key"
+                :to="{ name: 'type-name', params: { name: obj.label } }"
+                tag="a"
+                class="navbar-item"
+                active-class="active">
+                <div class="icon-container"><i :class="`notours ${getIconClassForProductType(obj.label)}`" /></div>
+                <div class="navbar-item-label">{{ $tc(key, 2) }}</div>
+            </nuxt-link>
+
+            <nuxt-link
+                :to="{ name: 'cart-id' }"
+                tag="a"
+                class="navbar-item"
+                active-class="active">
+                <div class="icon-container">
+                    <i class="notours icon-cart" :class="{'color-yellow': numCartItems}" />
+                    <span class="badge" v-if="numCartItems">{{ numCartItems }}</span>
+                </div>
+                <div class="navbar-item-label">{{ $t('Checkout') }}</div>
+            </nuxt-link>
+        </aside>
+
+        <header role="banner" v-if="$store.state.ui.pageTitle">
+            <!-- <div class="header-secondary-logo">
+                secondary logo
+            </div> -->
+            <div class="header-grow-container">
+                <div class="inlineBlock header-page-title">{{ $store.state.ui.pageTitle }}</div>
+            </div>
+        </header>
+
+        <main>
+            <nuxt/>
+        </main>
+
+        <footer class="footer">
+            <div class="tac">
+                <nuxt-link tag="a"
+                    class="underline"
+                    :to="{name: 'returns'}">{{ $t('Returns / Exchanges') }}</nuxt-link>
+            </div>
+
+            <div class="mtm tac">
+                <img src="/images/logo_victory_breadvan.svg" style="width:200px" />
+            </div>
+
+            <div class="mtm tac">
+                &#169; {{ year }} gmnst.com, {{ $t('All Rights Reserved') }}.
+                <span class="underline"><nuxt-link :to="{name: 'privacy'}">{{ $t('Privacy') }}</nuxt-link></span> and
+                <span class="underline"><nuxt-link :to="{name: 'conditions-of-use'}">{{ $t('Conditions') }}</nuxt-link></span>
+            </div>
+        </footer>
+    </div>
+</template>
+
+
+<style lang="scss" scoped>
+@import "~assets/css/components/_variables.scss";
+@import "~assets/css/components/_mixins.scss";
+
+$aside-width: 110px;
+$bottom-bar-height: 56px;
+$header-height: 40px;
+$header-secondary-logo-width: 150px;
+
+#__nuxt,
+#__layout,
+.layoutContainer {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+.color-yellow {
+    color: #f7c504 !important;
+}
+
+.layoutContainer {
+    main {
+        display: flex;
+        flex: 1;
+        flex-direction: row;
+        // padding-bottom: $bottom-bar-height;
+    }
+
+    header {
+        @include flexbox();
+        @include flex-direction(row);
+        @include flex-wrap(nowrap);
+        // @include align-items(center);
+        @include justify-content(center);
+        // background-color: #313131;
+        background-color: #ebebeb;
+        color: #525252;
+        height: $header-height;
+        padding: 0 20px;
+
+        .header-secondary-logo {
+            @include align-items(center);
+            display: none;
+            padding: 0;
+            white-space: nowrap;
+            width: $header-secondary-logo-width;
+            border: 1px solid red;
+        }
+
+        .header-grow-container {
+            @include flexbox();
+            @include flex(1);
+            @include flex-grow(1);
+            @include align-items(center);
+            @include justify-content(center);
+            // border: 1px solid red;
+        }
+
+        .header-page-title {
+            font-size: 20px;
+            line-height: 20px;
+        }
+    }
+
+    footer {
+        background-color: #353535;
+        padding: 10px 20px;
+        color: #fff;
+        font-size: 14px;
+        margin-bottom: $bottom-bar-height;
+
+        a {
+            color: #fff;
+        }
+
+        a:hover {
+            text-decoration: none;
+        }
+    }
+}
+
+.navbar-container {
+    @include flexbox();
+    @include justify-content(center);
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    z-index: 2;
+    height: $bottom-bar-height;
+    // background: rgba(204,5,5,0.8);
+    background: #d5393f;
+
+    .navbar-header {
+        display: none;
+        color: #fff;
+        height: $header-height;
+        // padding: 10px;
+        text-align: center;
+        // background-color: rgba(255, 255, 255, 0.1);
+        margin: 25px 0 40px 0;
+    }
+
+    .logo {
+        height: 40px;
+    }
+
+    .navbar-item {
+        @include flex-grow(1);
+        @include justify-content(center);
+        @include align-items(center);
+        min-width: 70px;
+        height: 100%;
+        padding: 5px 12px 10px;
+        cursor: pointer;
+        // transform: translateZ(0);
+        text-decoration: none;
+        text-align: center;
+        color: #fff;
+
+        &:hover,
+        &.navbar-item-checkout:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+
+        &.active {
+            background-color: rgba(255,255,255,.2);
+        }
+
+        .icon-container {
+            position: relative;
+            display: inline-block;
+            padding: 0;
+
+            i {
+                @include align-items(center);
+                font-size: 30px;
+                margin: auto;
+                vertical-align: middle;
+                color: rgba(255,255,255,0.9);
+            }
+
+            .badge {
+                background-color: #0f8aca;
+                border-radius: 10px;
+                box-shadow: 0 0 1px 1px rgba(255, 255, 12550, 0.5);
+                color: #fff;
+                display: inline-block;
+                font-size: 14px;
+                height: 18px;
+                line-height: 18px;
+                padding: 0 6px 0 5px;
+                text-align: center;
+                white-space: nowrap;
+                position: absolute;
+                top: -2px;
+                right: -14px;
+            }
+        }
+
+        .navbar-item-label {
+            display: block;
+            font-size: 12px;
+            margin-top: 0;
+        }
+
+        &.navbar-item-checkout {
+            background-color: rgba(68, 152, 90, 0.8)
+        }
+    }
+}
+
+@media #{$medium-and-up} {
+    .layoutContainer {
+        header,
+        main,
+        footer {
+            margin-left: $aside-width
+        }
+
+        footer {
+            margin-bottom: 0;
+        }
+
+        header {
+            .header-secondary-logo {
+                @include flexbox();
+            }
+
+            .header-page-title {
+                font-size: 26px;
+            }
+         }
+    }
+
+    .navbar-container {
+        @include flex-direction(column);
+        @include justify-content(flex-start);
+        position: fixed;
+        top: 0;
+        box-shadow: none;
+        width: $aside-width;
+        // padding-top: 64px;
+        height: 100%;
+
+        .navbar-header {
+            display: block;
+        }
+
+        .navbar-item {
+            @include flexbox();
+            @include flex(1);
+            @include flex-flow(column nowrap);
+            @include align-items(center);
+            color: #fff;
+            max-height: 72px;
+            margin-bottom: 10px;
+            height: 100%;
+            padding: 8px 12px 10px;
+            // justify-content: space-between;
+            cursor: pointer;
+            transform: translateZ(0);
+            font-size: 14px;
+            line-height: 1em;
+            text-decoration: none;
+            position: relative;
+
+            i {
+                @include align-items(center);
+                font-size: 24px;
+                margin: auto;
+            }
+
+            .navbar-item-label {
+                font-size: 14px;
+                margin-top: 4px;
+            }
+        }
+    }
+}
+</style>

@@ -1,0 +1,184 @@
+language: node_js
+
+dist: trusty
+
+sudo: required
+
+node_js:
+  - "8.9"
+
+cache:
+  directories:
+    - node_modules
+
+#addons:
+#  sauce_connect:
+#    username: $SAUCE_USERNAME
+#    access_key: $SAUCE_ACCESS_KEY
+
+install:
+  - sudo bash -c "$(curl -fsSL https://s3.amazonaws.com/tools.nanobox.io/bootstrap/ci.sh)"
+
+  # link this code base to the production nanobox so we can add env variables to our prod instance
+  - nanobox remote add $NANOBOX_APP_NAME
+
+  # adding local and production environment variables
+  # NODE_ENV
+  - nanobox evar add local NODE_ENV=production
+  - nanobox evar add NODE_ENV=production
+
+  # DATA_DB_NAME
+  - nanobox evar add local DATA_DB_NAME=$DATA_DB_NAME
+  - nanobox evar add DATA_DB_NAME=$DATA_DB_NAME
+
+  # ADMIN_EMAIL
+  - nanobox evar add local ADMIN_EMAIL=$ADMIN_EMAIL
+  - nanobox evar add ADMIN_EMAIL=$ADMIN_EMAIL
+
+  # ADMIN_PASSWORD
+  - nanobox evar add local ADMIN_PASSWORD=$ADMIN_PASSWORD
+  - nanobox evar add ADMIN_PASSWORD=$ADMIN_PASSWORD
+
+  # AUTH0_CLIENT_ID
+  - nanobox evar add local AUTH0_CLIENT_ID=$AUTH0_CLIENT_ID
+  - nanobox evar add AUTH0_CLIENT_ID=$AUTH0_CLIENT_ID
+  
+  # AUTH0_CLIENT_SECRET
+  - nanobox evar add local AUTH0_CLIENT_SECRET=$AUTH0_CLIENT_SECRET
+  - nanobox evar add AUTH0_CLIENT_SECRET=$AUTH0_CLIENT_SECRET
+  
+  # AUTH0_DOMAIN
+  - nanobox evar add local AUTH0_DOMAIN=$AUTH0_DOMAIN
+  - nanobox evar add AUTH0_DOMAIN=$AUTH0_DOMAIN
+
+  # BRAINTREE_ENVIRONMENT
+  - nanobox evar add local BRAINTREE_ENVIRONMENT=$BRAINTREE_ENVIRONMENT
+  - nanobox evar add BRAINTREE_ENVIRONMENT=$BRAINTREE_ENVIRONMENT
+
+  # BRAINTREE_MERCHANT_ID
+  - nanobox evar add local BRAINTREE_MERCHANT_ID=$BRAINTREE_MERCHANT_ID
+  - nanobox evar add BRAINTREE_MERCHANT_ID=$BRAINTREE_MERCHANT_ID
+
+  # BRAINTREE_PRIVATE_KEY
+  - nanobox evar add local BRAINTREE_PRIVATE_KEY=$BRAINTREE_PRIVATE_KEY 
+  - nanobox evar add BRAINTREE_PRIVATE_KEY=$BRAINTREE_PRIVATE_KEY 
+
+  # BRAINTREE_PUBLIC_KEY
+  - nanobox evar add local BRAINTREE_PUBLIC_KEY=$BRAINTREE_PUBLIC_KEY
+  - nanobox evar add BRAINTREE_PUBLIC_KEY=$BRAINTREE_PUBLIC_KEY
+
+  # BUG_SNAG_API_KEY
+  - nanobox evar add local BUG_SNAG_API_KEY=$BUG_SNAG_API_KEY
+  - nanobox evar add BUG_SNAG_API_KEY=$BUG_SNAG_API_KEY
+
+  # CART_TOKEN_SECRET
+  - nanobox evar add local CART_TOKEN_SECRET=$CART_TOKEN_SECRET
+  - nanobox evar add CART_TOKEN_SECRET=$CART_TOKEN_SECRET
+
+  # DIGITAL_OCEAN_SPACES_ACCESS_KEY
+  - nanobox evar add local DIGITAL_OCEAN_SPACES_ACCESS_KEY=$DIGITAL_OCEAN_SPACES_ACCESS_KEY
+  - nanobox evar add DIGITAL_OCEAN_SPACES_ACCESS_KEY=$DIGITAL_OCEAN_SPACES_ACCESS_KEY
+
+  # DIGITAL_OCEAN_SPACES_SECRET
+  - nanobox evar add local DIGITAL_OCEAN_SPACES_SECRET=$DIGITAL_OCEAN_SPACES_SECRET
+  - nanobox evar add DIGITAL_OCEAN_SPACES_SECRET=$DIGITAL_OCEAN_SPACES_SECRET
+
+  # DIGITAL_OCEAN_SPACES_ENDPOINT
+  - nanobox evar add local DIGITAL_OCEAN_SPACES_ENDPOINT=$DIGITAL_OCEAN_SPACES_ENDPOINT
+  - nanobox evar add DIGITAL_OCEAN_SPACES_ENDPOINT=$DIGITAL_OCEAN_SPACES_ENDPOINT
+  
+  # DIGITAL_OCEAN_SPACE_NAME
+  - nanobox evar add local DIGITAL_OCEAN_SPACE_NAME=$DIGITAL_OCEAN_SPACE_NAME
+  - nanobox evar add DIGITAL_OCEAN_SPACE_NAME=$DIGITAL_OCEAN_SPACE_NAME
+
+
+
+
+
+
+
+
+
+
+
+  # EMAIL_FROM_CART_SUCCESS
+  - nanobox evar add local EMAIL_FROM_CART_SUCCESS=$EMAIL_FROM_CART_SUCCESS
+  - nanobox evar add EMAIL_FROM_CART_SUCCESS=$EMAIL_FROM_CART_SUCCESS
+
+  # EMAIL_FROM_CART_SUCCESS_NAME
+  - nanobox evar add local EMAIL_FROM_CART_SUCCESS_NAME=$EMAIL_FROM_CART_SUCCESS_NAME
+  - nanobox evar add EMAIL_FROM_CART_SUCCESS_NAME=$EMAIL_FROM_CART_SUCCESS_NAME
+
+  # JWT_CLIENT_ID
+  - nanobox evar add local JWT_CLIENT_ID=$JWT_CLIENT_ID
+  - nanobox evar add JWT_CLIENT_ID=$JWT_CLIENT_ID
+
+  # JWT_CLIENT_SECRET
+  - nanobox evar add local JWT_CLIENT_SECRET=$JWT_CLIENT_SECRET
+  - nanobox evar add JWT_CLIENT_SECRET=$JWT_CLIENT_SECRET
+
+  # JWT_SERVER_SECRET
+  - nanobox evar add local JWT_SERVER_SECRET=$JWT_SERVER_SECRET
+  - nanobox evar add JWT_SERVER_SECRET=$JWT_SERVER_SECRET
+
+  # MAILGUN_API_KEY
+  - nanobox evar add local MAILGUN_API_KEY=$MAILGUN_API_KEY
+  - nanobox evar add MAILGUN_API_KEY=$MAILGUN_API_KEY
+
+  # MAILGUN_DOMAIN
+  - nanobox evar add local MAILGUN_DOMAIN=$MAILGUN_DOMAIN
+  - nanobox evar add MAILGUN_DOMAIN=$MAILGUN_DOMAIN
+
+  # MAILGUN_DOMAIN_PROD
+  - nanobox evar add local MAILGUN_DOMAIN_PROD=$MAILGUN_DOMAIN_PROD
+  - nanobox evar add MAILGUN_DOMAIN_PROD=$MAILGUN_DOMAIN_PROD
+
+  # SAUCE_USERNAME
+  - nanobox evar add local SAUCE_USERNAME=$SAUCE_USERNAME
+  - nanobox evar add SAUCE_USERNAME=$SAUCE_USERNAME
+
+  # SAUCE_ACCESS_KEY
+  - nanobox evar add local SAUCE_ACCESS_KEY=$SAUCE_ACCESS_KEY
+  - nanobox evar add SAUCE_ACCESS_KEY=$SAUCE_ACCESS_KEY
+
+  # SHIPENGINE_API_KEY_PROD
+  - nanobox evar add local SHIPENGINE_API_KEY_PROD=$SHIPENGINE_API_KEY_PROD
+  - nanobox evar add SHIPENGINE_API_KEY_PROD=$SHIPENGINE_API_KEY_PROD
+
+  # SHIPENGINE_CARRIER_ID_FEDEX
+  - nanobox evar add local SHIPENGINE_CARRIER_ID_FEDEX=$SHIPENGINE_CARRIER_ID_FEDEX
+  - nanobox evar add SHIPENGINE_CARRIER_ID_FEDEX=$SHIPENGINE_CARRIER_ID_FEDEX
+
+  # TAX_RATE_CALIFORNIA
+  - nanobox evar add local TAX_RATE_CALIFORNIA=$TAX_RATE_CALIFORNIA
+  - nanobox evar add TAX_RATE_CALIFORNIA=$TAX_RATE_CALIFORNIA
+
+  # Needed for prod only
+  - nanobox evar add APPINSIGHTS_INSTRUMENTATIONKEY=$APPINSIGHTS_INSTRUMENTATIONKEY
+  - nanobox evar add SHIPENGINE_CARRIER_ID_STAMPSCOM=$SHIPENGINE_CARRIER_ID_STAMPSCOM
+  - nanobox evar add SHIPPING_ADDRESS_FROM_ADDRESS1=$SHIPPING_ADDRESS_FROM_ADDRESS1
+  - nanobox evar add SHIPPING_ADDRESS_FROM_CITY=$SHIPPING_ADDRESS_FROM_CITY
+  - nanobox evar add SHIPPING_ADDRESS_FROM_COUNTRY_CODE=$SHIPPING_ADDRESS_FROM_COUNTRY_CODE
+  - nanobox evar add SHIPPING_ADDRESS_FROM_NAME=$SHIPPING_ADDRESS_FROM_NAME
+  - nanobox evar add SHIPPING_ADDRESS_FROM_PHONE=$SHIPPING_ADDRESS_FROM_PHONE
+  - nanobox evar add SHIPPING_ADDRESS_FROM_STATE=$SHIPPING_ADDRESS_FROM_STATE
+  - nanobox evar add SHIPPING_ADDRESS_FROM_ZIP=$SHIPPING_ADDRESS_FROM_ZIP
+
+  - nanobox run npm run build
+
+script: 
+  - nanobox run npm run knex:migrate
+  - nanobox run npm run knex:seed
+  - nanobox run npm run test:server
+  - nanobox run npm run test:e2e
+
+after_success:
+  - nanobox deploy
+
+notifications:
+  email:
+    recipients:
+      - $ADMIN_EMAIL
+    # always|never|change - change is when the repo status goes from pass to fail or vice versa
+    on_success: always
+    on_failure: always

@@ -1,0 +1,404 @@
+//
+// Color system
+//
+
+$white:  #fff !default;
+$gray-100: #f8f9fa !default;
+$gray-200: #e9ecef !default;
+$gray-300: #dee2e6 !default;
+$gray-400: #ced4da !default;
+$gray-500: #adb5bd !default;
+$gray-600: #868e96 !default;
+$gray-700: #495057 !default;
+$gray-800: #343a40 !default;
+$gray-900: #212529 !default;
+$black:  #000 !default;
+
+$border-radius:          .25rem !default;
+$border-radius-lg:       .3rem !default;
+$border-radius-sm:       .2rem !default;
+
+$blue:    #007bff !default;
+$indigo:  #6610f2 !default;
+$purple:  #6f42c1 !default;
+$pink:    #e83e8c !default;
+$red:     #dc3545 !default;
+$orange:  #fd7e14 !default;
+$yellow:  #ffc107 !default;
+$green:   #28a745 !default;
+$teal:    #20c997 !default;
+$cyan:    #17a2b8 !default;
+
+
+
+$theme-colors: (
+    primary: $blue,
+    secondary: $gray-600,
+    success: $green,
+    info: $cyan,
+    warning: $yellow,
+    danger: $red,
+    light: $gray-100,
+    dark: $gray-800
+  ) !default;
+
+
+$button-shadow-colors: (
+    primary: #986edf,
+    secondary: #87c4f2,
+    success: #43cb8e,
+    info: #25a8eb,
+    warning: #f99511,
+    danger: #ff707f,
+    light: #9ea9b6,
+    dark: #191a2d
+  );
+
+  $font-weight-normal: normal !default;
+
+  $input-btn-padding-y:       .5rem !default;
+  $input-btn-padding-x:       .75rem !default;
+  $input-btn-line-height:     1.25 !default;
+  
+  $input-btn-padding-y-sm:    .25rem !default;
+  $input-btn-padding-x-sm:    .5rem !default;
+  $input-btn-line-height-sm:  1.5 !default;
+  
+  $input-btn-padding-y-lg:    .5rem !default;
+  $input-btn-padding-x-lg:    1rem !default;
+  $input-btn-line-height-lg:  1.5 !default;
+  
+  $btn-font-weight:                $font-weight-normal !default;
+  $btn-box-shadow:                 inset 0 1px 0 rgba($white,.15), 0 1px 1px rgba($black,.075) !default;
+  $btn-focus-box-shadow:           0 0 0 3px rgba(#986edf, .25) !default;
+//   $btn-focus-box-shadow:           0 0 0 3px rgba(theme-color("primary"), .25) !default;
+  $btn-active-box-shadow:          inset 0 3px 5px rgba($black,.125) !default;
+  
+  $btn-link-disabled-color:        $gray-600 !default;
+  
+  $btn-block-spacing-y:            .5rem !default;
+  
+  // Allows for customizing button radius independently from global border radius
+  $btn-border-radius:              $border-radius !default;
+  $btn-border-radius-lg:           $border-radius-lg !default;
+  $btn-border-radius-sm:           $border-radius-sm !default;
+  
+  $btn-transition:                 background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out !default;
+  $transition-base:        all .2s ease-in-out !default;
+
+// Fonts
+$font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !default;
+$font-family-monospace:  "SFMono-Regular", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !default;
+$font-family-base:       $font-family-sans-serif !default;
+
+$font-size-base: 1rem !default; // Assumes the browser default, typically `16px`
+$font-size-lg:   1.25rem !default;
+$font-size-sm:   .875rem !default;
+
+$line-height-lg:         1.5 !default;
+$line-height-sm:         1.5 !default;
+
+// Links
+//
+// Style anchor elements.
+
+$link-color:            theme-color("primary") !default;
+$link-decoration:       none !default;
+// $link-hover-color:      darken($link-color, 15%) !default;
+$link-hover-color:      theme-color("primary") !default;
+$link-hover-decoration: underline !default;
+
+
+  
+  // Mixins
+@mixin transition($transition...) {
+    @if length($transition) == 0 {
+      transition: $transition-base;
+    } @else {
+      transition: $transition;
+    }
+}
+
+@mixin btn-shadow($color) {
+    border-color: $color;
+    transition: none;
+  
+    &,
+    &.focus,
+    &:focus {
+      box-shadow: 3px 3px 0 $color,
+                  2px 2px 0 $color,
+                  1px 1px 0 $color;
+    }
+  
+    &:hover {
+      box-shadow: 5px 5px 0 $color,
+                  4px 4px 0 $color,
+                  3px 3px 0 $color,
+                  2px 2px 0 $color,
+                  1px 1px 0 $color;
+      transform: translate(-2px, -2px);
+      transition: all .3s ease;
+      //border: 1px solid yellow;
+    }
+  
+    &:active {
+      box-shadow: none;
+      transform: translate(4px, 4px) !important;
+      transition: all .1s ease;
+    }
+}
+
+// Button variants
+//
+// Easily pump out default styles, as well as :hover, :focus, :active,
+// and disabled options for all buttons
+
+@mixin button-variant($background, $border, $active-background: darken($background, 7.5%), $active-border: darken($border, 10%)) {
+    // @include color-yiq($background); //TODO
+    background-color: $background;
+    border-color: $border;
+    @include box-shadow($btn-box-shadow);
+  
+    &:hover {
+    //   @include color-yiq($background);
+      background-color: $active-background;
+      border-color: $active-border;
+    }
+  
+    &:focus,
+    &.focus {
+        box-shadow: 0 0 0 3px rgba($border, .5);
+    }
+  
+    // Disabled comes first so active can properly restyle
+    &.disabled,
+    &:disabled {
+      background-color: $background;
+      border-color: $border;
+    }
+  
+    &:active,
+    &.active,
+    .show > &.dropdown-toggle {
+      background-color: $active-background;
+      background-image: none; // Remove the gradient for the pressed/active state
+      border-color: $active-border;
+      @include box-shadow($btn-active-box-shadow);
+    }
+  }
+  
+  @mixin button-outline-variant($color, $color-hover: #fff) {
+    color: $color;
+    background-color: transparent;
+    background-image: none;
+    border-color: $color;
+  
+    @include hover {
+      color: $color-hover;
+      background-color: $color;
+      border-color: $color;
+    }
+  
+    &:focus,
+    &.focus {
+      box-shadow: 0 0 0 3px rgba($color, .5);
+    }
+  
+    &.disabled,
+    &:disabled {
+      color: $color;
+      background-color: transparent;
+    }
+  
+    &:active,
+    &.active,
+    .show > &.dropdown-toggle {
+      color: $color-hover;
+      background-color: $color;
+      border-color: $color;
+    }
+  }
+  
+  // Button sizes
+  @mixin button-size($padding-y, $padding-x, $font-size, $line-height, $border-radius) {
+    padding: $padding-y $padding-x;
+    font-size: $font-size;
+    line-height: $line-height;
+    @include border-radius($border-radius);
+  }
+
+  @mixin hover-focus {
+      &:focus,
+      &:hover {
+        @content
+      }
+  }
+
+  @mixin hover {
+      &:hover { @content }
+  }
+  
+
+
+
+
+.btn {
+    display: inline-block;
+    font-weight: 600;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    user-select: none;
+    border: 1px solid transparent;
+    @include button-size($input-btn-padding-y, $input-btn-padding-x, $font-size-base, $input-btn-line-height, $btn-border-radius);
+    @include transition($btn-transition);
+  
+    // Share hover and focus styles
+    @include hover-focus {
+      text-decoration: none;
+    }
+    &:focus,
+    &.focus {
+      outline: 0;
+      box-shadow: $btn-focus-box-shadow;
+    }
+  
+    // Disabled comes first so active can properly restyle
+    &.disabled,
+    &:disabled {
+      opacity: .65;
+      @include box-shadow(none);
+    }
+  
+    &:active,
+    &.active {
+      background-image: none;
+      @include box-shadow($btn-focus-box-shadow, $btn-active-box-shadow);
+    }
+  }
+  
+  // Future-proof disabling of clicks on `<a>` elements
+  a.btn.disabled,
+  fieldset[disabled] a.btn {
+    pointer-events: none;
+  }
+  
+  
+  //
+  // Alternate buttons
+  //
+  
+  @each $color, $value in $theme-colors {
+    .btn-#{$color} {
+      @include button-variant($value, $value);
+    }
+  }
+  
+  @each $color, $value in $theme-colors {
+    .btn-outline-#{$color} {
+      @include button-outline-variant($value, #fff);
+    }
+  }
+  
+  
+  //
+  // Link buttons
+  //
+  
+  // Make a button look and behave like a link
+  .btn-link {
+    font-weight: $font-weight-normal;
+    color: $link-color;
+    border-radius: 0;
+  
+    &,
+    &:active,
+    &.active,
+    &:disabled {
+      background-color: transparent;
+      @include box-shadow(none);
+    }
+    &,
+    &:focus,
+    &:active {
+      border-color: transparent;
+      box-shadow: none;
+    }
+    @include hover {
+      border-color: transparent;
+    }
+    @include hover-focus {
+      color: $link-hover-color;
+      text-decoration: $link-hover-decoration;
+      background-color: transparent;
+    }
+    &:disabled {
+      color: $btn-link-disabled-color;
+  
+      @include hover-focus {
+        text-decoration: none;
+      }
+    }
+  }
+  
+  
+  //
+  // Button Sizes
+  //
+  
+  .btn-lg {
+    @include button-size($input-btn-padding-y-lg, $input-btn-padding-x-lg, $font-size-lg, $line-height-lg, $btn-border-radius-lg);
+  }
+  
+  .btn-sm {
+    @include button-size($input-btn-padding-y-sm, $input-btn-padding-x-sm, $font-size-sm, $line-height-sm, $btn-border-radius-sm);
+  }
+  
+  
+  //
+  // Block button
+  //
+  
+  .btn-block {
+    display: block;
+    width: 100%;
+  }
+  
+  // Vertically space out multiple block buttons
+  .btn-block + .btn-block {
+    margin-top: $btn-block-spacing-y;
+  }
+  
+  // Specificity overrides
+  input[type="submit"],
+  input[type="reset"],
+  input[type="button"] {
+    &.btn-block {
+      width: 100%;
+    }
+  }
+  
+
+  .btn-shadow {
+    margin-left: 8px;
+  
+    @each $color, $value in $button-shadow-colors {
+      &.btn-#{$color},
+      &.btn-outline-#{$color} {
+        @include btn-shadow($value);
+      }
+    }
+  
+    @each $color, $value in $theme-colors {
+      &.btn-#{$color},
+      &.btn-outline-#{$color} {
+        &:hover {
+          background-color: $value;
+          //border-color: $value;
+        }
+      }
+    }
+  }
+
+

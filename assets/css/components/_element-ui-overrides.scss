@@ -1,0 +1,42 @@
+.VueCarousel-dot {
+    margin-top: 0 !important;
+}
+.VueCarousel-navigation-prev {
+    left: 40px !important;
+    padding: 3px 5px 5px 2px !important;
+}
+.VueCarousel-navigation-next {
+    right: 40px !important;
+    padding: 3px 5px 5px 9px !important;
+}
+.VueCarousel-navigation-button {
+    border: none;
+    outline: 0;
+    margin: 0 !important;
+    height: 36px;
+    width: 36px;
+    cursor: pointer;
+    -webkit-transition: .3s;
+    transition: .3s;
+    border-radius: 50%;
+    background-color: rgba(31,45,61,.7);
+    position: absolute;
+    top: 50%;
+    z-index: 10;
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
+    text-align: center;
+    font-size: 20px;
+    color: #fff !important;
+}
+.VueCarousel-navigation-button:hover {
+    background-color: rgba(31,45,61,.8);
+}
+.VueCarousel-navigation--disabled {
+    visibility: hidden;
+}
+
+.el-radio__inner {
+    width: 18px;
+    height: 18px;
+}

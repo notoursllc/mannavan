@@ -1,0 +1,323 @@
+@charset "UTF-8";
+
+@import "components/normalize";
+@import "components/prefixer";
+@import "components/variables";
+@import "components/objects";
+@import "components/mixins";
+@import "components/cartItem";
+@import "components/element-ui-overrides";
+
+// @import '~animate.css';
+// .animated {
+//     animation-duration: .377s;
+// }
+
+@import '~bulma/sass/utilities/functions';
+@import '~bulma/sass/utilities/variables';
+@import '~bulma/sass/utilities/mixins';
+// @import '~bulma/sass/utilities/controls';
+@import '~bulma/sass/base/generic';
+@import '~bulma/sass/base/minireset';
+@import '~bulma/sass/base/helpers'; //?
+@import '~bulma/sass/components/level';
+@import '~bulma/sass/elements/content';
+@import '~bulma/sass/elements/other';
+@import '~bulma/sass/elements/image';
+@import '~bulma/sass/grid/columns';
+@import '~bulma/sass/layout/hero';
+@import '~bulma/sass/layout/section';
+@import '~bulma/sass/utilities/mixins';
+
+
+$fa-font-path: '~font-awesome/fonts/';
+@import '~font-awesome/scss/font-awesome';
+
+html,
+body {
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    font-size: 16px;
+    background-color: $bodyBgColor;
+}
+
+
+
+label {
+    margin-bottom: 0;
+
+    &.required:after {
+        color: #b31703 !important;
+        content: " *"
+    }
+}
+
+.fade-enter-active, .fade-leave-active {
+    transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+    opacity: 0;
+}
+
+/**
+ * Clearfix helper
+ * Used to contain floats: h5bp.com/q
+ */
+ .clearfix::before,
+ .clearfix::after {
+   content: "";
+   display: table;
+}
+
+ .clearfix::after {
+   clear: both;
+}
+
+ul.disc {
+    list-style-type: disc;
+    list-style-position: outside;
+}
+
+[v-cloak] {
+    display: none
+}
+
+/** NotOurs icon font */
+@font-face {
+    font-family: 'notours';
+    src:
+      url('/fonts/notours.ttf?1mtj5c') format('truetype'),
+      url('/fonts/notours.woff?1mtj5c') format('woff'),
+      url('/fonts/notours.svg?1mtj5c#notours') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+i.notours {
+    /* use !important to prevent issues with browser extensions that change fonts */
+    font-family: 'notours' !important;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-cap:before {
+    content: "\e900";
+}
+.icon-cart:before {
+    content: "\e901";
+}
+.icon-tshirt:before {
+    content: "\e902";
+}
+/** end NotOurs icon font */
+
+
+.pageContainerMax {
+    padding: 60px 40px;
+    width: 100%;
+}
+@media #{$only-screen-and-min-width-m}  {
+    .pageContainerMax {
+        max-width: 1192px;
+        margin-right: auto;
+        margin-left: auto;
+    }
+}
+@media #{$only-screen-and-max-width-s}  {
+    .pageContainerMax {
+        padding: 40px 20px;
+    }
+}
+
+.pageContainerMaxSkinny {
+    max-width: 700px !important;
+}
+
+
+
+
+.player {
+    position: relative;
+    max-width: 1000px;
+    margin: 0 auto;
+
+    .wrapper {
+        height: 0;
+        max-width: 1000px;
+        z-index: 0;
+        top: 0;
+        left: 0;
+        padding-bottom: 56.25%;
+        margin: 0 auto;
+
+        iframe,
+        object,
+        embed {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transition: opacity 1s,visibility 0s linear 0s;
+      }
+    }
+}
+
+
+[role="alert"] {
+    color: $colorRed;
+}
+
+.g-spec {
+    display: block;
+    margin-top: 20px;
+
+    &.no-zebra {
+        background-color: inherit !important;
+    }
+
+    .g-spec-label {
+        color: #6f6f6f;
+        font-size: 16px;
+        display: block;
+        padding: 10px 20px;
+        border-right: 0;
+        border-bottom: 1px solid $borderColorGray;
+        vertical-align: top;
+        font-weight: 600;
+        word-wrap: break-word;
+
+        &.no-line {
+            border: 0 !important;
+        }
+    }
+
+    .g-spec-content {
+        display: block;
+        padding: 10px 20px 10px 40px;
+        vertical-align: top;
+    }
+}
+
+@media all and (min-width: 63em) {
+    .g-spec {
+        display: table-row;
+
+        &:nth-child(even) {
+            background-color: $bgGrayZebra;
+        }
+
+        .g-spec-label {
+            font-size: 18px;
+            display: table-cell;
+            padding: 20px;
+            border-right: 1px solid $borderColorGray;
+            border-bottom: 0;
+            vertical-align: top;
+        }
+
+        .g-spec-content {
+            display: table-cell;
+            padding: 20px;
+            vertical-align: top;
+        }
+    }
+}
+
+
+.checkout_form_label {
+    display: block;
+    padding: 0;
+}
+
+.checkout_form_value {
+    // display: inline-block;
+    display: block;
+    margin-bottom: 15px;
+    position: relative;
+    // width: 100%;
+
+    .el-input__inner {
+        font-size: 20px !important;
+        color: $colorGray !important;
+        min-width: 200px;
+    }
+
+    > i.fa,
+    .checkout_form_value_icon {
+        position: absolute;
+        top: -9px;
+        right: -8px;
+        color: $colorGreen;
+        font-size: 16px;
+    }
+}
+
+@media all and (min-width: 601px) {
+    .checkout_form_label {
+        display: table-cell;
+        padding: 0 40px 10px 0;
+        vertical-align: top;
+        text-align: right;
+    }
+
+    // .checkout_form_value {
+    //     display: table-cell;
+    //     padding-bottom: 15px;
+    // }
+}
+
+
+/* element.io overrides */
+.el-notification__content {
+    text-align: inherit;
+    color: #6f7071;
+}
+
+.el-dialog {
+    position: relative;
+}
+.el-dialog:first-child:before {
+    content:'';
+    position:absolute;
+    width:100%;
+    height:4px;
+    background: #ff60b2; /* Old browsers */
+    background: -moz-linear-gradient(left, #ff60b2 0%, #ce006a 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(left, #ff60b2 0%,#ce006a 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to right, #ff60b2 0%,#ce006a 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    top:-2px;
+    left:0;
+}
+.el-dialog--small {
+    width: 80%;
+}
+
+.el-button {
+    @include grow()
+}
+.el-button:hover {
+    @include growHover()
+}
+
+@media #{$small-and-down} {
+    .el-notification {
+        right: auto;
+    }
+}
+
+.grow {
+   @include grow()
+}
+.grow:hover {
+    @include growHover()
+}
