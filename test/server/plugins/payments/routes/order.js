@@ -35,7 +35,6 @@ function getOrderFromList(index, verbose) {
                         headers
                     })
                     .then((res) => {
-                        console.log("ORDERS", res.result)
                         let data = res.result.data.toJSON();
 
                         expect(res.statusCode, 'Status code').to.equal(200);

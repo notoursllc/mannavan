@@ -35,9 +35,6 @@ internals.implementation = function (server, options) {
         authenticate: function (request, reply) {
             const settings = Hoek.applyToDefaults(internals.defaultOptions, options);
 
-            console.log("REQUEST HEADERS COOKIE", request.headers);
-            console.log("COOKIE KEY SETTINGS", settings);
-
             const token = Cookie.parse(request.headers.cookie)[settings.cookieKey];
             let decoded;
 

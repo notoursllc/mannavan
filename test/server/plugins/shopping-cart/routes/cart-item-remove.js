@@ -70,9 +70,9 @@ describe('Testing route: DELETE /cart/item/remove/{id}', () => {
                         if(isObject(cartData) && Array.isArray(cartData.cart_items)) {
                             cartData.cart_items.forEach((item) => {
                                 if(item.product_id === prodId) {
-                                    cartItemId = item.id;   
+                                    cartItemId = item.id;
                                 }
-                            })   
+                            })
                         }
 
                         return deleteItem(server, headers, cartItemId)

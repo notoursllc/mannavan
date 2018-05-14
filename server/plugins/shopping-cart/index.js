@@ -3,8 +3,6 @@
 const Joi = require('joi');
 const Boom = require('boom');
 const cloneDeep = require('lodash.clonedeep');
-const Bcrypt = require('bcrypt');
-const JWT = require('jsonwebtoken');
 const PaymentService = require('../payments/services/PaymentService');
 const ShoppingCartService = require('./services/ShoppingCartService');
 const ShoppingCartItemService = require('./services/ShoppingCartItemService');
@@ -158,7 +156,7 @@ internals.after = function (server, next) {
 
 
     internals.cartItemQty = (request, reply) => {
-        console.log("GET CART COOKIE TOKEN?", request.state['cart-jwt']);
+        // console.log("GET CART COOKIE TOKEN?", request.state['cart-jwt']);
 
         shoppingCartService
             .getCart(request)

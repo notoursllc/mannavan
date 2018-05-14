@@ -66,16 +66,14 @@ function setCartCookie(server, callback) {
 }
 
 function getJwtHeaders(server, callback) {
-    const request = {
+    server.inject({
         method: 'GET',
         url: '/cart/client-token/get'
-    };
-
-    server.inject(request, (res) => {
+    })
+    .then((res) => {
         let headers = {
             cookie: 'cart-jwt=' + res.headers.authorization
         };
-
         callback(headers);
     });
 }
@@ -167,28 +165,6 @@ function getBasicManifest() {
             {
                 plugin: {
                     register: './plugins/core'
-                }
-            },
-            // needed for every test because the shopping-cart plugin includes the auth-scheme-jwt-cookie plugin
-            {
-                plugin: {
-                    register: './plugins/products'
-                }
-            },
-            {
-                plugin: {
-                    register: './plugins/payments',
-                    options: {
-                        isSandbox: true,
-                        merchantId: process.env.BRAINTREE_MERCHANT_ID,
-                        publicKey: process.env.BRAINTREE_PUBLIC_KEY,
-                        privateKey: process.env.BRAINTREE_PRIVATE_KEY
-                    }
-                }
-            },
-            {
-                plugin: {
-                    register: './plugins/shopping-cart'
                 }
             }
         ]
