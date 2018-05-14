@@ -49,6 +49,7 @@ export const actions = {
             else {
                 shopping_cart_mixin.methods.getCartClientToken.call(app).then((token) => {
                     app.store.dispatch('shoppingcart/CART_TOKEN_SET', token);
+                    Cookies.set('cart-jwt', token);
                     // console.log("NUXTSERVERINIT - NO COOKIE SO GOT TOKEN");
                     return resolve();
                 })

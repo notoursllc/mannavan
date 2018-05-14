@@ -1,6 +1,5 @@
-# gmnst-ssr
+# mannavan
 
-> My unreal Nuxt.js project
 
 ## Build Setup
 
