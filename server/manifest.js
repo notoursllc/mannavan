@@ -66,6 +66,14 @@ internals.manifest = {
         },
         {
             plugin: {
+                register: './plugins/core'
+            },
+            options: {
+                select: ['api']
+            }
+        },
+        {
+            plugin: {
                 register: './plugins/customer'
             }
         },
@@ -116,14 +124,6 @@ internals.manifest = {
                 routes: {
                     prefix: '/api/v1'
                 }
-            }
-        },
-        {
-            plugin: {
-                register: './plugins/core'
-            },
-            options: {
-                select: ['api']
             }
         }
     ]

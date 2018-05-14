@@ -7,6 +7,21 @@ let internals = {};
 
 internals.after = (server, next) => {
 
+    /*
+     * Route authentication
+     */
+    server.register(require('../auth-scheme-jwt-cookie'));
+    server.auth.strategy('xCartToken', 'jwt-cookie', {
+         secret: process.env.JWT_SERVER_SECRET,
+         cookieKey: 'cart-jwt',
+         verifyOptions: {   // https://github.com/auth0/node-jsonwebtoken#jwtverifytoken-secretorpublickey-options-callback
+             ignoreExpiration: true,    // do not reject expired tokens
+             algorithms: [ 'HS256' ]
+         }
+     });
+    server.auth.default('xCartToken')
+
+
     server.views({
         engines: {
             html: require('handlebars')

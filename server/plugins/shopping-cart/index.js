@@ -48,16 +48,18 @@ internals.after = function (server, next) {
     });
     */
 
-   server.register(require('../auth-scheme-jwt-cookie'));
+//    server.register(require('../auth-scheme-jwt-cookie'));
 
-   server.auth.strategy('xCartToken', 'jwt-cookie', {
-        secret: process.env.JWT_SERVER_SECRET,
-        cookieKey: 'cart-jwt',
-        verifyOptions: {   // https://github.com/auth0/node-jsonwebtoken#jwtverifytoken-secretorpublickey-options-callback
-            ignoreExpiration: true,    // do not reject expired tokens
-            algorithms: [ 'HS256' ]
-        }
-    });
+//    server.auth.strategy('xCartToken', 'jwt-cookie', {
+//         secret: process.env.JWT_SERVER_SECRET,
+//         cookieKey: 'cart-jwt',
+//         verifyOptions: {   // https://github.com/auth0/node-jsonwebtoken#jwtverifytoken-secretorpublickey-options-callback
+//             ignoreExpiration: true,    // do not reject expired tokens
+//             algorithms: [ 'HS256' ]
+//         }
+//     });
+
+//     server.auth.default('xCartToken')
 
 
     /************************************
@@ -353,6 +355,7 @@ internals.after = function (server, next) {
             method: 'GET',
             path: '/cart/client-token/get',
             config: {
+                auth: false,
                 description: 'Returns the client token',
                 handler: internals.cartClientTokenGet
             }
@@ -363,7 +366,7 @@ internals.after = function (server, next) {
             config: {
                 description: 'Returns the Braintree client token',
                 auth: {
-                    strategies: ['xCartToken', 'simple']
+                    strategies: ['xCartToken']
                 },
                 handler: internals.cartPaymentTokenGet
             }
@@ -374,7 +377,6 @@ internals.after = function (server, next) {
             config: {
                 description: 'Finds the cart for the given jwt user',
                 auth: {
-                    // strategies: ['xCartToken', 'simple']
                     strategies: ['xCartToken']
                 },
                 handler: internals.cartGet
@@ -386,7 +388,7 @@ internals.after = function (server, next) {
             config: {
                 description: 'Finds the cart for the given jwt user',
                 auth: {
-                    strategies: ['xCartToken', 'simple']
+                    strategies: ['xCartToken']
                 },
                 validate: {
                     payload: Joi.object({
@@ -402,7 +404,7 @@ internals.after = function (server, next) {
             config: {
                 description: 'Adds a new item to the cart',
                 auth: {
-                    strategies: ['xCartToken', 'simple']
+                    strategies: ['xCartToken']
                 },
                 validate: {
                     payload: Joi.object({
@@ -422,7 +424,7 @@ internals.after = function (server, next) {
             config: {
                 description: 'Removes an item from the cart',
                 auth: {
-                    strategies: ['xCartToken', 'simple']
+                    strategies: ['xCartToken']
                 },
                 validate: {
                     payload: {
@@ -438,7 +440,7 @@ internals.after = function (server, next) {
             config: {
                 description: 'Updates the quantity of a shopping cart item (ShoppingCartItem model)',
                 auth: {
-                    strategies: ['xCartToken', 'simple']
+                    strategies: ['xCartToken']
                 },
                 validate: {
                     payload: Joi.object({
@@ -455,7 +457,7 @@ internals.after = function (server, next) {
             config: {
                 description: 'Sets the shipping address for the cart and calculates the sales tax',
                 auth: {
-                    strategies: ['xCartToken', 'simple']
+                    strategies: ['xCartToken']
                 },
                 validate: {
                     payload: Joi.reach(shoppingCartService.getShoppingCartModelSchema(), 'shipping')
@@ -469,7 +471,7 @@ internals.after = function (server, next) {
             config: {
                 description: 'Sets the selected shipping rate for the cart',
                 auth: {
-                    strategies: ['xCartToken', 'simple']
+                    strategies: ['xCartToken']
                 },
                 validate: {
                     payload: Joi.reach(shoppingCartService.getShoppingCartModelSchema(), 'shipping_rate')
@@ -483,7 +485,7 @@ internals.after = function (server, next) {
             config: {
                 description: 'Braintree nonce received by the client. Complete the transaction',
                 auth: {
-                    strategies: ['xCartToken', 'simple']
+                    strategies: ['xCartToken']
                 },
                 validate: {
                     // NOTE: shipping is not required here because the 'cart/shipping/setaddress' route

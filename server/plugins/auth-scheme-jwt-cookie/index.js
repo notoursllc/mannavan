@@ -4,12 +4,17 @@ const Boom = require('boom');
 const JWT = require('jsonwebtoken');
 const Cookie = require('cookie');
 const isObject = require('lodash.isobject');
+const Hoek = require('hoek');
 const internals = {};
 
 
 internals.isValid = (token) => {
     return token.split('.').length === 3;
 }
+
+internals.defaultOptions = {
+    cookieKey: 'jwt'
+};
 
 /**
  * Pretty basic implementation without any bells and whistles
@@ -28,7 +33,12 @@ internals.isValid = (token) => {
 internals.implementation = function (server, options) {
     const scheme = {
         authenticate: function (request, reply) {
-            const token = Cookie.parse(request.headers.cookie)[options.cookieKey || 'token'];
+            const settings = Hoek.applyToDefaults(internals.defaultOptions, options);
+
+            console.log("REQUEST HEADERS COOKIE", request.headers);
+            console.log("COOKIE KEY SETTINGS", settings);
+
+            const token = Cookie.parse(request.headers.cookie)[settings.cookieKey];
             let decoded;
 
             if (!token) {
