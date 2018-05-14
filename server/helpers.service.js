@@ -3,6 +3,7 @@
 const isString = require('lodash.isstring');
 const forEach = require('lodash.foreach');
 const queryString = require('query-string');
+const bcrypt = require('bcrypt');
 
 
 function queryHelper(request) {
@@ -71,12 +72,12 @@ function queryHelper(request) {
 
 /**
  * A helper method for querying Bookshelf models
- * 
+ *
  * http://bookshelfjs.org/#Model-instance-fetchPage
- * 
- * @param {*} request 
- * @param {*} model 
- * @param {*} withRelated 
+ *
+ * @param {*} request
+ * @param {*} model
+ * @param {*} withRelated
  */
 function fetchPage(request, model, withRelated) {
     let queryData = queryHelper(request);
@@ -93,7 +94,7 @@ function fetchPage(request, model, withRelated) {
         config = {
             pageSize: queryData.pageSize || 100,
             page: queryData.page || 1
-        } 
+        }
     }
 
     if(Array.isArray(withRelated) && withRelated.length) {
@@ -162,6 +163,51 @@ function stripQuotes(text) {
 }
 
 
+/**
+ * Creates a hash from a given password
+ *
+ * @param password
+ * @returns {Promise}
+ */
+function cryptPassword(password) {
+    return new Promise((resolve, reject) => {
+        bcrypt.genSalt(10, (err, salt) => {
+            if (err) {
+                return reject(err);
+            }
+
+            bcrypt.hash(password, salt, (err, hash) => {
+                if (err) {
+                    return reject(err);
+                }
+
+                return resolve(hash);
+            });
+        });
+    });
+}
+
+
+/**
+ * Compares a password against the hashed password for a match
+ *
+ * @param password      Clear password
+ * @param userPassword  Hashed password
+ * @returns {Promise}
+ */
+function comparePassword(password, userPassword) {
+    return new Promise((resolve, reject) => {
+        bcrypt.compare(password, userPassword, (err, isPasswordMatch) => {
+            if (err) {
+                return reject(err);
+            }
+
+            return resolve(isPasswordMatch);
+        });
+    });
+}
+
+
 module.exports.queryHelper = queryHelper;
 module.exports.fetchPage = fetchPage;
 module.exports.isDev = isDev;
@@ -169,3 +215,5 @@ module.exports.makeArray = makeArray;
 module.exports.twoPointDecimal = twoPointDecimal;
 module.exports.stripTags = stripTags;
 module.exports.stripQuotes = stripQuotes;
+module.exports.cryptPassword = cryptPassword;
+module.exports.comparePassword = comparePassword;

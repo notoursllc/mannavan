@@ -4,10 +4,7 @@ const Joi = require('joi');
 const jwt = require('jsonwebtoken');
 const uuidV4 = require('uuid/v4');
 const BaseService = require('../../core/services/BaseService');
-const ApiClientService = require('../../apiClients/services/ApiClientService');
-
-const apiClientService = new ApiClientService();
-
+const helperService = require('../../../helpers.service');
 
 module.exports = class ShoppingCartService extends BaseService {
 
@@ -78,19 +75,9 @@ module.exports = class ShoppingCartService extends BaseService {
 
 
     getCartClientToken(request) {
-        // return apiClientService
-        //     // .cryptPassword(process.env.CART_TOKEN_SECRET + uuidV4())
-        //     .cryptPassword(process.env.CART_TOKEN_SECRET)
-        //     .then((cartToken) => {
-        //         if(!cartToken) {
-        //             throw new Error('Error creating cart token');
-        //         }
-        //         return cartToken;
-        //     });
-
         let uuid = uuidV4();
 
-        return apiClientService
+        return helperService
             .cryptPassword(process.env.CART_TOKEN_SECRET + uuid)
             .then((cartToken) => {
                 if(!cartToken) {

@@ -1,5 +1,4 @@
 const DB_TABLES = {
-    api_clients: 'api_clients',
     carts: 'carts',
     cart_items: 'cart_items',
     customers: 'customers',
