@@ -10,7 +10,7 @@ const expect = Code.expect;
 const it = lab.test;
 
 
-describe('Testing route: GET /cart/client-token/get', () => {
+describe('Testing route: GET /jwt', () => {
 
     it('should get a JWT token', (done) => {
         testHelpers
@@ -20,7 +20,7 @@ describe('Testing route: GET /cart/client-token/get', () => {
 
                 server.inject({
                     method: 'GET',
-                    url: '/cart/client-token/get'
+                    url: testHelpers.getApiPrefix('/jwt')
                 })
                 .then((res) => {
                     expect(res.statusCode, 'Status code').to.equal(200);

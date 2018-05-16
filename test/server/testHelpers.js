@@ -45,7 +45,7 @@ function getFakeShippingAddress() {
 function setCartCookie(server, callback) {
     const request = {
         method: 'GET',
-        url: '/cart/client-token/get'
+        url: getApiPrefix('/jwt')
     };
 
     server.inject(request, (res) => {
@@ -68,7 +68,7 @@ function setCartCookie(server, callback) {
 function getJwtHeaders(server, callback) {
     server.inject({
         method: 'GET',
-        url: '/cart/client-token/get'
+        url: getApiPrefix('/jwt')
     })
     .then((res) => {
         let headers = {
@@ -112,66 +112,6 @@ function getJwtHeaders(server, callback) {
 //         });
 //     });
 // }
-
-
-function getBasicManifest() {
-    let manifest = {
-        connections: [
-            {
-                port: 0
-            }
-        ],
-        registrations: [
-            // {
-            //     plugin: {
-            //         register: './plugins/yar',
-            //         options: {}
-            //     }
-            // },
-            // {
-            //     plugin: {
-            //         register: './plugins/crumbCsrf',
-            //         options: {}
-            //     }
-            // },
-            {
-                plugin: {
-                    register: 'inert'
-                }
-            },
-            {
-                plugin: {
-                    register: 'vision'
-                }
-            },
-            {
-                plugin: {
-                    register: './plugins/logger'
-                }
-            },
-            {
-                plugin: {
-                    register: './plugins/bookshelf-orm',
-                    options: {
-                        knex: {
-                            debug: false
-                        },
-                        plugins: [
-                            require('bookshelf-uuid')
-                        ]
-                    }
-                }
-            },
-            {
-                plugin: {
-                    register: './plugins/core'
-                }
-            }
-        ]
-    };
-
-    return manifest;
-}
 
 
 function startServerAndGetHeaders(manifest, composeOptions) {
@@ -266,8 +206,75 @@ function addToCart(server, headers, productId, options) {
 }
 
 
-function getApiPrefix() {
-    return '/api/v1';
+function getApiPrefix(path) {
+    const prefix = '/api/v1';
+    const suffix = path && path.charAt(0) === '/' ? path : '/' + path;
+
+    if(path) {
+        return `${prefix}${suffix}`;
+    }
+
+    return prefix;
+}
+
+
+function getBasicManifest() {
+    let manifest = {
+        connections: [
+            {
+                port: 0
+            }
+        ],
+        registrations: [
+            // {
+            //     plugin: {
+            //         register: './plugins/yar',
+            //         options: {}
+            //     }
+            // },
+            // {
+            //     plugin: {
+            //         register: './plugins/crumbCsrf',
+            //         options: {}
+            //     }
+            // },
+            {
+                plugin: {
+                    register: 'inert'
+                }
+            },
+            {
+                plugin: {
+                    register: 'vision'
+                }
+            },
+            {
+                plugin: {
+                    register: './plugins/logger'
+                }
+            },
+            {
+                plugin: {
+                    register: './plugins/bookshelf-orm',
+                    options: {
+                        knex: {
+                            debug: false
+                        },
+                        plugins: [
+                            require('bookshelf-uuid')
+                        ]
+                    }
+                }
+            },
+            {
+                plugin: {
+                    register: './plugins/core'
+                }
+            }
+        ]
+    };
+
+    return manifest;
 }
 
 
