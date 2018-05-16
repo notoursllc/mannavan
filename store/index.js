@@ -49,8 +49,11 @@ export const actions = {
             else {
                 shopping_cart_mixin.methods.getCartClientToken.call(app).then((token) => {
                     app.store.dispatch('shoppingcart/CART_TOKEN_SET', token);
-                    Cookies.set('cart-jwt', token);
-                    // console.log("NUXTSERVERINIT - NO COOKIE SO GOT TOKEN");
+                    // Note: using Cookie.serialize here wont work.  It doesn't actually
+                    // set a cookie, but instead will "Serialize a cookie name-value pair into a Set-Cookie header string",
+                    // which is not what we want (https://github.com/jshttp/cookie#cookieserializename-value-options)
+                    // So, we're setting the token in vuex, and the cart-token nuxt plugin will pull the
+                    // value from vuex and set in a cookie.
                     return resolve();
                 })
                 .catch(error => {
@@ -59,68 +62,7 @@ export const actions = {
                 });
             }
         });
-    },
-
-
-    /**
-     * Gets the token from the cookie (if a server side request)
-     * or localStorage (if a client side request) and adds the token
-     * to vuex state
-     */
-    initJwt2(vuexContext, req) {
-        let token;
-        // let expirationDate;
-
-        // server side request
-        if (req) {
-            if (!req.headers.cookie) {
-                return;
-            }
-
-            const jwtCookie = req.headers.cookie
-                .split(";")
-                .find(c => c.trim().startsWith("jwt="));
-
-            if (!jwtCookie) {
-                return;
-            }
-
-            token = jwtCookie.split("=")[1];
-            // expirationDate = req.headers.cookie
-            //     .split(";")
-            //     .find(c => c.trim().startsWith("expirationDate="))
-            //     .split("=")[1];
-        }
-        // client side request
-        else {
-            token = localStorage.getItem("token");
-            // expirationDate = localStorage.getItem("tokenExpiration");
-        }
-
-        // if (new Date().getTime() > +expirationDate || !token) {
-        //     console.log("No token or invalid token");
-        //     vuexContext.dispatch("logout");
-        //     return;
-        // }
-
-        vuexContext.commit("JWT_KEY", token);
-    },
-
-
-
-    // requestJwt({ commit }) {
-    //     return this.$axios
-    //         .$post('/api/v1/token/get')
-    //         .then((response) => {
-    //             // Token is returned in the 'x-authorization' response header
-    //             // const token = response.headers['x-authorization'];
-    //             commit('JWT_KEY', response.token);
-    //         })
-    //         .catch(error => {
-    //             console.log("ERROR GETTING TOKEN FROM nuxtServerInit", error)
-    //             commit('JWT_KEY', null);
-    //         });
-    // }
+    }
 }
 
 

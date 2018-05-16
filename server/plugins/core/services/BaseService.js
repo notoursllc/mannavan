@@ -7,8 +7,9 @@ module.exports = class BaseService {
         this.modelName = modelName;
     }
 
+
     getModel() {
         return this.server.app.bookshelf.model(this.modelName);
     }
-    
+
 }

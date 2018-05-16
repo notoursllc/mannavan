@@ -62,7 +62,7 @@ module.exports = class ShoppingCartService extends BaseService {
     }
 
 
-    getCartToken(request) {
+    getCartTokenFromJwt(request) {
         const req = request.raw.req;
 
         if(request.auth.cookieToken) {
@@ -74,39 +74,11 @@ module.exports = class ShoppingCartService extends BaseService {
     }
 
 
-    getCartClientToken(request) {
-        let uuid = uuidV4();
-
-        return helperService
-            .cryptPassword(process.env.CART_TOKEN_SECRET + uuid)
-            .then((cartToken) => {
-                if(!cartToken) {
-                    throw new Error('Error creating cart token');
-                }
-
-                let jsonWebToken = jwt.sign(
-                    {
-                        jti: uuid,
-                        clientId: process.env.JWT_CLIENT_ID, // is this needed?
-                        ct: cartToken
-                    },
-                    process.env.JWT_SERVER_SECRET
-                );
-
-                return jsonWebToken;
-            })
-            .catch((err) => {
-                global.logger.error(err);
-                reply(Boom.unauthorized(err));
-            });
-    }
-
-
     getCart(request) {
         let self = this;
 
         return self.getModel().query((qb) => {
-            qb.where('token', '=', self.getCartToken(request));
+            qb.where('token', '=', self.getCartTokenFromJwt(request));
             qb.whereNull('closed_at');
             qb.whereNull('status');
         })
@@ -153,7 +125,7 @@ module.exports = class ShoppingCartService extends BaseService {
         return self.getCart(request)
             .then((ShoppingCart) => {
                 return ShoppingCart || self.getModel().create({
-                    token: self.getCartToken(request)
+                    token: self.getCartTokenFromJwt(request)
                 });
             })
     }

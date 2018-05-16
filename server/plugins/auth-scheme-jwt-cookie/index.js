@@ -35,6 +35,10 @@ internals.implementation = function (server, options) {
         authenticate: function (request, reply) {
             const settings = Hoek.applyToDefaults(internals.defaultOptions, options);
 
+            if (!request.headers.cookie) {
+                return reply(Boom.unauthorized('Missing cookie', 'jwt-cookie'));
+            }
+
             const token = Cookie.parse(request.headers.cookie)[settings.cookieKey];
             let decoded;
 

@@ -64,18 +64,6 @@ internals.after = function (server, next) {
      * ROUTE HANDLERS
      ************************************/
 
-    internals.cartClientTokenGet = (request, reply) => {
-        shoppingCartService
-            .getCartClientToken()
-            .then((token) => {
-                reply().header("Authorization", token);
-            })
-            .catch((err) => {
-                reply(Boom.badData(err));
-            });
-    };
-
-
     internals.cartPaymentTokenGet = (request, reply) => {
         paymentService
             .getClientToken()
@@ -349,15 +337,6 @@ internals.after = function (server, next) {
 
 
     server.route([
-        {
-            method: 'GET',
-            path: '/cart/client-token/get',
-            config: {
-                auth: false,
-                description: 'Returns the client token',
-                handler: internals.cartClientTokenGet
-            }
-        },
         {
             method: 'GET',
             path: '/cart/payment-token/get',

@@ -42,7 +42,7 @@ module.exports = {
     ** Plugins to load before mounting the App
     */
     plugins: [
-        // { src: '@/plugins/cart-token.js', ssr: false },
+        { src: '@/plugins/cart-token.js', ssr: false },
         // '@/plugins/axios.js',
         '@/plugins/i18n.js',
         '@/plugins/element-ui',

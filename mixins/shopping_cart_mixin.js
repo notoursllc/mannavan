@@ -8,7 +8,7 @@ export default {
         getCartClientToken() {
             // NOTE: not using $get here because we need the response.headers object
             return this.$axios
-                .get('/api/v1/cart/client-token/get')
+                .get('/api/v1/jwt')
                 .then((response) => {
                     return response.headers.authorization;
                 });
