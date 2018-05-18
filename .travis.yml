@@ -28,10 +28,8 @@ install:
   - nanobox evar add NODE_ENV=production
 
   # DATA_DB_NAME
-  #- nanobox evar add local DATA_DB_NAME=$DATA_DB_NAME
-  #- nanobox evar add DATA_DB_NAME=$DATA_DB_NAME
-
-
+  - nanobox evar add local DATA_DB_NAME=$DATA_DB_NAME
+  - nanobox evar add DATA_DB_NAME=$DATA_DB_NAME
 
   # AUTH0_CLIENT_ID
   - nanobox evar add local AUTH0_CLIENT_ID=$AUTH0_CLIENT_ID
