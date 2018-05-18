@@ -27,7 +27,7 @@ let common = {
         host: process.env.DATA_DB_HOST,
         user: process.env.DATA_DB_USER,
         password: process.env.DATA_DB_PASS,
-        database: process.env.ISNANO ? 'gonano' : process.env.DATA_DB_NAME
+        database: process.env.ISNANO || process.env.NODE_ENV == 'production' ? 'gonano' : process.env.DATA_DB_NAME
     }
 };
 
@@ -37,7 +37,7 @@ let common = {
 //         host: process.env.POSTGRES_HOST_LOCAL,
 //         user: process.env.POSTGRES_USER_LOCAL,
 //         password: process.env.POSTGRES_PASSWORD_LOCAL,
-//         database: process.env.POSTGRES_DB_LOCAL 
+//         database: process.env.POSTGRES_DB_LOCAL
 //     }
 // }
 
