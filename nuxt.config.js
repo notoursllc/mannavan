@@ -43,7 +43,6 @@ module.exports = {
     */
     plugins: [
         { src: '@/plugins/cart-token.js', ssr: false },
-        // '@/plugins/axios.js',
         '@/plugins/i18n.js',
         '@/plugins/element-ui',
         '@/plugins/format8601',
@@ -97,8 +96,6 @@ module.exports = {
     },
 
     env: {
-        API_USERNAME: process.env.API_USERNAME,
-        API_PASSWORD: process.env.API_PASSWORD,
         BUG_SNAG_API_KEY: process.env.BUG_SNAG_API_KEY,
         AUTH0_CLIENT_ID: process.env.AUTH0_CLIENT_ID,
         AUTH0_DOMAIN: process.env.AUTH0_DOMAIN,

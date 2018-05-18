@@ -20,7 +20,7 @@ module.exports = class ShoppingCartEmailService {
                 body: config.text,
                 html: config.html
             });
-    
+
             mail.build((mailBuildError, message) => {
                 mailgun
                     .messages()
@@ -46,21 +46,21 @@ module.exports = class ShoppingCartEmailService {
         let cart_items = cart.cart_items;
         let firstItem = null;
         let remainingItems = 0;
-    
+
         if(Array.isArray(cart_items)) {
             if(isObject(cart_items[0]) && isObject(cart_items[0].product) && cart_items[0].product.hasOwnProperty('title')) {
                 firstItem = this.substringOnWords(cart_items[0].product.title);
                 remainingItems = totalNumItems - 1;
-    
+
                 if(!remainingItems) {
                     return `"${firstItem}"`;
                 }
             }
-    
+
             let itemText = remainingItems === 1 ? 'item' : 'items';
             return `"${firstItem}" and ${remainingItems} more ${itemText}`;
         }
-    
+
         return null;
     }
 
@@ -68,22 +68,22 @@ module.exports = class ShoppingCartEmailService {
     getShippingName(ShoppingCart) {
         let cart = ShoppingCart.toJSON();
         let val = [];
-        
+
         if(cart.shipping_firstName) {
             val.push(cart.shipping_firstName);
         }
-    
+
         if(cart.shipping_lastName) {
             val.push(cart.shipping_lastName);
         }
-    
+
         return val.join(' ');
     }
 
 
     /**
      * Creates a substring but does not break up words
-     * 
+     *
      * @param str The string to trim
      * @param maxLen The maximum length to trim the string to
      * @param suffix The suffix to append to the end of the string if it is trimmed.  Pass null to append nothing.
@@ -128,7 +128,7 @@ module.exports = class ShoppingCartEmailService {
 
         return new Promise((resolve, reject) => {
             let html = pug.renderFile(
-                path.join(__dirname, '../email-templates', 'purchase-receipt.pug'), 
+                path.join(__dirname, '../email-templates', 'purchase-receipt.pug'),
                 {
                     orderTitle,
                     transactionId,
@@ -142,7 +142,7 @@ module.exports = class ShoppingCartEmailService {
                     grand_total: ShoppingCart.get('grand_total')
                 }
             );
-    
+
             self.send({
                 to: ShoppingCart.get('shipping_email'),
                 subject: `Your gmnst.com order of ${orderTitle}`,
@@ -158,7 +158,7 @@ module.exports = class ShoppingCartEmailService {
 
         return new Promise((resolve, reject) => {
             let html = pug.renderFile(
-                path.join(__dirname, '../email-templates', 'admin-purchase-alert.pug'), 
+                path.join(__dirname, '../email-templates', 'admin-purchase-alert.pug'),
                 {
                     orderTitle,
                     transactionId,
@@ -178,9 +178,9 @@ module.exports = class ShoppingCartEmailService {
                     grand_total: ShoppingCart.get('grand_total')
                 }
             );
-    
+
             self.send({
-                to: process.env.ADMIN_EMAIL,
+                to: process.env.EMAIL_ADMIN,
                 subject: `NEW ORDER: ${orderTitle}`,
                 html: html
             });
@@ -190,7 +190,7 @@ module.exports = class ShoppingCartEmailService {
 
     sendPurchaseEmails(ShoppingCart, transactionId) {
         let orderTitle = this.getPurchaseDescription(ShoppingCart);
-    
+
         return Promise.all([
             this.emailPurchaseReceiptToBuyer(ShoppingCart, transactionId, orderTitle),
             this.emailPurchaseAlertToAdmin(ShoppingCart, transactionId, orderTitle)

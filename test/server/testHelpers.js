@@ -65,6 +65,7 @@ function setCartCookie(server, callback) {
     });
 }
 
+
 function getJwtHeaders(server, callback) {
     server.inject({
         method: 'GET',
@@ -77,41 +78,6 @@ function getJwtHeaders(server, callback) {
         callback(headers);
     });
 }
-
-
-// function getJwtHeaders(server, callback) {
-//     const request = {
-//         method: 'POST',
-//         url: '/token/get',
-//         payload: {
-//             clientId: process.env.JWT_CLIENT_ID,
-//             clientSecret: process.env.JWT_CLIENT_SECRET
-//         }
-//     };
-
-//     server.inject(request, (res) => {
-//         let headers = {
-//             'Authorization': `Bearer ${res.headers['x-authorization']}`
-//         };
-
-//         callback(headers);
-//     });
-// }
-
-
-// function getInfo(server, callback) {
-//     getJwtHeaders(server, (headers) => {
-//         const request = {
-//             method: 'GET',
-//             url: '/info',
-//             headers: headers
-//         };
-
-//         server.inject(request, (res) => {
-//             callback(res.result.data);
-//         });
-//     });
-// }
 
 
 function startServerAndGetHeaders(manifest, composeOptions) {
@@ -281,8 +247,6 @@ function getBasicManifest() {
 module.exports.destroyKnexAndStopServer = destroyKnexAndStopServer;
 module.exports.getFakeBillingAddress = getFakeBillingAddress;
 module.exports.getFakeShippingAddress = getFakeShippingAddress;
-// module.exports.getInfo = getInfo;
-// module.exports.getJwtHeaders = getJwtHeaders;
 module.exports.getBasicManifest = getBasicManifest;
 module.exports.startServerAndGetHeaders = startServerAndGetHeaders;
 module.exports.getRegistrationIndexFromManifest = getRegistrationIndexFromManifest;

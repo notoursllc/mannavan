@@ -31,22 +31,16 @@ install:
   - nanobox evar add local DATA_DB_NAME=$DATA_DB_NAME
   - nanobox evar add DATA_DB_NAME=$DATA_DB_NAME
 
-  # ADMIN_EMAIL
-  - nanobox evar add local ADMIN_EMAIL=$ADMIN_EMAIL
-  - nanobox evar add ADMIN_EMAIL=$ADMIN_EMAIL
 
-  # ADMIN_PASSWORD
-  - nanobox evar add local ADMIN_PASSWORD=$ADMIN_PASSWORD
-  - nanobox evar add ADMIN_PASSWORD=$ADMIN_PASSWORD
 
   # AUTH0_CLIENT_ID
   - nanobox evar add local AUTH0_CLIENT_ID=$AUTH0_CLIENT_ID
   - nanobox evar add AUTH0_CLIENT_ID=$AUTH0_CLIENT_ID
-  
+
   # AUTH0_CLIENT_SECRET
   - nanobox evar add local AUTH0_CLIENT_SECRET=$AUTH0_CLIENT_SECRET
   - nanobox evar add AUTH0_CLIENT_SECRET=$AUTH0_CLIENT_SECRET
-  
+
   # AUTH0_DOMAIN
   - nanobox evar add local AUTH0_DOMAIN=$AUTH0_DOMAIN
   - nanobox evar add AUTH0_DOMAIN=$AUTH0_DOMAIN
@@ -60,8 +54,8 @@ install:
   - nanobox evar add BRAINTREE_MERCHANT_ID=$BRAINTREE_MERCHANT_ID
 
   # BRAINTREE_PRIVATE_KEY
-  - nanobox evar add local BRAINTREE_PRIVATE_KEY=$BRAINTREE_PRIVATE_KEY 
-  - nanobox evar add BRAINTREE_PRIVATE_KEY=$BRAINTREE_PRIVATE_KEY 
+  - nanobox evar add local BRAINTREE_PRIVATE_KEY=$BRAINTREE_PRIVATE_KEY
+  - nanobox evar add BRAINTREE_PRIVATE_KEY=$BRAINTREE_PRIVATE_KEY
 
   # BRAINTREE_PUBLIC_KEY
   - nanobox evar add local BRAINTREE_PUBLIC_KEY=$BRAINTREE_PUBLIC_KEY
@@ -86,20 +80,14 @@ install:
   # DIGITAL_OCEAN_SPACES_ENDPOINT
   - nanobox evar add local DIGITAL_OCEAN_SPACES_ENDPOINT=$DIGITAL_OCEAN_SPACES_ENDPOINT
   - nanobox evar add DIGITAL_OCEAN_SPACES_ENDPOINT=$DIGITAL_OCEAN_SPACES_ENDPOINT
-  
+
   # DIGITAL_OCEAN_SPACE_NAME
   - nanobox evar add local DIGITAL_OCEAN_SPACE_NAME=$DIGITAL_OCEAN_SPACE_NAME
   - nanobox evar add DIGITAL_OCEAN_SPACE_NAME=$DIGITAL_OCEAN_SPACE_NAME
 
-
-
-
-
-
-
-
-
-
+  # EMAIL_ADMIN
+  - nanobox evar add local EMAIL_ADMIN=$EMAIL_ADMIN
+  - nanobox evar add EMAIL_ADMIN=$EMAIL_ADMIN
 
   # EMAIL_FROM_CART_SUCCESS
   - nanobox evar add local EMAIL_FROM_CART_SUCCESS=$EMAIL_FROM_CART_SUCCESS
@@ -166,7 +154,7 @@ install:
 
   - nanobox run npm run build
 
-script: 
+script:
   - nanobox run npm run knex:migrate
   - nanobox run npm run knex:seed
   - nanobox run npm run test:server
@@ -178,7 +166,7 @@ after_success:
 notifications:
   email:
     recipients:
-      - $ADMIN_EMAIL
+      - $EMAIL_ADMIN
     # always|never|change - change is when the repo status goes from pass to fail or vice versa
     on_success: always
     on_failure: always

@@ -44,7 +44,6 @@
     "cookie": "^0.3.1",
     "dotenv": "^5.0.1",
     "element-ui": "^2.3.4",
-    "faker": "^4.1.0",
     "file-type": "^7.6.0",
     "font-awesome": "^4.7.0",
     "fs": "0.0.1-security",
@@ -99,6 +98,7 @@
     "eslint": "^4.15.0",
     "eslint-loader": "^1.7.1",
     "eslint-plugin-vue": "^4.0.0",
+    "faker": "^4.1.0",
     "lab": "^13.0.2",
     "nodemon": "^1.17.3"
   }

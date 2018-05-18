@@ -18,42 +18,6 @@ function injectAndExpectStatusCode(server, request, statusCode) {
 
 
 describe('Testing route: POST /cart/checkout', () => {
-    // it('should return 200 when checking out', (done) => {
-    //     let manifest = Hoek.clone(serverSetup.manifest);
-    //     manifest.registrations[0].plugin.options.customSessionIDGenerator = function(request) {
-    //         return 'abcde';
-    //     };
-    //
-    //     Server.init(manifest, serverSetup.composeOptions, (err, server) => {
-    //         expect(err).to.not.exist();
-    //
-    //         testHelpers.getInfo(server, ({crumb}) => {
-    //             // Add a new item to the cart
-    //             // Get the 'itemId' of that new item from the response
-    //             // Delete the item from the cart
-    //             const request = {
-    //                 method: 'POST',
-    //                 url: '/cart/checkout',
-    //                 payload: {
-    //                     nonce: 'fake-valid-nonce', // https://developers.braintreepayments.com/reference/general/testing/node
-    //                     billing: testHelpers.getFakeBillingAddress(),
-    //                     shipping: testHelpers.getFakeShippingAddress()
-    //                 },
-    //                 headers: {
-    //                     'x-csrf-token': crumb,
-    //                     cookie: 'crumb=' + crumb
-    //                 }
-    //             };
-    //
-    //             server.inject(request, (res) => {
-    //                 expect(res.statusCode, 'Status code').to.equal(200);
-    //                 // console.log("CHECKOUT RESPONSE", res.result.data);
-    //                 testHelpers.destroyKnexAndStopServer(server, done);
-    //             });
-    //         });
-    //     });
-    // });
-
     it('should return 400 (Bad Request) when nonce is not sent in the payload', (done) => {
         let manifest = Hoek.clone(serverSetup.manifest);
         // manifest.registrations[0].plugin.options.customSessionIDGenerator = function(request) {
