@@ -18,6 +18,7 @@
     "knex:seed": "node --require dotenv/config ./node_modules/knex/bin/cli.js seed:run",
     "test:client": "npm run unit && npm run e2e",
     "test:server": "NODE_ENV=test lab -a code -v --leaks test/server",
+    "test:e2e": "node test/client/e2e/runner.js",
     "generate": "nuxt generate",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
     "hash": "node ./hash.js",
