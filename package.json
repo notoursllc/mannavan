@@ -13,7 +13,8 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development nodemon server/start.js --watch server",
     "build": "nuxt build",
-    "start": "cross-env NODE_ENV=production node server/index.js",
+    "start": "cross-env NODE_ENV=production node server/start.js",
+    "start-local": "cross-env NODE_ENV=production node --require dotenv/config server/start.js",
     "knex:migrate": "node ./node_modules/knex/bin/cli.js migrate:latest",
     "knex:seed": "node --require dotenv/config ./node_modules/knex/bin/cli.js seed:run",
     "test:client": "npm run unit && npm run e2e",
