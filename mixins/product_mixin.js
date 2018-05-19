@@ -64,7 +64,7 @@ export default {
             let paramString = queryString.stringify(params, {arrayFormat: 'bracket'});
 
             return this.$axios
-                .$get(`/api/v1/products?${paramString}`) // TODO: is there a XSS issue here?
+                .$get(`/products?${paramString}`) // TODO: is there a XSS issue here?
                 .then((response) => {
                     return response.data;
                 });
@@ -73,7 +73,7 @@ export default {
 
         getProductInfo() {
             return this.$axios
-                .$get('/api/v1/product/info')
+                .$get('/product/info')
                 .then((response) => {
                     return response.data;
                 });
@@ -82,7 +82,7 @@ export default {
 
         getProductBySeoUri(str) {
             return this.$axios
-                .$get('/api/v1/product/seo', {
+                .$get('/product/seo', {
                     params: {
                         id: str
                     }
@@ -105,7 +105,7 @@ export default {
             params.id = id;
 
             return this.$axios
-                .$get('/api/v1/product', {
+                .$get('/product', {
                     params
                 })
                 .then((response) => {
@@ -160,10 +160,10 @@ export default {
 
 
         upsert(product) {
-            let target = '/api/v1/product/create';
+            let target = '/product/create';
 
             if(product.id) {
-                target = '/api/v1/product/update'
+                target = '/product/update'
             }
 
             return this.$axios
@@ -330,7 +330,7 @@ export default {
 
         createProductSize(size) {
             return this.$axios
-                .$post(`/api/v1/product/size/create`, size)
+                .$post(`/product/size/create`, size)
                 .then((response) => {
                     return response.data;
                 });
@@ -339,7 +339,7 @@ export default {
 
         updateProductSize(size) {
             return this.$axios
-                .$post(`/api/v1/product/size/update`, size)
+                .$post(`/product/size/update`, size)
                 .then((response) => {
                     return response.data;
                 });
@@ -348,7 +348,7 @@ export default {
 
         deleteProductSize(sizeId) {
             return this.$axios
-                .$post(`/api/v1/product/size/delete`, { id: sizeId })
+                .$post(`/product/size/delete`, { id: sizeId })
                 .then((response) => {
                     return response.data;
                 });
@@ -362,7 +362,7 @@ export default {
         upsertProductPicture(formData) {
             return this.$axios
                 .$post(
-                    '/api/v1/product/pic/upsert',
+                    '/product/pic/upsert',
                     formData,
                     { headers: { 'Content-Type': 'multipart/form-data' } }
                 )
@@ -374,7 +374,7 @@ export default {
 
         deleteProductPicture(id) {
             return this.$axios
-                .$post(`/api/v1/product/pic/delete`, { id })
+                .$post(`/product/pic/delete`, { id })
                 .then((response) => {
                     return response.data;
                 });

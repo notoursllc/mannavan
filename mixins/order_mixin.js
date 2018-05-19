@@ -51,7 +51,7 @@ export default {
     methods: {
         getOrder(transaction_id, verbose) {
             return this.$axios
-                .$get('/api/v1/order', {
+                .$get('/order', {
                     params: {
                         transaction_id,
                         verbose

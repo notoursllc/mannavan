@@ -8,7 +8,7 @@ export default {
         getCartClientToken() {
             // NOTE: not using $get here because we need the response.headers object
             return this.$axios
-                .get('/api/v1/jwt')
+                .get('/jwt')
                 .then((response) => {
                     return response.headers.authorization;
                 });
@@ -16,7 +16,7 @@ export default {
 
         getBraintreeClientToken() {
             return this.$axios
-                .$get('/api/v1/cart/payment-token/get')
+                .$get('/cart/payment-token/get')
                 .then((response) => {
                     return response.data;
                 });
@@ -25,7 +25,7 @@ export default {
 
         getCart() {
             return this.$axios
-                .$get('/api/v1/cart/get')
+                .$get('/cart/get')
                 .then((response) => {
                     return response.data;
                 });
@@ -34,7 +34,7 @@ export default {
 
         addItem(params) {
             return this.$axios
-                .$post('/api/v1/cart/item/add', params)
+                .$post('/cart/item/add', params)
                 .then((response) => {
                     return response.data;
                 });
@@ -43,7 +43,7 @@ export default {
 
         updateItemQty(params) {
             return this.$axios
-                .$post('/api/v1/cart/item/qty', params)
+                .$post('/cart/item/qty', params)
                 .then((response) => {
                     return response.data;
                 });
@@ -52,7 +52,7 @@ export default {
 
         deleteItem(params) {
             return this.$axios
-                .$post('/api/v1/cart/item/remove', params)
+                .$post('/cart/item/remove', params)
                 .then((response) => {
                     return response.data;
                 });
@@ -61,7 +61,7 @@ export default {
 
         setShippingAddress(address) {
             return this.$axios
-                .$post('/api/v1/cart/shipping/setaddress', address)
+                .$post('/cart/shipping/setaddress', address)
                 .then((response) => {
                     return response.data;
                 });
@@ -70,7 +70,7 @@ export default {
 
         validateAddress(address) {
             return this.$axios
-                .$post('/api/v1/shipping/validateAddress', address)
+                .$post('/shipping/validateAddress', address)
                 .then((response) => {
                     return response.data;
                 });
@@ -79,7 +79,7 @@ export default {
 
         getShippingRates(params) {
             return this.$axios
-                .$post('/api/v1/shipping/rates', params)
+                .$post('/shipping/rates', params)
                 .then((response) => {
                     return response.data;
                 });
@@ -88,7 +88,7 @@ export default {
 
         setShippingRate(obj) {
             return this.$axios
-                .$post('/api/v1/cart/shipping/rate', {
+                .$post('/cart/shipping/rate', {
                     shipping_rate: obj
                 })
                 .then((response) => {
@@ -99,7 +99,7 @@ export default {
 
         checkout(params) {
             return this.$axios
-                .$post('/api/v1/cart/checkout', params)
+                .$post('/cart/checkout', params)
                 .then((response) => {
                     return response.data;
                 });

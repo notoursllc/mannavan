@@ -40,7 +40,7 @@ export default {
 
         logger(type, message) {
             if(message) {
-                return this.$axios.$post('/api/v1/logger', {
+                return this.$axios.$post('/logger', {
                     type: type || 'error',
                     message: message
                 });
