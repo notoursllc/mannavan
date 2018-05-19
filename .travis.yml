@@ -27,6 +27,10 @@ install:
   - nanobox evar add local NODE_ENV=production
   - nanobox evar add NODE_ENV=production
 
+  # API_HOST
+  - nanobox evar add local API_HOST=$API_HOST
+  - nanobox evar add API_HOST=$API_HOST
+
   # API_PREFIX
   - nanobox evar add local API_PREFIX=$API_PREFIX
   - nanobox evar add API_PREFIX=$API_PREFIX
