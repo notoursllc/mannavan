@@ -24,131 +24,131 @@ install:
 
   # adding local and production environment variables
   # NODE_ENV
-  - nanobox evar add local NODE_ENV=production
+  #- nanobox evar add local NODE_ENV=production
   - nanobox evar add NODE_ENV=production
 
   # API_HOST
-  - nanobox evar add local API_HOST=$API_HOST
+  #- nanobox evar add local API_HOST=$API_HOST
   - nanobox evar add API_HOST=gobreadvan.com
 
   # API_PORT
-  - nanobox evar add local API_PORT=$API_PORT
+  #- nanobox evar add local API_PORT=$API_PORT
   - nanobox evar add API_PORT=80
 
   # API_PREFIX
-  - nanobox evar add local API_PREFIX=$API_PREFIX
+  #- nanobox evar add local API_PREFIX=$API_PREFIX
   - nanobox evar add API_PREFIX=$API_PREFIX
 
   # DATA_DB_NAME
-  - nanobox evar add local DATA_DB_NAME=$DATA_DB_NAME
+  #- nanobox evar add local DATA_DB_NAME=$DATA_DB_NAME
   - nanobox evar add DATA_DB_NAME=$DATA_DB_NAME
 
   # AUTH0_CLIENT_ID
-  - nanobox evar add local AUTH0_CLIENT_ID=$AUTH0_CLIENT_ID
+  #- nanobox evar add local AUTH0_CLIENT_ID=$AUTH0_CLIENT_ID
   - nanobox evar add AUTH0_CLIENT_ID=$AUTH0_CLIENT_ID
 
   # AUTH0_CLIENT_SECRET
-  - nanobox evar add local AUTH0_CLIENT_SECRET=$AUTH0_CLIENT_SECRET
+  #- nanobox evar add local AUTH0_CLIENT_SECRET=$AUTH0_CLIENT_SECRET
   - nanobox evar add AUTH0_CLIENT_SECRET=$AUTH0_CLIENT_SECRET
 
   # AUTH0_DOMAIN
-  - nanobox evar add local AUTH0_DOMAIN=$AUTH0_DOMAIN
+  #- nanobox evar add local AUTH0_DOMAIN=$AUTH0_DOMAIN
   - nanobox evar add AUTH0_DOMAIN=$AUTH0_DOMAIN
 
   # BRAINTREE_ENVIRONMENT
-  - nanobox evar add local BRAINTREE_ENVIRONMENT=$BRAINTREE_ENVIRONMENT
+  #- nanobox evar add local BRAINTREE_ENVIRONMENT=$BRAINTREE_ENVIRONMENT
   - nanobox evar add BRAINTREE_ENVIRONMENT=$BRAINTREE_ENVIRONMENT
 
   # BRAINTREE_MERCHANT_ID
-  - nanobox evar add local BRAINTREE_MERCHANT_ID=$BRAINTREE_MERCHANT_ID
+  #- nanobox evar add local BRAINTREE_MERCHANT_ID=$BRAINTREE_MERCHANT_ID
   - nanobox evar add BRAINTREE_MERCHANT_ID=$BRAINTREE_MERCHANT_ID
 
   # BRAINTREE_PRIVATE_KEY
-  - nanobox evar add local BRAINTREE_PRIVATE_KEY=$BRAINTREE_PRIVATE_KEY
+  #- nanobox evar add local BRAINTREE_PRIVATE_KEY=$BRAINTREE_PRIVATE_KEY
   - nanobox evar add BRAINTREE_PRIVATE_KEY=$BRAINTREE_PRIVATE_KEY
 
   # BRAINTREE_PUBLIC_KEY
-  - nanobox evar add local BRAINTREE_PUBLIC_KEY=$BRAINTREE_PUBLIC_KEY
+  #- nanobox evar add local BRAINTREE_PUBLIC_KEY=$BRAINTREE_PUBLIC_KEY
   - nanobox evar add BRAINTREE_PUBLIC_KEY=$BRAINTREE_PUBLIC_KEY
 
   # BUG_SNAG_API_KEY
-  - nanobox evar add local BUG_SNAG_API_KEY=$BUG_SNAG_API_KEY
+  #- nanobox evar add local BUG_SNAG_API_KEY=$BUG_SNAG_API_KEY
   - nanobox evar add BUG_SNAG_API_KEY=$BUG_SNAG_API_KEY
 
   # CART_TOKEN_SECRET
-  - nanobox evar add local CART_TOKEN_SECRET=$CART_TOKEN_SECRET
+  #- nanobox evar add local CART_TOKEN_SECRET=$CART_TOKEN_SECRET
   - nanobox evar add CART_TOKEN_SECRET=$CART_TOKEN_SECRET
 
   # DIGITAL_OCEAN_SPACES_ACCESS_KEY
-  - nanobox evar add local DIGITAL_OCEAN_SPACES_ACCESS_KEY=$DIGITAL_OCEAN_SPACES_ACCESS_KEY
+  #- nanobox evar add local DIGITAL_OCEAN_SPACES_ACCESS_KEY=$DIGITAL_OCEAN_SPACES_ACCESS_KEY
   - nanobox evar add DIGITAL_OCEAN_SPACES_ACCESS_KEY=$DIGITAL_OCEAN_SPACES_ACCESS_KEY
 
   # DIGITAL_OCEAN_SPACES_SECRET
-  - nanobox evar add local DIGITAL_OCEAN_SPACES_SECRET=$DIGITAL_OCEAN_SPACES_SECRET
+  #- nanobox evar add local DIGITAL_OCEAN_SPACES_SECRET=$DIGITAL_OCEAN_SPACES_SECRET
   - nanobox evar add DIGITAL_OCEAN_SPACES_SECRET=$DIGITAL_OCEAN_SPACES_SECRET
 
   # DIGITAL_OCEAN_SPACES_ENDPOINT
-  - nanobox evar add local DIGITAL_OCEAN_SPACES_ENDPOINT=$DIGITAL_OCEAN_SPACES_ENDPOINT
+  #- nanobox evar add local DIGITAL_OCEAN_SPACES_ENDPOINT=$DIGITAL_OCEAN_SPACES_ENDPOINT
   - nanobox evar add DIGITAL_OCEAN_SPACES_ENDPOINT=$DIGITAL_OCEAN_SPACES_ENDPOINT
 
   # DIGITAL_OCEAN_SPACE_NAME
-  - nanobox evar add local DIGITAL_OCEAN_SPACE_NAME=$DIGITAL_OCEAN_SPACE_NAME
+  #- nanobox evar add local DIGITAL_OCEAN_SPACE_NAME=$DIGITAL_OCEAN_SPACE_NAME
   - nanobox evar add DIGITAL_OCEAN_SPACE_NAME=$DIGITAL_OCEAN_SPACE_NAME
 
   # EMAIL_ADMIN
-  - nanobox evar add local EMAIL_ADMIN=$EMAIL_ADMIN
+  #- nanobox evar add local EMAIL_ADMIN=$EMAIL_ADMIN
   - nanobox evar add EMAIL_ADMIN=$EMAIL_ADMIN
 
   # EMAIL_FROM_CART_SUCCESS
-  - nanobox evar add local EMAIL_FROM_CART_SUCCESS=$EMAIL_FROM_CART_SUCCESS
+  #- nanobox evar add local EMAIL_FROM_CART_SUCCESS=$EMAIL_FROM_CART_SUCCESS
   - nanobox evar add EMAIL_FROM_CART_SUCCESS=$EMAIL_FROM_CART_SUCCESS
 
   # EMAIL_FROM_CART_SUCCESS_NAME
-  - nanobox evar add local EMAIL_FROM_CART_SUCCESS_NAME=$EMAIL_FROM_CART_SUCCESS_NAME
+  #- nanobox evar add local EMAIL_FROM_CART_SUCCESS_NAME=$EMAIL_FROM_CART_SUCCESS_NAME
   - nanobox evar add EMAIL_FROM_CART_SUCCESS_NAME=$EMAIL_FROM_CART_SUCCESS_NAME
 
   # JWT_CLIENT_ID
-  - nanobox evar add local JWT_CLIENT_ID=$JWT_CLIENT_ID
+  #- nanobox evar add local JWT_CLIENT_ID=$JWT_CLIENT_ID
   - nanobox evar add JWT_CLIENT_ID=$JWT_CLIENT_ID
 
   # JWT_CLIENT_SECRET
-  - nanobox evar add local JWT_CLIENT_SECRET=$JWT_CLIENT_SECRET
+  #- nanobox evar add local JWT_CLIENT_SECRET=$JWT_CLIENT_SECRET
   - nanobox evar add JWT_CLIENT_SECRET=$JWT_CLIENT_SECRET
 
   # JWT_SERVER_SECRET
-  - nanobox evar add local JWT_SERVER_SECRET=$JWT_SERVER_SECRET
+  #- nanobox evar add local JWT_SERVER_SECRET=$JWT_SERVER_SECRET
   - nanobox evar add JWT_SERVER_SECRET=$JWT_SERVER_SECRET
 
   # MAILGUN_API_KEY
-  - nanobox evar add local MAILGUN_API_KEY=$MAILGUN_API_KEY
+  #- nanobox evar add local MAILGUN_API_KEY=$MAILGUN_API_KEY
   - nanobox evar add MAILGUN_API_KEY=$MAILGUN_API_KEY
 
   # MAILGUN_DOMAIN
-  - nanobox evar add local MAILGUN_DOMAIN=$MAILGUN_DOMAIN
+  #- nanobox evar add local MAILGUN_DOMAIN=$MAILGUN_DOMAIN
   - nanobox evar add MAILGUN_DOMAIN=$MAILGUN_DOMAIN
 
   # MAILGUN_DOMAIN_PROD
-  - nanobox evar add local MAILGUN_DOMAIN_PROD=$MAILGUN_DOMAIN_PROD
+  #- nanobox evar add local MAILGUN_DOMAIN_PROD=$MAILGUN_DOMAIN_PROD
   - nanobox evar add MAILGUN_DOMAIN_PROD=$MAILGUN_DOMAIN_PROD
 
   # SAUCE_USERNAME
-  - nanobox evar add local SAUCE_USERNAME=$SAUCE_USERNAME
+  #- nanobox evar add local SAUCE_USERNAME=$SAUCE_USERNAME
   - nanobox evar add SAUCE_USERNAME=$SAUCE_USERNAME
 
   # SAUCE_ACCESS_KEY
-  - nanobox evar add local SAUCE_ACCESS_KEY=$SAUCE_ACCESS_KEY
+  #- nanobox evar add local SAUCE_ACCESS_KEY=$SAUCE_ACCESS_KEY
   - nanobox evar add SAUCE_ACCESS_KEY=$SAUCE_ACCESS_KEY
 
   # SHIPENGINE_API_KEY_PROD
-  - nanobox evar add local SHIPENGINE_API_KEY_PROD=$SHIPENGINE_API_KEY_PROD
+  #- nanobox evar add local SHIPENGINE_API_KEY_PROD=$SHIPENGINE_API_KEY_PROD
   - nanobox evar add SHIPENGINE_API_KEY_PROD=$SHIPENGINE_API_KEY_PROD
 
   # SHIPENGINE_CARRIER_ID_FEDEX
-  - nanobox evar add local SHIPENGINE_CARRIER_ID_FEDEX=$SHIPENGINE_CARRIER_ID_FEDEX
+  #- nanobox evar add local SHIPENGINE_CARRIER_ID_FEDEX=$SHIPENGINE_CARRIER_ID_FEDEX
   - nanobox evar add SHIPENGINE_CARRIER_ID_FEDEX=$SHIPENGINE_CARRIER_ID_FEDEX
 
   # TAX_RATE_CALIFORNIA
-  - nanobox evar add local TAX_RATE_CALIFORNIA=$TAX_RATE_CALIFORNIA
+  #- nanobox evar add local TAX_RATE_CALIFORNIA=$TAX_RATE_CALIFORNIA
   - nanobox evar add TAX_RATE_CALIFORNIA=$TAX_RATE_CALIFORNIA
 
   # Needed for prod only
