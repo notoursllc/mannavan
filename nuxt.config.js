@@ -2,6 +2,20 @@ require('dotenv').config();  // TODO: not sure if this works here
 
 const pkg = require('./package');
 
+const axiosConfig = {
+    debug: process.env.API_DEBUG || false,
+    https: process.env.API_USE_HTTPS || true,
+    retry: { retries: 3 },
+    progress: true
+};
+
+// if(process.env.NODE_ENV !== 'production') {
+//     axiosConfig.baseURL = 'http://localhost:3000/api/vi';
+    // axiosConfig.browserBaseURL = '/api/vi';
+// }
+
+
+
 module.exports = {
     mode: 'universal',
 
@@ -69,13 +83,7 @@ module.exports = {
     ** Axios module configuration
     *  See https://github.com/nuxt-community/axios-module#options
     */
-    axios: {
-        baseURL: (process.env.NODE_ENV !== 'production') ? 'http://localhost:3000' : '',
-        debug: process.env.API_DEBUG || false,
-        https: process.env.API_USE_HTTPS || true,
-        retry: { retries: 3 },
-        progress: true
-    },
+    axios: axiosConfig,
 
     /**
      *  Build configuration
