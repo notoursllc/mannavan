@@ -27,6 +27,10 @@ install:
   - nanobox evar add local NODE_ENV=production
   - nanobox evar add NODE_ENV=production
 
+  # API_PREFIX
+  - nanobox evar add local API_PREFIX=$API_PREFIX
+  - nanobox evar add API_PREFIX=$API_PREFIX
+
   # DATA_DB_NAME
   - nanobox evar add local DATA_DB_NAME=$DATA_DB_NAME
   - nanobox evar add DATA_DB_NAME=$DATA_DB_NAME
