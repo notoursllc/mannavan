@@ -70,7 +70,11 @@ module.exports = {
     *  See https://github.com/nuxt-community/axios-module#options
     */
     axios: {
-        debug: false
+        browserBaseURL: process.env.API_URL || 'https://gobreadvan.com/',
+        debug: process.env.API_DEBUG || false,
+        https: process.env.API_USE_HTTPS || true,
+        retry: { retries: 3 },
+        progress: true
     },
 
     /**

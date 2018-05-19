@@ -107,9 +107,9 @@ exports.register = (server, options, next) => {
     //     )
     // );
 
-    exceptionHandlers.push(
-        new (RotateFile)(fileConfig)
-    )
+    // exceptionHandlers.push(
+    //     new (RotateFile)(fileConfig)
+    // )
 
 
     const logger = new (winston.Logger)({
