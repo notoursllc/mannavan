@@ -28,8 +28,8 @@ install:
   - nanobox evar add NODE_ENV=production
 
   # API_URL
-  - nanobox evar add local API_URL=https://www.gobreadvan.com/api/vi
-  - nanobox evar add API_URL=https://www.gobreadvan.com/api/vi
+  - nanobox evar add local API_URL=https://www.gobreadvan.com/api/v1
+  - nanobox evar add API_URL=https://www.gobreadvan.com/api/v1
 
   # API_HOST
 #   - nanobox evar add local API_HOST=gobreadvan.com
