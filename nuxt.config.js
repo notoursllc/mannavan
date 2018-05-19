@@ -13,6 +13,9 @@ const axiosConfig = {
 //     axiosConfig.baseURL = 'http://localhost:3000/api/vi';
     // axiosConfig.browserBaseURL = '/api/vi';
 // }
+if(process.env.NODE_ENV === 'test') {
+    axiosConfig.baseURL = 'http://localhost:3000/api/vi';
+}
 
 
 
