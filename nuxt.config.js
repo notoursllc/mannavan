@@ -105,7 +105,8 @@ module.exports = {
     *  See https://github.com/nuxt-community/axios-module#options
     */
     axios: {
-        baseURL: `http://${process.env.API_HOST}:${process.env.API_PORT}/api/v1`,
+        baseURL: process.env.API_URL,
+        // baseURL: `http://${process.env.API_HOST}:${process.env.API_PORT}/api/v1`,
         // browserBaseURL: '/api/v1',
         debug: process.env.API_DEBUG || false,
         https: process.env.API_USE_HTTPS || true,
