@@ -16,9 +16,14 @@ let internals = {};
  ************************************/
 
 internals.getClientJwt = (request, reply) => {
-    let uuid = uuidV4();
-    console.log("GET CLEINT JWT START")
+    console.log("GET CLEINT JWT START");
 
+    let uuid = uuidV4();
+
+    reply("GET CLEINT JWT START EARLY REPLY");
+    return;
+
+    /*
     helperService
         .cryptPassword(process.env.CART_TOKEN_SECRET + uuid)
         .then((cartToken) => {
@@ -46,6 +51,7 @@ internals.getClientJwt = (request, reply) => {
             global.logger.error(err);
             reply(Boom.unauthorized(err));
         });
+        */
 };
 
 
