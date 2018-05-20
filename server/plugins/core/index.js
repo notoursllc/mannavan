@@ -17,6 +17,7 @@ let internals = {};
 
 internals.getClientJwt = (request, reply) => {
     let uuid = uuidV4();
+    console.log("GET CLEINT JWT START")
 
     helperService
         .cryptPassword(process.env.CART_TOKEN_SECRET + uuid)

@@ -47,6 +47,20 @@ export const actions = {
                     });
             }
             else {
+                console.log("GETTING JWT", app.$axios.defaults);
+
+                app.$axios
+                    .get('/jwt')
+                    .then((response) => {
+                        app.store.dispatch('shoppingcart/CART_TOKEN_SET', response.headers.authorization);
+                        return resolve();
+                    })
+                    .catch(error => {
+                        console.log("ERROR GETTING CART TOKEN", error);
+                        return resolve();
+                    });
+
+                /*
                 shopping_cart_mixin.methods.getCartClientToken.call(app).then((token) => {
                     app.store.dispatch('shoppingcart/CART_TOKEN_SET', token);
                     // Note: using Cookie.serialize here wont work.  It doesn't actually
@@ -60,6 +74,7 @@ export const actions = {
                     console.log("ERROR GETTING CART TOKEN", error);
                     return resolve();
                 });
+                */
             }
         });
     }
