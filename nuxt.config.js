@@ -13,8 +13,11 @@ const axiosConfig = {
 //     axiosConfig.baseURL = 'http://localhost:3000/api/vi';
     // axiosConfig.browserBaseURL = '/api/vi';
 // }
-if(process.env.ENVIRONMENT !== 'production') {
-    axiosConfig.baseURL = 'http://localhost:3000/api/v1';
+// if(process.env.ENVIRONMENT !== 'production') {
+//     axiosConfig.baseURL = 'http://localhost:3000/api/v1';
+// }
+if(process.env.ENVIRONMENT === 'production') {
+    axiosConfig.baseURL = 'http://www.gobreadvan.com/api/v1';
 }
 
 
