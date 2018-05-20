@@ -27,9 +27,6 @@ install:
   - nanobox evar add local NODE_ENV=test
   - nanobox evar add $NANOBOX_APP_NAME NODE_ENV=production
 
-  - nanobox evar add local ENVIRONMENT=test
-  - nanobox evar add $NANOBOX_APP_NAME ENVIRONMENT=test
-
   # DATA_DB_NAME
   - nanobox evar add local DATA_DB_NAME=$DATA_DB_NAME
   - nanobox evar add $NANOBOX_APP_NAME DATA_DB_NAME=$DATA_DB_NAME
@@ -164,7 +161,9 @@ script:
 after_success:
   # this works, but is build needed? YES
   - nanobox evar add local API_URL=https://www.gobreadvan.com/api/v1
-  - nanobox evar add local ENVIRONMENT=production
+  - nanobox evar add local COOKIE_DOMAIN=gobreadvan.com
+  - nanobox evar add $NANOBOX_APP_NAME COOKIE_DOMAIN=gobreadvan.com
+
   - nanobox run npm run build
   - nanobox deploy $NANOBOX_APP_NAME -m "Deploying from TravisCI"
 

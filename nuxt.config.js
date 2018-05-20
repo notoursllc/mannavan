@@ -2,30 +2,6 @@ require('dotenv').config();  // TODO: not sure if this works here
 
 const pkg = require('./package');
 
-// const axiosConfig = {
-//     browserBaseURL: '/api/v1',
-//     debug: process.env.API_DEBUG || false,
-//     https: process.env.API_USE_HTTPS || true,
-//     retry: { retries: 3 },
-//     progress: true
-// };
-
-// if(process.env.NODE_ENV !== 'production') {
-//     axiosConfig.baseURL = 'http://localhost:3000/api/vi';
-    // axiosConfig.browserBaseURL = '/api/vi';
-// }
-// if(process.env.ENVIRONMENT !== 'production') {
-//     axiosConfig.baseURL = 'http://localhost:3000/api/v1';
-// }
-console.log("=============== CONFIG ENV DATE================", new Date())
-console.log("=============== CONFIG ENV ================", process.env)
-
-// if(process.env.ENVIRONMENT === 'production') {
-//     axiosConfig.baseURL = 'http://www.gobreadvan.com/api/v1';
-// }
-
-
-
 module.exports = {
     mode: 'universal',
 
@@ -50,7 +26,7 @@ module.exports = {
         AUTH0_CLIENT_ID: process.env.AUTH0_CLIENT_ID,
         AUTH0_DOMAIN: process.env.AUTH0_DOMAIN,
         NODE_ENV: process.env.NODE_ENV,
-        ENVIRONMENT: process.env.ENVIRONMENT,
+        COOKIE_DOMAIN: process.env.COOKIE_DOMAIN,
     },
 
     /*
