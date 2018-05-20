@@ -49,9 +49,7 @@ module.exports = {
         BUG_SNAG_API_KEY: process.env.BUG_SNAG_API_KEY,
         AUTH0_CLIENT_ID: process.env.AUTH0_CLIENT_ID,
         AUTH0_DOMAIN: process.env.AUTH0_DOMAIN,
-        NODE_ENV: process.env.NODE_ENV,
-        API_HOST: process.env.API_HOST,
-        API_PORT: process.env.API_PORT
+        NODE_ENV: process.env.NODE_ENV
     },
 
     /*
@@ -106,8 +104,6 @@ module.exports = {
     */
     axios: {
         baseURL: process.env.API_URL || 'http://localhost:3000/api/v1',
-        // baseURL: `http://${process.env.API_HOST}:${process.env.API_PORT}/api/v1`,
-        // browserBaseURL: '/api/v1',
         debug: process.env.API_DEBUG || false,
         https: process.env.API_USE_HTTPS || true,
         retry: { retries: 3 },

@@ -30,18 +30,6 @@ install:
   - nanobox evar add local ENVIRONMENT=test
   - nanobox evar add $NANOBOX_APP_NAME ENVIRONMENT=production
 
-  # API_HOST
-  - nanobox evar add local API_HOST=$API_HOST
-  - nanobox evar add $NANOBOX_APP_NAME API_HOST=www.gobreadvan.com
-
-  # API_PORT
-  - nanobox evar add local API_PORT=$API_PORT
-  - nanobox evar add $NANOBOX_APP_NAME API_PORT=443
-
-  # API_URL
-#   - nanobox evar add local API_URL=$API_URL
-  - nanobox evar add $NANOBOX_APP_NAME API_URL=https://www.gobreadvan.com/api/v1
-
   # DATA_DB_NAME
   - nanobox evar add local DATA_DB_NAME=$DATA_DB_NAME
   - nanobox evar add $NANOBOX_APP_NAME DATA_DB_NAME=$DATA_DB_NAME
@@ -155,6 +143,7 @@ install:
   - nanobox evar add $NANOBOX_APP_NAME TAX_RATE_CALIFORNIA=$TAX_RATE_CALIFORNIA
 
   # Needed for prod only
+  - nanobox evar add $NANOBOX_APP_NAME API_URL=https://www.gobreadvan.com/api/v1
   - nanobox evar add $NANOBOX_APP_NAME SHIPENGINE_CARRIER_ID_STAMPSCOM=$SHIPENGINE_CARRIER_ID_STAMPSCOM
   - nanobox evar add $NANOBOX_APP_NAME SHIPPING_ADDRESS_FROM_ADDRESS1=$SHIPPING_ADDRESS_FROM_ADDRESS1
   - nanobox evar add $NANOBOX_APP_NAME SHIPPING_ADDRESS_FROM_CITY=$SHIPPING_ADDRESS_FROM_CITY
@@ -173,14 +162,8 @@ script:
   - nanobox run npm run test:e2e
 
 after_success:
-  #- nanobox evar add $NANOBOX_APP_NAME API_HOST=gobreadvan.com
-  #- nanobox evar add local API_HOST=gobreadvan.com
-  #- nanobox evar add $NANOBOX_APP_NAME API_PORT=80
-  #- nanobox evar add local API_PORT=80
-
   # this works, but is build needed? YES
   - nanobox evar add local API_URL=https://www.gobreadvan.com/api/v1
-  #- nanobox evar add $NANOBOX_APP_NAME API_URL=https://www.gobreadvan.com/api/v1
   - nanobox run npm run build
   - nanobox deploy $NANOBOX_APP_NAME -m "Deploying from TravisCI"
 
