@@ -90,7 +90,7 @@ module.exports = {
         baseURL: process.env.API_URL || 'http://localhost:3000/api/v1',
         debug: process.env.API_DEBUG || false,
         https: process.env.API_USE_HTTPS || true,
-        retry: { retries: 3 },
+        // retry: { retries: 3 },
         progress: true
     },
 
