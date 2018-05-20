@@ -2,13 +2,13 @@ require('dotenv').config();  // TODO: not sure if this works here
 
 const pkg = require('./package');
 
-const axiosConfig = {
-    browserBaseURL: '/api/v1',
-    debug: process.env.API_DEBUG || false,
-    https: process.env.API_USE_HTTPS || true,
-    retry: { retries: 3 },
-    progress: true
-};
+// const axiosConfig = {
+//     browserBaseURL: '/api/v1',
+//     debug: process.env.API_DEBUG || false,
+//     https: process.env.API_USE_HTTPS || true,
+//     retry: { retries: 3 },
+//     progress: true
+// };
 
 // if(process.env.NODE_ENV !== 'production') {
 //     axiosConfig.baseURL = 'http://localhost:3000/api/vi';
@@ -17,7 +17,9 @@ const axiosConfig = {
 // if(process.env.ENVIRONMENT !== 'production') {
 //     axiosConfig.baseURL = 'http://localhost:3000/api/v1';
 // }
+console.log("=============== CONFIG ENV DATE================", new Date())
 console.log("=============== CONFIG ENV ================", process.env)
+
 // if(process.env.ENVIRONMENT === 'production') {
 //     axiosConfig.baseURL = 'http://www.gobreadvan.com/api/v1';
 // }
@@ -40,6 +42,16 @@ module.exports = {
         link: [
             { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
         ]
+    },
+
+
+    env: {
+        BUG_SNAG_API_KEY: process.env.BUG_SNAG_API_KEY,
+        AUTH0_CLIENT_ID: process.env.AUTH0_CLIENT_ID,
+        AUTH0_DOMAIN: process.env.AUTH0_DOMAIN,
+        NODE_ENV: process.env.NODE_ENV,
+        API_HOST: process.env.API_HOST,
+        API_PORT: process.env.API_PORT
     },
 
     /*
@@ -70,7 +82,7 @@ module.exports = {
         '@/plugins/format8601',
         '@/plugins/prettyJson',
         '@/plugins/promise-finally',
-        '@/plugins/axios'
+        // '@/plugins/axios'
         // { src: '@/plugins/localStorage.js', ssr: false }  //https://www.npmjs.com/package/vuex-persistedstate
     ],
 
@@ -92,7 +104,14 @@ module.exports = {
     ** Axios module configuration
     *  See https://github.com/nuxt-community/axios-module#options
     */
-    axios: axiosConfig,
+    axios: {
+        baseURL: `http://${process.env.API_HOST}:${process.env.API_PORT}`,
+        browserBaseURL: '/api/v1',
+        debug: process.env.API_DEBUG || false,
+        https: process.env.API_USE_HTTPS || true,
+        retry: { retries: 3 },
+        progress: true
+    },
 
     /**
      *  Build configuration
@@ -116,18 +135,10 @@ module.exports = {
         }
     },
 
-    env: {
-        BUG_SNAG_API_KEY: process.env.BUG_SNAG_API_KEY,
-        AUTH0_CLIENT_ID: process.env.AUTH0_CLIENT_ID,
-        AUTH0_DOMAIN: process.env.AUTH0_DOMAIN,
-        NODE_ENV: process.env.NODE_ENV,
-        API_HOST: process.env.API_HOST,
-        API_PORT: process.env.API_PORT
-    },
 
     transition: {
         name: 'fade',
         mode: 'out-in'
-    },
+    }
 
 }
