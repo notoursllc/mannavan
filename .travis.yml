@@ -27,6 +27,9 @@ install:
   - nanobox evar add local NODE_ENV=test
   - nanobox evar add $NANOBOX_APP_NAME NODE_ENV=production
 
+  - nanobox evar add local ENVIRONMENT=test
+  - nanobox evar add $NANOBOX_APP_NAME ENVIRONMENT=production
+
   # API_HOST
   - nanobox evar add local API_HOST=$API_HOST
   - nanobox evar add $NANOBOX_APP_NAME API_HOST=gobreadvan.com
