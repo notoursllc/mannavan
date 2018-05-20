@@ -20,7 +20,7 @@ internals.getClientJwt = (request, reply) => {
 
     let uuid = uuidV4();
 
-    reply("GET CLEINT JWT START EARLY REPLY");
+    console.log("GET CLEINT JWT START EARLY REPLY");
 
     helperService
         .cryptPassword(process.env.CART_TOKEN_SECRET + uuid)
