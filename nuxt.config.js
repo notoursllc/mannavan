@@ -16,6 +16,7 @@ const axiosConfig = {
 // if(process.env.ENVIRONMENT !== 'production') {
 //     axiosConfig.baseURL = 'http://localhost:3000/api/v1';
 // }
+console.log("=============== CONFIG ENV ================", process.env)
 if(process.env.ENVIRONMENT === 'production') {
     axiosConfig.baseURL = 'http://www.gobreadvan.com/api/v1';
 }
