@@ -49,7 +49,8 @@ module.exports = {
         BUG_SNAG_API_KEY: process.env.BUG_SNAG_API_KEY,
         AUTH0_CLIENT_ID: process.env.AUTH0_CLIENT_ID,
         AUTH0_DOMAIN: process.env.AUTH0_DOMAIN,
-        NODE_ENV: process.env.NODE_ENV
+        NODE_ENV: process.env.NODE_ENV,
+        ENVIRONMENT: process.env.ENVIRONMENT,
     },
 
     /*
