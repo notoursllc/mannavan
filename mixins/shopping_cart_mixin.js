@@ -10,6 +10,7 @@ export default {
             return this.$axios
                 .get('/jwt')
                 .then((response) => {
+                    console.log("============ getCartClientToken RECEIVED", response.headers);
                     return response.headers.authorization;
                 });
         },
