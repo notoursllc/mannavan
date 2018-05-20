@@ -169,6 +169,8 @@ script:
   - nanobox run npm run test:e2e
 
 after_success:
+  - nanobox evar add $NANOBOX_APP_NAME API_HOST=gobreadvan.com
+  - nanobox evar add $NANOBOX_APP_NAME API_PORT=80
   - nanobox deploy $NANOBOX_APP_NAME -m "Deploying from TravisCI"
 
 notifications:
