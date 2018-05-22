@@ -45,6 +45,7 @@ internals.getClientJwt = (request, reply) => {
 
 internals.after = (server, next) => {
 
+    console.log("SERVER INFO", server.info)
     /*
      * Route authentication
      */
