@@ -170,23 +170,17 @@ function stripQuotes(text) {
  * @returns {Promise}
  */
 function cryptPassword(password) {
-    console.log("CRYPTPASSWORD START");
     return new Promise((resolve, reject) => {
-        console.log("CRYPTPASSWORD - BEFORE GENSALT");
         bcrypt.genSalt(10, (err, salt) => {
             if (err) {
-                console.log("CRYPTPASSWORD - GENSALT ERROR?", err);
                 return reject(err);
             }
 
             bcrypt.hash(password, salt, (err, hash) => {
-                console.log("CRYPTPASSWORD - HASH ERROR?", err);
                 if (err) {
-                    console.log("CRYPTPASSWORD - HASH ERROR", err);
                     return reject(err);
                 }
 
-                console.log("CRYPTPASSWORD - HASH SUCCESS", hash);
                 return resolve(hash);
             });
         });

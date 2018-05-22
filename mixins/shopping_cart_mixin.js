@@ -5,15 +5,6 @@ import isObject from 'lodash.isobject'
 
 export default {
     methods: {
-        getCartClientToken() {
-            // NOTE: not using $get here because we need the response.headers object
-            return this.$axios
-                .get('/jwt')
-                .then((response) => {
-                    return response.headers.authorization;
-                });
-        },
-
         getBraintreeClientToken() {
             return this.$axios
                 .$get('/cart/payment-token/get')

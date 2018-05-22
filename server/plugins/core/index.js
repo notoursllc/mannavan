@@ -16,11 +16,7 @@ let internals = {};
  ************************************/
 
 internals.getClientJwt = (request, reply) => {
-    console.log("GET CLEINT JWT START");
-
     let uuid = uuidV4();
-
-    console.log("GET CLEINT JWT START EARLY REPLY");
 
     helperService
         .cryptPassword(process.env.CART_TOKEN_SECRET + uuid)
@@ -37,11 +33,6 @@ internals.getClientJwt = (request, reply) => {
                 },
                 process.env.JWT_SERVER_SECRET
             );
-
-            //TODO: verify that this token is being returned/
-            // shopping-cart-mixin -> getCartClientToken is checking for 'authorization'
-            // in the reply header (lower case 'a')... is that the problem?
-            console.log("===== getClientJwt REPLYING", jsonWebToken);
 
             reply().header("Authorization", jsonWebToken);
         })
