@@ -63,8 +63,8 @@ module.exports = {
         '@/plugins/element-ui',
         '@/plugins/format8601',
         '@/plugins/prettyJson',
-        '@/plugins/promise-finally',
-        '@/plugins/axios'
+        '@/plugins/promise-finally'
+        // '@/plugins/axios'
         // { src: '@/plugins/localStorage.js', ssr: false }  //https://www.npmjs.com/package/vuex-persistedstate
     ],
 

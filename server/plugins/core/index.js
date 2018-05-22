@@ -15,37 +15,41 @@ let internals = {};
  * ROUTE HANDLERS
  ************************************/
 
-internals.getClientJwt = (request, reply) => {
-    let uuid = uuidV4();
 
-    helperService
-        .cryptPassword(process.env.CART_TOKEN_SECRET + uuid)
-        .then((cartToken) => {
-            if(!cartToken) {
-                throw new Error('Error creating cart token');
-            }
-
-            const jsonWebToken = jwt.sign(
-                {
-                    jti: uuid,
-                    clientId: process.env.JWT_CLIENT_ID, // is this needed?
-                    ct: cartToken
-                },
-                process.env.JWT_SERVER_SECRET
-            );
-
-            reply().header("Authorization", jsonWebToken);
-        })
-        .catch((err) => {
-            global.logger.error(err);
-            reply(Boom.unauthorized(err));
-        });
-};
 
 
 internals.after = (server, next) => {
 
-    console.log("SERVER INFO", server.info)
+    internals.getClientJwt = (request, reply) => {
+        let uuid = uuidV4();
+
+        global.logger.error("SERVER INFO", server.info)
+
+        helperService
+            .cryptPassword(process.env.CART_TOKEN_SECRET + uuid)
+            .then((cartToken) => {
+                if(!cartToken) {
+                    throw new Error('Error creating cart token');
+                }
+
+                const jsonWebToken = jwt.sign(
+                    {
+                        jti: uuid,
+                        clientId: process.env.JWT_CLIENT_ID, // is this needed?
+                        ct: cartToken
+                    },
+                    process.env.JWT_SERVER_SECRET
+                );
+
+                reply().header("Authorization", jsonWebToken);
+            })
+            .catch((err) => {
+                global.logger.error(err);
+                reply(Boom.unauthorized(err));
+            });
+    };
+
+
     /*
      * Route authentication
      */
