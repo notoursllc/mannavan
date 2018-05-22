@@ -23,8 +23,6 @@ internals.after = (server, next) => {
     internals.getClientJwt = (request, reply) => {
         let uuid = uuidV4();
 
-        global.logger.error("SERVER INFO", server.info)
-
         helperService
             .cryptPassword(process.env.CART_TOKEN_SECRET + uuid)
             .then((cartToken) => {
