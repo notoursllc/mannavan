@@ -26,7 +26,7 @@ module.exports = {
         AUTH0_CLIENT_ID: process.env.AUTH0_CLIENT_ID,
         AUTH0_DOMAIN: process.env.AUTH0_DOMAIN,
         NODE_ENV: process.env.NODE_ENV,
-        COOKIE_DOMAIN: process.env.COOKIE_DOMAIN,
+        // COOKIE_DOMAIN: process.env.COOKIE_DOMAIN,
         JWT_CLIENT_ID: process.env.JWT_CLIENT_ID,
         JWT_SERVER_SECRET: process.env.JWT_SERVER_SECRET,
         CART_TOKEN_SECRET: process.env.CART_TOKEN_SECRET,
