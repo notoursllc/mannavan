@@ -35,6 +35,9 @@ internals.implementation = function (server, options) {
         authenticate: function (request, reply) {
             const settings = Hoek.applyToDefaults(internals.defaultOptions, options);
 
+            // console.log("REQUEST STATE", request.state)
+            // console.log("REQUEST COOKIE", request.headers.cookie)
+
             if (!request.headers.cookie) {
                 return reply(Boom.unauthorized('Missing cookie', 'jwt-cookie'));
             }
