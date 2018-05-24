@@ -20,6 +20,7 @@ deploy.config:
   before_live:
     web.main:
       - npm run knex:migrate
+      - npm run build
 
 data.db:
   image: nanobox/postgresql:9.6
