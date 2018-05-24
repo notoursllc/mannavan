@@ -141,7 +141,6 @@ install:
 
   # Needed for prod only
   - nanobox evar add $NANOBOX_APP_NAME API_URL=https://www.gobreadvan.com/api/v1
-#   - nanobox evar add $NANOBOX_APP_NAME API_URL=https://gobreadvan.com/api/v1
   - nanobox evar add $NANOBOX_APP_NAME SHIPENGINE_CARRIER_ID_STAMPSCOM=$SHIPENGINE_CARRIER_ID_STAMPSCOM
   - nanobox evar add $NANOBOX_APP_NAME SHIPPING_ADDRESS_FROM_ADDRESS1=$SHIPPING_ADDRESS_FROM_ADDRESS1
   - nanobox evar add $NANOBOX_APP_NAME SHIPPING_ADDRESS_FROM_CITY=$SHIPPING_ADDRESS_FROM_CITY
@@ -162,11 +161,7 @@ script:
 after_success:
   # this works, but is build needed? YES
   - nanobox evar add local API_URL=https://www.gobreadvan.com/api/v1
-#   - nanobox evar add local API_URL=https://gobreadvan.com/api/v1
-#   - nanobox evar add local COOKIE_DOMAIN=gobreadvan.com
-#   - nanobox evar add $NANOBOX_APP_NAME COOKIE_DOMAIN=gobreadvan.com
-
-  - nanobox run npm run build
+  #- nanobox run npm run build
   - nanobox deploy $NANOBOX_APP_NAME -m "Deploying from TravisCI"
 
 notifications:
