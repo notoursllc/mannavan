@@ -157,10 +157,11 @@ script:
   - nanobox run npm run knex:seed
   - nanobox run npm run test:server
   - nanobox run npm run test:e2e
+  - nanobox evar add local API_URL=https://www.gobreadvan.com/api/v1
 
 after_success:
   # this works, but is build needed? YES
-  - nanobox evar add local API_URL=https://www.gobreadvan.com/api/v1
+  #- nanobox evar add local API_URL=https://www.gobreadvan.com/api/v1
   #- nanobox run npm run build
   - nanobox deploy $NANOBOX_APP_NAME -m "Deploying from TravisCI"
 
