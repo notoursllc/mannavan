@@ -162,7 +162,7 @@ after_success:
   # it seems we need to run another build so the nuxt files are built with
   # the updated environment variable values needed for production
   - nanobox evar add local API_URL=https://www.gobreadvan.com/api/v1
-  #- nanobox run npm run build
+  - nanobox run npm run build
   - nanobox deploy $NANOBOX_APP_NAME -m "Deploying from TravisCI"
 
 notifications:

@@ -9,7 +9,6 @@ run.config:
 
   extra_steps:
     - npm install
-    - npm run build
 
   cache_dirs:
     - node_modules
@@ -17,19 +16,21 @@ run.config:
   # Enable filesystem watcher
   fs_watch: true
 
+
+data.db:
+  image: nanobox/postgresql:9.6
+
+
 deploy.config:
   before_live:
     web.main:
       - npm run knex:migrate
 
-data.db:
-  image: nanobox/postgresql:9.6
 
 web.main:
   start:
     nginx: nginx -c /app/nanobox_config/nginx.conf
     node: npm start
-
   writable_dirs:
     - tmp
     - logs
