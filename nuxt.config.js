@@ -26,14 +26,9 @@ module.exports = {
         AUTH0_CLIENT_ID: process.env.AUTH0_CLIENT_ID,
         AUTH0_DOMAIN: process.env.AUTH0_DOMAIN,
         NODE_ENV: process.env.NODE_ENV,
-        // COOKIE_DOMAIN: process.env.COOKIE_DOMAIN,
         JWT_CLIENT_ID: process.env.JWT_CLIENT_ID,
         JWT_SERVER_SECRET: process.env.JWT_SERVER_SECRET,
-        CART_TOKEN_SECRET: process.env.CART_TOKEN_SECRET,
-
-        // TODO: for the axios plugin...enable the plugin to test!
-        API_HOST: process.env.API_HOST,
-        API_PORT: process.env.API_PORT
+        CART_TOKEN_SECRET: process.env.CART_TOKEN_SECRET
     },
 
     /*
@@ -64,7 +59,6 @@ module.exports = {
         '@/plugins/format8601',
         '@/plugins/prettyJson',
         '@/plugins/promise-finally'
-        // '@/plugins/axios'
         // { src: '@/plugins/localStorage.js', ssr: false }  //https://www.npmjs.com/package/vuex-persistedstate
     ],
 
@@ -90,7 +84,7 @@ module.exports = {
         baseURL: process.env.API_URL || 'http://localhost:3000/api/v1',
         debug: process.env.API_DEBUG || false,
         https: process.env.API_USE_HTTPS || true,
-        // retry: { retries: 3 },
+        retry: { retries: 3 },
         progress: true
     },
 
@@ -116,10 +110,8 @@ module.exports = {
         }
     },
 
-
     transition: {
         name: 'fade',
         mode: 'out-in'
     }
-
 }
