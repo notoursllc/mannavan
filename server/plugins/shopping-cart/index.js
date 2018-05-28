@@ -20,46 +20,6 @@ internals.after = function (server, next) {
     let shoppingCartEmailService = new ShoppingCartEmailService();
     let salesTaxService = new SalesTaxService();
 
-    /*
-    // using jwt to validate cart token
-    server.register(require('hapi-auth-jwt2'));
-
-    const validateJwt = (decoded, request, cb) => {
-        // for now no other validation is needed
-        cb(null, true);
-    }
-
-    // setting the 3rd argument to true means 'mode' is 'required'
-    // see: http://hapijs.com/tutorials/auth#mode
-    // server.auth.strategy('jwt', 'jwt', true, {
-    server.auth.strategy('xCartToken', 'jwt', {
-        key: process.env.JWT_SERVER_SECRET,
-        headerKey: 'x-cart-token',
-        // headerKey: false,
-        // urlKey: false,
-        // cookieKey: 'token',
-        validateFunc: validateJwt,
-        verifyOptions: {   // https://github.com/auth0/node-jsonwebtoken#jwtverifytoken-secretorpublickey-options-callback
-            // ignoreExpiration: true,    // do not reject expired tokens
-            algorithms: [ 'HS256' ]
-        }
-    });
-    */
-
-//    server.register(require('../auth-scheme-jwt-cookie'));
-
-//    server.auth.strategy('xCartToken', 'jwt-cookie', {
-//         secret: process.env.JWT_SERVER_SECRET,
-//         cookieKey: 'cart-jwt',
-//         verifyOptions: {   // https://github.com/auth0/node-jsonwebtoken#jwtverifytoken-secretorpublickey-options-callback
-//             ignoreExpiration: true,    // do not reject expired tokens
-//             algorithms: [ 'HS256' ]
-//         }
-//     });
-
-//     server.auth.default('xCartToken')
-
-
     /************************************
      * ROUTE HANDLERS
      ************************************/
