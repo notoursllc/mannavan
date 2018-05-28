@@ -539,12 +539,12 @@
 
         <div class="ptl tac">
             <div class="inlineBlock">
-                <el-button type="warning"
-                            class="colorBlack"
+                <el-button type="success"
                             size="large"
                             @click="submitPaymentForm"
                             :loading="placeOrderButtonLoading"
-                            :disabled="!paymentMethodButtonEnabled">
+                            :disabled="!paymentMethodButtonEnabled"
+                            round>
                     <span v-show="paymentMethod === 'PAYPAL'">{{ $t('Pay with PAYPAL') }}</span>
                     <span v-show="paymentMethod !== 'PAYPAL'">{{ $t('PLACE YOUR ORDER') }}</span>
                 </el-button>

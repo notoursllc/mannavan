@@ -269,10 +269,10 @@ export default {
                         </div>
 
                         <div class="ptl">
-                            <el-button type="warning"
+                            <el-button type="success"
                                     @click="addToCart"
-                                    class="colorBlack"
-                                    :loading="isLoading">{{ $t('ADD TO CART') }}</el-button>
+                                    :loading="isLoading"
+                                    round>{{ $t('ADD TO CART') }}</el-button>
                         </div>
                     </div>
                 </div>
@@ -338,6 +338,10 @@ export default {
         margin-right: 20px;
         cursor: pointer;
     }
+}
+
+.VueCarousel-wrapper {
+    box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.1)
 }
 
 @media #{$medium-and-up} {

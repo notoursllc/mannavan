@@ -1,6 +1,7 @@
 {
     "# items": "# items",
 
+    "About": "About",
     "About Billing and Shipping Addresses": "About Billing and Shipping Addresses",
     "accept_privacy_and_tos": "By placing your order, you agree to {siteName} {linkPrivacy} and {linkTos}.",
     "ADD TO CART": "ADD TO CART",
@@ -33,6 +34,7 @@
     "Company name": "Company name",
     "Conditions": "Conditions",
     "Conditions of Use": "Conditions of Use",
+    "Contact Us!": "Contact Us!",
     "CONTINUE": "CONTINUE",
     "CONTINUE TO PAYMENT": "CONTINUE TO PAYMENT",
     "CONTINUE TO SHIPPING METHOD": "CONTINUE TO SHIPPING METHOD",

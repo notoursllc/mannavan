@@ -40,7 +40,6 @@
     .pic-card-content {
         position: absolute;
         bottom: 0;
-        width: 100%;
         padding: 10px;
         background-color: rgba(0,0,0,0.5);
         color: #fff;

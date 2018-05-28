@@ -189,10 +189,9 @@
         <div class="ptl tac">
             <div class="inlineBlock">
                 <el-button type="warning"
-                            class="colorBlack"
-                            @click="submitShippingMethodForm"
-                            :disabled="!selectedRate"
-                            size="large">{{ $t('CONTINUE TO PAYMENT') }}</el-button>
+                    @click="submitShippingMethodForm"
+                    :disabled="!selectedRate"
+                    round>{{ $t('CONTINUE TO PAYMENT') }}</el-button>
             </div>
         </div>
     </div>

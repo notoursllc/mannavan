@@ -208,12 +208,12 @@
 
         <div class="ptl tac">
             <div class="inlineBlock">
-                <el-button type="warning"
-                            class="colorBlack"
+                <el-button type="success"
                             size="large"
                             @click="submitShippingForm"
                             :disabled="!shippingButtonEnabled"
-                            :loading="shippingFormIsLoading">{{ $t('CONTINUE TO SHIPPING METHOD') }}</el-button>
+                            :loading="shippingFormIsLoading"
+                            round>{{ $t('CONTINUE TO SHIPPING METHOD') }}</el-button>
 
                 <bottom-popover width="225px"
                                 v-show="!shippingButtonEnabled" >{{ $t('fill_out_form_warning') }}</bottom-popover>

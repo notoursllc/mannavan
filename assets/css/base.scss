@@ -7,6 +7,7 @@
 @import "components/mixins";
 @import "components/cartItem";
 @import "components/element-ui-overrides";
+@import "components/animations";
 
 // @import '~animate.css';
 // .animated {
@@ -39,7 +40,7 @@ body {
     padding: 0;
     margin: 0;
     font-size: 16px;
-    background-color: $bodyBgColor;
+    background-color: #fafafa;
 }
 
 

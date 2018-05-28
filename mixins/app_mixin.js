@@ -1,18 +1,20 @@
 'use strict';
 
+const domainName = 'goBreadVan.com';
+
 export default {
 
     methods: {
         getHelpEmailAddress() {
-            return 'help@gmnst.com';
+            return `help@${domainName}`;
         },
 
         getBrandName() {
-            return 'Gmnst';
+            return 'BreadVan';
         },
 
         getSiteName() {
-            return 'gmnst.com';
+            return domainName;
         },
 
         getSiteUrl(full) {
@@ -20,7 +22,7 @@ export default {
                 return full ? 'http://localhost:3000' : 'localhost:3000';
             }
             else {
-                return full ? 'https://www.gmnst.com' : 'www.gmnst.com';
+                return full ? `https://www.${domainName}` : `www.${domainName}`;
             }
         },
 

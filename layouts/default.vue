@@ -3,6 +3,7 @@ import Vue from 'vue'
 import { mapState, mapGetters } from 'vuex'
 import { Button } from 'element-ui'
 import product_mixin from '@/mixins/product_mixin'
+import app_mixin from '@/mixins/app_mixin'
 import AppFooter from '@/components/AppFooter'
 
 Vue.use(Button);
@@ -18,7 +19,8 @@ export default {
 
     data: function() {
         return {
-            year: new Date().getFullYear()
+            year: new Date().getFullYear(),
+            siteName: app_mixin.methods.getSiteName()
         }
     },
 
@@ -75,8 +77,8 @@ export default {
                 tag="a"
                 class="navbar-item"
                 active-class="active">
-                <div class="icon-container">
-                    <i class="notours icon-cart" :class="{'color-yellow': numCartItems}" />
+                <div class="icon-container" :class="{'bounce': numCartItems}">
+                    <i class="notours icon-cart" :class="{'cart-active': numCartItems}" />
                     <span class="badge" v-if="numCartItems">{{ numCartItems }}</span>
                 </div>
                 <div class="navbar-item-label">{{ $t('Checkout') }}</div>
@@ -97,20 +99,42 @@ export default {
         </main>
 
         <footer class="footer">
-            <div class="tac">
-                <nuxt-link tag="a"
-                    class="underline"
-                    :to="{name: 'returns'}">{{ $t('Returns / Exchanges') }}</nuxt-link>
+            <div class="content">
+                <div class="nav-container">
+                    <nav class="nav-item">
+                        <dl>
+                            <dt>Product</dt>
+                            <dd>
+                                <nuxt-link tag="a"
+                                    class="underline"
+                                    :to="{name: 'returns'}">{{ $t('Returns / Exchanges') }}</nuxt-link>
+                            </dd>
+                        </dl>
+                    </nav>
+
+                    <nav class="nav-item">
+                        <dl>
+                            <dt>Company</dt>
+                            <dd>
+                                <nuxt-link :to="{name: 'contact-us'}">{{ $t('Contact Us!') }}</nuxt-link>
+                            </dd>
+                            <dd>
+                                <nuxt-link :to="{name: 'privacy'}">{{ $t('Privacy') }}</nuxt-link>
+                            </dd>
+                            <dd>
+                                <nuxt-link :to="{name: 'conditions-of-use'}">{{ $t('Conditions of Use') }}</nuxt-link>
+                            </dd>
+                        </dl>
+                    </nav>
+                </div>
+
+                <div class="mtm tac">
+                    <img src="/images/logo_victory_breadvan.svg" style="width:200px" />
+                </div>
             </div>
 
-            <div class="mtm tac">
-                <img src="/images/logo_victory_breadvan.svg" style="width:200px" />
-            </div>
-
-            <div class="mtm tac">
-                &#169; {{ year }} gmnst.com, {{ $t('All Rights Reserved') }}.
-                <span class="underline"><nuxt-link :to="{name: 'privacy'}">{{ $t('Privacy') }}</nuxt-link></span> and
-                <span class="underline"><nuxt-link :to="{name: 'conditions-of-use'}">{{ $t('Conditions') }}</nuxt-link></span>
+            <div class="sub-footer tar">
+                &#169; {{ year }} {{ siteName }}, {{ $t('All Rights Reserved') }}.
             </div>
         </footer>
     </div>
@@ -134,8 +158,8 @@ $header-secondary-logo-width: 150px;
     flex-direction: column;
 }
 
-.color-yellow {
-    color: #f7c504 !important;
+.cart-active {
+    color: #7eef47 !important;
 }
 
 .layoutContainer {
@@ -153,8 +177,9 @@ $header-secondary-logo-width: 150px;
         // @include align-items(center);
         @include justify-content(center);
         // background-color: #313131;
-        background-color: #ebebeb;
-        color: #525252;
+        background-color: #fff;
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+        color: $colorOrange;
         height: $header-height;
         padding: 0 20px;
 
@@ -183,18 +208,57 @@ $header-secondary-logo-width: 150px;
     }
 
     footer {
-        background-color: #353535;
-        padding: 10px 20px;
+        background-color: #3d3d3d;
         color: #fff;
         font-size: 14px;
         margin-bottom: $bottom-bar-height;
 
+        .content {
+            color: #fff;
+            padding: 10px 20px;
+            max-width: 1230px;
+            margin: 30px auto;
+        }
+
         a {
             color: #fff;
+            text-decoration: none !important;
         }
 
         a:hover {
-            text-decoration: none;
+            text-decoration: underline !important;
+        }
+
+        .nav-container {
+            @include flex-direction(row);
+            @include justify-content(space-between);
+            @include align-items(flex-start);
+            @include flex-wrap(wrap);
+
+            .nav-item {
+                @include align-items(center);
+                @include justify-content(center);
+                @include flex-basis(auto);
+                @include flex-grow(1);
+                margin-bottom: 20px;
+            }
+        }
+
+
+        dt {
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        dd {
+            line-height: 25px;
+        }
+
+        .sub-footer {
+            background-color: rgba(0, 0, 0, 0.1);
+            color: #fff;
+            margin-top: 10px;
+            padding: 10px 40px;
         }
     }
 }
@@ -209,6 +273,9 @@ $header-secondary-logo-width: 150px;
     height: $bottom-bar-height;
     // background: rgba(204,5,5,0.8);
     background: #d5393f;
+    background: linear-gradient(60deg, #c30810 0%, #e66d17 100%) no-repeat scroll center center/cover;
+    // background: linear-gradient(60deg, #e0282f 0%, #e67417 100%) no-repeat scroll center center/cover;
+    // background: linear-gradient(60deg, #e67417 0%, #e0282f 100%) no-repeat scroll center center/cover;
 
     .navbar-header {
         display: none;
@@ -260,7 +327,7 @@ $header-secondary-logo-width: 150px;
             }
 
             .badge {
-                background-color: #0f8aca;
+                background-color: #3ca707;
                 border-radius: 10px;
                 box-shadow: 0 0 1px 1px rgba(255, 255, 12550, 0.5);
                 color: #fff;
@@ -299,6 +366,22 @@ $header-secondary-logo-width: 150px;
 
         footer {
             margin-bottom: 0;
+
+            .nav-container {
+                @include flexbox()
+            }
+
+            .nav-item {
+                @include flexbox()
+            }
+
+            dt {
+                margin-bottom: 15px;
+            }
+
+            dd {
+                line-height: 30px;
+            }
         }
 
         header {

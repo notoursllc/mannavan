@@ -34,7 +34,8 @@
 
         <el-button class="colorBlack"
                    size="large"
-                   v-popover:keepshoppingpopover>{{ $t('CONTINUE SHOPPING') }}</el-button>
+                   v-popover:keepshoppingpopover
+                   round>{{ $t('CONTINUE SHOPPING') }}</el-button>
     </div>
 </template>
 
