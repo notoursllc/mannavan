@@ -215,7 +215,7 @@ export default {
                                             :perPage="1"
                                             :loop="true"
                                             paginationColor="#cacac8"
-                                            paginationActiveColor="#ed198a">
+                                            paginationActiveColor="#e66d17">
                                     <slide v-for="(pic, key) in productPics" :key="key">
                                         <img :src="pic"
                                             :alt="product.title"
