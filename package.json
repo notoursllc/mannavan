@@ -30,7 +30,7 @@
     "accounting": "^0.4.1",
     "auth0-lock": "^11.7.0",
     "aws-sdk": "^2.247.1",
-    "bcrypt": "^1.0.3",
+    "bcrypt": "^2.0.1",
     "bluebird": "^3.5.1",
     "bookshelf": "^0.13.3",
     "bookshelf-modelbase": "^2.10.4",
