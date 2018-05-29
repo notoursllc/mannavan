@@ -65,10 +65,10 @@
 <template>
     <div class="pageContainerMax">
         <div class="tac ptl" v-if="this.shoppingCart.cart_items && this.shoppingCart.cart_items.length > 2">
-            <el-button type="warning"
-                        class="colorBlack"
+            <el-button type="success"
                         size="large"
-                        @click="goToCheckout">{{ $t('PROCEED TO CHECKOUT') }}</el-button>
+                        @click="goToCheckout"
+                        round>{{ $t('PROCEED TO CHECKOUT') }}</el-button>
         </div>
 
         <div class="pam">
