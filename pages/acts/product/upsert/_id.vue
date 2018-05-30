@@ -217,7 +217,7 @@ export default {
     <div class="pal">
         <div class="tar mbm">
             <el-button @click="goToStore(product.seo_uri)">
-                <i class="fa fa-window-restore"></i>&nbsp;&nbsp;VIEW PRODUCT IN STORE
+                <i class="notours icon-new-window"></i>&nbsp;&nbsp;VIEW PRODUCT IN STORE
             </el-button>
         </div>
 
@@ -317,7 +317,7 @@ export default {
                         <el-button
                             slot="append"
                             v-if="product.video_url"
-                            @click="playVideo(product.video_url)"><i class="fa fa-play"></i></el-button>
+                            @click="playVideo(product.video_url)"><i class="notours icon-play"></i></el-button>
                     </el-input>
                 </div>
 

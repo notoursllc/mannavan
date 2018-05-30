@@ -262,11 +262,11 @@ export default{
                         <td class="hide_medium_down">{{ pic.url }}</td>
                         <td class="tac">{{ pic.sort_order }}</td>
                         <td>
-                            <i v-if="pic.is_visible" class="fa fa-check-square colorGreen"></i>
+                            <i v-if="pic.is_visible" class="notours icon-check-square colorGreen"></i>
                         </td>
                         <td class="tac nowrap">
-                            <i class="fa fa-edit fs20 cursorPointer" @click="openPicEditModal(pic)"></i>
-                            <i class="fa fa-trash fs20 colorRed mlm cursorPointer" @click="deletePic(pic)"></i>
+                            <i class="notours icon-pencil fs20 cursorPointer" @click="openPicEditModal(pic)"></i>
+                            <i class="notours icon-trash fs20 colorRed mlm cursorPointer" @click="deletePic(pic)"></i>
                         </td>
                     </tr>
                 </tbody>
@@ -320,7 +320,7 @@ export default{
                     <img :src="picModal.tempImage" width="200" />
                     <div class="colorRed tal vat">
                         <span class="cursorPointer" @click="deleteTempImage()">
-                            <i class="fa fa-trash fs14 colorRed cursorPointer vam" ></i> remove
+                            <i class="notours icon-trash fs14 colorRed cursorPointer vam" ></i> remove
                         </span>
                     </div>
                 </div>

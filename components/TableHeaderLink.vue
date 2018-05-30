@@ -38,8 +38,8 @@
 <template>
     <span>
         <a @click="changeSort()"><slot></slot></a>
-        <i class="mls vam fa" 
-           v-bind:class="{ 'fa-angle-down': this.orderDir === 'DESC', 'fa-angle-up': this.orderDir === 'ASC' }" 
+        <i class="mls vam notours"
+           v-bind:class="{ 'icon-angle-down': this.orderDir === 'DESC', 'icon-angle-up': this.orderDir === 'ASC' }"
            v-show="this.attribute === this.sortData.orderBy"
            aria-hidden="true"></i>
     </span>

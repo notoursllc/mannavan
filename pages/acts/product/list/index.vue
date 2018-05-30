@@ -167,11 +167,11 @@ export default {
 
                         <div>
                             <el-button type="text" @click="openQuickView(product)" class="mrl">
-                                <i class="fa fa-eye fs20"></i>
+                                <i class="notours icon-eye fs20"></i>
                             </el-button>
 
                             <el-button type="text" @click="goToAdminProductUpsert(product.id)">
-                                <i class="fa fa-edit fs20"></i>
+                                <i class="notours icon-pencil fs20"></i>
                             </el-button>
                         </div>
                     </td>

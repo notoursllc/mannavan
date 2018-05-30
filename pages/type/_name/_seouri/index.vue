@@ -288,16 +288,16 @@ export default {
                                     inline-template>
                         <div>
                             <network network="facebook">
-                                <i class="fa fa-facebook" alt="Facebook"></i>
+                                <i class="notours icon-facebook" alt="Facebook"></i>
                             </network>
                             <network network="googleplus">
-                                <i class="fa fa-google-plus" alt="Google+"></i>
+                                <i class="notours icon-google" alt="Google+"></i>
                             </network>
                             <network network="pinterest">
-                                <i class="fa fa-pinterest" alt="Pinterest"></i>
+                                <i class="notours icon-pinterest" alt="Pinterest"></i>
                             </network>
                             <network network="twitter">
-                                <i class="fa fa-twitter" alt="Twitter"></i>
+                                <i class="notours icon-twitter" alt="Twitter"></i>
                             </network>
                         </div>
                     </social-sharing>
@@ -333,7 +333,7 @@ export default {
     margin-top: 40px;
     text-align: center;
 
-    .fa {
+    .notours {
         font-size: 25px;
         margin-right: 20px;
         cursor: pointer;

@@ -103,7 +103,7 @@ export default {
                     return monthClasses;
                 }
                 // find which set has the error classes and return those;
-                else if(monthClasses[1] === 'fa-times-circle') {
+                else if(monthClasses[1] === 'icon-times-circle') {
                     return monthClasses;
                 }
                 else {

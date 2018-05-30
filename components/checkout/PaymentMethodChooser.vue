@@ -19,11 +19,11 @@
 <template>
     <div class="payment-methods">
         <div class="item">
-            <div class="payment-type-button grow" 
+            <div class="payment-type-button grow"
                     :class="{'selected': paymentMethod === 'CREDIT_CARD'}"
                     @click="changeMethod('CREDIT_CARD')">
-                <i class="fa fa-credit-card payment-type"></i>
-                <i class="fa fa-check-circle"></i>
+                <i class="notours icon-credit-card payment-type"></i>
+                <i class="notours icon-check-circle"></i>
             </div>
             <div class="fs12 mts">{{ $t('CREDIT CARD') }}</div>
         </div>
@@ -32,8 +32,8 @@
             <div class="payment-type-button grow"
                     :class="{'selected': paymentMethod === 'PAYPAL'}"
                     @click="changeMethod('PAYPAL')">
-                <i class="fa fa-paypal payment-type"></i>
-                <i class="fa fa-check-circle"></i>
+                <i class="notours icon-paypal payment-type"></i>
+                <i class="notours icon-check-circle"></i>
             </div>
             <div class="fs12 mts">{{ $t('PAYPAL') }}</div>
         </div>
@@ -68,11 +68,11 @@
             min-width: 80px;
             position: relative;
 
-            .fa {
+            .notours {
                 position: relative;
             }
 
-            .fa-check-circle {
+            .icon-check-circle {
                 font-size: 20px;
                 visibility: hidden;
                 position: absolute;
@@ -88,13 +88,13 @@
             &:hover {
                 border-color: $colorGreen;
             }
-            
+
             &.selected {
                 // border-color: $colorGreen;
                 background-color: #effbee;
                 @include box-shadow(0px, 1px, 5px, rgba(110,167,107,1));
 
-                .fa-check-circle {
+                .icon-check-circle {
                     visibility: visible;
                     color: $colorGreen !important;
                 }

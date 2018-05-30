@@ -41,3 +41,40 @@
     width: 18px;
     height: 18px;
 }
+
+.el-notification__content {
+    text-align: inherit;
+    color: #6f7071;
+}
+
+.el-dialog {
+    position: relative;
+}
+.el-dialog:first-child:before {
+    content:'';
+    position:absolute;
+    width:100%;
+    height:4px;
+    background: #60b5ff; /* Old browsers */
+    background: -moz-linear-gradient(left, #60b5ff 0%, #1120c7 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(left, #60b5ff 0%,#1120c7 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to right, #60b5ff 0%,#1120c7 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    top:-2px;
+    left:0;
+}
+.el-dialog--small {
+    width: 80%;
+}
+
+.el-button {
+    @include grow()
+}
+.el-button:hover {
+    @include growHover()
+}
+
+@media #{$small-and-down} {
+    .el-notification {
+        right: auto;
+    }
+}

@@ -47,7 +47,6 @@
     "dotenv": "^5.0.1",
     "element-ui": "^2.4.0",
     "file-type": "^7.7.1",
-    "font-awesome": "^4.7.0",
     "fs": "0.0.1-security",
     "glue": "^4.2.1",
     "handlebars": "^4.0.11",

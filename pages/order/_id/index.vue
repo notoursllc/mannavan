@@ -58,7 +58,7 @@ export default {
 
         <div v-else>
             <div class="fs30 tac fwb">
-                <i class="fa fa-hand-peace-o vab mrs"></i>
+                <i class="notours icon-victory-peace vab mrs"></i>
                 {{ $t('Thanks.') }}
             </div>
 
@@ -67,7 +67,7 @@ export default {
                     <div class="colorGreen">
                         {{ $t('An email confirmation was sent to:' )}}
                         <div class="fwb">
-                            <i class="fa fa-envelope-o vab mrs" aria-hidden="true"></i>
+                            <i class="notours icon-envelope vab mrs" aria-hidden="true"></i>
                             {{ order.shoppingCart.shipping_email }}
                         </div>
                     </div>

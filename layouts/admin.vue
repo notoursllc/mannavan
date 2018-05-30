@@ -68,7 +68,6 @@ export default {
 
                     <el-submenu index="1">
                         <template slot="title">
-                            <i class="fa fa-cubes"></i>
                             <span>{{ $t('Products') }}</span>
                         </template>
 
@@ -82,7 +81,6 @@ export default {
                         :route="{ name: 'acts-reports' }"
                         index="/reports"
                         @click="menuItemClick">
-                        <i class="fa fa-bar-chart"></i>
                         <span>{{ $t('Reports') }}</span>
                     </el-menu-item>
                 </el-menu>
@@ -95,7 +93,7 @@ export default {
 
         <header role="banner" class="header" :class="{'sidenav-opened': $store.state.ui.sidebarOpened}">
             <div class="header-container">
-                <i class="fa fa-bars colorGrayLighter fs20 cursorPointer"
+                <i class="colorGrayLighter fs20 cursorPointer"
                     aria-hidden="true"
                     @click="$store.dispatch('ui/toggleSidebar')"></i>
 
@@ -270,7 +268,7 @@ $sidenav-width-admin: 160px;
     .el-menu {
         border: 0;
 
-        .fa {
+        .notours {
             vertical-align: middle;
             margin-right: 10px;
         }

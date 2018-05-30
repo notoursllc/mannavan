@@ -290,17 +290,17 @@ export default{
                         </td>
                         <td class="tar">{{ size.sort }}</td>
                         <td class="tar">
-                            <i v-if="size.is_visible" class="fa fa-check-square colorGreen"></i>
+                            <i v-if="size.is_visible" class="notours icon-check-square colorGreen"></i>
                         </td>
                         <td class="tar hide_medium_down">{{ size.cost }}</td>
                         <td class="tar hide_medium_down">{{ size.base_price }}</td>
                         <td class="tar hide_medium_down">{{ size.sale_price }}</td>
                         <td class="tar hide_medium_down">
-                            <i v-if="size.is_on_sale" class="fa fa-check-square colorGreen"></i>
+                            <i v-if="size.is_on_sale" class="notours icon-check-square colorGreen"></i>
                         </td>
                         <td class="tar hide_medium_down">{{ size.inventory_count }}</td>
                         <td class="tac">
-                            <i class="fa fa-trash fs20 colorRed mlm cursorPointer" @click="deleteSize(size)"></i>
+                            <i class="notours icon-trash fs20 colorRed mlm cursorPointer" @click="deleteSize(size)"></i>
                         </td>
                     </tr>
                 </tbody>

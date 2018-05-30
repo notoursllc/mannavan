@@ -267,8 +267,8 @@
                 hostedFieldsInstance.on('validityChange', (event) => {
                     let field = event.fields[event.emittedBy];
                     let id = getElementId(field);
-                    let classesSuccess = ['fa', 'fa-check-circle', 'colorGreen'];
-                    let classesError = ['fa', 'fa-times-circle', 'colorRed'];
+                    let classesSuccess = ['notours', 'icon-check-circle', 'colorGreen'];
+                    let classesError = ['notours', 'icon-times-circle', 'colorRed'];
 
                     // console.log("ON VALIDITY CHANGE", field, id, event.isValid)
 
@@ -441,14 +441,14 @@
                             <el-select v-model="paymentMethod" placeholder="Select" class="widthAll">
                                 <el-option :label="$t('CREDIT CARD')" value="CREDIT_CARD">
                                     <span class="floatLeft">{{ $t('CREDIT CARD') }}</span>
-                                    <span class="floatRight fs20"><i class="fa fa-credit-card payment-type vam"></i></span>
+                                    <span class="floatRight fs20"><i class="notours icon-credit-card payment-type vam"></i></span>
                                 </el-option>
                                 <el-option :label="$t('PAYPAL')" value="PAYPAL">
                                     <span class="floatLeft">{{ $t('PAYPAL') }}</span>
-                                    <span class="floatRight fs20"><i class="fa fa-paypal payment-type vam"></i></span>
+                                    <span class="floatRight fs20"><i class="notours icon-paypal payment-type vam"></i></span>
                                 </el-option>
                             </el-select>
-                            <i class="fa fa-check-circle colorGreen checkout_form_value_icon"></i>
+                            <i class="notours icon-check-circle colorGreen checkout_form_value_icon"></i>
                         </div>
                     </div>
                 </div>

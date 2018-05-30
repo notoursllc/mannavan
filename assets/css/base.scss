@@ -8,6 +8,7 @@
 @import "components/cartItem";
 @import "components/element-ui-overrides";
 @import "components/animations";
+@import "components/notours";
 
 // @import '~animate.css';
 // .animated {
@@ -21,7 +22,6 @@
 @import '~bulma/sass/base/generic';
 @import '~bulma/sass/base/minireset';
 @import '~bulma/sass/base/helpers'; //?
-@import '~bulma/sass/components/level';
 @import '~bulma/sass/elements/content';
 @import '~bulma/sass/elements/other';
 @import '~bulma/sass/elements/image';
@@ -30,9 +30,6 @@
 @import '~bulma/sass/layout/section';
 @import '~bulma/sass/utilities/mixins';
 
-
-$fa-font-path: '~font-awesome/fonts/';
-@import '~font-awesome/scss/font-awesome';
 
 html,
 body {
@@ -83,43 +80,6 @@ ul.disc {
 [v-cloak] {
     display: none
 }
-
-/** NotOurs icon font */
-@font-face {
-    font-family: 'notours';
-    src:
-      url('/fonts/notours.ttf?1mtj5c') format('truetype'),
-      url('/fonts/notours.woff?1mtj5c') format('woff'),
-      url('/fonts/notours.svg?1mtj5c#notours') format('svg');
-    font-weight: normal;
-    font-style: normal;
-}
-
-i.notours {
-    /* use !important to prevent issues with browser extensions that change fonts */
-    font-family: 'notours' !important;
-    speak: none;
-    font-style: normal;
-    font-weight: normal;
-    font-variant: normal;
-    text-transform: none;
-    line-height: 1;
-
-    /* Better Font Rendering =========== */
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
-
-.icon-cap:before {
-    content: "\e900";
-}
-.icon-cart:before {
-    content: "\e901";
-}
-.icon-tshirt:before {
-    content: "\e902";
-}
-/** end NotOurs icon font */
 
 
 .pageContainerMax {
@@ -253,7 +213,7 @@ i.notours {
         min-width: 200px;
     }
 
-    > i.fa,
+    > i.notours,
     .checkout_form_value_icon {
         position: absolute;
         top: -9px;
@@ -275,45 +235,6 @@ i.notours {
     //     display: table-cell;
     //     padding-bottom: 15px;
     // }
-}
-
-
-/* element.io overrides */
-.el-notification__content {
-    text-align: inherit;
-    color: #6f7071;
-}
-
-.el-dialog {
-    position: relative;
-}
-.el-dialog:first-child:before {
-    content:'';
-    position:absolute;
-    width:100%;
-    height:4px;
-    background: #ff60b2; /* Old browsers */
-    background: -moz-linear-gradient(left, #ff60b2 0%, #ce006a 100%); /* FF3.6-15 */
-    background: -webkit-linear-gradient(left, #ff60b2 0%,#ce006a 100%); /* Chrome10-25,Safari5.1-6 */
-    background: linear-gradient(to right, #ff60b2 0%,#ce006a 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-    top:-2px;
-    left:0;
-}
-.el-dialog--small {
-    width: 80%;
-}
-
-.el-button {
-    @include grow()
-}
-.el-button:hover {
-    @include growHover()
-}
-
-@media #{$small-and-down} {
-    .el-notification {
-        right: auto;
-    }
 }
 
 .grow {

@@ -44,9 +44,9 @@
         <div class="item"
              :class="{'active': currentStep === 0, 'completed': currentStep > 0}"
              @click="changeStep(0)">
-            <i class="fa fa-smile-o"></i>
+            <i class="notours icon-address"></i>
             <div class="item-desc">
-                <span v-show="currentStep === 0">1)</span><i v-show="currentStep > 0" class="fa fa-check-circle"></i> {{ $t('SHIPPING ADDRESS') }}
+                <span v-show="currentStep === 0">1)</span><i v-show="currentStep > 0" class="notours icon-check-circle"></i> {{ $t('SHIPPING ADDRESS') }}
             </div>
         </div>
 
@@ -57,9 +57,9 @@
         <div class="item"
              :class="{'active': currentStep === 1, 'completed': currentStep > 1}"
              @click="changeStep(1)">
-            <i class="fa fa-truck"></i>
+            <i class="notours icon-van"></i>
             <div class="item-desc">
-                <span v-show="currentStep <= 1">2)</span><i v-show="currentStep > 1" class="fa fa-check-circle"></i> {{ $t('SHIPPING METHOD') }}
+                <span v-show="currentStep <= 1">2)</span><i v-show="currentStep > 1" class="notours icon-check-circle"></i> {{ $t('SHIPPING METHOD') }}
             </div>
         </div>
 
@@ -70,9 +70,9 @@
         <div class="item"
              :class="{'active': currentStep === 2, 'completed': currentStep > 2}"
              @click="changeStep(2)">
-            <i class="fa fa-gift"></i>
+            <i class="notours icon-package"></i>
             <div class="item-desc">
-                <span v-show="currentStep <= 2">3)</span><i v-show="currentStep > 2" class="fa fa-check-circle"></i> {{ $t('PLACE YOUR ORDER') }}
+                <span v-show="currentStep <= 2">3)</span><i v-show="currentStep > 2" class="notours icon-check-circle"></i> {{ $t('PLACE YOUR ORDER') }}
             </div>
         </div>
     </div>
@@ -106,22 +106,24 @@
         }
 
         .item {
-            font-size: 18px;
-            padding: 2px;
-            @include border-radius(2px);
-            line-height: 18px;
+            // font-size: 20px;
+            font-size: 25px;
+            padding: 10px;
+            @include border-radius(5px);
+            // line-height: 18px;
             border: 1px solid transparent;
 
-            .fa {
+            .notours {
                 vertical-align: middle;
+                display: none;
             }
 
             .item-desc {
-                font-size: 10px;
+                font-size: 12px;
                 white-space: normal;
                 line-height: 12px;
 
-                .fa-check-circle {
+                .icon-check-circle {
                     margin-top: -2px;
                     font-size: 12px;
                 }
@@ -129,8 +131,9 @@
 
             &.active {
                 background-color: #effbee;
-                border: 1px solid #c8e2c7;
+                border: 3px solid #fff;
                 color: $colorGreen !important;
+                @include box-shadow(0, 10px, 30px, rgba(0, 0, 0, 0.1));
             }
 
             &.completed {
@@ -153,14 +156,17 @@
             .item {
                 font-size: 25px;
                 line-height: 25px;
-                padding: 3px;
+                padding: 4px;
+
+                .notours {
+                    display: block;
+                }
 
                 .item-desc {
-                    font-size: 12px;
                     white-space: nowrap;
                     line-height: 20px;
 
-                    .fa-check-circle {
+                    .icon-check-circle {
                         margin-top: -3px;
                         font-size: 14px;
                     }

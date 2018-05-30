@@ -211,7 +211,7 @@
                     <p v-if="!$v.form.email.required">{{ $t('Required') }}</p>
                     <p v-if="!$v.form.email.email">{{ $t('Please enter a valid email address.') }}</p>
                 </div>
-                <i v-show="canShowGreenCheck('email')" class="fa fa-check-circle"></i>
+                <i v-show="canShowGreenCheck('email')" class="notours icon-check-circle"></i>
             </div>
         </div>
 
@@ -223,7 +223,7 @@
                                 :init-value="countryCodeAlpha2"
                                 @change="newVal => countryCodeAlpha2 = newVal"></country-select>
                 <p role="alert" v-show="canShowValidationMsg('countryCodeAlpha2')">{{ $t('Required') }}</p>
-                <i v-show="canShowGreenCheck('countryCodeAlpha2')" class="fa fa-check-circle"></i>
+                <i v-show="canShowGreenCheck('countryCodeAlpha2')" class="notours icon-check-circle"></i>
             </div>
         </div>
 
@@ -234,7 +234,7 @@
                 <el-input v-model.trim="firstName"
                           :class="{ 'inputError': $v.form.firstName.$error }"></el-input>
                 <p role="alert" v-show="canShowValidationMsg('firstName')">{{ $t('Required') }}</p>
-                <i v-show="canShowGreenCheck('firstName')" class="fa fa-check-circle"></i>
+                <i v-show="canShowGreenCheck('firstName')" class="notours icon-check-circle"></i>
             </div>
         </div>
 
@@ -245,7 +245,7 @@
                 <el-input v-model.trim="lastName"
                           :class="{ 'inputError': $v.form.lastName.$error }"></el-input>
                 <p role="alert" v-show="canShowValidationMsg('lastName')">{{ $t('Required') }}</p>
-                <i v-show="canShowGreenCheck('lastName')" class="fa fa-check-circle"></i>
+                <i v-show="canShowGreenCheck('lastName')" class="notours icon-check-circle"></i>
             </div>
         </div>
 
@@ -256,7 +256,7 @@
                 <el-input v-model.trim="streetAddress"
                           :class="{ 'inputError': $v.form.streetAddress.$error }"></el-input>
                 <p role="alert" v-show="canShowValidationMsg('streetAddress')">{{ $t('Required') }}</p>
-                <i v-show="canShowGreenCheck('streetAddress')" class="fa fa-check-circle"></i>
+                <i v-show="canShowGreenCheck('streetAddress')" class="notours icon-check-circle"></i>
             </div>
         </div>
 
@@ -276,7 +276,7 @@
                 <el-input v-model.trim="city"
                           :class="{ 'inputError': $v.form.city.$error }"></el-input>
                 <p role="alert" v-show="canShowValidationMsg('city')">{{ $t('Required') }}</p>
-                <i v-show="canShowGreenCheck('city')" class="fa fa-check-circle"></i>
+                <i v-show="canShowGreenCheck('city')" class="notours icon-check-circle"></i>
             </div>
         </div>
 
@@ -293,7 +293,7 @@
                     :class="{ 'inputError': $v.form.state.$error }"></state-province-select>
                 <p role="alert" v-show="canShowValidationMsg('state')">{{ $t('Required') }}</p>
                 <p v-show="!stateSelectEnabled" class="colorGray fs12">{{ $t('Please select a Country first') }}</p>
-                <i v-show="canShowGreenCheck('state')" class="fa fa-check-circle"></i>
+                <i v-show="canShowGreenCheck('state')" class="notours icon-check-circle"></i>
             </div>
         </div>
 
@@ -304,7 +304,7 @@
                 <el-input v-model.trim="postalCode"
                         :class="{ 'inputError': $v.form.postalCode.$error }"></el-input>
                 <p role="alert" v-show="canShowValidationMsg('postalCode')">{{ $t('Required') }}</p>
-                <i v-show="canShowGreenCheck('postalCode')" class="fa fa-check-circle"></i>
+                <i v-show="canShowGreenCheck('postalCode')" class="notours icon-check-circle"></i>
             </div>
         </div>
 
@@ -314,7 +314,7 @@
             <div class="checkout_form_value">
                 <el-input v-model.trim="company"
                           :placeholder="'(' + $t('optional') + ')'"></el-input>
-                <i v-show="canShowGreenCheck('company')" class="fa fa-check-circle"></i>
+                <i v-show="canShowGreenCheck('company')" class="notours icon-check-circle"></i>
             </div>
         </div>
     </div>

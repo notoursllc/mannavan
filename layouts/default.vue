@@ -4,15 +4,10 @@ import { mapState, mapGetters } from 'vuex'
 import { Button } from 'element-ui'
 import product_mixin from '@/mixins/product_mixin'
 import app_mixin from '@/mixins/app_mixin'
-import AppFooter from '@/components/AppFooter'
 
 Vue.use(Button);
 
 export default {
-    components: {
-        AppFooter
-    },
-
     mixins: [
         product_mixin
     ],
@@ -57,7 +52,7 @@ export default {
                     :to="{ name: 'index' }"
                     tag="span"
                     class="cursorPointer">
-                    <img src="/images/logo_victory.svg" class="logo" />
+                    <i class="notours icon-victory logo" />
                 </nuxt-link>
             </div>
 
@@ -128,8 +123,9 @@ export default {
                     </nav>
                 </div>
 
-                <div class="mtm tac">
-                    <img src="/images/logo_victory_breadvan.svg" style="width:200px" />
+                <div class="tac">
+                    <!-- <img src="/images/logo_victory_breadvan.svg" style="width:200px" /> -->
+                    <i class="notours icon-logo" />
                 </div>
             </div>
 
@@ -217,7 +213,7 @@ $header-secondary-logo-width: 150px;
             color: #fff;
             padding: 10px 20px;
             max-width: 1230px;
-            margin: 30px auto;
+            margin: 15px auto 0 auto;
         }
 
         a {
@@ -244,6 +240,10 @@ $header-secondary-logo-width: 150px;
             }
         }
 
+        .icon-logo {
+            font-size: 150px;
+            color: rgba(255,255,255,0.8);
+        }
 
         dt {
             margin-bottom: 5px;
@@ -284,11 +284,12 @@ $header-secondary-logo-width: 150px;
         // padding: 10px;
         text-align: center;
         // background-color: rgba(255, 255, 255, 0.1);
-        margin: 25px 0 40px 0;
+        margin: 0 0 70px 0;
     }
 
     .logo {
-        height: 40px;
+        font-size: 85px;
+        color: #9e0403;
     }
 
     .navbar-item {
