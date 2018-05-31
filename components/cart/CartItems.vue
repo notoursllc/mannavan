@@ -3,7 +3,7 @@
     import Vue from 'vue'
     import { mapGetters } from 'vuex'
     import isObject from 'lodash.isobject'
-    import { Select, Option, InputNumber, Loading, Button } from 'element-ui'
+    import { Select, Option, InputNumber, Loading, Button, Popover } from 'element-ui'
     import ProductPrice from '@/components/product/ProductPrice'
     import NumberButtons from '@/components/NumberButtons'
     import product_mixin from '@/mixins/product_mixin'
@@ -13,6 +13,7 @@
     Vue.use(Option);
     Vue.use(InputNumber);
     Vue.use(Button);
+    Vue.use(Popover);
     Vue.use(Loading.directive)
 
     export default {
@@ -42,7 +43,8 @@
             return {
                 added_cart_item: {},
                 selectedQty: 0,
-                loading: true
+                loading: true,
+                deleteConfirmVisible: false
             }
         },
 
@@ -114,7 +116,22 @@
                                 class="itemTitle">{{ item.product.title }}</nuxt-link>
 
                             <div v-if="allowEdit" class="mts">
-                                <el-button type="text" @click="removeItem(item.id)">{{ $t('Delete') }}</el-button>
+                                <el-popover
+                                    placement="top"
+                                    width="200"
+                                    v-model="deleteConfirmVisible">
+                                    <div>{{ $t('Delete this item?') }}</div>
+                                    <div class="tar mtm">
+                                        <el-button size="mini"
+                                            type="text"
+                                            @click="deleteConfirmVisible = false">{{ $t('cancel') }}</el-button>
+
+                                        <el-button type="primary"
+                                            size="mini"
+                                            @click="deleteConfirmVisible = false; removeItem(item.id)">{{ $t('CONFIRM') }}</el-button>
+                                    </div>
+                                    <el-button slot="reference" type="text">{{ $t('Delete') }}</el-button>
+                                </el-popover>
                             </div>
                         </div>
 

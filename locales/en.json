@@ -18,6 +18,7 @@
 
     "BILLING ADDRESS": "BILLING ADDRESS",
 
+    "cancel": "cancel",
     "card_expiration_hint": "MM/YY",
     "card_expiration_year_hint": "YY",
     "card_expiration_month_hint": "MM",
@@ -34,6 +35,7 @@
     "Company name": "Company name",
     "Conditions": "Conditions",
     "Conditions of Use": "Conditions of Use",
+    "CONFIRM": "CONFIRM",
     "Contact Us!": "Contact Us!",
     "CONTINUE": "CONTINUE",
     "CONTINUE TO PAYMENT": "CONTINUE TO PAYMENT",
@@ -47,6 +49,7 @@
     "cvv_help_4_digit": "The 4 digit code is printed on the front of your card, above the credit card number, on either the right or left side.",
 
     "Delete": "Delete",
+    "Delete this item?": "Delete this item?",
     "digits_text": "digit | digits",
 
     "Email address": "Email address",
