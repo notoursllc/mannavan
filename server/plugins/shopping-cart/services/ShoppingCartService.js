@@ -45,6 +45,33 @@ module.exports = class ShoppingCartService extends BaseService {
     }
 
 
+    getDefaultWithRelated() {
+        const defaultWithRelated = [
+            {
+                cart_items: (query) => {
+                    // NOTE: the problem with sorting by 'updated at' is
+                    // when updating the qty of an item in the UI, the cart item
+                    // the user is updating will unexpectedly jump to the top of the list
+                    // because it is the last updated item
+                    query.orderBy('created_at', 'DESC');
+                }
+            },
+            {
+                'cart_items.product.pics': (query) => {    // https://stackoverflow.com/questions/35679855/always-fetch-from-related-models-in-bookshelf-js#35841710
+                    query.where('is_visible', '=', true);
+                    query.orderBy('sort_order', 'ASC');
+
+                    // Somehow this is resulting in no pics being returned sometimes.
+                    // Commenting out for now
+                    // query.limit(1);
+                }
+            }
+        ];
+
+        return defaultWithRelated;
+    }
+
+
     /**
      * Joi definitions for the ShoppingCart model
      *
@@ -74,7 +101,7 @@ module.exports = class ShoppingCartService extends BaseService {
     }
 
 
-    getCart(request) {
+    getCart(request, withRelatedArr) {
         let self = this;
 
         return self.getModel().query((qb) => {
@@ -84,26 +111,7 @@ module.exports = class ShoppingCartService extends BaseService {
         })
         .orderBy('created_at', 'DESC')
         .fetch({
-            withRelated: [
-                {
-                    cart_items: (query) => {
-                        // Sorting by updated_at (instead of created_at) will keep the most recently
-                        // updated cart item at the top of the list, which I think is the most
-                        // expected user experience
-                        query.orderBy('updated_at', 'DESC');
-                    }
-                },
-                {
-                    'cart_items.product.pics': (query) => {    // https://stackoverflow.com/questions/35679855/always-fetch-from-related-models-in-bookshelf-js#35841710
-                        query.where('is_visible', '=', true);
-                        query.orderBy('sort_order', 'ASC');
-
-                        // Somehow this is resulting in no pics being returned sometimes.
-                        // Commenting out for now
-                        // query.limit(1);
-                    }
-                }
-            ]
+            withRelated: Array.isArray(withRelatedArr) ? withRelatedArr : this.getDefaultWithRelated()
         })
     }
 
