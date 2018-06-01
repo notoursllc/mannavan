@@ -188,7 +188,7 @@
 
         <div class="ptl tac">
             <div class="inlineBlock">
-                <el-button type="warning"
+                <el-button type="success"
                     @click="submitShippingMethodForm"
                     :disabled="!selectedRate"
                     round>{{ $t('CONTINUE TO PAYMENT') }}</el-button>

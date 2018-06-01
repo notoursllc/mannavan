@@ -40,7 +40,7 @@ export default {
 
     head() {
         return {
-            title: this.$t('Thanks.'),
+            title: this.$t('We have a winner!'),
             meta: [
                 { vmid: 'description', name: 'description', content: `Thanks for your order from Gmnst` }
             ]
@@ -57,9 +57,9 @@ export default {
         </div>
 
         <div v-else>
-            <div class="fs30 tac fwb">
-                <i class="notours icon-victory-peace vab mrs"></i>
-                {{ $t('Thanks.') }}
+            <div class="tac">
+                <div style="margin-bottom:-20px;"><i class="notours icon-victory-peace"></i></div>
+                <div class="fs30 fwb">{{ $t('We have a winner!') }}</div>
             </div>
 
             <div v-loading="loading">
@@ -134,5 +134,9 @@ export default {
         background-color: $bgGrayZebra;
         width: 100%;
         text-align: center;
+    }
+
+    .icon-victory-peace {
+        font-size: 100px;
     }
 </style>

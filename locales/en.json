@@ -170,7 +170,6 @@
 
     "Tax": "Tax",
     "Thanks!": "Thanks!",
-    "Thanks.": "Thanks.",
     "The address you provided does not seem to be a valid mailing adddress.": "The address you provided does not seem to be a valid mailing adddress.",
     "There was an error setting up the payment client!": "There was an error setting up the payment client!",
     "There was an error tokenizing PayPal!": "There was an error tokenizing PayPal!",
@@ -182,6 +181,7 @@
     "Unable to initialize PayPal flow. Are your options correct?": "Unable to initialize PayPal flow. Are your options correct?",
     "USE A DIFFERENT BILLING ADDRESS": "USE A DIFFERENT BILLING ADDRESS",
 
+    "We have a winner!": "We have a winner!",
     "We want to make sure it fits!": "We want to make sure it fits!",
     "what's this?": "what's this?",
 
