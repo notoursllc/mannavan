@@ -44,10 +44,8 @@
         <div class="item"
              :class="{'active': currentStep === 0, 'completed': currentStep > 0}"
              @click="changeStep(0)">
-            <i class="notours icon-address"></i>
-            <div class="item-desc">
-                <span v-show="currentStep === 0">1)</span><i v-show="currentStep > 0" class="notours icon-check-circle"></i> {{ $t('SHIPPING ADDRESS') }}
-            </div>
+            <i class="notours" :class="{'icon-check-circle': currentStep > 0, 'icon-address': currentStep === 0}"></i>
+            <div class="item-desc">1) {{ $t('SHIPPING ADDRESS') }}</div>
         </div>
 
         <div class="spacer">
@@ -57,10 +55,8 @@
         <div class="item"
              :class="{'active': currentStep === 1, 'completed': currentStep > 1}"
              @click="changeStep(1)">
-            <i class="notours icon-van"></i>
-            <div class="item-desc">
-                <span v-show="currentStep <= 1">2)</span><i v-show="currentStep > 1" class="notours icon-check-circle"></i> {{ $t('SHIPPING METHOD') }}
-            </div>
+            <i class="notours" :class="{'icon-check-circle': currentStep > 1, 'icon-van': currentStep <= 1}"></i>
+            <div class="item-desc">2) {{ $t('SHIPPING METHOD') }}</div>
         </div>
 
         <div class="spacer">
@@ -70,10 +66,8 @@
         <div class="item"
              :class="{'active': currentStep === 2, 'completed': currentStep > 2}"
              @click="changeStep(2)">
-            <i class="notours icon-package"></i>
-            <div class="item-desc">
-                <span v-show="currentStep <= 2">3)</span><i v-show="currentStep > 2" class="notours icon-check-circle"></i> {{ $t('PLACE YOUR ORDER') }}
-            </div>
+            <i class="notours" :class="{'icon-check-circle': currentStep > 2, 'icon-package': currentStep <= 2}"></i>
+            <div class="item-desc">3) {{ $t('PLACE YOUR ORDER') }}</div>
         </div>
     </div>
 </template>
@@ -122,11 +116,6 @@
                 font-size: 12px;
                 white-space: normal;
                 line-height: 12px;
-
-                .icon-check-circle {
-                    margin-top: -2px;
-                    font-size: 12px;
-                }
             }
 
             &.active {
@@ -165,11 +154,6 @@
                 .item-desc {
                     white-space: nowrap;
                     line-height: 20px;
-
-                    .icon-check-circle {
-                        margin-top: -3px;
-                        font-size: 14px;
-                    }
                 }
             }
         }
