@@ -44,14 +44,16 @@
 
         methods: {
             updateShippingStateFromValidation: function(obj) {
-                let c = this.shoppingCart;
+                // Just updating the shipping attributes:
+                let updates = {};
+                updates.shipping_company = obj.company_name;
+                updates.shipping_streetAddress = obj.address_line1;
+                updates.shipping_city = obj.city_locality;
+                updates.shipping_state = obj.state_province;
+                updates.shipping_postalCode = obj.postal_code;
+                updates.shipping_countryCodeAlpha2 = obj.country_code;
 
-                c.shipping_company = obj.company_name
-                c.shipping_streetAddress = obj.address_line1
-                c.shipping_city = obj.city_locality
-                c.shipping_state = obj.state_province
-                c.shipping_postalCode = obj.postal_code
-                c.shipping_countryCodeAlpha2 = obj.country_code
+                this.$store.dispatch('shoppingcart/CART_SET', updates);
             },
 
             shippingFormDone: function() {
@@ -116,6 +118,7 @@
                 })
                 .then((result) => {
                     let validation = Array.isArray(result) ? result[0] : result;
+                    console.log("VALIDATION", validation);
 
                     // Add the validated values to the state
                     switch(validation.status) {
