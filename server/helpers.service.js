@@ -5,6 +5,22 @@ const forEach = require('lodash.foreach');
 const queryString = require('query-string');
 const bcrypt = require('bcrypt');
 
+const domainName = 'goBreadVan.com';
+
+function getSiteUrl(full) {
+    if(process.env.NODE_ENV === 'development') {
+        return full ? 'http://localhost:3000' : 'localhost:3000';
+    }
+    else {
+        return full ? `https://www.${domainName}` : `www.${domainName}`;
+    }
+}
+
+
+function getBrandName() {
+    return 'BreadVan';
+}
+
 
 function queryHelper(request) {
     let response = {
@@ -208,6 +224,7 @@ function comparePassword(password, userPassword) {
 }
 
 
+module.exports.getSiteUrl = getSiteUrl;
 module.exports.queryHelper = queryHelper;
 module.exports.fetchPage = fetchPage;
 module.exports.isDev = isDev;

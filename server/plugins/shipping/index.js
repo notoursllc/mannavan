@@ -1,63 +1,8 @@
 const Joi = require('joi');
-const Boom = require('boom');
-const ShippingService = require('./services/ShippingService');
-
-const shippingService = new ShippingService();
-let internals = {};
+const ShippingController = require('./shippingController');
 
 
 exports.register = (server, options, next) => {
-
-    /************************************
-     * ROUTE HANDLERS
-     ************************************/
-
-    internals.validateAddress = (request, reply) => {
-        shippingService
-            .validateAddress(request.payload)
-            .then((response) => {
-                //TODO - get value from response
-                reply.apiSuccess(response);
-            })
-            .catch((err) => {
-                global.logger.error(err);
-                global.bugsnag(err);
-                reply(Boom.badRequest(err));
-            });
-    };
-
-
-    internals.rates = (request, reply) => {
-        shippingService
-            .getShippingRates({
-                shipment: {
-                    ship_from: {
-                        name: process.env.SHIPPING_ADDRESS_FROM_NAME,
-                        address_line1: process.env.SHIPPING_ADDRESS_FROM_ADDRESS1,
-                        city_locality: process.env.SHIPPING_ADDRESS_FROM_CITY,
-                        state_province: process.env.SHIPPING_ADDRESS_FROM_STATE,
-                        postal_code: process.env.SHIPPING_ADDRESS_FROM_ZIP,
-                        country_code: process.env.SHIPPING_ADDRESS_FROM_COUNTRY_CODE,
-                        phone: process.env.SHIPPING_ADDRESS_FROM_PHONE
-                    },
-                    ...request.payload
-                },
-                rate_options: {
-                    carrier_ids: shippingService.getCarrierIdsForCountry(request.payload.ship_to.country_code)
-                }
-            })
-            .then((response) => {
-                shippingService.parseShippingRateResponse(response).then((filtered) => {
-                    reply.apiSuccess(filtered);
-                });
-            })
-            .catch((err) => {
-                global.logger.error(err);
-                global.bugsnag(err);
-                reply(Boom.badRequest(err));
-            });
-    };
-
 
     server.route([
         {
@@ -78,7 +23,7 @@ exports.register = (server, options, next) => {
                         country_code: Joi.string().max(3).regex(/^[A-z]+$/).required()
                     }
                 },
-                handler: internals.validateAddress 
+                handler: ShippingController.validateAddress
             }
         },
         {
@@ -110,7 +55,7 @@ exports.register = (server, options, next) => {
                         )
                     }
                 },
-                handler: internals.rates
+                handler: ShippingController.rates
             }
         }
     ]);

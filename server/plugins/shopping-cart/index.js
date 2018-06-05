@@ -1,313 +1,17 @@
 'use strict';
 
 const Joi = require('joi');
+const Hoek = require('hoek');
 const Boom = require('boom');
-const cloneDeep = require('lodash.clonedeep');
-const PaymentService = require('../payments/services/PaymentService');
-const ShoppingCartService = require('./services/ShoppingCartService');
-const ShoppingCartItemService = require('./services/ShoppingCartItemService');
-const ShoppingCartEmailService = require('./services/ShoppingCartEmailService');
-const SalesTaxService = require('./services/SalesTaxService');
+const braintree = require('braintree');
+const ShoppingCartController = require('./shoppingCartController');
+
 
 let internals = {};
 
 
 internals.after = function (server, next) {
-
-    let shoppingCartService = new ShoppingCartService(server);
-    let shoppingCartItemService = new ShoppingCartItemService(server);
-    let paymentService = new PaymentService(server);
-    let shoppingCartEmailService = new ShoppingCartEmailService();
-    let salesTaxService = new SalesTaxService();
-
-    /************************************
-     * ROUTE HANDLERS
-     ************************************/
-
-    internals.cartPaymentTokenGet = (request, reply) => {
-        paymentService
-            .getClientToken()
-            .then((token) => {
-                reply.apiSuccess(token);
-            })
-            .catch((err) => {
-                reply(Boom.badData(err));
-            });
-    };
-
-
-    internals.cartGet = (request, reply) => {
-        shoppingCartService.findOrCreateCart(request)
-            .then((ShoppingCart) => {
-                reply.apiSuccess(ShoppingCart.toJSON());
-            })
-            .catch((err) => {
-                reply(Boom.notFound(err));
-            });
-    };
-
-
-    internals.cartAddresses = (request, reply) => {
-        shoppingCartService.findOrCreateCart(request)
-            .then((ShoppingCart) => {
-                reply.apiSuccess(ShoppingCart.toJSON());
-            })
-            .catch((err) => {
-                reply(Boom.notFound(err));
-            });
-    };
-
-
-    internals.cartItemAdd = (request, reply) => {
-        shoppingCartItemService
-            .addItem(request)
-            .then(() => {
-                return shoppingCartService.getCart(request);
-            })
-            .then((ShoppingCart) => {
-                if(!ShoppingCart) {
-                    throw new Error("Error getting the shopping cart");
-                }
-                reply.apiSuccess(ShoppingCart.toJSON());
-            })
-            .catch((err) => {
-                reply(Boom.badData(err));
-            });
-    };
-
-
-    internals.cartItemRemove = (request, reply) => {
-        shoppingCartService
-            .getCart(request)
-            .then((ShoppingCart) => {
-                return shoppingCartItemService
-                    .getModel()
-                    .findById(request.payload.id)
-                    .then((ShoppingCartItem) => {
-                        if(!ShoppingCartItem) {
-                            return;
-                        }
-
-                        return ShoppingCartItem.destroy();
-                    });
-            })
-            .then(() => {
-                return shoppingCartService.getCart(request);
-            })
-            .then((ShoppingCart) => {
-                reply.apiSuccess(ShoppingCart.toJSON());
-            })
-            .catch((err) => {
-                reply(Boom.badData(err));
-            });
-    };
-
-
-    internals.cartItemQty = (request, reply) => {
-        // console.log("GET CART COOKIE TOKEN?", request.state['cart-jwt']);
-
-        shoppingCartService
-            .getCart(request)
-            .then((ShoppingCart) => {
-                return shoppingCartItemService.getModel().findById(request.payload.id);
-            })
-            .then((ShoppingCartItem) => {
-                if(!ShoppingCartItem) {
-                    throw new Error(`Unable to find a shopping cart item.`);
-                }
-
-                return ShoppingCartItem.save(
-                    { qty: parseInt((request.payload.qty || 1), 10) },
-                    { method: 'update', patch: true }
-                );
-            })
-            .then(() => {
-                return shoppingCartService.getCart(request)
-            })
-            .then((ShoppingCart) => {
-                reply.apiSuccess(ShoppingCart.toJSON());
-            })
-            .catch((err) => {
-                reply(Boom.badData(err));
-            });
-    };
-
-
-    internals.cartShippingSetAddress = (request, reply) => {
-        shoppingCartService
-            .getCart(request)
-            .then((ShoppingCart) => {
-                let salesTaxParams = cloneDeep(request.payload);
-                salesTaxParams.sub_total = ShoppingCart.sub_total
-
-                return salesTaxService
-                    .getSalesTaxAmount(salesTaxParams)
-                    .then((salesTax) => {
-                        // Save the shipping params and the sales tax value in the model
-                        let updateParams = request.payload;
-                        updateParams.sales_tax = salesTax;
-
-                        return ShoppingCart.save(
-                            updateParams,
-                            { method: 'update', patch: true }
-                        );
-                    });
-            })
-            .then((ShoppingCart) => {
-                reply.apiSuccess(ShoppingCart.toJSON());
-            })
-            .catch((err) => {
-                reply(Boom.badData(err));
-            });
-    };
-
-
-    internals.cartShippingRate = (request, reply) => {
-        shoppingCartService
-            .getCart(request)
-            .then((ShoppingCart) => {
-                return ShoppingCart.save(
-                    request.payload,
-                    { method: 'update', patch: true }
-                );
-            })
-            .then((ShoppingCart) => {
-                reply.apiSuccess(ShoppingCart.toJSON());
-            })
-            .catch((err) => {
-                reply(Boom.badData(err));
-            });
-    };
-
-
-    internals.cartCheckout = (request, reply) => {
-        let cartJson;
-        let cart;
-
-        shoppingCartService
-            .getCart(request)
-            .then((ShoppingCart) => {
-                cart = ShoppingCart;
-                cartJson = ShoppingCart.toJSON();
-
-                return paymentService.runPayment({
-                    paymentMethodNonce: request.payload.nonce,
-                    amount: ShoppingCart.get('grand_total'),
-                    customer: {
-                        // NOTE: Braintree requires that this email has a '.' in the domain name (i.e test@test.com)
-                        // which technically isn't correct. This fails validation: test@test
-                        email: cartJson.shipping_email
-                    },
-                    shipping: {
-                        company: cartJson.shipping_company,
-                        countryCodeAlpha2: cartJson.shipping_countryCodeAlpha2,
-                        extendedAddress: cartJson.shipping_extendedAddress || null,
-                        firstName: cartJson.shipping_firstName,
-                        lastName: cartJson.shipping_lastName,
-                        locality: cartJson.shipping_city,
-                        postalCode: cartJson.shipping_postalCode,
-                        region: cartJson.shipping_state,
-                        streetAddress: cartJson.shipping_streetAddress
-                    },
-                    billing: {
-                        company: request.payload.billing_company,
-                        countryCodeAlpha2: request.payload.billing_countryCodeAlpha2,
-                        extendedAddress: request.payload.billing_extendedAddress || null,
-                        firstName: request.payload.billing_firstName,
-                        lastName: request.payload.billing_lastName,
-                        locality: request.payload.billing_city,
-                        postalCode: request.payload.billing_postalCode,
-                        region: request.payload.billing_state,
-                        streetAddress: request.payload.billing_streetAddress
-                    },
-                    options: {
-                        submitForSettlement: true
-                    }
-                });
-            })
-            .then((transactionObj) => {
-                console.log('BRAINTREE TRANSACTION RESULT', transactionObj)
-
-                shoppingCartEmailService
-                    .sendPurchaseEmails(cart, transactionObj.transaction.id)
-                    .catch((err) => {
-                        let cartId = cart.get('id');
-                        let msg = `Unable to send email confirmation to user after successful purchase: (ShoppingCart ID: ${cartId}) ${err}`;
-                        global.logger.error(msg);
-                        global.bugsnag(msg);
-                    });
-
-                // If the Braintree transaction is successful then anything that happens after this
-                // (i.e saving the payment details to DB) needs to fail silently, as the user has
-                // already been changed and we can't give the impression of an overall transaction
-                // failure that may prompt them to re-do the purchase.
-
-                // Saving the payment transaction whether it was successful (transactionObj.success === true)
-                // or not (transactionObj.success === false)
-                // Any failures that happen while saving the payment info do not affect the
-                // braintree transaction and thus should fail silently.
-                paymentService
-                    .savePayment(cartJson.id, transactionObj)
-                    .catch((err) => {
-                        let msg = `ERROR SAVING PAYMENT INFO: ${err}`;
-                        // Catching the error here and not letting it fall through
-                        // to the catch block below because we do not want this
-                        // failure returning in the API response.  It will be logged only.
-                        global.logger.error(msg)
-                        global.bugsnag(msg);
-                    });
-
-
-                // Updating the cart with the billing params and the 'closed_at'
-                // timestamp if transaction was successful:
-                let updateParams = cloneDeep(request.payload);
-                delete updateParams.nonce;
-                if(transactionObj.success) {
-                    // This will cause the cart not to be re-used
-                    // (See ShoppingCart -> getCart())
-                    updateParams.closed_at = new Date()
-                }
-
-                cart.save(
-                    updateParams,
-                    { method: 'update', patch: true }
-                )
-                .catch((err) => {
-                    global.logger.error(err);
-                    global.bugsnag(err);
-                });
-
-
-                // Successful transactions return the transaction id
-                if(transactionObj.success) {
-                    reply.apiSuccess({
-                        transactionId: transactionObj.transaction.id
-                    });
-                }
-                else {
-                    throw new Error(transactionObj.message || 'An error occurred when saving the payment transaction data.')
-                }
-            })
-            .catch((err) => {
-                let msg = err instanceof Error ? err.message : err;
-                // NOTE: Boom errors are automatically logged by the onPreResponse handler
-                reply(Boom.badData(msg));
-            });
-    };
-
-
     server.route([
-        {
-            method: 'GET',
-            path: '/cart/payment-token/get',
-            config: {
-                description: 'Returns the Braintree client token',
-                auth: {
-                    strategies: ['xCartToken']
-                },
-                handler: internals.cartPaymentTokenGet
-            }
-        },
         {
             method: 'GET',
             path: '/cart/get',
@@ -316,23 +20,7 @@ internals.after = function (server, next) {
                 auth: {
                     strategies: ['xCartToken']
                 },
-                handler: internals.cartGet
-            }
-        },
-        {
-            method: 'POST',
-            path: '/cart/addresses',
-            config: {
-                description: 'Finds the cart for the given jwt user',
-                auth: {
-                    strategies: ['xCartToken']
-                },
-                validate: {
-                    payload: Joi.object({
-                        id: Joi.string().uuid().required()
-                    })
-                },
-                handler: internals.cartAddresses
+                handler: ShoppingCartController.cartGetHandler
             }
         },
         {
@@ -352,7 +40,7 @@ internals.after = function (server, next) {
                         }).required()
                     })
                 },
-                handler: internals.cartItemAdd
+                handler: ShoppingCartController.cartItemAddHandler
             }
         },
         {
@@ -368,7 +56,7 @@ internals.after = function (server, next) {
                         id: Joi.string().uuid().required()
                     }
                 },
-                handler: internals.cartItemRemove
+                handler: ShoppingCartController.cartItemRemoveHandler
             }
         },
         {
@@ -385,21 +73,21 @@ internals.after = function (server, next) {
                         qty: Joi.number().min(1).required()
                     })
                 },
-                handler: internals.cartItemQty
+                handler: ShoppingCartController.cartItemQtyHandler
             }
         },
         {
             method: 'POST',
-            path: '/cart/shipping/setaddress',
+            path: '/cart/shipping/address',
             config: {
                 description: 'Sets the shipping address for the cart and calculates the sales tax',
                 auth: {
                     strategies: ['xCartToken']
                 },
                 validate: {
-                    payload: Joi.reach(shoppingCartService.getShoppingCartModelSchema(), 'shipping')
+                    payload: Joi.reach(ShoppingCartController.getShoppingCartModelSchema(), 'shipping')
                 },
-                handler: internals.cartShippingSetAddress
+                handler: ShoppingCartController.cartShippingSetAddressHandler
             }
         },
         {
@@ -411,9 +99,9 @@ internals.after = function (server, next) {
                     strategies: ['xCartToken']
                 },
                 validate: {
-                    payload: Joi.reach(shoppingCartService.getShoppingCartModelSchema(), 'shipping_rate')
+                    payload: Joi.reach(ShoppingCartController.getShoppingCartModelSchema(), 'shipping_rate')
                 },
-                handler: internals.cartShippingRate
+                handler: ShoppingCartController.genericCartUpdateHandler
             }
         },
         {
@@ -425,15 +113,15 @@ internals.after = function (server, next) {
                     strategies: ['xCartToken']
                 },
                 validate: {
-                    // NOTE: shipping is not required here because the 'cart/shipping/setaddress' route
+                    // NOTE: shipping is not required here because the 'cart/shipping/address' route
                     // should have been called before this route, which persists the shipping info.
                     payload: Object.assign(
                         {},
                         { nonce: Joi.string().trim().required() },
-                        shoppingCartService.getBillingAttributesSchema()
+                        ShoppingCartController.getBillingAttributesSchema()
                     )
                 },
-                handler: internals.cartCheckout
+                handler: ShoppingCartController.cartCheckoutHandler
             }
         },
         {
@@ -445,11 +133,45 @@ internals.after = function (server, next) {
                     reply(Boom.notFound());
                 }
             }
-        }
+        },
+        {
+            method: 'GET',
+            path: '/order',
+            config: {
+                description: 'Basic order info',
+                validate: {
+                    query: {
+                        transaction_id: Joi.string().max(50),
+                        verbose: Joi.boolean().optional()
+                    }
+                },
+                handler: ShoppingCartController.getOrderHandler
+            }
+        },
+        {
+            method: 'GET',
+            path: '/orders',
+            config: {
+                description: 'Gets a list of orders',
+                handler: ShoppingCartController.getOrdersHandler
+            }
+        },
+        {
+            method: 'GET',
+            path: '/payment-token',
+            config: {
+                description: 'Returns the Braintree client token',
+                auth: {
+                    strategies: ['xCartToken']
+                },
+                handler: ShoppingCartController.getPaymentClientTokenHandler
+            }
+        },
     ]);
 
 
     // LOADING BOOKSHELF MODEL:
+    // let baseModel = bookshelf.Model.extend({});
     let baseModel = require('bookshelf-modelbase')(server.app.bookshelf);
 
     server.app.bookshelf.model(
@@ -462,13 +184,42 @@ internals.after = function (server, next) {
         require('./models/ShoppingCartItem')(baseModel, server.app.bookshelf, server)
     );
 
+    server.app.bookshelf.model(
+        'Payment',
+        require('./models/Payment')(baseModel, server.app.bookshelf, server)
+    );
+
     return next();
 };
 
 
 
 exports.register = (server, options, next) => {
-    server.dependency(['BookshelfOrm', 'Core', 'Products', 'Payments'], internals.after);
+    let schema = Joi.object().keys({
+        isSandbox: Joi.boolean(),
+        merchantId: Joi.string().alphanum(),
+        publicKey: Joi.string().alphanum(),
+        privateKey: Joi.string().alphanum()
+    });
+
+    const validateOptions = schema.validate(options);
+    if (validateOptions.error) {
+        return next(validateOptions.error);
+    }
+
+    ShoppingCartController.setServer(server);
+
+    const settings = Hoek.applyToDefaults({ isSandbox: true }, options);
+
+    global.braintreeGateway = braintree.connect({
+        environment: settings.isSandbox ? braintree.Environment.Sandbox : braintree.Environment.Production,
+        merchantId: settings.merchantId,
+        publicKey: settings.publicKey,
+        privateKey: settings.privateKey
+    });
+
+
+    server.dependency(['BookshelfOrm', 'Core', 'Products'], internals.after);
     return next();
 };
 

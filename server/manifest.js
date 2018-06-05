@@ -89,18 +89,7 @@ internals.manifest = {
         },
         {
             plugin: {
-                register: './plugins/shopping-cart'
-            },
-            options: {
-                select: ['api'],
-                routes: {
-                    prefix: '/api/v1'
-                }
-            }
-        },
-        {
-            plugin: {
-                register: './plugins/payments',
+                register: './plugins/shopping-cart',
                 options: {
                     isSandbox: process.env.BRAINTREE_ENVIRONMENT === 'Environment.SANDBOX',
                     merchantId: process.env.BRAINTREE_MERCHANT_ID,
