@@ -63,7 +63,8 @@ export default{
                         title: e.message,
                         duration: 0
                     })
-                )
+                );
+                bugsnagClient.notify(e);
             });
     }
 }

@@ -7,7 +7,7 @@ export default {
     methods: {
         getBraintreeClientToken() {
             return this.$axios
-                .$get('/cart/payment-token/get')
+                .$get('/payment-token')
                 .then((response) => {
                     return response.data;
                 });
@@ -52,7 +52,7 @@ export default {
 
         setShippingAddress(address) {
             return this.$axios
-                .$post('/cart/shipping/setaddress', address)
+                .$post('/cart/shipping/address', address)
                 .then((response) => {
                     return response.data;
                 });

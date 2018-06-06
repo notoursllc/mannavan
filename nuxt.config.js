@@ -73,7 +73,8 @@ module.exports = {
         '@/plugins/element-ui',
         '@/plugins/format8601',
         '@/plugins/prettyJson',
-        '@/plugins/promise-finally'
+        '@/plugins/promise-finally',
+        { src: '@/plugins/bugsnag', ssr: false }
     ],
 
     router: {

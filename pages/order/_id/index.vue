@@ -30,8 +30,9 @@ export default {
                 this.loading = false;
                 this.orderExists = true;
             })
-            .catch(() => {
+            .catch((e) => {
                 this.orderExists = false;
+                bugsnagClient.notify(e);
             })
             .finally(() => {
                 this.loading = false;

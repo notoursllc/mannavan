@@ -8,17 +8,16 @@ const bugsnag = require('bugsnag')
 exports.register = (server, options, next) => {
 
     // Bugsnag setup:
-    bugsnag.register(process.env.BUG_SNAG_API_KEY);
-    global.bugsnag = function() {
-        let args = arguments;
+    bugsnag.register(process.env.BUG_SNAG_API_KEY, {
+        releaseStage: 'production'
+    });
 
-        return new Promise((resolve, reject) => {
-            if(process.env.NODE_ENV === 'production') {
-                bugsnag.notify(args);
-            }
-            resolve();
-        });
-    };
+    global.bugsnag = function() {
+        const args = arguments;
+        if(process.env.NODE_ENV === 'production') {
+            bugsnag.notify(args);
+        }
+    }
 
     // Winston setup:
     winston.setLevels({

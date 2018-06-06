@@ -1,16 +1,15 @@
 const Promise = require('bluebird');
 const faker = require('faker');
 const CoreService = require('../../server/plugins/core/core.service');
-const ProductService = require('../../server/plugins/products/services/ProductService.js');
+const productsController = require('../../server/plugins/products/productsController');
 
-const productService = new ProductService();
-const productTypes = productService.getProductTypes();
-const productSubTypes = productService.getProductSubTypes();
+const productTypes = productsController.getProductTypes();
+const productSubTypes = productsController.getProductSubTypes();
 const fakeGenderOptions = buildSampleGenderOptions();
 
 
 function buildSampleGenderOptions() {
-    let types = productService.getGenderTypes();
+    let types = productsController.getGenderTypes();
     let opts = [];
 
     // adding one option for each gender

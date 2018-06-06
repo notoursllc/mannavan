@@ -3,8 +3,6 @@
 const Lab = require('lab');
 const Code = require('code');
 
-const ProductSizeService = require('../../../server/plugins/products/product-sizes.service');
-
 const lab = exports.lab = Lab.script();
 const describe = lab.describe;
 const it = lab.it;
