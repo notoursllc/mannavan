@@ -28,8 +28,9 @@ function getPaymentModel() {
 }
 
 
-async function setServer(server) {
-    server = server;
+function setServer(s) {
+    server = s;
+    productsController.setServer(s);
 }
 
 
@@ -182,19 +183,6 @@ async function findOrCreateCart(request) {
 }
 
 
-async function cartGetHandler(request, reply) {
-    try {
-        const ShoppingCart = await findOrCreateCart(request);
-        reply.apiSuccess(
-            ShoppingCart.toJSON()
-        );
-    }
-    catch(err) {
-        reply(Boom.notFound(err));
-    }
-}
-
-
 async function addCartItem(request) {
     try {
         const Product = await productsController.getProductByAttribute('id', request.payload.id);
@@ -203,7 +191,7 @@ async function addCartItem(request) {
 
         // Determine if we simply need to update the qty of an existing item
         // or add a new one
-        let ShoppingCartItem = await getShoppingCartModel().findByVariant(
+        let ShoppingCartItem = await getShoppingCartItemModel().findByVariant(
             ShoppingCart.get('id'),
             Product.get('id'),
             'size',
@@ -235,6 +223,19 @@ async function addCartItem(request) {
     catch(err) {
         global.logger.error(err);
         global.bugsnag(err);
+    }
+}
+
+
+async function cartGetHandler(request, reply) {
+    try {
+        const ShoppingCart = await findOrCreateCart(request);
+        reply.apiSuccess(
+            ShoppingCart.toJSON()
+        );
+    }
+    catch(err) {
+        reply(Boom.notFound(err));
     }
 }
 
@@ -313,7 +314,7 @@ async function cartShippingSetAddressHandler(request, reply) {
     try {
         let ShoppingCart = await getCart(request);
 
-        if(ShoppingCart) {
+        if(!ShoppingCart) {
             throw new Error('Unable to find shopping cart.')
         }
 
@@ -665,7 +666,6 @@ module.exports = {
     getShoppingCartModelSchema,
     getCartTokenFromJwt,
     getCart,
-    cartIsActive,
     findOrCreateCart,
 
     //payments

@@ -27,9 +27,9 @@ function getProductPicVariantModel() {
 }
 
 
-async function setServer(server) {
-    server = server;
-    productPicService = new ProductPicService(server);
+function setServer(s) {
+    server = s;
+    productPicService = new ProductPicService(s);
 }
 
 
@@ -233,7 +233,7 @@ function productInfoHandler(request, reply) {
 
 async function getProductsHandler(request, reply) {
     try {
-        const Products = await HelperService.fetchPage(
+        const Products = await helperService.fetchPage(
             request,
             getProductModel(),
             getWithRelated()
@@ -443,12 +443,14 @@ async function productPicDeleteHandler(request, reply) {
 
 
 module.exports = {
+    setServer,
     getProductTypes,
     getProductSubTypes,
     getGenderTypes,
     getSizeTypes,
     getSizeTypeSortOrder,
     featuredProductPic,
+    getProductByAttribute,
 
     // route handlers
     productShareHandler,

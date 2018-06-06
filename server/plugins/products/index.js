@@ -241,6 +241,8 @@ internals.after = function (server, next) {
 
 
 exports.register = (server, options, next) => {
+    productsController.setServer(server);
+
     server.dependency(['BookshelfOrm', 'Core'], internals.after);
     return next();
 };
