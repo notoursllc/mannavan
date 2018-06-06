@@ -41,11 +41,6 @@ internals.manifest = {
         {
             plugin: 'vision'
         },
-        // {
-        //     plugin: {
-        //         register: './plugins/crumbCsrf'
-        //     }
-        // },
         {
             plugin: {
                 register: './plugins/logger'
