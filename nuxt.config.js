@@ -1,4 +1,4 @@
-require('dotenv').config();  // TODO: not sure if this works here
+// require('dotenv').config();  // TODO: not sure if this works here
 
 const pkg = require('./package');
 

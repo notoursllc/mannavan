@@ -26,7 +26,7 @@
     "precommit": "npm run lint"
   },
   "dependencies": {
-    "@nuxtjs/axios": "^5.0.0",
+    "@nuxtjs/axios": "^5.1.1",
     "accounting": "^0.4.1",
     "auth0-lock": "^11.7.2",
     "aws-sdk": "^2.254.1",
@@ -45,7 +45,7 @@
     "code": "^5.2.0",
     "confidence": "^3.0.2",
     "cookie": "^0.3.1",
-    "dotenv": "^5.0.1",
+    "dotenv": "^6.0.0",
     "element-ui": "^2.4.1",
     "file-type": "^7.7.1",
     "fs": "0.0.1-security",
@@ -68,7 +68,7 @@
     "mailgun-js": "^0.18.0",
     "node-sass": "^4.9.0",
     "nodemailer": "^4.6.5",
-    "nuxt": "^1.0.0",
+    "nuxt": "^1.4.1",
     "path": "^0.12.7",
     "pg": "^7.4.3",
     "promise.prototype.finally": "^3.1.0",
