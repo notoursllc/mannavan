@@ -16,6 +16,11 @@ cache:
 #    username: $SAUCE_USERNAME
 #    access_key: $SAUCE_ACCESS_KEY
 
+# safelist of branches to build
+branches:
+  only:
+  - master
+
 install:
   - sudo bash -c "$(curl -fsSL https://s3.amazonaws.com/tools.nanobox.io/bootstrap/ci.sh)"
 
