@@ -1,5 +1,6 @@
 'use strict';
 
+const path = require('path');
 const Config = require('./config');
 
 const routePrefix = '/api/v1';
@@ -11,7 +12,10 @@ const webManifest = {
     },
     register: {
         plugins: [
-            { plugin: 'hapi-nuxt' },
+            {
+                plugin: 'hapi-nuxt',
+                options: path.resolve(__dirname, '../nuxt.config.js')
+            },
             { plugin: 'inert' },
             { plugin: 'vision' },
             { plugin: './plugins/logger' },
