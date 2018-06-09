@@ -7,15 +7,12 @@ const braintree = require('braintree');
 const ShoppingCartController = require('./shoppingCartController');
 
 
-let internals = {};
-
-
-internals.after = function (server, next) {
+const after = function (server) {
     server.route([
         {
             method: 'GET',
             path: '/cart/get',
-            config: {
+            options: {
                 description: 'Finds the cart for the given jwt user',
                 auth: {
                     strategies: ['xCartToken']
@@ -26,7 +23,7 @@ internals.after = function (server, next) {
         {
             method: 'POST',
             path: '/cart/item/add',
-            config: {
+            options: {
                 description: 'Adds a new item to the cart',
                 auth: {
                     strategies: ['xCartToken']
@@ -46,7 +43,7 @@ internals.after = function (server, next) {
         {
             method: 'POST',
             path: '/cart/item/remove',
-            config: {
+            options: {
                 description: 'Removes an item from the cart',
                 auth: {
                     strategies: ['xCartToken']
@@ -62,7 +59,7 @@ internals.after = function (server, next) {
         {
             method: 'POST',
             path: '/cart/item/qty',
-            config: {
+            options: {
                 description: 'Updates the quantity of a shopping cart item (ShoppingCartItem model)',
                 auth: {
                     strategies: ['xCartToken']
@@ -79,7 +76,7 @@ internals.after = function (server, next) {
         {
             method: 'POST',
             path: '/cart/shipping/address',
-            config: {
+            options: {
                 description: 'Sets the shipping address for the cart and calculates the sales tax',
                 auth: {
                     strategies: ['xCartToken']
@@ -93,7 +90,7 @@ internals.after = function (server, next) {
         {
             method: 'POST',
             path: '/cart/shipping/rate',
-            config: {
+            options: {
                 description: 'Sets the selected shipping rate for the cart',
                 auth: {
                     strategies: ['xCartToken']
@@ -107,7 +104,7 @@ internals.after = function (server, next) {
         {
             method: 'POST',
             path: '/cart/checkout',
-            config: {
+            options: {
                 description: 'Braintree nonce received by the client. Complete the transaction',
                 auth: {
                     strategies: ['xCartToken']
@@ -127,17 +124,17 @@ internals.after = function (server, next) {
         {
             method: 'GET',
             path: '/cart/{param*}',
-            config: {
+            options: {
                 description: 'Returns 404 response',
-                handler: (request, reply) => {
-                    reply(Boom.notFound());
+                handler: (request, h) => {
+                    return Boom.notFound();
                 }
             }
         },
         {
             method: 'GET',
             path: '/order',
-            config: {
+            options: {
                 description: 'Basic order info',
                 validate: {
                     query: {
@@ -151,7 +148,7 @@ internals.after = function (server, next) {
         {
             method: 'GET',
             path: '/orders',
-            config: {
+            options: {
                 description: 'Gets a list of orders',
                 handler: ShoppingCartController.getOrdersHandler
             }
@@ -159,7 +156,7 @@ internals.after = function (server, next) {
         {
             method: 'GET',
             path: '/payment-token',
-            config: {
+            options: {
                 description: 'Returns the Braintree client token',
                 auth: {
                     strategies: ['xCartToken']
@@ -188,39 +185,36 @@ internals.after = function (server, next) {
         'Payment',
         require('./models/Payment')(baseModel, server.app.bookshelf, server)
     );
-
-    return next();
 };
 
 
+exports.plugin = {
+    once: true,
+    pkg: require('./package.json'),
+    register: function (server, options) {
+        let schema = Joi.object().keys({
+            isSandbox: Joi.boolean(),
+            merchantId: Joi.string().alphanum(),
+            publicKey: Joi.string().alphanum(),
+            privateKey: Joi.string().alphanum()
+        });
 
-exports.register = (server, options, next) => {
-    let schema = Joi.object().keys({
-        isSandbox: Joi.boolean(),
-        merchantId: Joi.string().alphanum(),
-        publicKey: Joi.string().alphanum(),
-        privateKey: Joi.string().alphanum()
-    });
+        const validateOptions = schema.validate(options);
+        if (validateOptions.error) {
+            throw new Error(validateOptions.error);
+        }
 
-    const validateOptions = schema.validate(options);
-    if (validateOptions.error) {
-        return next(validateOptions.error);
+        ShoppingCartController.setServer(server);
+
+        const settings = Hoek.applyToDefaults({ isSandbox: true }, options);
+
+        global.braintreeGateway = braintree.connect({
+            environment: settings.isSandbox ? braintree.Environment.Sandbox : braintree.Environment.Production,
+            merchantId: settings.merchantId,
+            publicKey: settings.publicKey,
+            privateKey: settings.privateKey
+        });
+
+        server.dependency(['BookshelfOrm', 'Core', 'Products'], after);
     }
-
-    ShoppingCartController.setServer(server);
-
-    const settings = Hoek.applyToDefaults({ isSandbox: true }, options);
-
-    global.braintreeGateway = braintree.connect({
-        environment: settings.isSandbox ? braintree.Environment.Sandbox : braintree.Environment.Production,
-        merchantId: settings.merchantId,
-        publicKey: settings.publicKey,
-        privateKey: settings.privateKey
-    });
-
-
-    server.dependency(['BookshelfOrm', 'Core', 'Products'], internals.after);
-    return next();
 };
-
-exports.register.attributes = require('./package.json');

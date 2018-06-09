@@ -2,11 +2,9 @@ const Joi = require('joi');
 const path = require('path');
 const productsController = require('./productsController');
 
-let internals = {};
-let routePrefix = '/api/v1';
+const routePrefix = '/api/v1';
 
-
-internals.schema = {
+const schema = {
     title: Joi.string().max(100),
     description_short: Joi.string().max(500).allow(null),
     description_long: Joi.string().max(750).allow(null),
@@ -30,8 +28,7 @@ internals.schema = {
     updated_at: Joi.date().optional()
 };
 
-
-internals.productPicSchema = {
+const productPicSchema = {
     id: Joi.string().uuid(),
     sort_order: Joi.number().integer().min(0),
     is_visible: Joi.boolean(),
@@ -39,7 +36,7 @@ internals.productPicSchema = {
 };
 
 
-internals.after = function (server, next) {
+const after = function (server) {
 
     // Yes this was aleady set in the Core plugin, but apparently
     // it must be set in every plugin that needs a view engine:
@@ -59,7 +56,7 @@ internals.after = function (server, next) {
         {
             method: 'GET',
             path: `${routePrefix}/product`,
-            config: {
+            options: {
                 description: 'Finds a product by ID',
                 validate: {
                     query: {
@@ -73,7 +70,7 @@ internals.after = function (server, next) {
         {
             method: 'GET',
             path: '/product/share',  // NOTE: no routePrefix on this one
-            config: {
+            options: {
                 auth: false,
                 validate: {
                     query: {
@@ -86,7 +83,7 @@ internals.after = function (server, next) {
         {
             method: 'GET',
             path: `${routePrefix}/product/seo`,
-            config: {
+            options: {
                 description: 'Finds a product by it\'s seo uri',
                 validate: {
                     query: {
@@ -99,7 +96,7 @@ internals.after = function (server, next) {
         {
             method: 'GET',
             path: `${routePrefix}/product/info`,
-            config: {
+            options: {
                 description: 'Returns general info about products',
                 handler: productsController.productInfoHandler
             }
@@ -107,7 +104,7 @@ internals.after = function (server, next) {
         {
             method: 'GET',
             path: `${routePrefix}/products`,
-            config: {
+            options: {
                 description: 'Gets a list of products',
                 handler: productsController.getProductsHandler
             }
@@ -115,11 +112,11 @@ internals.after = function (server, next) {
         {
             method: 'POST',
             path: `${routePrefix}/product/create`,
-            config: {
+            options: {
                 description: 'Updates a product',
                 validate: {
                     payload: Joi.object({
-                        ...internals.schema
+                        ...schema
                     })
                 },
                 handler: productsController.productCreateHandler
@@ -128,12 +125,12 @@ internals.after = function (server, next) {
         {
             method: 'POST',
             path: `${routePrefix}/product/update`,
-            config: {
+            options: {
                 description: 'Updates a product',
                 validate: {
                     payload: Joi.object({
                         id: Joi.string().uuid().required(),
-                        ...internals.schema
+                        ...schema
                     })
                 },
                 handler: productsController.productUpdateHandler
@@ -144,7 +141,7 @@ internals.after = function (server, next) {
         {
             method: 'POST',
             path: `${routePrefix}/product/size/create`,
-            config: {
+            options: {
                 description: 'Adds a new size to the product',
                 handler: productsController.productSizeCreateHandler
             }
@@ -152,7 +149,7 @@ internals.after = function (server, next) {
         {
             method: 'POST',
             path: `${routePrefix}/product/size/update`,
-            config: {
+            options: {
                 description: 'Updates a product size',
                 handler: productsController.productSizeUpdateHandler
             }
@@ -160,7 +157,7 @@ internals.after = function (server, next) {
         {
             method: 'POST',
             path: `${routePrefix}/product/size/delete`,
-            config: {
+            options: {
                 description: 'Deletes a product size',
                 validate: {
                     payload: {
@@ -175,7 +172,7 @@ internals.after = function (server, next) {
         {
             method: 'POST',
             path: `${routePrefix}/product/pic/upsert`,
-            config: {
+            options: {
                 description: 'Adds a new picture to the product',
                 payload: {
                     output: 'stream',
@@ -186,7 +183,7 @@ internals.after = function (server, next) {
                 validate: {
                     payload: {
                         file: Joi.object(),
-                        ...internals.productPicSchema
+                        ...productPicSchema
                     }
                 },
                 handler: productsController.productPicUpsertHandler
@@ -195,7 +192,7 @@ internals.after = function (server, next) {
         {
             method: 'POST',
             path: `${routePrefix}/product/pic/delete`,
-            config: {
+            options: {
                 description: 'Deletes a product picture',
                 validate: {
                     payload: {
@@ -235,16 +232,15 @@ internals.after = function (server, next) {
         'ProductSize',
         require('./models/ProductSize')(baseModel, server.app.bookshelf, server)
     );
-
-    return next();
 };
 
 
-exports.register = (server, options, next) => {
-    productsController.setServer(server);
+exports.plugin = {
+    once: true,
+    pkg: require('./package.json'),
+    register: function (server, options) {
+        productsController.setServer(server);
 
-    server.dependency(['BookshelfOrm', 'Core'], internals.after);
-    return next();
+        server.dependency(['BookshelfOrm', 'Core'], after);
+    }
 };
-
-exports.register.attributes = require('./package.json');

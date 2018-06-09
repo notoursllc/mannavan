@@ -3,16 +3,13 @@ const Joi = require('joi');
 const isObject = require('lodash.isobject');
 const coreController = require('./coreController');
 
-let internals = {};
 
-
-internals.after = (server, next) => {
-
+const after = function(server) {
     let routes = [
         {
             method: 'GET',
             path: '/api/v1/jwt',
-            config: {
+            options: {
                 auth: false,
                 description: 'Returns the client token',
                 handler: coreController.getClientJwtHandler
@@ -21,7 +18,7 @@ internals.after = (server, next) => {
         {
             method: 'POST',
             path: '/api/v1/logger',
-            config: {
+            options: {
                 description: 'Logs stuff',
                 validate: {
                     payload: Joi.object({
@@ -37,7 +34,7 @@ internals.after = (server, next) => {
         // {
         //     method: 'GET',
         //     path: '/{path*}',
-        //     config: {
+        //     options: {
         //         auth: false
         //     },
         //     handler: function (request, reply) {
@@ -61,7 +58,7 @@ internals.after = (server, next) => {
             {
                 method: 'GET',
                 path: '/static/{filepath*}',
-                config: {
+                options: {
                     auth: false,
                     cache: {
                         expiresIn: 24 * 60 * 60 * 1000,
@@ -79,7 +76,7 @@ internals.after = (server, next) => {
             {
                 path: '/favicon.ico',
                 method: 'get',
-                config: {
+                options: {
                     auth: false,
                     cache: {
                         expiresIn: 1000*60*60*24*21
@@ -91,63 +88,60 @@ internals.after = (server, next) => {
     }
 
     server.route(routes);
-
-    return next();
 };
 
 
+exports.plugin = {
+    once: true,
+    pkg: require('./package.json'),
+    register: function (server, options) {
+        coreController.setServer(server);
 
-exports.register = function (server, options, next) {
-    coreController.setServer(server);
-
-    // Route authentication
-    server.register(require('../auth-scheme-jwt-cookie'));
-    server.auth.strategy('xCartToken', 'jwt-cookie', {
-         secret: process.env.JWT_SERVER_SECRET,
-         cookieKey: 'cart-jwt',
-         verifyOptions: {   // https://github.com/auth0/node-jsonwebtoken#jwtverifytoken-secretorpublickey-options-callback
-             ignoreExpiration: true,    // do not reject expired tokens
-             algorithms: [ 'HS256' ]
-         }
-     });
-    server.auth.default('xCartToken')
-
-
-    server.views({
-        engines: {
-            html: require('handlebars')
-        },
-        path: path.resolve(__dirname, '../../../dist')
-        // partialsPath: '../../views/partials',
-        // relativeTo: __dirname // process.cwd() // prefer this over __dirname when compiling to dist/cjs and using rollup
-    });
-
-
-    server.decorate('reply', 'apiSuccess', function (responseData, paginationObj) {
-        let response = {};
-        response.data = responseData;
-
-        if(isObject(paginationObj)) {
-            response.pagination = paginationObj;
-        }
-
-        return this.response(response);
-    });
-
-
-    // Handle Boom errors
-    server.ext('onPreResponse', function (request, reply) {
-        if (request.response.isBoom) {
-            if(process.env.NODE_ENV !== 'test') {
-                global.logger.error(request.response)
+        server.auth.strategy('xCartToken', 'jwt-cookie', {
+            secret: process.env.JWT_SERVER_SECRET,
+            cookieKey: 'cart-jwt',
+            verifyOptions: {   // https://github.com/auth0/node-jsonwebtoken#jwtverifytoken-secretorpublickey-options-callback
+                ignoreExpiration: true,    // do not reject expired tokens
+                algorithms: [ 'HS256' ]
             }
-        }
-        return reply.continue();
-    });
+        });
+        server.auth.default('xCartToken')
 
 
-    server.dependency(['vision'], internals.after);
-    return next();
+        server.views({
+            engines: {
+                html: require('handlebars')
+            },
+            path: path.resolve(__dirname, '../../../dist')
+            // partialsPath: '../../views/partials',
+            // relativeTo: __dirname // process.cwd() // prefer this over __dirname when compiling to dist/cjs and using rollup
+        });
+
+
+        server.decorate('toolkit', 'apiSuccess', function (responseData, paginationObj) {
+            let response = {};
+            response.data = responseData;
+
+            if(isObject(paginationObj)) {
+                response.pagination = paginationObj;
+            }
+
+            return this.response(response);
+        });
+
+        // Handle Boom errors
+        server.ext('onPreResponse', function (request, h) {
+            const response = request.response;
+            if (request.response.isBoom) {
+                if(process.env.NODE_ENV !== 'test') {
+                    global.logger.error(request.response)
+                }
+                return null;
+            }
+
+            return h.continue;
+        });
+
+        server.dependency(['vision'], after);
+    }
 };
-
-exports.register.attributes = require('./package.json');

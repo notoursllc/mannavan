@@ -154,7 +154,7 @@ async function getProductByAttribute(attrName, attrValue) {
 }
 
 
-async function productShareHandler(request, reply) {
+async function productShareHandler(request, h) {
     try {
         let uriParts = request.query.uri.split('/');
         let seoUri = uriParts[uriParts.length - 1];
@@ -165,7 +165,7 @@ async function productShareHandler(request, reply) {
         const urlImages = `${url}/images/`;
         const featuredPic = featuredProductPic(p);
 
-        return await reply.view('views/socialshare', {
+        return await h.view('views/socialshare', {
             title: p.title || `Welcome to ${helperService.getBrandName()}`,
             description: p.description_short || '',
             image: featuredPic ? `${urlImages}product/${featuredPic}` : `${urlImages}logo_header.png`,
@@ -175,12 +175,12 @@ async function productShareHandler(request, reply) {
     catch(err) {
         global.logger.error(err);
         global.bugsnag(err);
-        reply(Boom.badRequest(err));
+        return Boom.badRequest(err);
     }
 }
 
 
-async function getProductByIdHandler(request, reply) {
+async function getProductByIdHandler(request, h) {
     try {
         const Products = await getProductModel()
             .forge({ id: request.query.id })
@@ -188,17 +188,17 @@ async function getProductByIdHandler(request, reply) {
                 withRelated: getWithRelated(request.query)
             });
 
-        reply.apiSuccess(Products);
+        return h.apiSuccess(Products);
     }
     catch(err) {
         global.logger.error(err);
         global.bugsnag(err);
-        reply(Boom.badRequest(err));
+        return Boom.badRequest(err);
     }
 }
 
 
-async function productSeoHandler(request, reply) {
+async function productSeoHandler(request, h) {
     try {
         let withRelated = getWithRelated();
         withRelated.push('pics.pic_variants');
@@ -211,18 +211,18 @@ async function productSeoHandler(request, reply) {
                 withRelated
             });
 
-        reply.apiSuccess(Products);
+        return h.apiSuccess(Products);
     }
     catch(err) {
         global.logger.error(err);
         global.bugsnag(err);
-        reply(Boom.badRequest(err));
+        return Boom.badRequest(err);
     }
 }
 
 
-function productInfoHandler(request, reply) {
-    reply.apiSuccess({
+function productInfoHandler(request, h) {
+    return h.apiSuccess({
         types: getProductTypes(),
         subTypes: getProductSubTypes(),
         sizes: getSizeTypes(),
@@ -231,7 +231,7 @@ function productInfoHandler(request, reply) {
 }
 
 
-async function getProductsHandler(request, reply) {
+async function getProductsHandler(request, h) {
     try {
         const Products = await helperService.fetchPage(
             request,
@@ -239,7 +239,7 @@ async function getProductsHandler(request, reply) {
             getWithRelated()
         );
 
-        reply.apiSuccess(
+        return h.apiSuccess(
             Products,
             Products.pagination
         );
@@ -247,33 +247,32 @@ async function getProductsHandler(request, reply) {
     catch(err) {
         global.logger.error(err);
         global.bugsnag(err);
-        reply(Boom.notFound(err));
+        return Boom.notFound(err);
     }
 }
 
 
-async function productCreateHandler(request, reply) {
+async function productCreateHandler(request, h) {
     try {
         const Product = await getProductModel().create(request.payload);
 
         if(!Product) {
-            reply(Boom.badRequest('Unable to create product.'));
-            return;
+            return Boom.badRequest('Unable to create product.');
         }
 
-        reply.apiSuccess(
+        return h.apiSuccess(
             Product.toJSON()
         );
     }
     catch(err) {
         global.logger.error(err);
         global.bugsnag(err);
-        reply(Boom.badRequest(err));
+        return Boom.badRequest(err);
     }
 }
 
 
-async function productUpdateHandler(request, reply) {
+async function productUpdateHandler(request, h) {
     try {
         request.payload.updated_at = request.payload.updated_at || new Date();
 
@@ -283,18 +282,17 @@ async function productUpdateHandler(request, reply) {
         );
 
         if(!Product) {
-            reply(Boom.badRequest('Unable to find product.'));
-            return;
+            return Boom.badRequest('Unable to find product.');
         }
 
-        reply.apiSuccess(
+        return h.apiSuccess(
             Product.toJSON()
         );
     }
     catch(err) {
         global.logger.error(err);
         global.bugsnag(err);
-        reply(Boom.badRequest(err));
+        return Boom.badRequest(err);
     }
 }
 
@@ -302,30 +300,29 @@ async function productUpdateHandler(request, reply) {
 /***************************************
  * Product size route handlers
  /**************************************/
-async function productSizeCreateHandler(request, reply) {
+async function productSizeCreateHandler(request, h) {
     try {
         request.payload.sort = request.payload.sort || getSizeTypeSortOrder(request.payload.size)
 
         const ProductSize = await getProductSizeModel().create(request.payload);
 
         if(!ProductSize) {
-            reply(Boom.badRequest('Unable to create a a new product size.'));
-            return;
+            return Boom.badRequest('Unable to create a a new product size.');
         }
 
-        reply.apiSuccess(
+        return h.apiSuccess(
             ProductSize.toJSON()
         );
     }
     catch(err) {
         global.logger.error(err);
         global.bugsnag(err);
-        reply(Boom.badRequest(err));
+        return Boom.badRequest(err);
     }
 }
 
 
-async function productSizeUpdateHandler(request, reply) {
+async function productSizeUpdateHandler(request, h) {
     try {
         request.payload.updated_at = request.payload.updated_at || new Date();
 
@@ -335,23 +332,22 @@ async function productSizeUpdateHandler(request, reply) {
         );
 
         if(!ProductSize) {
-            reply(Boom.badRequest('Unable to find product size.'));
-            return;
+            return Boom.badRequest('Unable to find product size.');
         }
 
-        reply.apiSuccess(
+        return h.apiSuccess(
             ProductSize.toJSON()
         );
     }
     catch(err) {
         global.logger.error(err);
         global.bugsnag(err);
-        reply(Boom.badRequest(err));
+        return Boom.badRequest(err);
     }
 }
 
 
-async function productSizeDeleteHandler(request, reply) {
+async function productSizeDeleteHandler(request, h) {
     try {
         request.payload.updated_at = request.payload.updated_at || new Date();
 
@@ -360,18 +356,17 @@ async function productSizeDeleteHandler(request, reply) {
         );
 
         if(!ProductSize) {
-            reply(Boom.badRequest('Unable to find product size.'));
-            return;
+            return Boom.badRequest('Unable to find product size.');
         }
 
-        reply.apiSuccess(
+        return h.apiSuccess(
             ProductSize.toJSON()
         );
     }
     catch(err) {
         global.logger.error(err);
         global.bugsnag(err);
-        reply(Boom.badRequest(err));
+        return Boom.badRequest(err);
     }
 }
 
@@ -379,13 +374,12 @@ async function productSizeDeleteHandler(request, reply) {
 /***************************************
  * Product picture route handlers
  /**************************************/
-async function productPicUpsertHandler(request, reply) {
+async function productPicUpsertHandler(request, h) {
     try {
         const productPicId = await productPicService.upsertProductPic(request);
 
         if(!productPicId) {
-            reply(Boom.badRequest('Unable to create a a new product picture.'));
-            return;
+            return Boom.badRequest('Unable to create a a new product picture.');
         }
 
         global.logger.info(
@@ -393,19 +387,19 @@ async function productPicUpsertHandler(request, reply) {
             productPicId
         );
 
-        reply.apiSuccess({
+        return h.apiSuccess({
             product_pic_id: productPicId
         });
     }
     catch(err) {
         global.logger.error(err);
         global.bugsnag(err);
-        reply(Boom.badRequest(err));
+        return Boom.badRequest(err);
     }
 };
 
 
-async function productPicDeleteHandler(request, reply) {
+async function productPicDeleteHandler(request, h) {
     try {
         request.payload.updated_at = request.payload.updated_at || new Date();
 
@@ -429,14 +423,14 @@ async function productPicDeleteHandler(request, reply) {
         global.logger.info('DELETE FILE PRODUCT PIC SHOULD HAVE VARIANTS', ProductPic.toJSON())
         global.logger.info('PRODUCT PIC - DB DELETED2', request.payload.id);
 
-        reply.apiSuccess({
+        return h.apiSuccess({
             id: request.payload.id
         });
     }
     catch(err) {
         global.logger.error(err);
         global.bugsnag(err);
-        reply(Boom.badRequest(err));
+        return Boom.badRequest(err);
     }
 };
 

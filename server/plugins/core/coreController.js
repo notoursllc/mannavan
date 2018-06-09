@@ -15,7 +15,7 @@ function setServer(s) {
 }
 
 
-async function getClientJwtHandler(request, reply) {
+async function getClientJwtHandler(request, h) {
     try {
         let uuid = uuidV4();
 
@@ -34,17 +34,15 @@ async function getClientJwtHandler(request, reply) {
             process.env.JWT_SERVER_SECRET
         );
 
-        reply().header("Authorization", jsonWebToken);
+        return h.response().header("Authorization", jsonWebToken);
     }
     catch(err) {
-        global.logger.error(err);
-        global.bugsnag(err);
-        reply(Boom.unauthorized(err));
+        return Boom.unauthorized(err);
     }
 };
 
 
-function loggerHandler(request, reply) {
+function loggerHandler(request, h) {
     switch(request.payload.type) {
         // Only supportig the 'error' and 'info' types for now
         case 'error':
@@ -55,12 +53,13 @@ function loggerHandler(request, reply) {
             global.logger.info(request.payload.message);
     }
 
-    reply.apiSuccess();
+    h.apiSuccess();
 }
 
 
-function faviconHandler(request, reply) {
-    reply(null, fs.createReadStream(path.resolve(__dirname, '../../../dist/static/favicon.ico'))).code(200).type('image/x-icon');
+function faviconHandler(request, h) {
+    // TODO: not sure if this is right
+    h.response(fs.createReadStream(path.resolve(__dirname, '../../../dist/static/favicon.ico'))).code(200).type('image/x-icon');
 }
 
 

@@ -227,20 +227,20 @@ async function addCartItem(request) {
 }
 
 
-async function cartGetHandler(request, reply) {
+async function cartGetHandler(request, h) {
     try {
         const ShoppingCart = await findOrCreateCart(request);
-        reply.apiSuccess(
+        return h.apiSuccess(
             ShoppingCart.toJSON()
         );
     }
     catch(err) {
-        reply(Boom.notFound(err));
+        return Boom.notFound(err);
     }
 }
 
 
-async function cartItemAddHandler(request, reply) {
+async function cartItemAddHandler(request, h) {
     try {
         await throwIfCartIsNotActive(request);
 
@@ -251,17 +251,17 @@ async function cartItemAddHandler(request, reply) {
             throw new Error("Error getting the shopping cart");
         }
 
-        reply.apiSuccess(
+        return h.apiSuccess(
             ShoppingCart.toJSON()
         );
     }
     catch(err) {
-        reply(Boom.badData(err));
+        return Boom.badData(err);
     }
 };
 
 
-async function cartItemRemoveHandler(request, reply) {
+async function cartItemRemoveHandler(request, h) {
     try {
         await throwIfCartIsNotActive(request);
 
@@ -273,17 +273,17 @@ async function cartItemRemoveHandler(request, reply) {
 
         const ShoppingCart = await getCart(request);
 
-        reply.apiSuccess(
+        return h.apiSuccess(
             ShoppingCart.toJSON()
         );
     }
     catch(err) {
-        reply(Boom.badData(err));
+        return Boom.badData(err);
     }
 };
 
 
-async function cartItemQtyHandler(request, reply) {
+async function cartItemQtyHandler(request, h) {
     try {
         await throwIfCartIsNotActive(request);
 
@@ -300,17 +300,17 @@ async function cartItemQtyHandler(request, reply) {
 
         const ShoppingCart = await getCart(request);
 
-        reply.apiSuccess(
+        return h.apiSuccess(
             ShoppingCart.toJSON()
         );
     }
     catch(err) {
-        reply(Boom.badData(err));
+        return Boom.badData(err);
     }
 };
 
 
-async function cartShippingSetAddressHandler(request, reply) {
+async function cartShippingSetAddressHandler(request, h) {
     try {
         let ShoppingCart = await getCart(request);
 
@@ -329,17 +329,17 @@ async function cartShippingSetAddressHandler(request, reply) {
             { method: 'update', patch: true }
         );
 
-        reply.apiSuccess(
+        return h.apiSuccess(
             ShoppingCart.toJSON()
         );
     }
     catch(err) {
-        reply(Boom.badData(err));
+        return Boom.badData(err);
     }
 };
 
 
-async function genericCartUpdateHandler(request, reply) {
+async function genericCartUpdateHandler(request, h) {
     try {
         let ShoppingCart = await getCart(request);
 
@@ -348,18 +348,18 @@ async function genericCartUpdateHandler(request, reply) {
             { method: 'update', patch: true }
         );
 
-        reply.apiSuccess(
+        return h.apiSuccess(
             ShoppingCart.toJSON()
         );
     }
     catch(err) {
-        reply(Boom.badData(err));
+        return Boom.badData(err);
     }
 };
 
 
 // TODO: this function uses shoppingCartEmailService
-async function cartCheckoutHandler(request, reply) {
+async function cartCheckoutHandler(request, h) {
     try {
         let ShoppingCart = await getCart(request);
 
@@ -451,7 +451,7 @@ async function cartCheckoutHandler(request, reply) {
 
         // Successful transactions return the transaction id
         if(transactionObj.success) {
-            reply.apiSuccess({
+            return h.apiSuccess({
                 transactionId: transactionObj.transaction.id
             });
         }
@@ -462,7 +462,7 @@ async function cartCheckoutHandler(request, reply) {
     catch(err) {
         let msg = err instanceof Error ? err.message : err;
         // NOTE: Boom errors are automatically logged by the onPreResponse handler
-        reply(Boom.badData(msg));
+        return Boom.badData(msg);
     }
 };
 
@@ -487,7 +487,7 @@ async function getPaymentByAttribute(attrName, attrValue) {
 }
 
 
-async function getOrdersHandler(request, reply) {
+async function getOrdersHandler(request, h) {
     try {
         const orders = await HelperService.fetchPage(
             request,
@@ -495,24 +495,24 @@ async function getOrdersHandler(request, reply) {
             ['shoppingCart.cart_items.product']
         );
 
-        reply.apiSuccess(
+        return h.apiSuccess(
             orders, orders.pagination
         );
     }
     catch(err) {
         global.logger.error(err);
         global.bugsnag(err);
-        reply(Boom.notFound(err));
+        return Boom.notFound(err);
     }
 }
 
 
-async function getOrderHandler(request, reply) {
+async function getOrderHandler(request, h) {
     try {
         const payment = await getPaymentByAttribute('transaction_id', request.query.transaction_id);
 
         if(!payment) {
-            return reply(Boom.notFound('Order not found'));
+            return Boom.notFound('Order not found');
         }
 
         let p = payment.toJSON();
@@ -545,12 +545,12 @@ async function getOrderHandler(request, reply) {
             response.transaction.payment.payerEmail = p.transaction.paypalAccount.payerEmail;
         }
 
-        reply.apiSuccess(response);
+        return h.apiSuccess(response);
     }
     catch(err) {
         global.logger.error(err);
         global.bugsnag(err);
-        reply(Boom.badRequest(err));
+        return Boom.badRequest(err);
     }
 }
 
@@ -567,7 +567,7 @@ async function getOrderHandler(request, reply) {
 *
 * @returns {Promise}
 */
-async function getPaymentClientTokenHandler(request, reply) {
+async function getPaymentClientTokenHandler(request, h) {
     try {
         const response = await global.braintreeGateway.clientToken.generate({});
 
@@ -575,14 +575,14 @@ async function getPaymentClientTokenHandler(request, reply) {
             throw new Error('Error generating client token.')
         }
 
-        reply.apiSuccess(
+        return h.apiSuccess(
             response.clientToken
         );
     }
     catch(err) {
         global.logger.error(err);
         global.bugsnag(err);
-        reply(Boom.badRequest(err));
+        return Boom.badRequest(err);
     }
 }
 

@@ -129,16 +129,16 @@ internals.parseShippingRateResponse = (response) => {
 /**
  * Calls the ShipEngine API to validate a shipping address
  */
-exports.validateAddress = async (request, reply) => {
+exports.validateAddress = async (request, h) => {
     try {
         const { res, payload } = await wreck.post('/addresses/validate', { payload: helpers.makeArray(request.payload) });
-        reply.apiSuccess(payload);
+        return h.apiSuccess(payload);
     }
     catch(err) {
         const error = new Error('ERROR VALIDATING SHIPPING ADDRESS: ' + internals.getShipEngineErrorMessage(err));
         global.logger.error(error);
         global.bugsnag(error);
-        reply(Boom.badRequest(error));
+        return Boom.badRequest(error);
     }
 };
 
@@ -146,7 +146,7 @@ exports.validateAddress = async (request, reply) => {
 /**
  * Calls the ShipEngine API to get shipping rates
  */
-exports.rates = async (request, reply) => {
+exports.rates = async (request, h) => {
     try {
         const config = {
             shipment: {
@@ -167,7 +167,7 @@ exports.rates = async (request, reply) => {
         };
 
         const { res, payload } = await wreck.post('/rates', { payload: config });
-        reply.apiSuccess(
+        return h.apiSuccess(
             internals.parseShippingRateResponse(payload)
         );
     }
@@ -175,6 +175,6 @@ exports.rates = async (request, reply) => {
         const error = new Error('ERROR GETTING SHIPPING RATES: ' + internals.getShipEngineErrorMessage(err));
         global.logger.error(error);
         global.bugsnag(error);
-        reply(Boom.badRequest(error));
+        return Boom.badRequest(error);
     }
 };
