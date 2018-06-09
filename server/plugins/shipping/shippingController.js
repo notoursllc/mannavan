@@ -138,7 +138,7 @@ exports.validateAddress = async (request, h) => {
         const error = new Error('ERROR VALIDATING SHIPPING ADDRESS: ' + internals.getShipEngineErrorMessage(err));
         global.logger.error(error);
         global.bugsnag(error);
-        return Boom.badRequest(error);
+        throw Boom.badRequest(error);
     }
 };
 
@@ -175,6 +175,6 @@ exports.rates = async (request, h) => {
         const error = new Error('ERROR GETTING SHIPPING RATES: ' + internals.getShipEngineErrorMessage(err));
         global.logger.error(error);
         global.bugsnag(error);
-        return Boom.badRequest(error);
+        throw Boom.badRequest(error);
     }
 };

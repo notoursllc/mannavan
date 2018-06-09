@@ -175,7 +175,7 @@ async function productShareHandler(request, h) {
     catch(err) {
         global.logger.error(err);
         global.bugsnag(err);
-        return Boom.badRequest(err);
+        throw Boom.badRequest(err);
     }
 }
 
@@ -193,7 +193,7 @@ async function getProductByIdHandler(request, h) {
     catch(err) {
         global.logger.error(err);
         global.bugsnag(err);
-        return Boom.badRequest(err);
+        throw Boom.badRequest(err);
     }
 }
 
@@ -216,7 +216,7 @@ async function productSeoHandler(request, h) {
     catch(err) {
         global.logger.error(err);
         global.bugsnag(err);
-        return Boom.badRequest(err);
+        throw Boom.badRequest(err);
     }
 }
 
@@ -247,7 +247,7 @@ async function getProductsHandler(request, h) {
     catch(err) {
         global.logger.error(err);
         global.bugsnag(err);
-        return Boom.notFound(err);
+        throw Boom.notFound(err);
     }
 }
 
@@ -257,7 +257,7 @@ async function productCreateHandler(request, h) {
         const Product = await getProductModel().create(request.payload);
 
         if(!Product) {
-            return Boom.badRequest('Unable to create product.');
+            throw Boom.badRequest('Unable to create product.');
         }
 
         return h.apiSuccess(
@@ -267,7 +267,7 @@ async function productCreateHandler(request, h) {
     catch(err) {
         global.logger.error(err);
         global.bugsnag(err);
-        return Boom.badRequest(err);
+        throw Boom.badRequest(err);
     }
 }
 
@@ -282,7 +282,7 @@ async function productUpdateHandler(request, h) {
         );
 
         if(!Product) {
-            return Boom.badRequest('Unable to find product.');
+            throw Boom.badRequest('Unable to find product.');
         }
 
         return h.apiSuccess(
@@ -292,7 +292,7 @@ async function productUpdateHandler(request, h) {
     catch(err) {
         global.logger.error(err);
         global.bugsnag(err);
-        return Boom.badRequest(err);
+        throw Boom.badRequest(err);
     }
 }
 
@@ -307,7 +307,7 @@ async function productSizeCreateHandler(request, h) {
         const ProductSize = await getProductSizeModel().create(request.payload);
 
         if(!ProductSize) {
-            return Boom.badRequest('Unable to create a a new product size.');
+            throw Boom.badRequest('Unable to create a a new product size.');
         }
 
         return h.apiSuccess(
@@ -317,7 +317,7 @@ async function productSizeCreateHandler(request, h) {
     catch(err) {
         global.logger.error(err);
         global.bugsnag(err);
-        return Boom.badRequest(err);
+        throw Boom.badRequest(err);
     }
 }
 
@@ -332,7 +332,7 @@ async function productSizeUpdateHandler(request, h) {
         );
 
         if(!ProductSize) {
-            return Boom.badRequest('Unable to find product size.');
+            throw Boom.badRequest('Unable to find product size.');
         }
 
         return h.apiSuccess(
@@ -342,7 +342,7 @@ async function productSizeUpdateHandler(request, h) {
     catch(err) {
         global.logger.error(err);
         global.bugsnag(err);
-        return Boom.badRequest(err);
+        throw Boom.badRequest(err);
     }
 }
 
@@ -356,7 +356,7 @@ async function productSizeDeleteHandler(request, h) {
         );
 
         if(!ProductSize) {
-            return Boom.badRequest('Unable to find product size.');
+            throw Boom.badRequest('Unable to find product size.');
         }
 
         return h.apiSuccess(
@@ -366,7 +366,7 @@ async function productSizeDeleteHandler(request, h) {
     catch(err) {
         global.logger.error(err);
         global.bugsnag(err);
-        return Boom.badRequest(err);
+        throw Boom.badRequest(err);
     }
 }
 
@@ -379,7 +379,7 @@ async function productPicUpsertHandler(request, h) {
         const productPicId = await productPicService.upsertProductPic(request);
 
         if(!productPicId) {
-            return Boom.badRequest('Unable to create a a new product picture.');
+            throw Boom.badRequest('Unable to create a a new product picture.');
         }
 
         global.logger.info(
@@ -394,7 +394,7 @@ async function productPicUpsertHandler(request, h) {
     catch(err) {
         global.logger.error(err);
         global.bugsnag(err);
-        return Boom.badRequest(err);
+        throw Boom.badRequest(err);
     }
 };
 
@@ -430,7 +430,7 @@ async function productPicDeleteHandler(request, h) {
     catch(err) {
         global.logger.error(err);
         global.bugsnag(err);
-        return Boom.badRequest(err);
+        throw Boom.badRequest(err);
     }
 };
 

@@ -37,7 +37,7 @@ async function getClientJwtHandler(request, h) {
         return h.response().header("Authorization", jsonWebToken);
     }
     catch(err) {
-        return Boom.unauthorized(err);
+        throw Boom.unauthorized(err);
     }
 };
 

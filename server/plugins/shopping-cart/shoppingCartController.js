@@ -1,8 +1,6 @@
 'use strict';
 const Joi = require('joi');
 const Boom = require('boom');
-const jwt = require('jsonwebtoken');
-const uuidV4 = require('uuid/v4');
 const cloneDeep = require('lodash.clonedeep');
 const isObject = require('lodash.isobject');
 const HelperService = require('../../helpers.service');
@@ -111,13 +109,9 @@ function getShoppingCartModelSchema() {
 
 
 function getCartTokenFromJwt(request) {
-    const req = request.raw.req;
-
-    if(request.auth.cookieToken) {
-        let decoded = jwt.verify(request.auth.cookieToken , process.env.JWT_SERVER_SECRET);
-        return decoded.ct;
+    if(request.auth.credentials) {
+        return request.auth.credentials.ct;
     }
-
     return null;
 }
 
@@ -235,7 +229,9 @@ async function cartGetHandler(request, h) {
         );
     }
     catch(err) {
-        return Boom.notFound(err);
+        global.logger.error(err);
+        global.bugsnag(err);
+        throw Boom.notFound(err);
     }
 }
 
@@ -256,7 +252,9 @@ async function cartItemAddHandler(request, h) {
         );
     }
     catch(err) {
-        return Boom.badData(err);
+        global.logger.error(err);
+        global.bugsnag(err);
+        throw Boom.badData(err);
     }
 };
 
@@ -278,7 +276,9 @@ async function cartItemRemoveHandler(request, h) {
         );
     }
     catch(err) {
-        return Boom.badData(err);
+        global.logger.error(err);
+        global.bugsnag(err);
+        throw Boom.badData(err);
     }
 };
 
@@ -305,7 +305,9 @@ async function cartItemQtyHandler(request, h) {
         );
     }
     catch(err) {
-        return Boom.badData(err);
+        global.logger.error(err);
+        global.bugsnag(err);
+        throw Boom.badData(err);
     }
 };
 
@@ -334,7 +336,9 @@ async function cartShippingSetAddressHandler(request, h) {
         );
     }
     catch(err) {
-        return Boom.badData(err);
+        global.logger.error(err);
+        global.bugsnag(err);
+        throw Boom.badData(err);
     }
 };
 
@@ -353,7 +357,9 @@ async function genericCartUpdateHandler(request, h) {
         );
     }
     catch(err) {
-        return Boom.badData(err);
+        global.logger.error(err);
+        global.bugsnag(err);
+        throw Boom.badData(err);
     }
 };
 
@@ -461,8 +467,9 @@ async function cartCheckoutHandler(request, h) {
     }
     catch(err) {
         let msg = err instanceof Error ? err.message : err;
-        // NOTE: Boom errors are automatically logged by the onPreResponse handler
-        return Boom.badData(msg);
+        global.logger.error(msg);
+        global.bugsnag(msg);
+        throw Boom.badData(msg);
     }
 };
 
@@ -502,7 +509,7 @@ async function getOrdersHandler(request, h) {
     catch(err) {
         global.logger.error(err);
         global.bugsnag(err);
-        return Boom.notFound(err);
+        throw Boom.notFound(err);
     }
 }
 
@@ -512,7 +519,7 @@ async function getOrderHandler(request, h) {
         const payment = await getPaymentByAttribute('transaction_id', request.query.transaction_id);
 
         if(!payment) {
-            return Boom.notFound('Order not found');
+            throw Boom.notFound('Order not found');
         }
 
         let p = payment.toJSON();
@@ -550,7 +557,7 @@ async function getOrderHandler(request, h) {
     catch(err) {
         global.logger.error(err);
         global.bugsnag(err);
-        return Boom.badRequest(err);
+        throw Boom.badRequest(err);
     }
 }
 
@@ -582,7 +589,7 @@ async function getPaymentClientTokenHandler(request, h) {
     catch(err) {
         global.logger.error(err);
         global.bugsnag(err);
-        return Boom.badRequest(err);
+        throw Boom.badRequest(err);
     }
 }
 
@@ -654,6 +661,7 @@ async function runPayment(opts) {
     catch(err) {
         global.logger.error(err);
         global.bugsnag(err);
+        throw new Error(err);
     }
 }
 

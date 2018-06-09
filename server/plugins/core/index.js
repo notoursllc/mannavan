@@ -105,7 +105,7 @@ exports.plugin = {
                 algorithms: [ 'HS256' ]
             }
         });
-        server.auth.default('xCartToken')
+        server.auth.default('xCartToken');
 
 
         server.views({
@@ -129,18 +129,6 @@ exports.plugin = {
             return this.response(response);
         });
 
-        // Handle Boom errors
-        server.ext('onPreResponse', function (request, h) {
-            const response = request.response;
-            if (request.response.isBoom) {
-                if(process.env.NODE_ENV !== 'test') {
-                    global.logger.error(request.response)
-                }
-                return null;
-            }
-
-            return h.continue;
-        });
 
         server.dependency(['vision'], after);
     }

@@ -127,7 +127,7 @@ const after = function (server) {
             options: {
                 description: 'Returns 404 response',
                 handler: (request, h) => {
-                    return Boom.notFound();
+                    throw Boom.notFound();
                 }
             }
         },
