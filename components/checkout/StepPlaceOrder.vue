@@ -4,7 +4,6 @@
     import isObject from 'lodash.isobject'
     import forEach from 'lodash.foreach'
     import cloneDeep from 'lodash.clonedeep'
-    import Promise from 'bluebird';
     import { Checkbox, Input, Notification, Loading, Dialog, Select } from 'element-ui'
     import PaymentMethodChooser from '@/components/checkout/PaymentMethodChooser'
     import ShippingBillingForm from '@/components/checkout/ShippingBillingForm'
@@ -26,6 +25,9 @@
     Vue.prototype.$notify = Notification;
 
     let currentNotification = null;
+
+
+
 
 
     export default {
@@ -124,60 +126,58 @@
         },
 
         methods: {
-            setBillingData: function() {
-                return new Promise((resolve, reject) => {
-                    if(this.shoppingCart.billingSameAsShipping) {
-                        let shippingKeys = [
-                            'firstName',
-                            'lastName',
-                            'streetAddress',
-                            'extendedAddress',
-                            'company',
-                            'city',
-                            'state',
-                            'postalCode',
-                            'countryCodeAlpha2'
-                        ];
+            setBillingData: async function() {
+                if(this.shoppingCart.billingSameAsShipping) {
+                    let shippingKeys = [
+                        'firstName',
+                        'lastName',
+                        'streetAddress',
+                        'extendedAddress',
+                        'company',
+                        'city',
+                        'state',
+                        'postalCode',
+                        'countryCodeAlpha2'
+                    ];
 
-                        let cart = cloneDeep(this.shoppingCart);
+                    let cart = cloneDeep(this.shoppingCart);
 
-                        shippingKeys.forEach((item) => {
-                            cart[`billing_${item}`] = cart[`shipping_${item}`]
-                        });
+                    shippingKeys.forEach((item) => {
+                        cart[`billing_${item}`] = cart[`shipping_${item}`]
+                    });
 
-                        this.$store.dispatch('shoppingcart/CART_SET', cart).then(resolve);
-                    }
-                    else {
-                        resolve();
-                    }
-                });
+                    await this.$store.dispatch('shoppingcart/CART_SET', cart);
+                }
+                return;
             },
 
 
-            submitPaymentForm: function() {
-                this.setBillingData().then(() => {
-                    this.placeOrderButtonLoading = true;
+            submitPaymentForm: async function() {
+                await this.setBillingData();
+                this.placeOrderButtonLoading = true;
 
-                    if(this.paymentMethod === 'PAYPAL') {
-                        this.tokenizePaypal();
-                    }
-                    else {
-                        this.tokenizeHostedFields();
-                    }
-                });
+                if(this.paymentMethod === 'PAYPAL') {
+                    this.tokenizePaypal();
+                }
+                else {
+                    this.tokenizeHostedFields();
+                }
             },
 
 
-            doCheckout: function(nonce) {
-                let self = this;
+            doCheckout: async function(nonce) {
+                try {
+                    let self = this;
 
-                return this.checkout({
-                    nonce: nonce,
-                    ...this.billingAttributes
-                })
-                .then((result) => {
+                    const result = await this.checkout({
+                        nonce: nonce,
+                        ...this.billingAttributes
+                    });
+
                     this.$store.dispatch('shoppingcart/CHECKOUT_CLEANUP');
 
+                    // Not going to display any error to the user if braintree fails
+                    // to tear down.
                     this.braintree.hostedFieldsInstance.teardown((teardownErr) => {
                         if (teardownErr) {
                             console.log('There was an error tearing it down!', teardownErr.message);
@@ -189,15 +189,15 @@
                         name: 'order-id',
                         params: { id: result.transactionId }
                     });
-                })
-                .catch((error) => {
+                }
+                catch(error) {
                     currentNotification = this.$notify({
                         type: 'error',
                         title: `${ this.$t('Error placing order') }:`,
                         message: self.getApiErrorMessage(error),
                         duration: 0
                     });
-                })
+                }
             },
 
 
@@ -284,7 +284,6 @@
                         }
                     }
                 });
-
 
                 hostedFieldsInstance.on('cardTypeChange', (event) => {
                     // console.log('cardTypeChange', event);
@@ -387,40 +386,88 @@
                 );
             },
 
-            getClientToken: function() {
-                return new Promise((resolve, reject) => {
-                    if(!this.braintreeClientToken) {
-                        this.getBraintreeClientToken().then((token) => {
-                            this.$store.dispatch('shoppingcart/BRAINTREE_CLIENT_TOKEN', token);
-                            resolve(token);
+            getClientToken: async function() {
+                if(this.braintreeClientToken) {
+                    return this.braintreeClientToken;
+                }
+
+                const token = await this.getBraintreeClientToken();
+                this.$store.dispatch('shoppingcart/BRAINTREE_CLIENT_TOKEN', token);
+                return token;
+            },
+
+            hostedFieldsInit: async function() {
+                try {
+                    const token = await this.getClientToken();
+                    const client = require('braintree-web/client');
+
+                    try {
+                        const clientInstance = await client.create({ authorization: token });
+
+                        this.createHostedFields(clientInstance);
+                        this.createPaypal(clientInstance);
+                    }
+                    catch(clientErr) {
+                        currentNotification = this.$notify({
+                            type: 'error',
+                            title: this.$t('There was an error setting up the payment client!'),
+                            message: this.getBraintreeErrorMessage(clientErr),
+                            duration: 0
                         });
                     }
-                    else {
-                        resolve(this.braintreeClientToken);
+                }
+                catch(err) {
+                    currentNotification = this.$notify({
+                        type: 'error',
+                        title: this.$t('Error'),
+                        message: err.response.data.message,
+                        duration: 0
+                    });
+                }
+            },
+
+            getBraintreeErrorMessage: function(clientErr) {
+                let errorMessage = clientErr;
+
+                if(isObject(clientErr) && clientErr.hasOwnProperty('code')) {
+                    // https://github.com/braintree/braintree-web/blob/3beb6d43b1c453e3c97f01129fa07a89234b2003/src/hosted-fields/shared/errors.js
+                    // Not translating all errors, just the ones that could be caused by the user
+                    switch(clientErr.code) {
+                        case 'HOSTED_FIELDS_FIELDS_EMPTY':
+                            errorMessage = this.$t('braintree.HOSTED_FIELDS_FIELDS_EMPTY');
+                            break;
+
+                        case 'HOSTED_FIELDS_ATTRIBUTE_VALUE_NOT_ALLOWED':
+                            errorMessage = this.$t('braintree.HOSTED_FIELDS_ATTRIBUTE_VALUE_NOT_ALLOWED');
+                            break;
+
+                        case 'PAYPAL_POPUP_CLOSED':
+                            // console.error('Customer closed PayPal popup.');
+                            this.paymentMethod = 'CREDIT_CARD'
+                            break;
+
+                        case 'PAYPAL_ACCOUNT_TOKENIZATION_FAILED':
+                        case 'PAYPAL_FLOW_FAILED':
+                            errorMessage = clientErr.details
+                            break;
+
+                        default:
+                            if(clientErr.hasOwnProperty('message')) {
+                                errorMessage = clientErr.message;
+                            }
+                            else {
+                                errorMessage = clientErr.code;
+                            }
                     }
-                });
+                }
+
+                return errorMessage;
             }
         },
 
-        created() {
+        async created() {
             if(this.shoppingCart.num_items) {
-                this.getClientToken().then((token) => {
-                    let client = require('braintree-web/client');
-                    client
-                        .create({ authorization: token })
-                        .then((clientInstance) => {
-                            this.createHostedFields(clientInstance);
-                            this.createPaypal(clientInstance);
-                        })
-                        .catch((clientErr) => {
-                            currentNotification = this.$notify({
-                                type: 'error',
-                                title: this.$t('There was an error setting up the payment client!'),
-                                message: this.getBraintreeErrorMessage(clientErr),
-                                duration: 0
-                            });
-                        })
-                });
+                await this.hostedFieldsInit();
             }
         }
     }

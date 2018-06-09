@@ -21,22 +21,19 @@ export default {
         }
     },
 
-    created() {
-        this.$store.dispatch('ui/pageTitle', null);
+    async created() {
+        try {
+            this.$store.dispatch('ui/pageTitle', null);
 
-        this.getOrder(this.$route.params.id)
-            .then((order) => {
-                this.order = order;
-                this.loading = false;
-                this.orderExists = true;
-            })
-            .catch((e) => {
-                this.orderExists = false;
-                bugsnagClient.notify(e);
-            })
-            .finally(() => {
-                this.loading = false;
-            });
+            this.order = await this.getOrder(this.$route.params.id);
+            this.orderExists = true;
+            this.loading = false;
+        }
+        catch(e) {
+            this.orderExists = false;
+            this.loading = false;
+            // bugsnagClient.notify(e);
+        }
     },
 
     head() {

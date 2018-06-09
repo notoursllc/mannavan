@@ -34,7 +34,10 @@ async function getClientJwtHandler(request, h) {
             process.env.JWT_SERVER_SECRET
         );
 
-        return h.response().header("Authorization", jsonWebToken);
+        const response = h.response('success');
+        response.type('text/plain');
+        response.header('Authorization', jsonWebToken);
+        return response;
     }
     catch(err) {
         throw Boom.unauthorized(err);

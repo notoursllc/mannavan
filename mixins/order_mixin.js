@@ -49,17 +49,14 @@ export default {
     },
 
     methods: {
-        getOrder(transaction_id, verbose) {
-            return this.$axios
-                .$get('/order', {
-                    params: {
-                        transaction_id,
-                        verbose
-                    }
-                })
-                .then((response) => {
-                    return response.data;
-                });
+        async getOrder(transaction_id, verbose) {
+            const response = await this.$axios.$get('/order', {
+                params: {
+                    transaction_id,
+                    verbose
+                }
+            });
+            return response.data;
         },
 
 

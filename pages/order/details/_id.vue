@@ -27,21 +27,18 @@ export default {
         }
     },
 
-    created() {
-        this.getOrder(this.$route.params.id, true)
-            .then((order) => {
-                this.order = order;
-                this.orderExists = true;
-            })
-            .catch((e) => {
-                this.orderExists = false;
-                bugsnagClient.notify(e);
-            })
-            .finally(() => {
-                this.loading = false;
-            });
+    async created() {
+        try {
+            this.$store.dispatch('ui/pageTitle', this.$t('Order Details'));
 
-        this.$store.dispatch('ui/pageTitle', this.$t('Order Details'));
+            this.order = await this.getOrder(this.$route.params.id, true)
+            this.orderExists = true;
+        }
+        catch(e) {
+            this.orderExists = false;
+            this.loading = false;
+            // bugsnagClient.notify(e);
+        }
     },
 
     head() {

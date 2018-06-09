@@ -56,77 +56,74 @@
                 this.$store.dispatch('shoppingcart/CART_SET', updates);
             },
 
-            shippingFormDone: function() {
-                const shippingAttributes = cloneDeep(this.shippingAttributes);
-                delete shippingAttributes.shipping_total;
-                delete shippingAttributes.shipping_rate;
+            shippingFormDone: async function() {
+                try {
+                    const shippingAttributes = cloneDeep(this.shippingAttributes);
+                    delete shippingAttributes.shipping_total;
+                    delete shippingAttributes.shipping_rate;
 
-                // This step needs to clear the shipping rate cache because
-                // we are assuming the shipping address has changed and thus
-                // new rates should be retrieved
-                this.$store.dispatch('shoppingcart/CLEAR_SHIPPING_RATES_CACHE');
+                    // This step needs to clear the shipping rate cache because
+                    // we are assuming the shipping address has changed and thus
+                    // new rates should be retrieved
+                    await this.$store.dispatch('shoppingcart/CLEAR_SHIPPING_RATES_CACHE');
 
-                // Setting the shipping address will also calculate the
-                // sales tax for the cart because sales tax calculation requires
-                // knowledge of the destination.  Sales tax needs to be set so
-                // the API can return the shipping/tax/grand total amounts for the 'review'
-                // checkout step
-                return this.setShippingAddress(shippingAttributes)
-                    .then((result) => {
-                        // As a convenience to the user keeping the Country and State
-                        // values the same as the shipping values, as they are likely the same
-                        if(!result.billing_countryCodeAlpha2) {
-                            result.billing_countryCodeAlpha2 = result.shipping_countryCodeAlpha2
+                    // Setting the shipping address will also calculate the
+                    // sales tax for the cart because sales tax calculation requires
+                    // knowledge of the destination.  Sales tax needs to be set so
+                    // the API can return the shipping/tax/grand total amounts for the 'review'
+                    // checkout step
+                    const result = await this.setShippingAddress(shippingAttributes);
 
-                            if(!result.billing_state) {
-                                result.billing_state = result.shipping_state
-                            }
+                    if(!result.billing_countryCodeAlpha2) {
+                        result.billing_countryCodeAlpha2 = result.shipping_countryCodeAlpha2
+
+                        if(!result.billing_state) {
+                            result.billing_state = result.shipping_state
                         }
+                    }
 
-                        return this.$store.dispatch('shoppingcart/CART_SET', result);
-                    })
-                    .then(() => {
-                        this.$emit('done', 'shipping-address-step')
-                    })
-                    .catch((result) => {
-                        currentNotification = this.$notify({
-                            title: this.$t('An error occurred'),
-                            message: 'A server error occurred while setting the shipping address.',
-                            duration: 0,
-                            type: 'error'
-                        });
+                    this.$store.dispatch('shoppingcart/CART_SET', result);
+                    this.$emit('done', 'shipping-address-step');
+                    return;
+                }
+                catch(err) {
+                    currentNotification = this.$notify({
+                        title: this.$t('An error occurred'),
+                        message: 'A server error occurred while setting the shipping address.',
+                        duration: 0,
+                        type: 'error'
                     });
+                }
             },
 
-            submitShippingForm: function() {
-                let self = this;
-                let c = this.shoppingCart;
+            submitShippingForm: async function() {
+                try {
+                    let self = this;
+                    let c = this.shoppingCart;
 
-                this.shippingFormIsLoading = true;
+                    this.shippingFormIsLoading = true;
 
-                if(currentNotification) {
-                    currentNotification.close();
-                }
+                    if(currentNotification) {
+                        currentNotification.close();
+                    }
 
-                this.validateAddress({
-                    company_name: c.shipping_company,
-                    address_line1: c.shipping_streetAddress,
-                    city_locality: c.shipping_city,
-                    state_province: c.shipping_state,
-                    postal_code: c.shipping_postalCode,
-                    country_code: c.shipping_countryCodeAlpha2
-                })
-                .then((result) => {
-                    let validation = Array.isArray(result) ? result[0] : result;
-                    console.log("VALIDATION", validation);
+                    const result = await this.validateAddress({
+                        company_name: c.shipping_company,
+                        address_line1: c.shipping_streetAddress,
+                        city_locality: c.shipping_city,
+                        state_province: c.shipping_state,
+                        postal_code: c.shipping_postalCode,
+                        country_code: c.shipping_countryCodeAlpha2
+                    });
+
+                    const validation = Array.isArray(result) ? result[0] : result;
 
                     // Add the validated values to the state
                     switch(validation.status) {
                         case 'verified':
                             this.updateShippingStateFromValidation(validation.matched_address);
-                            this.shippingFormDone().then(() => {
-                                this.shippingFormIsLoading = false;
-                            });
+                            await this.shippingFormDone();
+                            this.shippingFormIsLoading = false;
                             return;
 
                         // NOTE: The 'unverified' case could still be a correct address.
@@ -138,9 +135,8 @@
                         // so we need to get the values from the 'original_address' property
                         case 'unverified':
                             this.updateShippingStateFromValidation(validation.original_address);
-                            this.shippingFormDone().then(() => {
-                                this.shippingFormIsLoading = false;
-                            });
+                            await this.shippingFormDone();
+                            this.shippingFormIsLoading = false;
                             return;
 
                         default:
@@ -174,8 +170,8 @@
                             });
                             break;
                     }
-                })
-                .catch((error) => {
+                }
+                catch(error) {
                     let msg = error.message;
 
                     if (error.response) {
@@ -184,13 +180,13 @@
 
                     this.shippingFormIsLoading = false;
 
-                    this.$notify({
+                    currentNotification = this.$notify({
                         title: msg || "An internal server error occurred",
                         // message: errorMessage,
                         duration: 0,
                         type: 'error'
                     });
-                });
+                }
             }
 
         }

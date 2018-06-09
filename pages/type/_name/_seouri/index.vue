@@ -112,7 +112,7 @@ export default {
     },
 
     methods: {
-        addToCart: function() {
+        addToCart: async function() {
             if (!this.selectedSize) {
                 showNotification(
                     this.$notify({
@@ -136,18 +136,32 @@ export default {
             else {
                 this.isLoading = true;
 
-                this.addItem({
-                    id: this.product.id,
-                    options: {
-                        size: this.selectedSize,
-                        qty: this.selectedQty
-                    }
-                })
-                .then((cartData) => {
+                try {
+                    const cartData = await this.addItem({
+                        id: this.product.id,
+                        options: {
+                            size: this.selectedSize,
+                            qty: this.selectedQty
+                        }
+                    });
+
                     this.$store.dispatch('shoppingcart/CART_SET', cartData);
                     this.isLoading = false;
                     this.goToCart();
-                });
+                    return;
+                }
+                catch(err) {
+                    this.isLoading = false;
+
+                    showNotification(
+                        this.$notify({
+                            type: 'error',
+                            title: this.$t('Error'),
+                            message: err.response.data.message,
+                            duration: 0
+                        })
+                    )
+                }
             }
         },
 

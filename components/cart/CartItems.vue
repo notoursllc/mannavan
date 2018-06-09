@@ -3,7 +3,7 @@
     import Vue from 'vue'
     import { mapGetters } from 'vuex'
     import isObject from 'lodash.isobject'
-    import { Select, Option, InputNumber, Loading, Button, Popover } from 'element-ui'
+    import { Select, Option, InputNumber, Loading, Button, Popover, Notification } from 'element-ui'
     import ProductPrice from '@/components/product/ProductPrice'
     import NumberButtons from '@/components/NumberButtons'
     import product_mixin from '@/mixins/product_mixin'
@@ -14,7 +14,19 @@
     Vue.use(InputNumber);
     Vue.use(Button);
     Vue.use(Popover);
-    Vue.use(Loading.directive)
+    Vue.use(Loading.directive);
+
+    Vue.prototype.$notify = Notification;
+    let currentNotification = null;
+
+
+    function showNotification(Notification) {
+        if(currentNotification) {
+            currentNotification.close();
+        }
+        currentNotification = Notification
+    }
+
 
     export default {
         props: {
@@ -55,30 +67,47 @@
         },
 
         methods: {
-            updateCartItemQuantity(item, qty) {
-                let loadingInstance = Loading.service({ target: `#cartItem${item.id}` });
+            async updateCartItemQuantity(item, qty) {
+                try {
+                    const loadingInstance = Loading.service({ target: `#cartItem${item.id}` });
 
-                this.updateItemQty({
-                    id: item.id,
-                    qty
-                })
-                .then((cartData) => {
+                    const cartData = await this.updateItemQty({
+                        id: item.id,
+                        qty
+                    });
+
                     this.$store.dispatch('shoppingcart/CART_SET', cartData);
                     item.qty = qty;
                     loadingInstance.close();
-                });
+                }
+                catch(err) {
+                    showNotification(
+                        this.$notify({
+                            type: 'error',
+                            title: this.$t('An error occurred'),
+                            duration: 0
+                        })
+                    )
+                }
             },
 
-            removeItem(id) {
-                let loadingInstance = Loading.service({ target: `#cartItem${id}` });
+            async removeItem(id) {
+                try {
+                    const loadingInstance = Loading.service({ target: `#cartItem${id}` });
+                    const cartData = await this.deleteItem({ id });
 
-                this.deleteItem({
-                    id
-                })
-                .then((cartData) => {
                     this.$store.dispatch('shoppingcart/CART_SET', cartData);
                     loadingInstance.close();
-                });
+                }
+                catch(err) {
+                    showNotification(
+                        this.$notify({
+                            type: 'error',
+                            title: this.$t('An error occurred'),
+                            duration: 0
+                        })
+                    )
+                }
             }
         },
 
