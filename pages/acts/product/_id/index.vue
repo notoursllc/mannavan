@@ -63,7 +63,6 @@ export default{
                     duration: 0
                 })
             );
-            // bugsnagClient.notify(e);
         }
     }
 }

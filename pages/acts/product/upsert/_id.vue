@@ -118,7 +118,6 @@ export default {
                         duration: 0
                     })
                 );
-                // bugsnagClient.notify(e);
             }
         },
 
@@ -183,7 +182,6 @@ export default {
                         duration: 0
                     })
                 );
-                // bugsnagClient.notify(e);
             }
         }
     },
@@ -208,7 +206,6 @@ export default {
                     duration: 0
                 })
             );
-            // bugsnagClient.notify(e);
         }
     }
 }

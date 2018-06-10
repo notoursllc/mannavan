@@ -37,7 +37,6 @@ export default {
         catch(e) {
             this.orderExists = false;
             this.loading = false;
-            // bugsnagClient.notify(e);
         }
     },
 
