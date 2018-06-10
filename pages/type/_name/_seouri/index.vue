@@ -85,7 +85,7 @@ export default {
             const data = {};
             data.product = await product_mixin.methods.getProductBySeoUri.call(app, params.seouri);
 
-            if(!product) {
+            if(!data.product) {
                 return;
             }
 
