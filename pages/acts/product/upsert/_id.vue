@@ -100,25 +100,26 @@ export default {
     },
 
     methods: {
-        getProduct() {
-            return this.getProductById(this.$route.params.id, { viewAllRelated: true })
-                .then((product) => {
-                    if(!product) {
-                        throw new Error(this.$t('Product not found'));
-                    }
+        async getProduct() {
+            try {
+                const product = await this.getProductById(this.$route.params.id, { viewAllRelated: true });
 
-                    return product;
-                })
-                .catch((e) => {
-                    showNotification(
-                        this.$notify({
-                            type: 'error',
-                            title: e.message,
-                            duration: 0
-                        })
-                    );
-                    // bugsnagClient.notify(e);
-                });
+                if(!product) {
+                    throw new Error(this.$t('Product not found'));
+                }
+
+                return product;
+            }
+            catch(e) {
+                showNotification(
+                    this.$notify({
+                        type: 'error',
+                        title: e.message,
+                        duration: 0
+                    })
+                );
+                // bugsnagClient.notify(e);
+            }
         },
 
         goToStore(seoUri) {
@@ -152,56 +153,29 @@ export default {
             this.videoPlayerModal.player = player;
         },
 
-        upsertProduct(product) {
-            this.upsert(product)
-                .then((p) => {
-                    if(!p) {
-                        throw new Error(this.$t('Error updating product'));
-                    }
+        async upsertProduct(product) {
+            try {
+                const p = await this.upsert(product);
 
-                    let title = 'Product added successfully';
-                    if(product.id) {
-                        title = 'Product updated successfully';
-                    }
-
-                    this.$notify({
-                        type: 'success',
-                        title,
-                        message: p.title,
-                        duration: 3000
-                    });
-
-                    this.goToAdminProductList();
-                })
-                .catch((e) => {
-                    showNotification(
-                        this.$notify({
-                            type: 'error',
-                            title: e.message,
-                            duration: 0
-                        })
-                    );
-                    // bugsnagClient.notify(e);
-                });
-        }
-    },
-
-    created() {
-        if(this.$route.params.id) {
-            this.getProduct().then((product) => {
-                this.product = product;
-            });
-        }
-
-        this.getProductInfo()
-            .then((productInfo) => {
-                if(!productInfo) {
-                    throw new Error(this.$t('Product info not found'));
+                if(!p) {
+                    throw new Error(this.$t('Error updating product'));
                 }
 
-                this.productInfo = productInfo;
-            })
-            .catch((e) => {
+                let title = 'Product added successfully';
+                if(product.id) {
+                    title = 'Product updated successfully';
+                }
+
+                this.$notify({
+                    type: 'success',
+                    title,
+                    message: p.title,
+                    duration: 3000
+                });
+
+                this.goToAdminProductList();
+            }
+            catch(e) {
                 showNotification(
                     this.$notify({
                         type: 'error',
@@ -210,7 +184,32 @@ export default {
                     })
                 );
                 // bugsnagClient.notify(e);
-            });
+            }
+        }
+    },
+
+    async created() {
+        try {
+            if(this.$route.params.id) {
+                this.product = await this.getProduct();
+            }
+
+            this.productInfo = await this.getProductInfo();
+
+            if(!this.productInfo) {
+                throw new Error(this.$t('Product info not found'));
+            }
+        }
+        catch(e) {
+            showNotification(
+                this.$notify({
+                    type: 'error',
+                    title: e.message,
+                    duration: 0
+                })
+            );
+            // bugsnagClient.notify(e);
+        }
     }
 }
 </script>

@@ -47,25 +47,24 @@ export default{
         }
     },
 
-    created() {
-        this.getProductById(this.$route.params.id)
-            .then((product) => {
-                if(!product) {
-                    throw new Error(this.$t('Product not found'));
-                }
+    async created() {
+        try {
+            this.product = await this.getProductById(this.$route.params.id);
 
-                this.product = product;
-            })
-            .catch((e) => {
-                showNotification(
-                    this.$notify({
-                        type: 'error',
-                        title: e.message,
-                        duration: 0
-                    })
-                );
-                // bugsnagClient.notify(e);
-            });
+            if(!this.product) {
+                throw new Error(this.$t('Product not found'));
+            }
+        }
+        catch(e) {
+            showNotification(
+                this.$notify({
+                    type: 'error',
+                    title: e.message,
+                    duration: 0
+                })
+            );
+            // bugsnagClient.notify(e);
+        }
     }
 }
 </script>

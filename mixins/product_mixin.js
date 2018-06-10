@@ -60,40 +60,31 @@ export default {
         },
 
 
-        getProducts(params) {
+        async getProducts(params) {
             let paramString = queryString.stringify(params, {arrayFormat: 'bracket'});
 
-            return this.$axios
-                .$get(`/products?${paramString}`) // TODO: is there a XSS issue here?
-                .then((response) => {
-                    return response.data;
-                });
+            const response = await this.$axios.$get(`/products?${paramString}`); // TODO: is there a XSS issue here?
+            return response.data;
         },
 
 
-        getProductInfo() {
-            return this.$axios
-                .$get('/product/info')
-                .then((response) => {
-                    return response.data;
-                });
+        async getProductInfo() {
+            const response = await this.$axios.$get('/product/info');
+            return response.data;
         },
 
 
-        getProductBySeoUri(str) {
-            return this.$axios
-                .$get('/product/seo', {
-                    params: {
-                        id: str
-                    }
-                })
-                .then((response) => {
-                    return response.data;
-                });
+        async getProductBySeoUri(str) {
+            const response = await this.$axios.$get('/product/seo', {
+                params: {
+                    id: str
+                }
+            });
+            return response.data;
         },
 
 
-        getProductById(id, options) {
+        async getProductById(id, options) {
             let params = {};
 
             if(isObject(options)) {
@@ -104,13 +95,10 @@ export default {
 
             params.id = id;
 
-            return this.$axios
-                .$get('/product', {
-                    params
-                })
-                .then((response) => {
-                    return response.data;
-                });
+            const response = await this.$axios.$get('/product', {
+                params
+            });
+            return response.data;
         },
 
 
@@ -159,21 +147,19 @@ export default {
         },
 
 
-        upsert(product) {
+        async upsert(product) {
             let target = '/product/create';
 
             if(product.id) {
                 target = '/product/update'
             }
 
-            return this.$axios
-                .$post(
-                    target,
-                    stripRelations(product)
-                )
-                .then((response) => {
-                    return response.data;
-                });
+            const response = await this.$axios.$post(
+                target,
+                stripRelations(product)
+            );
+
+            return response.data;
         },
 
 
@@ -254,30 +240,6 @@ export default {
          * Product Sizes
          ******************************/
 
-        // buildSizeOptions(product) {
-        //     return new Promise((resolve, reject) => {
-        //         let sizeOpts = [];
-        //         let maxInventoryCount = 0;
-
-        //         if (Array.isArray(product.sizes)) {
-        //             product.sizes.forEach((obj) => {
-        //                 if (obj.is_visible && obj.inventory_count) {
-        //                     sizeOpts.push(obj.size);
-
-        //                     if (obj.inventory_count > maxInventoryCount) {
-        //                         maxInventoryCount = obj.inventory_count;
-        //                     }
-        //                 }
-        //             });
-        //         }
-
-        //         resolve({
-        //             sizeOpts,
-        //             maxInventoryCount
-        //         });
-        //     });
-        // },
-
         buildSizeOptions(product) {
             let sizeOpts = [];
             let maxInventoryCount = 0;
@@ -301,57 +263,47 @@ export default {
         },
 
 
-        buildMissingSizeOptions(sizes) {
-            return this.getProductInfo()
-                .then((productInfo) => {
-                    if(!productInfo) {
-                        throw new Error(this.$t('Product sizes not found'));
-                    }
+        async buildMissingSizeOptions(sizes) {
+            const productInfo = await this.getProductInfo();
 
-                    let usedSizeIds = [];
-                    let options = [];
+            if(!productInfo) {
+                throw new Error(this.$t('Product sizes not found'));
+            }
 
-                    if(Array.isArray(sizes)) {
-                        sizes.forEach((size) => {
-                            usedSizeIds.push(size.size);
-                        });
-                    }
+            let usedSizeIds = [];
+            let options = [];
 
-                    productInfo.sizes.forEach((id) => {
-                        if(usedSizeIds.indexOf(id) === -1) {
-                            options.push(id);
-                        }
-                    });
-
-                    return options;
+            if(Array.isArray(sizes)) {
+                sizes.forEach((size) => {
+                    usedSizeIds.push(size.size);
                 });
+            }
+
+            productInfo.sizes.forEach((id) => {
+                if(usedSizeIds.indexOf(id) === -1) {
+                    options.push(id);
+                }
+            });
+
+            return options;
         },
 
 
-        createProductSize(size) {
-            return this.$axios
-                .$post(`/product/size/create`, size)
-                .then((response) => {
-                    return response.data;
-                });
+        async createProductSize(size) {
+            const response = await this.$axios.$post(`/product/size/create`, size)
+            return response.data;
         },
 
 
-        updateProductSize(size) {
-            return this.$axios
-                .$post(`/product/size/update`, size)
-                .then((response) => {
-                    return response.data;
-                });
+        async updateProductSize(size) {
+            const response = await this.$axios.$post(`/product/size/update`, size);
+            return response.data;
         },
 
 
-        deleteProductSize(sizeId) {
-            return this.$axios
-                .$post(`/product/size/delete`, { id: sizeId })
-                .then((response) => {
-                    return response.data;
-                });
+        async deleteProductSize(sizeId) {
+            const response = await this.$axios.$post(`/product/size/delete`, { id: sizeId })
+            return response.data;
         },
 
 
@@ -359,25 +311,19 @@ export default {
          * Product Pictures
          ******************************/
 
-        upsertProductPicture(formData) {
-            return this.$axios
-                .$post(
-                    '/product/pic/upsert',
-                    formData,
-                    { headers: { 'Content-Type': 'multipart/form-data' } }
-                )
-                .then((response) => {
-                    return response.data;
-                });
+        async upsertProductPicture(formData) {
+            const response = await this.$axios.$post(
+                '/product/pic/upsert',
+                formData,
+                { headers: { 'Content-Type': 'multipart/form-data' } }
+            )
+            return response.data;
         },
 
 
-        deleteProductPicture(id) {
-            return this.$axios
-                .$post(`/product/pic/delete`, { id })
-                .then((response) => {
-                    return response.data;
-                });
+        async deleteProductPicture(id) {
+            const response = await this.$axios.$post(`/product/pic/delete`, { id });
+            return response.data;
         }
     }
 }

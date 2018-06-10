@@ -37,39 +37,30 @@ export default {
         }
     },
 
-    asyncData({ params, store, app }) {
-        // console.log("IN ASYNC DATA store", store.state.product)
-        // console.log("IN ASYNC DATA store", store.state.product)
-        // console.log("IN ASYNC DATA", context.app.store)
-        // this.init(context.app.$route.params.id)
+    async asyncData({ params, store, app }) {
+        const products = await product_mixin.methods.getProducts.call(app, {
+            // where: ['is_available', '=', true],
+            // andWhere: [
+            //     ['inventory_count', '>', 0]
+            // ],
+            orderBy: 'updated_at',
+            orderDir: 'DESC'
+        });
 
-        return product_mixin.methods.getProducts.call(app, {
-                // where: ['is_available', '=', true],
-                // andWhere: [
-                //     ['inventory_count', '>', 0]
-                // ],
-                orderBy: 'updated_at',
-                orderDir: 'DESC'
-            })
-            .then((products) => {
-                return {
-                    products
-                }
-            })
+        return {
+            products
+        }
     },
 
     methods: {
-        fetchProducts() {
-            this.getProducts({
+        async fetchProducts() {
+            this.products = await this.getProducts({
                 // where: ['is_available', '=', true],
                 // whereRaw: ['sub_type & ? > 0', [productTypeId]],
                 // andWhere: [
                 //     ['inventory_count', '>', 0]
                 // ],
                 ...this.sortData
-            })
-            .then((products) => {
-                this.products = products;
             });
         },
 

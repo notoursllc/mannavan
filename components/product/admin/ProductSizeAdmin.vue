@@ -90,20 +90,19 @@ export default{
         },
 
 
-        setSizeOptions(sizes) {
-            this.buildMissingSizeOptions(sizes)
-                .then((options) => {
-                    this.sizeOptions = options;
-                })
-                .catch((e) => {
-                    showNotification(
-                        this.$notify({
-                            type: 'error',
-                            title: e.message,
-                            duration: 0
-                        })
-                    )
-                });
+        async setSizeOptions(sizes) {
+            try {
+                this.sizeOptions = await this.buildMissingSizeOptions(sizes);
+            }
+            catch(err) {
+                showNotification(
+                    this.$notify({
+                        type: 'error',
+                        title: e.message,
+                        duration: 0
+                    })
+                )
+            }
         },
 
 

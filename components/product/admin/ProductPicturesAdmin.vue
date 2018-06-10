@@ -99,50 +99,53 @@ export default{
             this.picModal.tempImage = null;
         },
 
-        deletePic(pic) {
-            let picName = this.$t(pic.url);
+        async deletePic(pic) {
+            try {
+                let picName = this.$t(pic.url);
 
-            this.$confirm(`Remove this picture from the product? "${ picName }"`, 'Please confirm', {
-                confirmButtonText: 'OK',
-                cancelButtonText: 'Cancel',
-                type: 'warning'
-            })
-            .then(() => {
-                this.deleteProductPicture(pic.id)
-                    .then((pictureJson) => {
-                        if(!pictureJson) {
-                            throw new Error(this.$t('Product picture not found'));
-                        }
+                await this.$confirm(`Remove this picture from the product? "${ picName }"`, 'Please confirm', {
+                    confirmButtonText: 'OK',
+                    cancelButtonText: 'Cancel',
+                    type: 'warning'
+                });
 
-                        this.setProduct();
+                try {
+                    const pictureJson = await this.deleteProductPicture(pic.id);
 
-                        this.$emit('updated');
+                    if(!pictureJson) {
+                        throw new Error(this.$t('Product picture not found'));
+                    }
 
-                        showNotification(
-                            this.$notify({
-                                type: 'success',
-                                title: 'Picture deleted:',
-                                message: pic.url,
-                                duration: 3000
-                            })
-                        );
-                    })
-                    .catch((e) => {
-                        showNotification(
-                            this.$notify({
-                                type: 'error',
-                                title: e.message,
-                                duration: 0
-                            })
-                        )
-                    });
-            })
-            .catch(() => {
-                // console.log("DELETE SIZE CANCELLED")
-            });
+                    this.setProduct();
+
+                    this.$emit('updated');
+
+                    showNotification(
+                        this.$notify({
+                            type: 'success',
+                            title: 'Picture deleted:',
+                            message: picName,
+                            duration: 3000
+                        })
+                    );
+
+                }
+                catch(e) {
+                    showNotification(
+                        this.$notify({
+                            type: 'error',
+                            title: e.message,
+                            duration: 0
+                        })
+                    )
+                }
+            }
+            catch(e) {
+                // DO NOTHING
+            }
         },
 
-        savePic(pictureId) {
+        async savePic(pictureId) {
             let promise = null;
             let formData = new FormData();
             let whitelist = [
@@ -163,53 +166,53 @@ export default{
                 formData.append('product_id', this.product.id);
             }
 
-            this.upsertProductPicture(formData)
-                .then((picJson) => {
-                    this.picModal.isActive = false;
-                    this.setProduct();
-                    this.deleteTempImage();
+            try {
+                const picJson = await this.upsertProductPicture(formData);
 
-                    this.$emit('updated');
+                this.picModal.isActive = false;
+                this.setProduct();
+                this.deleteTempImage();
 
-                    showNotification(
-                        this.$notify({
-                            type: 'success',
-                            title: 'Picture saved:',
-                            message: picJson.url,
-                            duration: 3000
-                        })
-                    )
-                })
-                .catch((e) => {
-                    showNotification(
-                        this.$notify({
-                            type: 'error',
-                            title: e.message,
-                            duration: 0
-                        })
-                    )
-                });
+                this.$emit('updated');
+
+                showNotification(
+                    this.$notify({
+                        type: 'success',
+                        title: 'Picture saved:',
+                        message: picJson.url,
+                        duration: 3000
+                    })
+                )
+            }
+            catch(e) {
+                showNotification(
+                    this.$notify({
+                        type: 'error',
+                        title: e.message,
+                        duration: 0
+                    })
+                )
+            }
         },
 
 
-        setProduct() {
-            return this.getProductById(this.productId, { viewAllRelated: true })
-                .then((product) => {
-                    if(!product) {
-                        throw new Error(this.$t('Product not found'));
-                    }
+        async setProduct() {
+            try {
+                this.product = await this.getProductById(this.productId, { viewAllRelated: true });
 
-                    this.product = product;
-                })
-                .catch((e) => {
-                    showNotification(
-                        this.$notify({
-                            type: 'error',
-                            title: e.message,
-                            duration: 0
-                        })
-                    )
-                });
+                if(!this.product) {
+                    throw new Error(this.$t('Product not found'));
+                }
+            }
+            catch(e) {
+                showNotification(
+                    this.$notify({
+                        type: 'error',
+                        title: e.message,
+                        duration: 0
+                    })
+                )
+            }
         },
 
         openPicEditModal(pic) {

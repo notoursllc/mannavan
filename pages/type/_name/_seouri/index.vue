@@ -80,35 +80,35 @@ export default {
         }
     },
 
-    asyncData({ params, store, app }) {
-        // Using call so this.$axios works properly in getProductBySeoUri()
-        return product_mixin.methods.getProductBySeoUri.call(app, params.seouri)
-            .then((product) => {
-                const data = {};
+    async asyncData({ params, store, app }) {
+        try {
+            const data = {};
+            data.product = await product_mixin.methods.getProductBySeoUri.call(app, params.seouri);
 
-                if(!product) {
-                    return;
-                }
+            if(!product) {
+                return;
+            }
 
-                let pics = [];
+            const pics = [];
 
-                data.product = product;
+            let opts = product_mixin.methods.buildSizeOptions(data.product);
+            data.sizeOptions = opts.sizeOpts;
 
-                let opts = product_mixin.methods.buildSizeOptions(product);
-                data.sizeOptions = opts.sizeOpts;
+            if (Array.isArray(data.product.pics)) {
+                data.product.pics.forEach((obj) => {
+                    pics.push(obj.url)
+                });
 
-                if (Array.isArray(data.product.pics)) {
-                    data.product.pics.forEach((obj) => {
-                        pics.push(obj.url)
-                    });
+                data.productPics = pics;
+            }
 
-                    data.productPics = pics;
-                }
+            store.dispatch('ui/pageTitle', data.product.title);
 
-                store.dispatch('ui/pageTitle', data.product.title);
-
-                return data;
-            });
+            return data;
+        }
+        catch(err) {
+            console.log("Error getting product", err)
+        }
     },
 
     methods: {
