@@ -56,7 +56,7 @@
                 added_cart_item: {},
                 selectedQty: 0,
                 loading: true,
-                deleteConfirmVisible: false
+                confirmDeleteModals: {}
             }
         },
 
@@ -146,20 +146,26 @@
 
                             <div v-if="allowEdit" class="mts">
                                 <el-popover
-                                    placement="top"
                                     width="200"
-                                    v-model="deleteConfirmVisible">
+                                    v-model="confirmDeleteModals[item.id]"
+                                    trigger="click"
+                                    placement="start/right-end">
                                     <div>{{ $t('Delete this item?') }}</div>
                                     <div class="tar mtm">
-                                        <el-button size="mini"
-                                            type="text"
-                                            @click="deleteConfirmVisible = false">{{ $t('cancel') }}</el-button>
-
-                                        <el-button type="primary"
+                                        <el-button
+                                            type="primary"
                                             size="mini"
-                                            @click="deleteConfirmVisible = false; removeItem(item.id)">{{ $t('CONFIRM') }}</el-button>
+                                            @click="confirmDeleteModals[item.id] = false; removeItem(item.id)">{{ $t('CONFIRM') }}</el-button>
+
+                                        <el-button
+                                            size="mini"
+                                            type="text"
+                                            @click="confirmDeleteModals[item.id] = false">{{ $t('cancel') }}</el-button>
                                     </div>
-                                    <el-button slot="reference" type="text">{{ $t('Delete') }}</el-button>
+                                    <el-button
+                                        slot="reference"
+                                        type="text"
+                                        @click="confirmDeleteModals[item.id] = true">{{ $t('Delete') }}</el-button>
                                 </el-popover>
                             </div>
                         </div>
