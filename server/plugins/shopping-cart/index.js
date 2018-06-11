@@ -192,27 +192,21 @@ exports.plugin = {
     once: true,
     pkg: require('./package.json'),
     register: function (server, options) {
-        let schema = Joi.object().keys({
-            isSandbox: Joi.boolean(),
-            merchantId: Joi.string().alphanum(),
-            publicKey: Joi.string().alphanum(),
-            privateKey: Joi.string().alphanum()
-        });
-
-        const validateOptions = schema.validate(options);
-        if (validateOptions.error) {
-            throw new Error(validateOptions.error);
-        }
-
         ShoppingCartController.setServer(server);
 
-        const settings = Hoek.applyToDefaults({ isSandbox: true }, options);
+        let env;
+        if(process.env.NODE_ENV === 'test' || process.env.BRAINTREE_USE_SANDBOX) {
+            env = braintree.Environment.Sandbox;
+        }
+        else {
+            env = braintree.Environment.Production;
+        }
 
         global.braintreeGateway = braintree.connect({
-            environment: settings.isSandbox ? braintree.Environment.Sandbox : braintree.Environment.Production,
-            merchantId: settings.merchantId,
-            publicKey: settings.publicKey,
-            privateKey: settings.privateKey
+            environment: env,
+            merchantId: process.env.BRAINTREE_MERCHANT_ID,
+            publicKey: process.env.BRAINTREE_PUBLIC_KEY,
+            privateKey: process.env.BRAINTREE_PRIVATE_KEY
         });
 
         server.dependency(['BookshelfOrm', 'Core', 'Products'], after);
