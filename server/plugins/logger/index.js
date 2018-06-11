@@ -1,8 +1,8 @@
 // https://insightops.help.rapid7.com/docs/nodejs
-const LogEntries = require('r7insight_node');
+// const LogEntries = require('r7insight_node');
 const winston = require('winston');
 const Promise = require('bluebird');
-const bugsnag = require('bugsnag')
+const bugsnag = require('bugsnag');
 
 
 exports.plugin = {
@@ -37,11 +37,11 @@ exports.plugin = {
         });
 
         // https://github.com/rapid7/r7insight_node#options
-        const LogEntries = new (winston.transports.Logentries)({
-            token: process.env.LOGENTRIES_TOKEN,
-            region: 'us',
-            withStack: true
-        });
+        // const LogEntries = new (winston.transports.Logentries)({
+        //     token: process.env.LOGENTRIES_TOKEN,
+        //     region: 'us',
+        //     withStack: true
+        // });
 
         let transports = [
             new (winston.transports.Console)({
@@ -50,7 +50,7 @@ exports.plugin = {
                 colorize: true,
                 silent: false
             }),
-            LogEntries
+            // LogEntries
         ];
 
         let exceptionHandlers = [
@@ -58,7 +58,7 @@ exports.plugin = {
                 handleExceptions: true,
                 humanReadableUnhandledException: true
             }),
-            LogEntries
+            // LogEntries
         ];
 
         const logger = new (winston.Logger)({
