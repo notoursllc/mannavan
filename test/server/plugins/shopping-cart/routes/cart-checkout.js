@@ -20,7 +20,7 @@ function injectAndExpectStatusCode(server, request, statusCode) {
 describe('Testing route: POST /cart/checkout', () => {
     it('should return 400 (Bad Request) when nonce is not sent in the payload', (done) => {
         let manifest = Hoek.clone(serverSetup.manifest);
-        // manifest.registrations[0].plugin.options.customSessionIDGenerator = function(request) {
+        // manifest.register.plugins[0].plugin.options.customSessionIDGenerator = function(request) {
         //     return '12345';
         // };
 
@@ -53,7 +53,7 @@ describe('Testing route: POST /cart/checkout', () => {
 
     it('should return 400 (Bad Request) when invalid shipping data is sent', (done) => {
         let manifest = Hoek.clone(serverSetup.manifest);
-        // manifest.registrations[0].plugin.options.customSessionIDGenerator = function(request) {
+        // manifest.register.plugins[0].plugin.options.customSessionIDGenerator = function(request) {
         //     return '12345';
         // };
 
@@ -156,7 +156,7 @@ describe('Testing route: POST /cart/checkout', () => {
 
     it('should return 400 (Bad Request) when invalid billing data is sent', (done) => {
         let manifest = Hoek.clone(serverSetup.manifest);
-        // manifest.registrations[0].plugin.options.customSessionIDGenerator = function(request) {
+        // manifest.register.plugins[0].plugin.options.customSessionIDGenerator = function(request) {
         //     return '12345';
         // };
 

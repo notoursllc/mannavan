@@ -72,12 +72,12 @@ const it = lab.test;
 
 
 internals.manifest = {
-    connections: [
-        {
-            port: 0
-        }
-    ],
-    registrations: []
+    server: {
+        port: 0
+    },
+    register: {
+        plugins: []
+    }
 };
 
 internals.composeOptions = {

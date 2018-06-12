@@ -113,8 +113,8 @@ function startServerAndGetHeaders(manifest, composeOptions) {
 function getRegistrationIndexFromManifest(path, manifest) {
     let i = -1;
 
-    if(isObject(manifest) && Array.isArray(manifest.registrations)) {
-        forEach(manifest.registrations, (obj, index) => {
+    if(isObject(manifest) && Array.isArray(manifest.register.plugins)) {
+        forEach(manifest.register.plugins, (obj, index) => {
             if(isObject(obj) && isObject(obj.plugin) && obj.plugin.register === path) {
                 i = index;
             }
@@ -129,7 +129,7 @@ function spliceRegistrationFromManifest(path, manifest) {
     let index = getRegistrationIndexFromManifest(path, manifest);
 
     if(index > -1) {
-        manifest.registrations.splice(index, 1);
+        manifest.register.plugins.splice(index, 1);
     }
 }
 
@@ -186,58 +186,26 @@ function getApiPrefix(path) {
 
 function getBasicManifest() {
     let manifest = {
-        connections: [
-            {
-                port: 0
-            }
-        ],
-        registrations: [
-            // {
-            //     plugin: {
-            //         register: './plugins/yar',
-            //         options: {}
-            //     }
-            // },
-            // {
-            //     plugin: {
-            //         register: './plugins/crumbCsrf',
-            //         options: {}
-            //     }
-            // },
-            {
-                plugin: {
-                    register: 'inert'
-                }
-            },
-            {
-                plugin: {
-                    register: 'vision'
-                }
-            },
-            {
-                plugin: {
-                    register: './plugins/logger'
-                }
-            },
-            {
-                plugin: {
-                    register: './plugins/bookshelf-orm',
+        server: {
+            port: 0
+        },
+        register: {
+            plugins: [
+                { plugin: 'inert' },
+                { plugin: 'vision' },
+                { plugin: './plugins/logger' },
+                {
+                    plugin: './plugins/bookshelf-orm',
                     options: {
                         knex: {
-                            debug: false
-                        },
-                        plugins: [
-                            require('bookshelf-uuid')
-                        ]
+                            debug: true
+                        }
                     }
-                }
-            },
-            {
-                plugin: {
-                    register: './plugins/core'
-                }
-            }
-        ]
+                },
+                { plugin: './plugins/auth-scheme-jwt-cookie' },
+                { plugin: './plugins/core' }
+            ]
+        }
     };
 
     return manifest;

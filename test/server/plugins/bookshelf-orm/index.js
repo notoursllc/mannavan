@@ -15,14 +15,14 @@ describe('Testing BookshelfOrm plugin', () => {
 
     // it('should have exposed methods under gmnst namespace when provided in plugin options', (done) => {
     //     const manifest = Hoek.clone(serverSetup.manifest);
-    //     manifest.registrations[2].plugin.options = {};
-    //     manifest.registrations[2].plugin.options.namespace = 'gmnst';
+    //     manifest.register.plugins[2].plugin.options = {};
+    //     manifest.register.plugins[2].plugin.options.namespace = 'gmnst';
     //
     //     // removing unneeded plugins for this test
-    //     manifest.registrations.splice(4, 1);
-    //     manifest.registrations.splice(5, 1);
-    //     manifest.registrations.splice(6, 1);
-    //     manifest.registrations.splice(7, 1);
+    //     manifest.register.plugins.splice(4, 1);
+    //     manifest.register.plugins.splice(5, 1);
+    //     manifest.register.plugins.splice(6, 1);
+    //     manifest.register.plugins.splice(7, 1);
     //
     //     testHelpers
     //         .startServerAndGetHeaders(manifest, serverSetup.composeOptions)

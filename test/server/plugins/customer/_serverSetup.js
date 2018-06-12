@@ -3,12 +3,8 @@ const testHelpers = require('../../testHelpers');
 
 
 let manifest = testHelpers.getBasicManifest();
-manifest.registrations.push(
-    {
-        plugin: {
-            register: './plugins/customer'
-        }
-    }
+manifest.register.plugins.push(
+    { plugin: './plugins/customer' }
 );
 
 

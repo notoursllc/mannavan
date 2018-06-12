@@ -42,7 +42,7 @@ describe('Testing route: DELETE /cart/item/remove/{id}', () => {
 
     it('should remove the cart item from the cart after deleting it', { timeout: 5000 }, (done) => {
         let manifest = Hoek.clone(serverSetup.manifest);
-        // manifest.registrations[0].plugin.options.customSessionIDGenerator = function(request) {
+        // manifest.register.plugins[0].plugin.options.customSessionIDGenerator = function(request) {
         //     return 'abcde';
         // };
 
