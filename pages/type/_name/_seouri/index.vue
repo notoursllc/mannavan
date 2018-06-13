@@ -9,6 +9,11 @@ import { Carousel, Slide } from 'vue-carousel'
 import SocialSharing from 'vue-social-sharing'
 import ProductPrice from '@/components/product/ProductPrice'
 import NumberButtons from '@/components/NumberButtons'
+import IconFacebook from '@/components/icons/IconFacebook'
+import IconGooglePlus from '@/components/icons/IconGooglePlus'
+import IconTwitter from '@/components/icons/IconTwitter'
+import IconPinterest from '@/components/icons/IconPinterest'
+import IconCap from '@/components/icons/IconCap'
 import product_mixin from '@/mixins/product_mixin'
 import app_mixin from '@/mixins/app_mixin'
 import shopping_cart_mixin from '@/mixins/shopping_cart_mixin'
@@ -45,7 +50,11 @@ export default {
         ProductPrice,
         NumberButtons,
         Carousel,
-        Slide
+        Slide,
+        IconFacebook,
+        IconGooglePlus,
+        IconTwitter,
+        IconPinterest
     },
 
     data() {
@@ -292,29 +301,30 @@ export default {
                 </div>
 
                 <div class="social">
+
                     <!-- <social-sharing :url="siteUrl + '/product/share?id=' + product.id" -->
-                    <social-sharing :url="pageUrl"
+                    <!-- <social-sharing :url="pageUrl"
                                     :title="product.title"
                                     :description="product.title"
-                                    hashtags="gmnst"
+                                    hashtags="breadVan"
                                     :twitter-user="twitterUser"
                                     :media="mediaPicture"
                                     inline-template>
                         <div>
                             <network network="facebook">
-                                <i class="notours icon-facebook" alt="Facebook"></i>
+                                <icon-facebook icon-name="facebook" icon-color="#000" width="40px" height="40px" />
                             </network>
                             <network network="googleplus">
-                                <i class="notours icon-google" alt="Google+"></i>
+                                <icon-google-plus icon-name="google-plus" icon-color="#000" width="40px" height="40px" />
                             </network>
                             <network network="pinterest">
-                                <i class="notours icon-pinterest" alt="Pinterest"></i>
+                                <icon-pinterest icon-name="google-plus" icon-color="#4a4a4a" width="25px" /> 
                             </network>
                             <network network="twitter">
-                                <i class="notours icon-twitter" alt="Twitter"></i>
+                                <icon-twitter icon-name="google-plus" icon-color="#4a4a4a" width="25px" /> 
                             </network>
                         </div>
-                    </social-sharing>
+                    </social-sharing> -->
                 </div>
         </div>
     </div>
@@ -346,12 +356,6 @@ export default {
 .social {
     margin-top: 40px;
     text-align: center;
-
-    .notours {
-        font-size: 25px;
-        margin-right: 20px;
-        cursor: pointer;
-    }
 }
 
 .VueCarousel-wrapper {

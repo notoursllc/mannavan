@@ -7,6 +7,8 @@ import FormRow from '@/components/FormRow'
 import ProductSizeAdmin from '@/components/product/admin/ProductSizeAdmin'
 import ProductPicturesAdmin from '@/components/product/admin/ProductPicturesAdmin'
 import BitwiseMultiSelect from '@/components/BitwiseMultiSelect'
+import IconNewWindow from '@/components/icons/IconNewWindow'
+import IconPlayVideo from '@/components/icons/IconPlayVideo'
 import product_mixin from '@/mixins/product_mixin'
 
 Vue.prototype.$notify = Notification;
@@ -41,7 +43,9 @@ export default {
         FormRow,
         ProductSizeAdmin,
         ProductPicturesAdmin,
-        BitwiseMultiSelect
+        BitwiseMultiSelect,
+        IconNewWindow,
+        IconPlayVideo
     },
 
     mixins: [
@@ -216,7 +220,8 @@ export default {
     <div class="pal">
         <div class="tar mbm">
             <el-button @click="goToStore(product.seo_uri)">
-                <i class="notours icon-new-window"></i>&nbsp;&nbsp;VIEW PRODUCT IN STORE
+                <icon-new-window icon-name="new_window" icon-color="#000" width="15px" />
+                &nbsp;&nbsp;VIEW PRODUCT IN STORE
             </el-button>
         </div>
 
@@ -316,7 +321,9 @@ export default {
                         <el-button
                             slot="append"
                             v-if="product.video_url"
-                            @click="playVideo(product.video_url)"><i class="notours icon-play"></i></el-button>
+                            @click="playVideo(product.video_url)">
+                            <icon-play-video icon-name="play" width="20px" />
+                        </el-button>
                     </el-input>
                 </div>
 

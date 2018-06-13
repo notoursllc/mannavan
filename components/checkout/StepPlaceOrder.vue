@@ -5,7 +5,6 @@
     import forEach from 'lodash.foreach'
     import cloneDeep from 'lodash.clonedeep'
     import { Checkbox, Input, Notification, Loading, Dialog, Select } from 'element-ui'
-    import PaymentMethodChooser from '@/components/checkout/PaymentMethodChooser'
     import ShippingBillingForm from '@/components/checkout/ShippingBillingForm'
     import CartItems from '@/components/cart/CartItems'
     import CartTotalsTable from '@/components/cart/CartTotalsTable'
@@ -14,6 +13,9 @@
     import BottomPopover from '@/components/BottomPopover'
     import CreditCardIcon from '@/components/CreditCardIcon'
     import SiteName from '@/components/SiteName'
+    import StatusWrapper from '@/components/StatusWrapper'
+    import IconCreditCard from '@/components/icons/IconCreditCard'
+    import IconPaypal from '@/components/icons/IconPaypal'
     import shopping_cart_mixin from '@/mixins/shopping_cart_mixin'
     import app_mixin from '@/mixins/app_mixin'
 
@@ -26,13 +28,8 @@
 
     let currentNotification = null;
 
-
-
-
-
     export default {
         components: {
-            PaymentMethodChooser,
             ShippingView,
             ShippingBillingHelp,
             ShippingBillingForm,
@@ -41,7 +38,10 @@
             BottomPopover,
             CreditCardIcon,
             CartTotalsTable,
-            SiteName
+            SiteName,
+            StatusWrapper,
+            IconCreditCard,
+            IconPaypal
         },
 
         mixins: [
@@ -59,15 +59,11 @@
             paymentMethodButtonEnabled: function() {
                 if(this.paymentMethod === 'PAYPAL' ||
                     (this.paymentMethod === 'CREDIT_CARD' &&
-                    this.inputClasses['card-number'] &&
-                    this.inputClasses['card-number'].indexOf('colorGreen') > -1 &&
-                    this.inputClasses['expiration-year'] &&
-                    this.inputClasses['expiration-year'].indexOf('colorGreen') > -1 &&
-                    this.inputClasses['expiration-month'] &&
-                    this.inputClasses['expiration-month'].indexOf('colorGreen') > -1 &&
-                    this.inputClasses['cvv'] &&
-                    this.inputClasses['cvv'].indexOf('colorGreen') > -1) &&
-                    (this.billingSameAsShipping || (!this.billingSameAsShipping && this.separateBillingFormValid))) {
+                    this.inputStatus['card-number'] === 'success' &&
+                    this.inputStatus['expiration-year'] === 'success' &&
+                    this.inputStatus['expiration-month'] === 'success' &&
+                    this.inputStatus['cvv'] === 'success' &&
+                    (this.billingSameAsShipping || (!this.billingSameAsShipping && this.separateBillingFormValid)))) {
                     return true;
                 }
 
@@ -105,11 +101,11 @@
                 securityCodeHint: `3 ${this.$tc('digits_text', 3)}`,
                 placeOrderButtonLoading: false,
                 separateBillingFormValid: false,
-                inputClasses: {
+                inputStatus: {
                     'card-number': null,
                     'expiration-year': null,
                     'expiration-month': null,
-                    'cvv': null,
+                    'cvv': null
                 },
                 braintree: {
                     clientInstance: null,
@@ -267,26 +263,21 @@
                 hostedFieldsInstance.on('validityChange', (event) => {
                     let field = event.fields[event.emittedBy];
                     let id = getElementId(field);
-                    let classesSuccess = ['notours', 'icon-check-circle', 'colorGreen'];
-                    let classesError = ['notours', 'icon-times-circle', 'colorRed'];
-
-                    // console.log("ON VALIDITY CHANGE", field, id, event.isValid)
 
                     if(id) {
                         if (field.isValid === false && !field.isPotentiallyValid) {
-                            this.inputClasses[id] = classesError;
+                            this.inputStatus[id] = 'failed'
                         }
                         else if (field.isValid === true) {
-                            this.inputClasses[id] = classesSuccess;
+                            this.inputStatus[id] = 'success'
                         }
                         else {
-                            this.inputClasses[id] = null;
+                            this.inputStatus[id] = null
                         }
                     }
                 });
 
                 hostedFieldsInstance.on('cardTypeChange', (event) => {
-                    // console.log('cardTypeChange', event);
                     let isPotentiallyValid = (isObject(event.fields) && isObject(event.fields.number) && !event.fields.number.isPotentiallyValid);
 
                     if(isPotentiallyValid) {
@@ -483,19 +474,25 @@
                 <div class="displayTableRow">
                     <label class="checkout_form_label fwb">{{ $t('PAYMENT METHOD') }}:</label>
                     <div class="checkout_form_value">
-                        <!-- <payment-method-chooser @change="val => { paymentMethod = val }"></payment-method-chooser> -->
                         <div class="inlineBlock relative widthAll">
-                            <el-select v-model="paymentMethod" placeholder="Select" class="widthAll">
-                                <el-option :label="$t('CREDIT CARD')" value="CREDIT_CARD">
-                                    <span class="floatLeft">{{ $t('CREDIT CARD') }}</span>
-                                    <span class="floatRight fs20"><i class="notours icon-credit-card payment-type vam"></i></span>
-                                </el-option>
-                                <el-option :label="$t('PAYPAL')" value="PAYPAL">
-                                    <span class="floatLeft">{{ $t('PAYPAL') }}</span>
-                                    <span class="floatRight fs20"><i class="notours icon-paypal payment-type vam"></i></span>
-                                </el-option>
-                            </el-select>
-                            <i class="notours icon-check-circle colorGreen checkout_form_value_icon"></i>
+                            <status-wrapper :success="true">
+                                <el-select v-model="paymentMethod" placeholder="Select" class="widthAll">
+                                    <el-option :label="$t('CREDIT CARD')" value="CREDIT_CARD">
+                                        <span class="floatLeft">{{ $t('CREDIT CARD') }}</span>
+                                        <icon-credit-card
+                                            icon-name="credit_card" 
+                                            width="20px"
+                                            class="floatRight mts" />
+                                    </el-option>
+                                    <el-option :label="$t('PAYPAL')" value="PAYPAL">
+                                        <span class="floatLeft">{{ $t('PAYPAL') }}</span>
+                                        <icon-paypal
+                                            icon-name="credit_card" 
+                                            width="20px"
+                                            class="floatRight mts" />
+                                    </el-option>
+                                </el-select>
+                            </status-wrapper>
                         </div>
                     </div>
                 </div>
@@ -504,13 +501,14 @@
                 <div class="displayTableRow" v-show="paymentMethod === 'CREDIT_CARD'">
                     <label class="checkout_form_label fwb">{{ $t('CARD NUMBER') }}:</label>
                     <div class="checkout_form_value">
-                        <div id="card-number" class="el-input__inner"></div>
-                        <span class="card-icon">
-                            <credit-card-icon :card-type="cardType"></credit-card-icon>
-                        </span>
-                        <i v-show="inputClasses['card-number']"
-                            :class="inputClasses['card-number']"
-                            class="checkout_form_value_icon"></i>
+                        <status-wrapper 
+                            :success="inputStatus['card-number'] === 'success'"
+                            :failed="inputStatus['card-number'] === 'failed'">
+                            <div id="card-number" class="el-input__inner"></div>
+                            <span class="card-icon">
+                                <credit-card-icon :card-type="cardType"></credit-card-icon>
+                            </span>
+                        </status-wrapper>
                     </div>
                 </div>
 
@@ -518,19 +516,16 @@
                 <div class="displayTableRow" v-show="paymentMethod === 'CREDIT_CARD'">
                     <label class="checkout_form_label fwb">{{ $t('EXPIRES') }}:</label>
                     <div class="checkout_form_value">
-                        <div class="displayTable relative">
-                            <!-- month -->
-                            <div id="expiration-month" class="el-input__inner hostedField70 displayTableCell"></div>
-
-                            <div class="displayTableCell colorGrayLighter phs vat" style="font-size:22px">/</div>
-
-                            <!-- year -->
-                            <div id="expiration-year" class="el-input__inner hostedField70 displayTableCell"></div>
-
-                            <i v-show="inputClasses['expiration-month'] && inputClasses['expiration-year']"
-                                :class="getPaymentMonthYearClass(inputClasses['expiration-month'], inputClasses['expiration-year'])"
-                                class="checkout_form_value_icon"></i>
-                        </div>
+                        <status-wrapper 
+                            class-name="inline"
+                            :success="inputStatus['expiration-month'] === 'success' && inputStatus['expiration-year'] === 'success'"
+                            :failed="inputStatus['expiration-month'] === 'failed' || inputStatus['expiration-year'] === 'failed'">
+                            <div class="displayTable">
+                                <div id="expiration-month" class="el-input__inner hostedField70 displayTableCell"></div>
+                                <div class="displayTableCell colorGrayLighter phs vat" style="font-size:22px">/</div>
+                                <div id="expiration-year" class="el-input__inner hostedField70 displayTableCell"></div>
+                            </div>
+                        </status-wrapper>
                     </div>
                 </div>
 
@@ -541,15 +536,16 @@
                         <!-- <span class="colorGrayLighter">({{ securityCodeHint }})</span>: -->
                     </label>
                     <div class="checkout_form_value">
-                        <div class="displayTableCell relative">
-                            <div id="cvv" class="el-input__inner hostedField80 displayTableCell"></div>
-                            <i v-show="inputClasses.cvv"
-                                :class="inputClasses.cvv"
-                                class="checkout_form_value_icon"></i>
-                            <!-- <div class="colorGrayLighter fs14">({{ securityCodeHint }})</div> -->
+                        <div class="displayTableCell">
+                            <status-wrapper 
+                                class-name="inline"
+                                :success="inputStatus['cvv'] === 'success'"
+                                :failed="inputStatus['cvv'] === 'failed'">
+                                <div id="cvv" class="el-input__inner hostedField80 displayTableCell"></div>
+                            </status-wrapper>
                         </div>
-                        <div class="displayTableCell plm vat">
-                            <span class="underlineDotted cursorPointer" @click="securityCodeModalShow = true">{{ $t("what's this?") }}</span>
+                        <div class="displayTableCell plm vam">
+                            <span class="underlineDotted cursorPointer" @click="securityCodeModalShow = true">{{ $t("what's a security code?") }}</span>
                         </div>
                     </div>
                 </div>

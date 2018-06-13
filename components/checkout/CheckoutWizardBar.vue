@@ -1,41 +1,53 @@
 <script>
-    export default {
-        props: {
-            step: {
-                type: Number,
-                default: 1
-            }
-        },
+import IconAddress from '@/components/icons/IconAddress'
+import IconPackage from '@/components/icons/IconPackage'
+import IconVan from '@/components/icons/IconVan'
+import IconCheckSquare from '@/components/icons/IconCheckSquare'
 
-        data: function() {
-            return {
-                currentStep: 1
-            }
-        },
+export default {
+    props: {
+        step: {
+            type: Number,
+            default: 1
+        }
+    },
 
-        created() {
-            this.currentStep = this.step;
-        },
+    components: {
+        IconAddress,
+        IconPackage,
+        IconVan,
+        IconCheckSquare
+    },
 
-        methods: {
-            /**
-             * Changes the current step number if the new step is less than
-             * the current step
-             */
-            changeStep(stepNum) {
-                if(this.currentStep > stepNum) {
-                    this.currentStep = stepNum;
-                    this.$emit('change', stepNum)
-                }
-            }
-        },
+    data: function() {
+        return {
+            currentStep: 1
+        }
+    },
 
-        watch: {
-            'step' (to, from) {
-                this.currentStep = to;
+    created() {
+        this.currentStep = this.step;
+    },
+
+    methods: {
+        /**
+            * Changes the current step number if the new step is less than
+            * the current step
+            */
+        changeStep(stepNum) {
+            if(this.currentStep > stepNum) {
+                this.currentStep = stepNum;
+                this.$emit('change', stepNum)
             }
         }
+    },
+
+    watch: {
+        'step' (to, from) {
+            this.currentStep = to;
+        }
     }
+}
 </script>
 
 
@@ -44,7 +56,18 @@
         <div class="item"
              :class="{'active': currentStep === 0, 'completed': currentStep > 0}"
              @click="changeStep(0)">
-            <i class="notours" :class="{'icon-check-circle': currentStep > 0, 'icon-address': currentStep === 0}"></i>
+            <div class="item-icon">
+                <icon-check-square
+                    v-if="currentStep > 0" 
+                    icon-name="checkmark" 
+                    icon-color="#6ea76b" 
+                    width="20px" />
+                <icon-address
+                    v-if="currentStep === 0" 
+                    icon-name="checkmark"
+                    :icon-color="currentStep === 0 ? '#6ea76b' : '#b0b0b0'" 
+                    width="30px" />
+            </div>
             <div class="item-desc">1) {{ $t('SHIPPING ADDRESS') }}</div>
         </div>
 
@@ -55,7 +78,18 @@
         <div class="item"
              :class="{'active': currentStep === 1, 'completed': currentStep > 1}"
              @click="changeStep(1)">
-            <i class="notours" :class="{'icon-check-circle': currentStep > 1, 'icon-van': currentStep <= 1}"></i>
+            <div class="item-icon">
+                <icon-check-square
+                    v-if="currentStep > 1" 
+                    icon-name="checkmark" 
+                    icon-color="#6ea76b" 
+                    width="20px" />
+                <icon-van
+                    v-if="currentStep <= 1" 
+                    icon-name="checkmark"
+                    :icon-color="currentStep === 1 ? '#6ea76b' : '#b0b0b0'" 
+                    width="30px" />
+            </div>
             <div class="item-desc">2) {{ $t('SHIPPING METHOD') }}</div>
         </div>
 
@@ -66,7 +100,18 @@
         <div class="item"
              :class="{'active': currentStep === 2, 'completed': currentStep > 2}"
              @click="changeStep(2)">
-            <i class="notours" :class="{'icon-check-circle': currentStep > 2, 'icon-package': currentStep <= 2}"></i>
+            <div class="item-icon">
+                <icon-check-square
+                    v-if="currentStep > 2" 
+                    icon-name="checkmark" 
+                    icon-color="#6ea76b" 
+                    width="20px" />
+                <icon-package
+                    v-if="currentStep <= 2" 
+                    icon-name="checkmark"
+                    :icon-color="currentStep === 2 ? '#6ea76b' : '#b0b0b0'" 
+                    width="30px" />
+            </div>
             <div class="item-desc">3) {{ $t('PLACE YOUR ORDER') }}</div>
         </div>
     </div>
@@ -107,7 +152,7 @@
             // line-height: 18px;
             border: 1px solid transparent;
 
-            .notours {
+            .item-icon {
                 vertical-align: middle;
                 display: none;
             }
@@ -147,7 +192,7 @@
                 line-height: 25px;
                 padding: 4px;
 
-                .notours {
+                .item-icon {
                     display: block;
                 }
 

@@ -1,0 +1,29 @@
+<script>
+import svg_icon_mixin from '@/mixins/svg_icon_mixin';
+
+export default {
+    mixins: [
+        svg_icon_mixin
+    ]
+}
+</script>
+
+<template>
+    <i class="inlineBlock" :style="{'width':width, 'height':height}">
+        <svg 
+            version="1.1" 
+            xmlns="http://www.w3.org/2000/svg" 
+            xmlns:xlink="http://www.w3.org/1999/xlink" 
+            viewBox="0 0 16 16"
+            role="presentation">
+            <title :id="iconName" lang="en">{{iconName}} icon</title>
+            <g :fill="fillColor">
+                <path d="M15.9,9.3c0-0.1-0.1-0.1-0.2-0.1L11.7,8L9.3,4.5c0,0,0,0-0.1-0.1C8.2,3.5,5,2.9,2.6,4.3c-1.6,1-3.3,3.1-2.2,8
+                    c0,0.1,0.1,0.2,0.3,0.2h0.1l7-1.9c0.6,0.3,3.1,1.4,3.8,1.5c0.2,0,0.4,0,0.5,0c2.8,0,3.9-2.7,3.9-2.7C15.9,9.4,15.9,9.3,15.9,9.3z
+                    M8.9,4.9l2.3,3.3l-2,1.2C8.7,8.4,7,5.2,5.3,4c0.2,0,0.4,0,0.6,0C7.2,4,8.3,4.4,8.9,4.9L8.9,4.9z M7.7,10.1L3,11.4
+                    c-0.3-1-1.4-5.2,1.4-7.2C6,4.7,7.9,8,8.7,9.6L7.7,10.1z M2.9,4.8C3,4.7,3.2,4.6,3.3,4.5C2.4,5.6,2,7,2.1,8.7c0,1,0.2,1.9,0.5,2.8
+                    L0.9,12C-0.1,7.5,1.4,5.6,2.9,4.8z M11.6,11.6L11.6,11.6c-0.5,0-2.1-0.7-3.3-1.2l3.3-1.9l3.8,1.1C15,10.2,13.8,11.8,11.6,11.6z"/>
+            </g>
+        </svg>
+    </i>
+</template>

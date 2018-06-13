@@ -2,6 +2,8 @@
 import Vue from 'vue'
 import { mapState } from 'vuex'
 import { Button, Menu, MenuItem, Submenu } from 'element-ui'
+import IconVictory from '@/components/icons/IconVictory'
+
 
 Vue.use(Menu);
 Vue.use(Submenu);
@@ -9,6 +11,10 @@ Vue.use(MenuItem);
 Vue.use(Button);
 
 export default {
+    components: {
+        IconVictory
+    },
+
     methods: {
         handleResize: function() {
             this.$store.dispatch('ui/windowResize');
@@ -53,11 +59,8 @@ export default {
     <div class="layoutContainer">
         <div class="sidenav-container">
             <aside class="sidenav" :class="{'sidenav-fixed': $store.state.ui.sidebarOpened}">
-                <div class="sidenav-header">
-                    <img class="header-image cursorPointer"
-                        src="/images/logo_header.png"
-                        @click="$router.push({ name: 'acts-product-list' })"
-                        alt="gmnst" />
+                <div class="sidenav-header ptm">
+                    <icon-victory icon-name="logo" icon-color="rgba(255,255,255,.9)" width="60px" />
                 </div>
 
                 <el-menu
@@ -120,7 +123,8 @@ export default {
 @import "~assets/css/components/_variables.scss";
 @import "~assets/css/components/_mixins.scss";
 
-$sidenav-width-admin: 160px;
+$sidenav-width-admin: 140px;
+$header-height: 50px;
 
 .layoutContainer {
 
@@ -136,14 +140,14 @@ $sidenav-width-admin: 160px;
     }
 
     .fa-bars {
-        line-height: 60px;
+        line-height: $header-height;
     }
 
     .header {
         background-color: #fff;
         position: relative;
         color: #333;
-        line-height: 60px;
+        line-height: $header-height;
     }
 
     .header-container {
@@ -206,8 +210,8 @@ $sidenav-width-admin: 160px;
             text-decoration: none;
             cursor: pointer;
             padding: 0 10px;
-            height: 60px;
-            line-height: 60px;
+            height: $header-height;
+            line-height: $header-height;
 
             &:hover,
             &:focus {
@@ -241,8 +245,7 @@ $sidenav-width-admin: 160px;
         z-index: 1;
 
         .sidenav-header {
-            height: 60px;
-            line-height: 60px;
+            height: $header-height;
             text-align: center;
             background-color: rgba(0,0,0,.1);
         }
@@ -267,11 +270,6 @@ $sidenav-width-admin: 160px;
 
     .el-menu {
         border: 0;
-
-        .notours {
-            vertical-align: middle;
-            margin-right: 10px;
-        }
     }
 
     // Fixed Sidenav hide on smaller

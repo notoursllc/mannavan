@@ -4,6 +4,8 @@ import cloneDeep from 'lodash.clonedeep'
 import forEach from 'lodash.foreach'
 import { Notification, MessageBox, Dialog, Button, Input, InputNumber, Checkbox, Select, Option } from 'element-ui'
 import FormRow from '@/components/FormRow'
+import IconTrash from '@/components/icons/IconTrash'
+import IconCheckSquare from '@/components/icons/IconCheckSquare'
 import product_mixin from '@/mixins/product_mixin'
 
 Vue.prototype.$notify = Notification;
@@ -30,7 +32,9 @@ function showNotification(Notification) {
 
 export default{
     components: {
-        FormRow
+        FormRow,
+        IconTrash,
+        IconCheckSquare
     },
 
     props: {
@@ -289,17 +293,30 @@ export default{
                         </td>
                         <td class="tar">{{ size.sort }}</td>
                         <td class="tar">
-                            <i v-if="size.is_visible" class="notours icon-check-square colorGreen"></i>
+                            <icon-check-square 
+                                v-if="size.is_visible" 
+                                icon-name="checked" 
+                                icon-color="green" 
+                                width="15px" />
                         </td>
                         <td class="tar hide_medium_down">{{ size.cost }}</td>
                         <td class="tar hide_medium_down">{{ size.base_price }}</td>
                         <td class="tar hide_medium_down">{{ size.sale_price }}</td>
                         <td class="tar hide_medium_down">
-                            <i v-if="size.is_on_sale" class="notours icon-check-square colorGreen"></i>
+                            <icon-check-square 
+                                v-if="size.is_on_sale"
+                                icon-name="checked" 
+                                icon-color="green" 
+                                width="15px" />
                         </td>
                         <td class="tar hide_medium_down">{{ size.inventory_count }}</td>
                         <td class="tac">
-                            <i class="notours icon-trash fs20 colorRed mlm cursorPointer" @click="deleteSize(size)"></i>
+                            <icon-trash 
+                                icon-name="delete" 
+                                icon-color="red" 
+                                width="20px"
+                                class="cursorPointer mlm"
+                                @click="deleteSize(size)" />
                         </td>
                     </tr>
                 </tbody>

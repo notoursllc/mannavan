@@ -51,6 +51,12 @@ label {
     }
 }
 
+svg {
+  display: inline-block;
+//   vertical-align: baseline;
+//   margin-bottom: -2px;
+}
+
 .fade-enter-active, .fade-leave-active {
     transition: opacity .35s;
 }

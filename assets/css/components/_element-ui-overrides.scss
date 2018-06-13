@@ -78,3 +78,10 @@
         right: auto;
     }
 }
+
+.el-select-dropdown__item svg path {
+    fill: #606266 !important;
+}
+.el-select-dropdown__item.selected svg path {
+    fill: #409EFF !important;
+}

@@ -5,6 +5,8 @@ import forEach from 'lodash.foreach'
 import TableHeaderLink from '@/components/TableHeaderLink'
 import ProductDetailsJsonView from '@/components/product/admin/ProductDetailsJsonView'
 import product_mixin from '@/mixins/product_mixin'
+import IconEye from '@/components/icons/IconEye'
+import IconPencil from '@/components/icons/IconPencil'
 
 Vue.use(Dialog)
 Vue.use(Button)
@@ -18,7 +20,9 @@ export default {
 
     components: {
         TableHeaderLink,
-        ProductDetailsJsonView
+        ProductDetailsJsonView,
+        IconEye,
+        IconPencil
     },
 
     mixins: [
@@ -158,11 +162,11 @@ export default {
 
                         <div>
                             <el-button type="text" @click="openQuickView(product)" class="mrl">
-                                <i class="notours icon-eye fs20"></i>
+                                <icon-eye icon-name="preview" icon-color="#409EFF" width="25px" />
                             </el-button>
 
                             <el-button type="text" @click="goToAdminProductUpsert(product.id)">
-                                <i class="notours icon-pencil fs20"></i>
+                                <icon-pencil icon-name="pencil" icon-color="#409EFF" width="25px" />
                             </el-button>
                         </div>
                     </td>

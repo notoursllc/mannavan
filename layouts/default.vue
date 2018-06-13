@@ -4,10 +4,23 @@ import { mapState, mapGetters } from 'vuex'
 import { Button } from 'element-ui'
 import product_mixin from '@/mixins/product_mixin'
 import app_mixin from '@/mixins/app_mixin'
+import IconVictory from '@/components/icons/IconVictory'
+import IconCart from '@/components/icons/IconCart'
+import IconCap from '@/components/icons/IconCap'
+import IconTshirt from '@/components/icons/IconTshirt'
+import IconLogo from '@/components/icons/IconLogo'
 
 Vue.use(Button);
 
 export default {
+    components: {
+        IconVictory,
+        IconCart,
+        IconCap,
+        IconTshirt,
+        IconLogo
+    },
+
     mixins: [
         product_mixin
     ],
@@ -16,21 +29,6 @@ export default {
         return {
             year: new Date().getFullYear(),
             siteName: app_mixin.methods.getSiteName()
-        }
-    },
-
-    methods: {
-        getIconClassForProductType(type) {
-            switch(type) {
-                case 'hats':
-                    return 'icon-cap';
-
-                case 'tops':
-                    return 'icon-tshirt';
-
-                default:
-                    return '';
-            }
         }
     },
 
@@ -52,7 +50,7 @@ export default {
                     :to="{ name: 'index' }"
                     tag="span"
                     class="cursorPointer">
-                    <i class="notours icon-victory logo" />
+                    <icon-victory icon-name="logo" icon-color="#9e0502" width="85px" />
                 </nuxt-link>
             </div>
 
@@ -63,7 +61,10 @@ export default {
                 tag="a"
                 class="navbar-item"
                 active-class="active">
-                <div class="icon-container"><i :class="`notours ${getIconClassForProductType(obj.label)}`" /></div>
+                <div class="icon-container">
+                    <icon-cap icon-name="cap" icon-color="#fff" width="35px" v-if="obj.label === 'hats'" />
+                    <icon-tshirt icon-name="tops" icon-color="#fff" width="35px" v-if="obj.label === 'tops'" />
+                </div>
                 <div class="navbar-item-label">{{ $tc(key, 2) }}</div>
             </nuxt-link>
 
@@ -73,7 +74,7 @@ export default {
                 class="navbar-item"
                 active-class="active">
                 <div class="icon-container" :class="{'bounce': numCartItems}">
-                    <i class="notours icon-cart" :class="{'cart-active': numCartItems}" />
+                    <icon-cart icon-name="shopping_cart" :icon-color="numCartItems ? '#7eef47': '#fff'" width="35px" />
                     <span class="badge" v-if="numCartItems">{{ numCartItems }}</span>
                 </div>
                 <div class="navbar-item-label">{{ $t('Checkout') }}</div>
@@ -121,11 +122,10 @@ export default {
                             </dd>
                         </dl>
                     </nav>
-                </div>
 
-                <div class="tac">
-                    <!-- <img src="/images/logo_victory_breadvan.svg" style="width:200px" /> -->
-                    <i class="notours icon-logo" />
+                    <nav class="nav-item" id="footer-logo">
+                        <icon-logo icon-name="breadvan" width="150px" />
+                    </nav>
                 </div>
             </div>
 
@@ -240,9 +240,8 @@ $header-secondary-logo-width: 150px;
             }
         }
 
-        .icon-logo {
-            font-size: 150px;
-            color: rgba(255,255,255,0.8);
+        #footer-logo {
+            display: none;
         }
 
         dt {
@@ -284,7 +283,7 @@ $header-secondary-logo-width: 150px;
         // padding: 10px;
         text-align: center;
         // background-color: rgba(255, 255, 255, 0.1);
-        margin: 0 0 70px 0;
+        margin: 20px 0 50px 0;
     }
 
     .logo {
@@ -319,14 +318,6 @@ $header-secondary-logo-width: 150px;
             display: inline-block;
             padding: 0;
 
-            i {
-                @include align-items(center);
-                font-size: 30px;
-                margin: auto;
-                vertical-align: middle;
-                color: rgba(255,255,255,0.9);
-            }
-
             .badge {
                 background-color: #3ca707;
                 border-radius: 10px;
@@ -348,7 +339,7 @@ $header-secondary-logo-width: 150px;
         .navbar-item-label {
             display: block;
             font-size: 12px;
-            margin-top: 0;
+            margin-top: -10px;
         }
 
         &.navbar-item-checkout {
@@ -374,6 +365,10 @@ $header-secondary-logo-width: 150px;
 
             .nav-item {
                 @include flexbox()
+            }
+
+            #footer-logo {
+                display: flex !important;
             }
 
             dt {
@@ -436,7 +431,7 @@ $header-secondary-logo-width: 150px;
 
             .navbar-item-label {
                 font-size: 14px;
-                margin-top: 4px;
+                margin-top: 2px;
             }
         }
     }
