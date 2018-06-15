@@ -312,16 +312,16 @@ export default {
                                     inline-template>
                         <div>
                             <network network="facebook">
-                                <icon-facebook icon-name="facebook" icon-color="#000" width="40px" height="40px" />
+                                <icon-facebook icon-name="facebook" width="40px" height="40px" />
                             </network>
                             <network network="googleplus">
-                                <icon-google-plus icon-name="google-plus" icon-color="#000" width="40px" height="40px" />
+                                <icon-google-plus icon-name="google-plus" width="40px" height="40px" />
                             </network>
                             <network network="pinterest">
-                                <icon-pinterest icon-name="google-plus" icon-color="#4a4a4a" width="25px" /> 
+                                <icon-pinterest icon-name="google-plus" width="25px" />
                             </network>
                             <network network="twitter">
-                                <icon-twitter icon-name="google-plus" icon-color="#4a4a4a" width="25px" /> 
+                                <icon-twitter icon-name="google-plus" width="25px" />
                             </network>
                         </div>
                     </social-sharing> -->

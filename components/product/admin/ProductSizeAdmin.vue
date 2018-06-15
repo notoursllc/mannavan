@@ -293,27 +293,27 @@ export default{
                         </td>
                         <td class="tar">{{ size.sort }}</td>
                         <td class="tar">
-                            <icon-check-square 
-                                v-if="size.is_visible" 
-                                icon-name="checked" 
-                                icon-color="green" 
+                            <icon-check-square
+                                v-if="size.is_visible"
+                                icon-name="checked"
+                                class-name="fillGreen"
                                 width="15px" />
                         </td>
                         <td class="tar hide_medium_down">{{ size.cost }}</td>
                         <td class="tar hide_medium_down">{{ size.base_price }}</td>
                         <td class="tar hide_medium_down">{{ size.sale_price }}</td>
                         <td class="tar hide_medium_down">
-                            <icon-check-square 
+                            <icon-check-square
                                 v-if="size.is_on_sale"
-                                icon-name="checked" 
-                                icon-color="green" 
+                                icon-name="checked"
+                                class-name="fillGreen"
                                 width="15px" />
                         </td>
                         <td class="tar hide_medium_down">{{ size.inventory_count }}</td>
                         <td class="tac">
-                            <icon-trash 
-                                icon-name="delete" 
-                                icon-color="red" 
+                            <icon-trash
+                                icon-name="delete"
+                                class-name="fillRed"
                                 width="20px"
                                 class="cursorPointer mlm"
                                 @click="deleteSize(size)" />

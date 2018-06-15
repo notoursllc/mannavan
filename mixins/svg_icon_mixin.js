@@ -1,29 +1,25 @@
 'use strict';
 
+import IconBase from '@/components/icons/IconBase';
+
 export default {
     props: {
-        iconName: {
-            type: String,
-            default: 'box'
-        },
-        iconColor: {
-            type: String,
-        },
         width: {
-            type: [String],
-            // default: '18px'
+            type: String
         },
         height: {
-            type: [String],
-            // default: '18px'
+            type: String
         },
         className: {
-            type: [String],
+            type: String,
+            default: 'fillGray'
+        },
+        iconName: {
+            type: String
         }
     },
-    computed: {
-        fillColor() {
-            return this.iconColor || '#4a4a4a'
-        }
-    }
+
+    components: {
+        IconBase
+    },
 }

@@ -162,11 +162,11 @@ export default {
 
                         <div>
                             <el-button type="text" @click="openQuickView(product)" class="mrl">
-                                <icon-eye icon-name="preview" icon-color="#409EFF" width="25px" />
+                                <icon-eye icon-name="preview" class-name="fillBlue" width="25px" />
                             </el-button>
 
                             <el-button type="text" @click="goToAdminProductUpsert(product.id)">
-                                <icon-pencil icon-name="pencil" icon-color="#409EFF" width="25px" />
+                                <icon-pencil icon-name="pencil" class-name="fillBlue" width="25px" />
                             </el-button>
                         </div>
                     </td>

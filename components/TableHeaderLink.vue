@@ -47,8 +47,8 @@ export default{
     <span>
         <a @click="changeSort()" class="underlineDotted"><slot></slot></a>
         <span class="inlineBlock vam pls" v-show="this.attribute === this.sortData.orderBy">
-            <icon-arrow-up icon-name="sort-asc" icon-color="#409EFF" width="16px" v-show="this.orderDir === 'ASC'" />
-            <icon-arrow-down icon-name="sort-desc" icon-color="#409EFF" width="16px" v-show="this.orderDir === 'DESC'" />
+            <icon-arrow-up icon-name="sort-asc" width="16px" v-show="this.orderDir === 'ASC'" />
+            <icon-arrow-down icon-name="sort-desc" width="16px" v-show="this.orderDir === 'DESC'" />
         </span>
     </span>
 </template>

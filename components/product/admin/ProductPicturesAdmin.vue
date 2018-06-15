@@ -6,6 +6,9 @@ import Validations from 'vuelidate'
 import { required } from 'vuelidate/lib/validators'
 import FormRow from '@/components/FormRow'
 import product_mixin from '@/mixins/product_mixin'
+import IconCheckSquare from '@/components/icons/IconCheckSquare'
+import IconTrash from '@/components/icons/IconTrash'
+import IconPencil from '@/components/icons/IconPencil'
 
 Vue.prototype.$notify = Notification;
 Vue.prototype.$confirm = MessageBox.confirm;
@@ -33,7 +36,9 @@ function showNotification(Notification) {
 
 export default{
     components: {
-        FormRow
+        FormRow,
+        IconCheckSquare,
+        IconPencil
     },
 
     props: {
@@ -265,11 +270,24 @@ export default{
                         <td class="hide_medium_down">{{ pic.url }}</td>
                         <td class="tac">{{ pic.sort_order }}</td>
                         <td>
-                            <i v-if="pic.is_visible" class="notours icon-check-square colorGreen"></i>
+                            <icon-check-square
+                                v-if="pic.is_visible"
+                                icon-name="checked"
+                                class-name="fillGreen"
+                                width="15px" />
                         </td>
                         <td class="tac nowrap">
-                            <i class="notours icon-pencil fs20 cursorPointer" @click="openPicEditModal(pic)"></i>
-                            <i class="notours icon-trash fs20 colorRed mlm cursorPointer" @click="deletePic(pic)"></i>
+                            <icon-pencil
+                                @click="openPicEditModal(pic)"
+                                icon-name="edit"
+                                class-name="fillGreen"
+                                width="15px" />
+
+                            <icon-trash
+                                @click="deletePic(pic)"
+                                icon-name="delete"
+                                class-name="fillRed"
+                                width="15px" />
                         </td>
                     </tr>
                 </tbody>
@@ -323,7 +341,11 @@ export default{
                     <img :src="picModal.tempImage" width="200" />
                     <div class="colorRed tal vat">
                         <span class="cursorPointer" @click="deleteTempImage()">
-                            <i class="notours icon-trash fs14 colorRed cursorPointer vam" ></i> remove
+                            <icon-trash
+                                icon-name="delete"
+                                class-name="fillRed"
+                                class="vam"
+                                width="15px" /> remove
                         </span>
                     </div>
                 </div>

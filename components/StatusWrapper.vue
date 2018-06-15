@@ -39,14 +39,14 @@ export default {
         <slot></slot>
         <icon-check-square
             v-show="showSuccessIcon"
-            icon-name="checkmark" 
-            icon-color="#6ea76b" 
+            icon-name="checkmark"
+            class-name="fillGreen"
             width="20px"
             class="status-icon" />
         <icon-times-square
             v-show="showFailureIcon"
-            icon-name="times" 
-            icon-color="#e33829" 
+            icon-name="times"
+            class-name="fillRed"
             width="20px"
             class="status-icon" />
     </div>

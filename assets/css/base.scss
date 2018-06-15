@@ -8,7 +8,7 @@
 @import "components/cartItem";
 @import "components/element-ui-overrides";
 @import "components/animations";
-@import "components/notours";
+@import "components/svg";
 
 // @import '~animate.css';
 // .animated {
@@ -219,7 +219,6 @@ ul.disc {
         min-width: 200px;
     }
 
-    > i.notours,
     .checkout_form_value_icon {
         position: absolute;
         top: -9px;

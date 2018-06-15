@@ -220,7 +220,7 @@ export default {
     <div class="pal">
         <div class="tar mbm">
             <el-button @click="goToStore(product.seo_uri)">
-                <icon-new-window icon-name="new_window" icon-color="#000" width="15px" />
+                <icon-new-window icon-name="new_window" width="15px" />
                 &nbsp;&nbsp;VIEW PRODUCT IN STORE
             </el-button>
         </div>

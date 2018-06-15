@@ -59,7 +59,7 @@ export default {
 
         <div v-else>
             <div class="tac">
-                <icon-victory-peace icon-name="thanks" icon-color="#6da76a" width="150px" />
+                <icon-victory-peace icon-name="thanks" class-name="fillGreen" width="150px" />
                 <div class="fs30 fwb">{{ $t('We have a winner!') }}</div>
             </div>
 
@@ -68,7 +68,7 @@ export default {
                     <div class="colorGreen">
                         <span class="fs16">{{ $t('An email confirmation was sent to:' )}}</span>
                         <div class="tac" style="margin-bottom:-10px">
-                            <icon-envelope icon-name="email" icon-color="#6da76a" width="50px" />
+                            <icon-envelope icon-name="email" class-name="fillGreen" width="50px" />
                         </div>
                         <div class="fwb fs20">
                             {{ order.shoppingCart.shipping_email }}

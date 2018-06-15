@@ -53,19 +53,21 @@ export default {
 
 <template>
     <div class="checkout-wizard">
+
+        <!-- shipping address -->
         <div class="item"
              :class="{'active': currentStep === 0, 'completed': currentStep > 0}"
              @click="changeStep(0)">
             <div class="item-icon">
                 <icon-check-square
-                    v-if="currentStep > 0" 
-                    icon-name="checkmark" 
-                    icon-color="#6ea76b" 
+                    v-if="currentStep > 0"
+                    icon-name="checkmark"
+                    class-name="fillGreen"
                     width="20px" />
                 <icon-address
-                    v-if="currentStep === 0" 
+                    v-if="currentStep === 0"
                     icon-name="checkmark"
-                    :icon-color="currentStep === 0 ? '#6ea76b' : '#b0b0b0'" 
+                    :class-name="currentStep === 0 ? 'fillGreen' : 'fillGrayLight'"
                     width="30px" />
             </div>
             <div class="item-desc">1) {{ $t('SHIPPING ADDRESS') }}</div>
@@ -75,19 +77,20 @@ export default {
             <hr style="width:100%;" />
         </div>
 
+        <!-- shipping method -->
         <div class="item"
              :class="{'active': currentStep === 1, 'completed': currentStep > 1}"
              @click="changeStep(1)">
             <div class="item-icon">
                 <icon-check-square
-                    v-if="currentStep > 1" 
-                    icon-name="checkmark" 
-                    icon-color="#6ea76b" 
+                    v-if="currentStep > 1"
+                    icon-name="checkmark"
+                    class-name="fillGreen"
                     width="20px" />
                 <icon-van
-                    v-if="currentStep <= 1" 
+                    v-if="currentStep <= 1"
                     icon-name="checkmark"
-                    :icon-color="currentStep === 1 ? '#6ea76b' : '#b0b0b0'" 
+                    :class-name="currentStep === 0 ? 'fillGrayLight' : 'fillGreen'"
                     width="30px" />
             </div>
             <div class="item-desc">2) {{ $t('SHIPPING METHOD') }}</div>
@@ -97,19 +100,20 @@ export default {
             <hr style="width:100%;" />
         </div>
 
+        <!-- place order -->
         <div class="item"
              :class="{'active': currentStep === 2, 'completed': currentStep > 2}"
              @click="changeStep(2)">
             <div class="item-icon">
                 <icon-check-square
-                    v-if="currentStep > 2" 
-                    icon-name="checkmark" 
-                    icon-color="#6ea76b" 
+                    v-if="currentStep > 2"
+                    icon-name="checkmark"
+                    class-name="fillGreen"
                     width="20px" />
                 <icon-package
-                    v-if="currentStep <= 2" 
+                    v-if="currentStep <= 2"
                     icon-name="checkmark"
-                    :icon-color="currentStep === 2 ? '#6ea76b' : '#b0b0b0'" 
+                    :class-name="currentStep === 2 ? 'fillGreen' : 'fillGrayLight'"
                     width="30px" />
             </div>
             <div class="item-desc">3) {{ $t('PLACE YOUR ORDER') }}</div>

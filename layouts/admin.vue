@@ -60,7 +60,7 @@ export default {
         <div class="sidenav-container">
             <aside class="sidenav" :class="{'sidenav-fixed': $store.state.ui.sidebarOpened}">
                 <div class="sidenav-header ptm">
-                    <icon-victory icon-name="logo" icon-color="rgba(255,255,255,.9)" width="60px" />
+                    <icon-victory icon-name="logo" class-name="fillWhite" width="60px" />
                 </div>
 
                 <el-menu

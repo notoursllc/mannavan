@@ -50,7 +50,7 @@ export default {
                     :to="{ name: 'index' }"
                     tag="span"
                     class="cursorPointer">
-                    <icon-victory icon-name="logo" icon-color="#9e0502" width="85px" />
+                    <icon-victory icon-name="logo" class-name="fillBurntOrange" width="85px" />
                 </nuxt-link>
             </div>
 
@@ -62,8 +62,8 @@ export default {
                 class="navbar-item"
                 active-class="active">
                 <div class="icon-container">
-                    <icon-cap icon-name="cap" icon-color="#fff" width="35px" v-if="obj.label === 'hats'" />
-                    <icon-tshirt icon-name="tops" icon-color="#fff" width="35px" v-if="obj.label === 'tops'" />
+                    <icon-cap icon-name="cap" class-name="fillWhite" width="35px" v-if="obj.label === 'hats'" />
+                    <icon-tshirt icon-name="tops" class-name="fillWhite" width="35px" v-if="obj.label === 'tops'" />
                 </div>
                 <div class="navbar-item-label">{{ $tc(key, 2) }}</div>
             </nuxt-link>
@@ -74,7 +74,7 @@ export default {
                 class="navbar-item"
                 active-class="active">
                 <div class="icon-container" :class="{'bounce': numCartItems}">
-                    <icon-cart icon-name="shopping_cart" :icon-color="numCartItems ? '#7eef47': '#fff'" width="35px" />
+                    <icon-cart icon-name="shopping_cart" :class-name="numCartItems ? 'fillLime': 'fillWhite'" width="35px" />
                     <span class="badge" v-if="numCartItems">{{ numCartItems }}</span>
                 </div>
                 <div class="navbar-item-label">{{ $t('Checkout') }}</div>
@@ -124,7 +124,7 @@ export default {
                     </nav>
 
                     <nav class="nav-item" id="footer-logo">
-                        <icon-logo icon-name="breadvan" width="150px" />
+                        <icon-logo icon-name="breadvan" class-name="fillWhite" width="150px" />
                     </nav>
                 </div>
             </div>
@@ -263,6 +263,7 @@ $header-secondary-logo-width: 150px;
 }
 
 .navbar-container {
+    @include box-shadow(0, 0, 4px, rgba(0, 0, 0, .5));
     @include flexbox();
     @include justify-content(center);
     position: fixed;
@@ -275,6 +276,7 @@ $header-secondary-logo-width: 150px;
     background: linear-gradient(60deg, #c30810 0%, #e66d17 100%) no-repeat scroll center center/cover;
     // background: linear-gradient(60deg, #e0282f 0%, #e67417 100%) no-repeat scroll center center/cover;
     // background: linear-gradient(60deg, #e67417 0%, #e0282f 100%) no-repeat scroll center center/cover;
+
 
     .navbar-header {
         display: none;
@@ -396,7 +398,7 @@ $header-secondary-logo-width: 150px;
         @include justify-content(flex-start);
         position: fixed;
         top: 0;
-        box-shadow: none;
+        // box-shadow: none;
         width: $aside-width;
         // padding-top: 64px;
         height: 100%;
