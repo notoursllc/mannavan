@@ -229,7 +229,8 @@ export default{
                 <!-- operations -->
                 <el-table-column
                     label="Operations"
-                    align="center">
+                    align="center"
+                    width="150">
                     <div slot-scope="scope" class="nowrap">
                         <el-button
                             type="primary"
