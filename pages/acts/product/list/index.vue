@@ -1,15 +1,14 @@
 <script>
 import Vue from 'vue'
-import { Dialog, Button } from 'element-ui'
+import { Button, Table, TableColumn } from 'element-ui'
 import forEach from 'lodash.foreach'
-import TableHeaderLink from '@/components/TableHeaderLink'
 import ProductDetailsJsonView from '@/components/product/admin/ProductDetailsJsonView'
 import product_mixin from '@/mixins/product_mixin'
-import IconEye from '@/components/icons/IconEye'
 import IconPencil from '@/components/icons/IconPencil'
 
-Vue.use(Dialog)
 Vue.use(Button)
+Vue.use(Table)
+Vue.use(TableColumn)
 
 export default {
     middleware: [
@@ -19,9 +18,7 @@ export default {
     layout: 'admin',
 
     components: {
-        TableHeaderLink,
         ProductDetailsJsonView,
-        IconEye,
         IconPencil
     },
 
@@ -32,8 +29,6 @@ export default {
     data() {
         return {
             products: [],
-            quickViewProduct: null,
-            modalIsActive: false,
             sortData: {
                 orderBy: 'updated_at',
                 orderDir: 'DESC'
@@ -83,14 +78,10 @@ export default {
             return values.join(', ');
         },
 
-        sort(sortData) {
-            this.sortData = sortData;
+        sortChanged(val) {
+            this.sortData.orderBy = val.prop || 'updated_at';
+            this.sortData.orderDir = val.order === 'ascending' ? 'ASC' : 'DESC';
             this.fetchProducts();
-        },
-
-        openQuickView(product) {
-            this.quickViewProduct = product;
-            this.modalIsActive = true;
         }
     }
 }
@@ -104,90 +95,82 @@ export default {
             <el-button type="primary" @click="goToAdminProductAdd">ADD PRODUCT</el-button>
         </div>
 
-        <table v-show="products.length" class="table">
-            <thead>
-                <tr>
-                    <th>Featured Image</th>
-                    <th>
-                        <table-header-link
-                                attribute="is_available"
-                                :sort-data="sortData"
-                                @change="sort">Available</table-header-link>
-                    </th>
-                    <th>
-                        <table-header-link
-                                attribute="sub_type"
-                                :sort-data="sortData"
-                                @change="sort">Type</table-header-link>
-                    </th>
-                    <th>
-                        <table-header-link
-                                attribute="title"
-                                :sort-data="sortData"
-                                @change="sort">Title</table-header-link>
-                    </th>
-                    <th>Display Price</th>
-                    <th class="hide_medium_down">
-                        <table-header-link
-                                attribute="updated_at"
-                                :sort-data="sortData"
-                                @change="sort">Updated</table-header-link>
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="product in products" :key="product.id">
-                    <!-- featured image -->
-                    <td>
-                        <img v-if="product.pics.length"
-                            :src="featuredProductPic(product)"
-                            alt="Image"
-                            class="prodPicSmall" />
-                        <div class="fs12"># pictures: {{ product.pics.length }}</div>
-                    </td>
+        <el-table
+            :data="products"
+            class="widthAll"
+            @sort-change="sortChanged">
 
-                    <!-- is available -->
-                    <td>
-                        <span v-bind:class="{'colorGreen':product.is_available, 'colorRed':!product.is_available}">
-                            {{ product.is_available ? 'Yes' : 'No '}}
-                        </span>
-                    </td>
+            <el-table-column type="expand">
+                <template slot-scope="scope">
+                    <product-details-json-view :product="scope.row"></product-details-json-view>
+                </template>
+            </el-table-column>
 
-                    <!-- product sub-type -->
-                    <td>{{ subTypeLabel(product.sub_type) }}</td>
+            <!-- featured image -->
+            <el-table-column
+                label="Featured Image"
+                width="140">
+                <template slot-scope="scope">
+                    <img v-if="scope.row.pics.length"
+                        :src="featuredProductPic(scope.row)"
+                        alt="Image"
+                        class="prodPicSmall" />
+                    <div class="fs12"># pictures: {{ scope.row.pics.length }}</div>
+                </template>
+            </el-table-column>
 
-                    <!-- product title -->
-                    <td>
-                        <div>{{ product.title }}</div>
+            <!-- title -->
+            <el-table-column
+                prop="title"
+                label="Title"
+                sortable="custom">
+                <template slot-scope="scope">
+                    <div>{{ scope.row.title }}</div>
+                    <el-button type="text" @click="goToAdminProductUpsert(scope.row.id)">EDIT</el-button>
+                </template>
+            </el-table-column>
 
-                        <div>
-                            <el-button type="text" @click="openQuickView(product)" class="mrl">
-                                <icon-eye icon-name="preview" class-name="fillBlue" width="25px" />
-                            </el-button>
+            <!-- available -->
+            <el-table-column
+                label="Available"
+                width="120"
+                prop="is_available"
+                sortable="custom">
+                <template slot-scope="scope">
+                    <span v-bind:class="{'colorGreen':scope.row.is_available, 'colorRed':!scope.row.is_available}">
+                        {{ scope.row.is_available ? 'Yes' : 'No '}}
+                    </span>
+                </template>
+            </el-table-column>
 
-                            <el-button type="text" @click="goToAdminProductUpsert(product.id)">
-                                <icon-pencil icon-name="pencil" class-name="fillBlue" width="25px" />
-                            </el-button>
-                        </div>
-                    </td>
+            <!-- product sub-type -->
+            <el-table-column
+                label="Type"
+                prop="sub_type"
+                width="120"
+                sortable="custom">
+                <template slot-scope="scope">
+                    {{ subTypeLabel(scope.row.sub_type) }}
+                </template>
+            </el-table-column>
 
-                    <!-- display price -->
-                    <td>{{ product.display_price }}</td>
+            <!-- display price -->
+            <el-table-column
+                prop="display_price"
+                label="Display Price"
+                width="140"></el-table-column>
 
-                    <!-- display price -->
-                    <td class="hide_medium_down">{{ product.updated_at | format8601 }}</td>
-                </tr>
-            </tbody>
-        </table>
-        <div v-show="!products.length">{{ $t('No results') }}</div>
-
-        <el-dialog :title="quickViewProduct ? quickViewProduct.title : null"
-                    :visible.sync="modalIsActive"
-                    :modal-append-to-body="false"
-                    width="95%">
-            <product-details-json-view :product="quickViewProduct"></product-details-json-view>
-        </el-dialog>
-
+            <!-- updated -->
+            <el-table-column
+                label="Updated"
+                prop="updated_at"
+                width="120"
+                sortable="custom">
+                <template slot-scope="scope">
+                    {{ scope.row.updated_at | format8601 }}
+                </template>
+            </el-table-column>
+        </el-table>
     </div>
 </template>
 

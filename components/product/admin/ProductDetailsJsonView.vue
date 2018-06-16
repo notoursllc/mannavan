@@ -14,20 +14,12 @@ export default {
 
 <template>
     <div>
-        <div class="g-spec">
-            <div class="g-spec-label">JSON</div>
-            <div class="g-spec-content">
-                <pre style="overflow-x:scroll; max-width:1200px">{{ product | formatJson }}</pre>
-            </div>
-        </div>
+        <pre style="overflow-x:scroll">{{ product | formatJson }}</pre>
 
-        <div class="g-spec">
-            <div class="g-spec-label">Pictures</div>
-            <div class="g-spec-content">
-                <div v-for="pic in product.pics" :key="pic.id" class="inlineBlock mrl vat">
-                    <img :src="pic.url" class="prodPic">
-                    <div>{{ pic.url }}</div>
-                </div>
+        <div class="mtl">
+            <div v-for="pic in product.pics" :key="pic.id" class="inlineBlock mrl vat prodPic">
+                <img :src="pic.url">
+                <div>{{ pic.url }}</div>
             </div>
         </div>
     </div>
@@ -36,6 +28,7 @@ export default {
 <style lang="scss">
     .prodPic {
         width: 400px;
+        overflow-wrap: break-word;
     }
 
     .tree-view-item-leaf {
