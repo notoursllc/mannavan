@@ -289,16 +289,18 @@ export default {
         },
 
 
-        async createProductSize(size) {
-            const response = await this.$axios.$post(`/product/size/create`, size)
+        async upsertProductSize(size) {
+            let uri = '/product/size/create' ;
+
+            if(size.id) {
+                uri = '/product/size/update';
+            }
+
+            const response = await this.$axios.$post(uri, size);
             return response.data;
         },
 
 
-        async updateProductSize(size) {
-            const response = await this.$axios.$post(`/product/size/update`, size);
-            return response.data;
-        },
 
 
         async deleteProductSize(sizeId) {

@@ -306,8 +306,7 @@ export default {
         <div class="g-spec">
             <div class="g-spec-label">Sizes</div>
             <div class="g-spec-content">
-                sizes: {{ product.sizes }}
-                <product-size-admin :product="product"></product-size-admin>
+                <product-size-admin :product-id="product.id"></product-size-admin>
             </div>
         </div>
 

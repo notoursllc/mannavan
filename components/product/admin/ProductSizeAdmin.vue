@@ -1,9 +1,8 @@
 <script>
 import Vue from 'vue'
-import cloneDeep from 'lodash.clonedeep'
-import forEach from 'lodash.foreach'
-import { Notification, MessageBox, Dialog, Button, Input, InputNumber, Checkbox, Select, Option } from 'element-ui'
+import { Notification, MessageBox, Dialog, Button, Input, InputNumber, Checkbox, Select, Option, Table, TableColumn } from 'element-ui'
 import FormRow from '@/components/FormRow'
+import IconPencil from '@/components/icons/IconPencil'
 import IconTrash from '@/components/icons/IconTrash'
 import IconCheckSquare from '@/components/icons/IconCheckSquare'
 import product_mixin from '@/mixins/product_mixin'
@@ -18,6 +17,8 @@ Vue.use(InputNumber);
 Vue.use(Checkbox);
 Vue.use(Select);
 Vue.use(Option);
+Vue.use(Table);
+Vue.use(TableColumn);
 
 let currentNotification = null;
 
@@ -34,22 +35,15 @@ export default{
     components: {
         FormRow,
         IconTrash,
+        IconPencil,
         IconCheckSquare
     },
 
     props: {
-        // productId: {
-        //     type: String,
-        //     required: false
-        // },
-        product: {
-            type: Object,
+        productId: {
+            type: String,
             required: false
         }
-        // sizes: {
-        //     type: Array,
-        //     required: false
-        // }
     },
 
     mixins: [
@@ -58,6 +52,7 @@ export default{
 
     data() {
         return {
+            product: {},
             sizeOptions: {},
             sizeModal: {
                 isActive: false,
@@ -73,24 +68,39 @@ export default{
     },
 
     methods: {
-        // setSizesPropertyInProduct() {
-        //     if(!this.product) {
-        //         this.product = {};
-        //     }
-        //     if(!this.product.hasOwnProperty('sizes')) {
-        //         this.product.sizes = [];
-        //     }
-        // },
-
-        // setSizesProp() {
-        //     if(!Array.isArray(this.sizes)) {
-        //         this.sizes = [];
-        //     }
-        // },
-
         resetSizeModalData() {
             this.sizeModal.isActive = false;
             this.sizeModal.size = {};
+        },
+
+
+        openSizeUpsertModal(size) {
+            this.setSizeOptions(this.product.sizes);
+            this.sizeModal.size = size || {};
+            this.sizeModal.isActive = true;
+        },
+
+        async getProduct() {
+            if(!this.productId) {
+                return;
+            }
+
+            try {
+                this.product = await this.getProductById(this.productId, { viewAllRelated: true });
+
+                if(!this.product) {
+                    throw new Error(this.$t('Product not found'));
+                }
+            }
+            catch(e) {
+                showNotification(
+                    this.$notify({
+                        type: 'error',
+                        title: e.message,
+                        duration: 0
+                    })
+                );
+            }
         },
 
 
@@ -110,154 +120,88 @@ export default{
         },
 
 
-        openSizeEditModal(size) {
-            // this.setSizeOptions(this.sizes);
-            this.setSizeOptions(this.product.sizes);
-            this.sizeModal.size = size || {};
-            this.sizeModal.isActive = true;
-        },
+        async deleteSize(sizeObject) {
+            let sizeName = this.$t(sizeObject.size);
 
-
-        deleteSize(size) {
-            // this.setSizesProp();
-
-            // let sizes = cloneDeep(this.product.sizes);
-
-            if(size.size) {
-                let productSizeIndex = -1;
-
-                // this.sizes.forEach((obj, index) => {
-                this.product.sizes.forEach((obj, index) => {
-                    if(obj.size === size.size) {
-                        productSizeIndex = index;
-                    }
+            try {
+                await this.$confirm(`Remove size "${ sizeName }" from the product?`, 'Please confirm', {
+                    confirmButtonText: 'OK',
+                    cancelButtonText: 'Cancel',
+                    type: 'warning'
                 });
 
-                console.log("DELETING INDEX", productSizeIndex)
+                try {
+                    let size = await this.deleteProductSize(sizeObject.id);
 
-                if(productSizeIndex > -1) {
-                    // this.sizes.splice(productSizeIndex, 1);
-                    this.product.sizes.splice(productSizeIndex, 1);
-                    // this.$emit('updated', sizes);
+                    if(!size) {
+                        throw new Error(this.$t('Product size not found'));
+                    }
+
+                    this.getProduct();
+
+                    showNotification(
+                        this.$notify({
+                            type: 'success',
+                            title: 'Size deleted:',
+                            message: sizeName,
+                            duration: 4000
+                        })
+                    );
                 }
+                catch(e) {
+                    showNotification(
+                        this.$notify({
+                            type: 'error',
+                            title: e.message,
+                            duration: 0
+                        })
+                    )
+                }
+            }
+            catch(err) {
+                // do nothing when user cancels the size delete
             }
         },
 
-        // deleteSize(size) {
-        //     let sizeName = this.$t(size.size);
 
-        //     this.$confirm(`Remove size "${ sizeName }" from the product?`, 'Please confirm', {
-        //         confirmButtonText: 'OK',
-        //         cancelButtonText: 'Cancel',
-        //         type: 'warning'
-        //     })
-        //     .then(() => {
-        //         this
-        //             .deleteProductSize(size.id)
-        //             .then((size) => {
-        //                 if(!size) {
-        //                     throw new Error(this.$t('Product size not found'));
-        //                 }
+        async saveSize(size) {
+            size.product_id = this.product.id;
 
-        //                 this.setProduct();
+            try {
+                let sizeJson = await this.upsertProductSize(size);
 
-        //                 this.$emit('updated');
+                this.resetSizeModalData();
+                this.getProduct();
 
-        //                 showNotification(
-        //                     this.$notify({
-        //                         type: 'success',
-        //                         title: 'Size deleted:',
-        //                         message: sizeName,
-        //                         duration: 3000
-        //                     })
-        //                 );
-        //             })
-        //             .catch((e) => {
-        //                 showNotification(
-        //                     this.$notify({
-        //                         type: 'error',
-        //                         title: e.message,
-        //                         duration: 0
-        //                     })
-        //                 )
-        //             });
-        //     })
-        //     .catch(() => {
-        //         // console.log("DELETE SIZE CANCELLED")
-        //     });
-        // },
-
-        saveSize(size) {
-            // const sizes = cloneDeep(this.sizes) || [];
-            let productSizeIndex = -1;
-
-            if(size.size) {
-                // sizes.forEach((obj, index) => {
-                this.product.sizes.forEach((obj, index) => {
-                    if(obj.size === size.size) {
-                        productSizeIndex = index;
-                    }
-                });
-
-                // If this size is already in the given sizes array then replace it:
-                if(productSizeIndex > -1) {
-                    // sizes[productSizeIndex] = size;
-                    this.product.sizes[productSizeIndex] = size;
-                }
-                else {
-                    // sizes.push(size);
-                    this.product.sizes.push(size);
-                }
+                showNotification(
+                    this.$notify({
+                        type: 'success',
+                        title: 'Size updated:',
+                        message: this.$t(sizeJson.size),
+                        duration: 4000
+                    })
+                )
             }
-
-            this.resetSizeModalData();
-            // this.$emit('updated', this.product.sizes);
+            catch(e) {
+                showNotification(
+                    this.$notify({
+                        type: 'error',
+                        title: e.message,
+                        duration: 0
+                    })
+                )
+            }
         }
+    },
 
-
-        // saveSize(size) {
-        //     let promise = null;
-
-        //     if(size.id) {
-        //         promise = this.updateProductSize(size);
-        //     }
-        //     else {
-        //         size.product_id = this.product.id;
-        //         promise = this.createProductSize(size);
-        //     }
-
-        //     promise.then((sizeJson) => {
-        //         this.sizeModal.isActive = false;
-        //         this.setProduct();
-
-        //         this.$emit('updated');
-
-        //         showNotification(
-        //             this.$notify({
-        //                 type: 'success',
-        //                 title: 'Size updated:',
-        //                 message: this.$t(sizeJson.size),
-        //                 duration: 3000
-        //             })
-        //         )
-        //     })
-        //     .catch((e) => {
-        //         showNotification(
-        //             this.$notify({
-        //                 type: 'error',
-        //                 title: e.message,
-        //                 duration: 0
-        //             })
-        //         )
-        //     });
-        // }
+    mounted() {
+        const unwatch = this.$watch('productId', val => {
+            if(val) {
+                this.getProduct();
+                unwatch();
+            }
+        }, {immediate: true})
     }
-
-    // watch: {
-    //     'product' (to, from) {
-    //         console.log("PRODUCT CHANGED", to)
-    //     }
-    // }
 }
 </script>
 
@@ -265,71 +209,118 @@ export default{
 <template>
     <div v-cloak>
         <div class="tar mbm">
-            <el-button type="primary" @click="openSizeEditModal()">ADD SIZE</el-button>
+            <el-button type="primary" @click="openSizeUpsertModal()">ADD SIZE</el-button>
         </div>
 
         <!-- <div v-if="!sizes || !sizes.length" class="colorGrayLighter">none</div> -->
         <div v-if="!product.sizes || !product.sizes.length" class="colorGrayLighter">none</div>
         <div v-else>
-            <div class="colorGrayLighter fs14 phm">{{ `${product.sizes.length} ${$tc('results', product.sizes.length)}` }}</div>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Size</th>
-                        <th class="tar">Sort order</th>
-                        <th class="tar">Is visible</th>
-                        <th class="tar hide_medium_down">Cost</th>
-                        <th class="tar hide_medium_down">Base price</th>
-                        <th class="tar hide_medium_down">Sale price</th>
-                        <th class="tar hide_medium_down">Is on sale</th>
-                        <th class="tar hide_medium_down">Inventory count</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="size in product.sizes" :key="size.id">
-                        <td>
-                            <a @click="openSizeEditModal(size)">{{ $t(size.size) }}</a>
-                        </td>
-                        <td class="tar">{{ size.sort }}</td>
-                        <td class="tar">
-                            <icon-check-square
-                                v-if="size.is_visible"
-                                icon-name="checked"
-                                class-name="fillGreen"
+            <div class="colorGrayLighter fs14 mbs">{{ `${product.sizes.length} ${$tc('results', product.sizes.length)}` }}</div>
+
+            <el-table
+                :data="product.sizes"
+                class="widthAll">
+
+                <!-- size name -->
+                <el-table-column prop="size" label="Size">
+                    <template slot-scope="scope">{{ $t(scope.row.size) }}</template>
+                </el-table-column>
+
+                <!-- operations -->
+                <el-table-column
+                    label="Operations"
+                    align="center">
+                    <div slot-scope="scope" class="nowrap">
+                        <el-button
+                            type="primary"
+                            round
+                            @click="openSizeUpsertModal(scope.row)">
+                            <icon-pencil
+                                icon-name="edit"
+                                class-name="fillWhite"
                                 width="15px" />
-                        </td>
-                        <td class="tar hide_medium_down">{{ size.cost }}</td>
-                        <td class="tar hide_medium_down">{{ size.base_price }}</td>
-                        <td class="tar hide_medium_down">{{ size.sale_price }}</td>
-                        <td class="tar hide_medium_down">
-                            <icon-check-square
-                                v-if="size.is_on_sale"
-                                icon-name="checked"
-                                class-name="fillGreen"
-                                width="15px" />
-                        </td>
-                        <td class="tar hide_medium_down">{{ size.inventory_count }}</td>
-                        <td class="tac">
+                        </el-button>
+
+                        <el-button
+                            type="danger"
+                            round
+                            @click="deleteSize(scope.row)"
+                            class="mrl">
                             <icon-trash
                                 icon-name="delete"
-                                class-name="fillRed"
-                                width="20px"
-                                class="cursorPointer mlm"
-                                @click="deleteSize(size)" />
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+                                class-name="fillWhite"
+                                width="15px" />
+                        </el-button>
+                    </div>
+                </el-table-column>
+
+                <!-- is visible -->
+                <el-table-column
+                    prop="is_visible"
+                    label="Is visible"
+                    align="right">
+                    <template slot-scope="scope">
+                        <icon-check-square
+                            v-if="scope.row.is_visible"
+                            icon-name="checked"
+                            class-name="fillGreen"
+                            width="15px" />
+                    </template>
+                </el-table-column>
+
+                <!-- cost -->
+                <el-table-column
+                    prop="cost"
+                    label="Cost"
+                    align="right"></el-table-column>
+
+                <!-- base price -->
+                <el-table-column
+                    prop="base_price"
+                    label="Base price"
+                    align="right">
+                </el-table-column>
+
+                <!-- sale price -->
+                <el-table-column
+                    prop="sale_price"
+                    label="Sale price"
+                    align="right"></el-table-column>
+
+                <!-- is on sale -->
+                <el-table-column
+                    prop="is_visible"
+                    label="Is on sale"
+                    align="right">
+                    <template slot-scope="scope">
+                        <icon-check-square
+                            v-if="scope.row.is_on_sale"
+                            icon-name="checked"
+                            class-name="fillGreen"
+                            width="15px" />
+                    </template>
+                </el-table-column>
+
+                <!-- inventory count -->
+                <el-table-column
+                    prop="inventory_count"
+                    label="Inventory count"
+                    align="right">
+                </el-table-column>
+            </el-table>
         </div>
 
         <!-- product size edit dialog -->
-        <el-dialog :title="sizeModal.sizeName ? 'EDIT: ' + $t(sizeModal.sizeName) : 'ADD SIZE'"
+        <el-dialog :title="sizeModal.size.size ? 'EDIT: ' + $t(sizeModal.size.size) : 'ADD SIZE'"
                    :visible.sync="sizeModal.isActive"
                    :modal-append-to-body="false">
 
             <form-row label="Size:">
-                <el-select v-model="sizeModal.size.size" placeholder="Choose">
+                <div v-if="sizeModal.size.size">{{ $t(sizeModal.size.size) }}</div>
+                <el-select
+                    v-else
+                    v-model="sizeModal.size.size"
+                    placeholder="Choose">
                     <el-option
                         v-for="key in sizeOptions"
                         :key="key"
