@@ -19,15 +19,14 @@ const imageMimeTypeWhiteList = [
     'image/pjpeg'
 ];
 
-const tmpDirectory = path.join(__dirname, '../../../tmp');
-
 // Configure AWS client for use with Digital Ocean Spaces
 const spacesEndpoint = new AWS.Endpoint(process.env.DIGITAL_OCEAN_SPACES_ENDPOINT);
-const s3 = new AWS.S3({
+AWS.config.update({
     endpoint: spacesEndpoint,
     accessKeyId: process.env.DIGITAL_OCEAN_SPACES_ACCESS_KEY,
     secretAccessKey: process.env.DIGITAL_OCEAN_SPACES_SECRET
 });
+const s3 = new AWS.S3();
 
 let server = null;
 
@@ -68,56 +67,32 @@ function getCloudUrl() {
 }
 
 
-async function uploadFileToCloud(resizeData) {
-    if(!resizeData) {
-        return;
-    }
-
-    let data = await fs.readFile(`${tmpDirectory}/${resizeData.file_name}`);
-
-    console.log("uploadFileToCloud - resizeData", resizeData);
-    console.log("uploadFileToCloud - data", data);
-
-    let { mime } = fileType(data);
-    let fileKey = getCloudImagePath(resizeData.file_name);
-
-    let params = {
-        Body: data,
-        Bucket: process.env.DIGITAL_OCEAN_SPACE_NAME,
-        Key: fileKey,
-        ACL: 'public-read',
-        ContentType: mime
-        // Metadata: {
-        //     'Content-Type': typeObj.mime
-        // }
-    };
-
-    // Upload the image to DigitalOcean.
-    // Returns a data object containing an 'ETag' attribute,
-    // which I think we don't need for anything.
-    await s3.putObject(params);
-
-    // The entire image url will be persisted in the DB
-    resizeData.url = `${getCloudUrl()}/${fileKey}`;
-    return resizeData;
-}
-
-
 async function deleteFile(url) {
-    if(!url) {
-        return;
-    }
+    return new Promise((resolve, reject) => {
+        if(!url) {
+            return;
+        }
 
-    let arr = url.split('/');
-    let fileName = arr[arr.length - 1];
+        let arr = url.split('/');
+        let fileName = arr[arr.length - 1];
 
-    if(!fileName) {
-        throw new Error(`Can not delete file for url ${url}`)
-    }
+        if(!fileName) {
+            reject(`Can not delete file for url ${url}`);
+            return;
+        }
 
-    await s3.deleteObject({
-        Bucket: process.env.DIGITAL_OCEAN_SPACE_NAME,
-        Key: getCloudImagePath(fileName)
+        const config = {
+            Bucket: process.env.DIGITAL_OCEAN_SPACE_NAME,
+            Key: getCloudImagePath(fileName)
+        };
+
+        s3.deleteObject(config, (err, data) => {
+            if(err) {
+                return reject(err);
+            }
+
+            resolve(data);
+        });
     });
 }
 
@@ -137,11 +112,8 @@ async function resizeAndWrite(req, width) {
         // to modify the request.payload.file value, causing subsequest
         // resize attemtps on the same file to fail.
         let file = cloneDeep(req.payload.file);
-        // let request = req;
 
-        // if(request.payload.file) {
         if(file) {
-            // let typeObj = fileIsImage(request.payload.file._data)
             let typeObj = fileIsImage(file._data)
 
             if(typeObj) {
@@ -166,39 +138,35 @@ async function resizeAndWrite(req, width) {
                         let fileKey = getCloudImagePath(fileName);
                         let { mime } = fileType(buffer);
 
+                        // https://gist.github.com/SylarRuby/b60eea29c1682519e422476cc5357b60
                         const s3Config = {
-                            Body: buffer,
                             Bucket: process.env.DIGITAL_OCEAN_SPACE_NAME,
                             Key: fileKey,
+                            Body: buffer,
                             ACL: 'public-read',
+                            ContentEncoding: 'base64', // required
                             ContentType: mime
                             // Metadata: {
                             //     'Content-Type': typeObj.mime
                             // }
                         };
 
-                        console.log("S3 config", s3Config)
-                        s3.putObject(s3Config);
+                        s3.upload(s3Config, (err, data) => {
+                            if (err) {
+                                console.log(err);
+                                return reject(err);
+                            }
 
-                        console.log("SHARP DONE", fileKey);
+                            console.log('Image successfully uploaded.', data);
 
-                        return resolve({
-                            url: `${getCloudUrl()}/${fileKey}`,
-                            width: w
-                        });
-                    })
-                    // .on('info', function(info) {
-                    //     // Adding the file name to the response object because it's persisted in the DB later
-                    //     info.file_name = fileName;
-                    //     return resolve(info);
-                    // });
+                            return resolve({
+                                url: `${getCloudUrl()}/${fileKey}`,
+                                width: w
+                            });
+                        })
+                    });
 
-                // request.payload.file.pipe(transformer);
                 file.pipe(transformer);
-                // request.payload.file.pipe(transformer).pipe(
-                //     fs.createWriteStream(`${tmpDirectory}/${fileName}`)
-                // );
-
             }
             else {
                 global.logger.info('SAVING PRODUCT FAILED BECAUSE WRONG MIME TYPE');
@@ -209,45 +177,6 @@ async function resizeAndWrite(req, width) {
             resolve();
         }
     });
-}
-
-function resizeAndWrite2(req, width) {
-    // Cloning is necessary because the file.pipe operation below seems
-    // to modify the request.payload.file value, causing subsequest
-    // resize attemtps on the same file to fail.
-    let request = cloneDeep(req);
-
-    if(request.payload.file) {
-        let typeObj = fileIsImage(request.payload.file._data)
-
-        if(typeObj) {
-            let w = parseInt(width, 10) || 600
-            let cleanId = helperService.stripTags(helperService.stripQuotes(request.payload.product_id));
-            let fileName = `${cleanId}_${new Date().getTime()}.${typeObj.ext}`;
-
-            // Read image data from readableStream,
-            // resize,
-            // emit an 'info' event with calculated dimensions
-            // and finally write image data to writableStream
-            let transformer = sharp()
-                .resize(w)
-                .max()
-                .withoutEnlargement(true)
-                .on('info', function(info) {
-                    // Adding the file name to the response object because it's persisted in the DB later
-                    info.file_name = fileName;
-                    return info;
-                });
-
-            request.payload.file.pipe(transformer).pipe(
-                fs.createWriteStream(`${tmpDirectory}/${fileName}`)
-            );
-        }
-        else {
-            global.logger.info('SAVING PRODUCT FAILED BECAUSE WRONG MIME TYPE');
-            throw new Error('File type must be one of: ' + imageMimeTypeWhiteList.join(','));
-        }
-    }
 }
 
 
@@ -328,7 +257,7 @@ function deleteVariants(ProductPic) {
     * @param {*} req
     * @param {*} options
     */
-async function upsertProductPic(request, options) {
+async function upsertPic(request, options) {
     try {
         const ProductPic = await unlinkFileAndVariantsIfBeingReplaced(request);
 
@@ -344,9 +273,6 @@ async function upsertProductPic(request, options) {
     }
 
     const resizeResponse = await resizeAndWrite(request, 600);
-    // const resizeResponse = await resizeAndWrite(request, 600);
-    // const uploadResponse = await uploadFileToCloud(resizeResponse);
-
     global.logger.info('PRODUCT PIC - FILE RESIZED (600)', resizeResponse);
 
     // update or create the ProductPic
@@ -378,9 +304,6 @@ async function upsertProductPic(request, options) {
 
 async function upsertPicVariant(request, productPicId) {
     const resizeResponse = await resizeAndWrite(request, 1000);
-    // const variantResizeResponse = await resizeAndWrite(request, 1000);
-    // const variantUploadResponse = await uploadFileToCloud(variantResizeResponse);
-
     global.logger.info('PRODUCT PIC VARIANT - FILE RESIZED (1000)', resizeResponse);
 
     let payload = cloneDeep(request.payload);
@@ -433,7 +356,7 @@ function featuredProductPic(productJson) {
 
  async function productPicUpsertHandler(request, h) {
     try {
-        const productPicId = await upsertProductPic(request);
+        const productPicId = await upsertPic(request);
 
         if(!productPicId) {
             throw Boom.badRequest('Unable to create a a new product picture.');
@@ -473,7 +396,7 @@ async function productPicDeleteHandler(request, h) {
         //TODO: Get the product.  If this is the featured pic, assign a new one on the product
 
         // Delete from DB:
-        ProductPic = await getProductPicModel().destroy(
+        const ProductPic = await getProductPicModel().destroy(
             { id: request.payload.id }
         );
 
