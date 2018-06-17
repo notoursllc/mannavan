@@ -1,14 +1,14 @@
 <script>
 import Vue from 'vue'
-import { Notification, MessageBox, Upload, Dialog, Button, Input, InputNumber, Checkbox, Select, Option } from 'element-ui'
+import { Notification, MessageBox, Upload, Dialog, Button, Input, InputNumber, Checkbox, Select, Option, Table, TableColumn } from 'element-ui'
 import forEach from 'lodash.foreach'
 import Validations from 'vuelidate'
 import { required } from 'vuelidate/lib/validators'
 import FormRow from '@/components/FormRow'
-import product_mixin from '@/mixins/product_mixin'
 import IconCheckSquare from '@/components/icons/IconCheckSquare'
 import IconTrash from '@/components/icons/IconTrash'
 import IconPencil from '@/components/icons/IconPencil'
+import product_mixin from '@/mixins/product_mixin'
 
 Vue.prototype.$notify = Notification;
 Vue.prototype.$confirm = MessageBox.confirm;
@@ -21,6 +21,8 @@ Vue.use(InputNumber);
 Vue.use(Checkbox);
 Vue.use(Select);
 Vue.use(Option);
+Vue.use(Table);
+Vue.use(TableColumn);
 Vue.use(Validations)
 
 let currentNotification = null;
@@ -34,11 +36,12 @@ function showNotification(Notification) {
 }
 
 
-export default{
+export default {
     components: {
         FormRow,
         IconCheckSquare,
-        IconPencil
+        IconPencil,
+        IconTrash
     },
 
     props: {
@@ -48,9 +51,9 @@ export default{
         },
     },
 
-    mixins: {
+    mixins: [
         product_mixin
-    },
+    ],
 
     data() {
         return {
@@ -104,6 +107,31 @@ export default{
             this.picModal.tempImage = null;
         },
 
+
+        async getProduct() {
+            if(!this.productId) {
+                return;
+            }
+
+            try {
+                this.product = await this.getProductById(this.productId, { viewAllRelated: true });
+
+                if(!this.product) {
+                    throw new Error(this.$t('Product not found'));
+                }
+            }
+            catch(e) {
+                showNotification(
+                    this.$notify({
+                        type: 'error',
+                        title: e.message,
+                        duration: 0
+                    })
+                );
+            }
+        },
+
+
         async deletePic(pic) {
             try {
                 let picName = this.$t(pic.url);
@@ -121,7 +149,7 @@ export default{
                         throw new Error(this.$t('Product picture not found'));
                     }
 
-                    this.setProduct();
+                    this.getProduct();
 
                     this.$emit('updated');
 
@@ -150,6 +178,7 @@ export default{
             }
         },
 
+
         async savePic(pictureId) {
             let promise = null;
             let formData = new FormData();
@@ -175,7 +204,7 @@ export default{
                 const picJson = await this.upsertProductPicture(formData);
 
                 this.picModal.isActive = false;
-                this.setProduct();
+                this.getProduct();
                 this.deleteTempImage();
 
                 this.$emit('updated');
@@ -201,29 +230,11 @@ export default{
         },
 
 
-        async setProduct() {
-            try {
-                this.product = await this.getProductById(this.productId, { viewAllRelated: true });
-
-                if(!this.product) {
-                    throw new Error(this.$t('Product not found'));
-                }
-            }
-            catch(e) {
-                showNotification(
-                    this.$notify({
-                        type: 'error',
-                        title: e.message,
-                        duration: 0
-                    })
-                )
-            }
-        },
-
         openPicEditModal(pic) {
             this.picModal.form = pic || {};
             this.picModal.isActive = true;
         },
+
 
         openPicQuickView(pic) {
             this.picViewModal.pic = pic;
@@ -232,9 +243,12 @@ export default{
     },
 
     created() {
-        if(this.productId) {
-            this.setProduct();
-        }
+        const unwatch = this.$watch('productId', val => {
+            if(val) {
+                this.getProduct();
+                unwatch();
+            }
+        }, {immediate: true})
     }
 }
 </script>
@@ -247,52 +261,75 @@ export default{
                        @click="openPicEditModal()">ADD PICTURE</el-button>
         </div>
 
-        <div v-if="!product.pics || !product.pics.length" class="colorGrayLighter">none</div>
-        <div v-else>
-            <!-- <div class="colorGrayLighter fs14 phm">{{ `${product.pics.length} ${this.$tc('results', product.pics.length)}` }}</div> -->
-            <table class="table widthAll">
-                <thead>
-                    <tr>
-                        <th>Pic</th>
-                        <th>File name</th>
-                        <th>Sort order</th>
-                        <th>Visible</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="pic in product.pics" :key="pic.id">
-                        <td>
-                            <a @click="openPicQuickView(pic)" v-if="pic.url">
-                                <img :src="pic.url" class="width50" />
-                            </a>
-                        </td>
-                        <td class="hide_medium_down">{{ pic.url }}</td>
-                        <td class="tac">{{ pic.sort_order }}</td>
-                        <td>
-                            <icon-check-square
-                                v-if="pic.is_visible"
-                                icon-name="checked"
-                                class-name="fillGreen"
-                                width="15px" />
-                        </td>
-                        <td class="tac nowrap">
-                            <icon-pencil
-                                @click="openPicEditModal(pic)"
-                                icon-name="edit"
-                                class-name="fillGreen"
-                                width="15px" />
+        <el-table
+            :data="product.pics"
+            class="widthAll">
 
-                            <icon-trash
-                                @click="deletePic(pic)"
-                                icon-name="delete"
-                                class-name="fillRed"
-                                width="15px" />
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+            <!-- picture -->
+            <el-table-column
+                label="Picture"
+                width="100">
+                <template slot-scope="scope">
+                    <a @click="openPicQuickView(scope.row)" v-if="scope.row.url">
+                        <img :src="scope.row.url" class="width50" />
+                    </a>
+                </template>
+            </el-table-column>
+
+            <!-- operations -->
+            <el-table-column
+                label="Operations"
+                align="center"
+                width="150">
+                <div slot-scope="scope" class="nowrap">
+                    <el-button
+                        type="primary"
+                        round
+                        @click="openPicEditModal(scope.row)">
+                        <icon-pencil
+                            icon-name="edit"
+                            class-name="fillWhite"
+                            width="15px" />
+                    </el-button>
+
+                    <el-button
+                        type="danger"
+                        round
+                        @click="deletePic(scope.row)"
+                        class="mrl">
+                        <icon-trash
+                            icon-name="delete"
+                            class-name="fillWhite"
+                            width="15px" />
+                    </el-button>
+                </div>
+            </el-table-column>
+
+            <!-- url -->
+            <el-table-column
+                prop="url"
+                label="URL"></el-table-column>
+
+            <!-- sort order -->
+            <el-table-column
+                prop="sort_order"
+                label="Sort order"
+                width="120"></el-table-column>
+
+            <!-- is visible -->
+            <el-table-column
+                prop="is_visible"
+                label="Visible"
+                width="120">
+                <template slot-scope="scope" v-if="scope.row.is_visible">
+                    <icon-check-square
+                        icon-name="checked"
+                        class-name="fillGreen"
+                        width="15px" />
+                </template>
+            </el-table-column>
+        </el-table>
+
 
         <!-- product pic dialog -->
         <el-dialog :title="picViewModal.pic.url"
@@ -309,9 +346,6 @@ export default{
         <el-dialog :title="picModal.form.file_name ? 'Edit picture \''+picModal.form.file_name+'\'' : 'Add picture'"
                    :visible.sync="picModal.isActive"
                    :modal-append-to-body="false">
-
-            <!-- Product title -->
-            <form-row label="Product:">{{ product.title }}</form-row>
 
             <!-- Is visible -->
             <form-row label="Is visible:">

@@ -3,33 +3,20 @@
 const isObject = require('lodash.isobject');
 const Boom = require('boom');
 const helperService = require('../../helpers.service');
-const ProductPicService = require('./services/ProductPicService');
+const productPicController = require('./productPicController');
+const productSizeController = require('./productSizeController');
 
 
 let server = null;
-let productPicService;
 
 
-function getProductModel() {
+function getModel() {
     return server.app.bookshelf.model('Product');
-}
-
-function getProductSizeModel() {
-    return server.app.bookshelf.model('ProductSize');
-}
-
-function getProductPicModel() {
-    return server.app.bookshelf.model('ProductPic');
-}
-
-function getProductPicVariantModel() {
-    return server.app.bookshelf.model('ProductPicVariant');
 }
 
 
 function setServer(s) {
     server = s;
-    productPicService = new ProductPicService(s);
 }
 
 
@@ -59,53 +46,6 @@ function getGenderTypes() {
         GENDER_TYPE_BOYS: 0x04, // 00000100
         GENDER_TYPE_GIRLS: 0x08  // 00001000
     };
-}
-
-
-function getSizeTypes() {
-    return [
-        'SIZE_YOUTH_XS',
-        'SIZE_YOUTH_S',
-        'SIZE_YOUTH_M',
-        'SIZE_YOUTH_L',
-        'SIZE_YOUTH_XL',
-        'SIZE_ADULT_XS',
-        'SIZE_ADULT_S',
-        'SIZE_ADULT_M',
-        'SIZE_ADULT_L',
-        'SIZE_ADULT_XL',
-        'SIZE_ADULT_2XL',
-        'SIZE_ADULT_3XL',
-        'SIZE_ADULT_4XL',
-        'SIZE_ADULT_5XL'
-    ];
-}
-
-
-function getSizeTypeSortOrder(size) {
-    let types = getSizeTypes();
-    let index = types.indexOf(size);
-    return index > -1 ? index : types.length;
-}
-
-
-function featuredProductPic(productJson) {
-    let pic = null;
-
-    if(Array.isArray(productJson.pics)) {
-        let len = productJson.pics.length;
-
-        // The related sizes for a product are ordered by sort order (ASC)
-        // so the first 'is_visible' pic will be the featured pic
-        for(let i=0; i<len; i++) {
-            if(productJson.pics[i].is_visible && productJson.pics[i].url) {
-                pic = productJson.pics[i].url;
-                break;
-            }
-        }
-    }
-
-    return pic;
 }
 
 
@@ -148,11 +88,15 @@ async function getProductByAttribute(attrName, attrValue) {
         forgeOpts[attrName] = attrValue;
     }
 
-    return await getProductModel().forge(forgeOpts).fetch({
+    return await getModel().forge(forgeOpts).fetch({
         withRelated: getWithRelated()
     });
 }
 
+
+/***************************************
+ * route handlers
+ /**************************************/
 
 async function productShareHandler(request, h) {
     try {
@@ -163,7 +107,7 @@ async function productShareHandler(request, h) {
         const p = isObject(Product) ? Product.toJSON() : {};
         const url = helperService.getSiteUrl(true);
         const urlImages = `${url}/images/`;
-        const featuredPic = featuredProductPic(p);
+        const featuredPic = productPicController.featuredProductPic(p);
 
         return await h.view('views/socialshare', {
             title: p.title || `Welcome to ${helperService.getBrandName()}`,
@@ -182,7 +126,7 @@ async function productShareHandler(request, h) {
 
 async function getProductByIdHandler(request, h) {
     try {
-        const Products = await getProductModel()
+        const Products = await getModel()
             .forge({ id: request.query.id })
             .fetch({
                 withRelated: getWithRelated(request.query)
@@ -203,7 +147,7 @@ async function productSeoHandler(request, h) {
         let withRelated = getWithRelated();
         withRelated.push('pics.pic_variants');
 
-        const Products = await getProductModel()
+        const Products = await getModel()
             .forge({
                 'seo_uri': request.query.id
             })
@@ -225,7 +169,7 @@ function productInfoHandler(request, h) {
     return h.apiSuccess({
         types: getProductTypes(),
         subTypes: getProductSubTypes(),
-        sizes: getSizeTypes(),
+        sizes: productSizeController.getSizeTypes(),
         genders: getGenderTypes()
     });
 }
@@ -235,7 +179,7 @@ async function getProductsHandler(request, h) {
     try {
         const Products = await helperService.fetchPage(
             request,
-            getProductModel(),
+            getModel(),
             getWithRelated()
         );
 
@@ -254,7 +198,7 @@ async function getProductsHandler(request, h) {
 
 async function productCreateHandler(request, h) {
     try {
-        const Product = await getProductModel().create(request.payload);
+        const Product = await getModel().create(request.payload);
 
         if(!Product) {
             throw Boom.badRequest('Unable to create product.');
@@ -276,7 +220,7 @@ async function productUpdateHandler(request, h) {
     try {
         request.payload.updated_at = request.payload.updated_at || new Date();
 
-        const Product = await getProductModel().update(
+        const Product = await getModel().update(
             request.payload,
             { id: request.payload.id }
         );
@@ -297,153 +241,11 @@ async function productUpdateHandler(request, h) {
 }
 
 
-/***************************************
- * Product size route handlers
- /**************************************/
-async function productSizeCreateHandler(request, h) {
-    try {
-        request.payload.sort = request.payload.sort || getSizeTypeSortOrder(request.payload.size)
-
-        const ProductSize = await getProductSizeModel().create(request.payload);
-
-        if(!ProductSize) {
-            throw Boom.badRequest('Unable to create a a new product size.');
-        }
-
-        return h.apiSuccess(
-            ProductSize.toJSON()
-        );
-    }
-    catch(err) {
-        global.logger.error(err);
-        global.bugsnag(err);
-        throw Boom.badRequest(err);
-    }
-}
-
-
-async function productSizeUpdateHandler(request, h) {
-    try {
-        request.payload.updated_at = request.payload.updated_at || new Date();
-
-        const ProductSize = await getProductSizeModel().update(
-            request.payload,
-            { id: request.payload.id }
-        );
-
-        if(!ProductSize) {
-            throw Boom.badRequest('Unable to find product size.');
-        }
-
-        return h.apiSuccess(
-            ProductSize.toJSON()
-        );
-    }
-    catch(err) {
-        global.logger.error(err);
-        global.bugsnag(err);
-        throw Boom.badRequest(err);
-    }
-}
-
-
-async function productSizeDeleteHandler(request, h) {
-    try {
-        request.payload.updated_at = request.payload.updated_at || new Date();
-
-        const ProductSize = await getProductSizeModel().destroy(
-            { id: request.payload.id }
-        );
-
-        if(!ProductSize) {
-            throw Boom.badRequest('Unable to find product size.');
-        }
-
-        return h.apiSuccess(
-            ProductSize.toJSON()
-        );
-    }
-    catch(err) {
-        global.logger.error(err);
-        global.bugsnag(err);
-        throw Boom.badRequest(err);
-    }
-}
-
-
-/***************************************
- * Product picture route handlers
- /**************************************/
-async function productPicUpsertHandler(request, h) {
-    try {
-        const productPicId = await productPicService.upsertProductPic(request);
-
-        if(!productPicId) {
-            throw Boom.badRequest('Unable to create a a new product picture.');
-        }
-
-        global.logger.info(
-            request.payload.id ? 'PRODUCT PIC - DB UPDATED' : 'PRODUCT PIC - DB CREATED',
-            productPicId
-        );
-
-        return h.apiSuccess({
-            product_pic_id: productPicId
-        });
-    }
-    catch(err) {
-        global.logger.error(err);
-        global.bugsnag(err);
-        throw Boom.badRequest(err);
-    }
-};
-
-
-async function productPicDeleteHandler(request, h) {
-    try {
-        request.payload.updated_at = request.payload.updated_at || new Date();
-
-        try {
-            await productPicService.unlinkFileAndVariants(request.payload.id);
-        }
-        catch(err) {
-            // just dropping the exception beacuse issues deleting the file
-            // shouldn't stop this process from continuing
-            global.logger.error(err);
-            global.bugsnag(err);
-        }
-
-        //TODO: Get the product.  If this is the featured pic, assign a new one on the product
-
-        // Delete from DB:
-        ProductPic = await getProductPicModel().destroy(
-            { id: request.payload.id }
-        );
-
-        global.logger.info('DELETE FILE PRODUCT PIC SHOULD HAVE VARIANTS', ProductPic.toJSON())
-        global.logger.info('PRODUCT PIC - DB DELETED2', request.payload.id);
-
-        return h.apiSuccess({
-            id: request.payload.id
-        });
-    }
-    catch(err) {
-        global.logger.error(err);
-        global.bugsnag(err);
-        throw Boom.badRequest(err);
-    }
-};
-
-
-
 module.exports = {
     setServer,
     getProductTypes,
     getProductSubTypes,
     getGenderTypes,
-    getSizeTypes,
-    getSizeTypeSortOrder,
-    featuredProductPic,
     getProductByAttribute,
 
     // route handlers
@@ -453,10 +255,5 @@ module.exports = {
     productInfoHandler,
     getProductsHandler,
     productCreateHandler,
-    productUpdateHandler,
-    productSizeCreateHandler,
-    productSizeUpdateHandler,
-    productSizeDeleteHandler,
-    productPicUpsertHandler,
-    productPicDeleteHandler
+    productUpdateHandler
 };

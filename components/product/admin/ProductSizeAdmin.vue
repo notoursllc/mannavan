@@ -31,7 +31,7 @@ function showNotification(Notification) {
 }
 
 
-export default{
+export default {
     components: {
         FormRow,
         IconTrash,

@@ -3,9 +3,7 @@
 const Promise = require('bluebird');
 const faker = require('faker');
 const CoreService = require('../../server/plugins/core/core.service');
-const ProductPicService = require('../../server/plugins/products/services/ProductPicService');
-
-const productPicService = new ProductPicService();
+const productPicController = require('../../server/plugins/products/productPicController');
 
 
 exports.seed = (knex) => {
@@ -18,7 +16,7 @@ exports.seed = (knex) => {
             let promises = [];
             let d = new Date();
             let uuid;
-            let urlPrefix = productPicService.getCloudUrl();
+            let urlPrefix = productPicController.getCloudUrl();
 
             global.productPicSeedUuids = [];
             global.productSeedUuids = global.productSeedUuids || [];
@@ -28,12 +26,12 @@ exports.seed = (knex) => {
                 // picture 1
                 uuid = faker.random.uuid();
                 global.productPicSeedUuids.push(uuid);
-                
+
                 promises.push(
                     knex(CoreService.DB_TABLES.product_pics)
                         .insert({
                             id: uuid,
-                            url: `${urlPrefix}/${productPicService.getCloudImagePath('sample-300-x-400.png')}`,
+                            url: `${urlPrefix}/${productPicController.getCloudImagePath('sample-300-x-400.png')}`,
                             sort_order: 1,
                             is_visible: true,
                             created_at: d,
@@ -49,7 +47,7 @@ exports.seed = (knex) => {
                     knex(CoreService.DB_TABLES.product_pics)
                         .insert({
                             id: uuid,
-                            url: `${urlPrefix}/${productPicService.getCloudImagePath('sample_calbeamin.jpg')}`,
+                            url: `${urlPrefix}/${productPicController.getCloudImagePath('sample_calbeamin.jpg')}`,
                             sort_order: 2,
                             is_visible: true,
                             created_at: d,

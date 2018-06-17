@@ -314,9 +314,8 @@ export default {
             <div class="g-spec-label">Media</div>
             <div class="g-spec-content">
                 <!-- video_url -->
-                <div>
-                    <div class="fwb fs14">Video URL:</div>
-                    <el-input v-model="product.video_url">
+                <form-row label="Video URL:">
+                    <el-input v-model="product.video_url" style="width:600px">
                         <el-button
                             slot="append"
                             v-if="product.video_url"
@@ -324,11 +323,10 @@ export default {
                             <icon-play-video icon-name="play" width="20px" />
                         </el-button>
                     </el-input>
-                </div>
+                </form-row>
 
                 <!-- pictures -->
                 <div class="mtl">
-                    <div class="fwb fs14">Pictures:</div>
                     <product-pictures-admin :product-id="product.id"></product-pictures-admin>
                 </div>
             </div>
@@ -398,15 +396,17 @@ export default {
         </div>
 
 
-        <!-- <el-dialog title="Product video"
+        <el-dialog title="Product video"
                 :visible.sync="videoPlayerModal.isActive"
-                :modal-append-to-body="false"
-                @close="modalClosed">
+                @close="modalClosed"
+                width="90%"
+                top="5vh">
             <youtube
                 :video-id="videoPlayerModal.videoId"
                 :player-vars="{ autoplay: 1 }"
+                player-width="100%"
                 @playing="videoPlaying"></youtube>
-        </el-dialog> -->
+        </el-dialog>
     </div>
 </template>
 

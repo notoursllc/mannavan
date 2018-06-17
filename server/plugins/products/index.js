@@ -1,6 +1,8 @@
 const Joi = require('joi');
 const path = require('path');
 const productsController = require('./productsController');
+const productPicController = require('./productPicController');
+const productSizeController = require('./productSizeController');
 
 const routePrefix = '/api/v1';
 
@@ -143,7 +145,7 @@ const after = function (server) {
             path: `${routePrefix}/product/size/create`,
             options: {
                 description: 'Adds a new size to the product',
-                handler: productsController.productSizeCreateHandler
+                handler: productSizeController.productSizeCreateHandler
             }
         },
         {
@@ -151,7 +153,7 @@ const after = function (server) {
             path: `${routePrefix}/product/size/update`,
             options: {
                 description: 'Updates a product size',
-                handler: productsController.productSizeUpdateHandler
+                handler: productSizeController.productSizeUpdateHandler
             }
         },
         {
@@ -164,7 +166,7 @@ const after = function (server) {
                         id: Joi.string().uuid()
                     }
                 },
-                handler: productsController.productSizeDeleteHandler
+                handler: productSizeController.productSizeDeleteHandler
             }
         },
 
@@ -186,7 +188,7 @@ const after = function (server) {
                         ...productPicSchema
                     }
                 },
-                handler: productsController.productPicUpsertHandler
+                handler: productPicController.productPicUpsertHandler
             }
         },
         {
@@ -199,7 +201,7 @@ const after = function (server) {
                         id: Joi.string().uuid()
                     }
                 },
-                handler: productsController.productPicDeleteHandler
+                handler: productPicController.productPicDeleteHandler
             }
         }
     ]);
@@ -240,6 +242,8 @@ exports.plugin = {
     pkg: require('./package.json'),
     register: function (server, options) {
         productsController.setServer(server);
+        productSizeController.setServer(server);
+        productPicController.setServer(server);
 
         server.dependency(['BookshelfOrm', 'Core'], after);
     }
