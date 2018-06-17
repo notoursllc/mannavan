@@ -359,25 +359,22 @@ export default {
                     <!-- type -->
                     <form-row label="Product type:">
                         <bitwise-multi-select
-                            :options="typeSelectOptions"
-                            :init="product.type"
-                            @changed="val => product.type = val"></bitwise-multi-select>
+                            v-model="product.type"
+                            :options="typeSelectOptions"></bitwise-multi-select>
                     </form-row>
 
                     <!-- sub_type -->
                     <form-row label="Product sub-type:">
                         <bitwise-multi-select
-                            :options="subTypeSelectOptions"
-                            :init="product.sub_type"
-                            @changed="val => product.sub_type = val"></bitwise-multi-select>
+                            v-model="product.sub_type"
+                            :options="subTypeSelectOptions"></bitwise-multi-select>
                     </form-row>
 
                     <!-- gender -->
                     <form-row label="Gender type:">
                         <bitwise-multi-select
-                            :options="genderSelectOptions"
-                            :init="product.gender"
-                            @changed="val => product.gender = val"></bitwise-multi-select>
+                            v-model="product.gender"
+                            :options="genderSelectOptions"></bitwise-multi-select>
                     </form-row>
 
                 </div>

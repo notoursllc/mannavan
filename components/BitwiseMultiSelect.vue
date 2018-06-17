@@ -7,6 +7,8 @@ Vue.use(Select);
 
 export default {
     props: {
+        value: {},
+
         placeholder: {
             type: String,
             default: ''
@@ -15,10 +17,6 @@ export default {
         options: {
             type: Object,
             required: true
-        },
-
-        init: {
-            type: Number
         }
     },
 
@@ -27,6 +25,7 @@ export default {
             selectedVal: null
         }
     },
+
 
     methods: {
         selectValueChanged: function(valueArray) {
@@ -40,16 +39,16 @@ export default {
                 total += val;
             })
 
-            this.$emit('changed', total)
+            this.$emit('input', total)
         }
     },
 
     created: function() {
-        let unwatch = this.$watch('init', function(newVal, oldVal) {
+        let unwatch = this.$watch('options', function(newVal, oldVal) {
             let values = [];
 
-            forEach(this.options, function(val, key) {
-                if(val & newVal) {
+            forEach(this.options, (val, key) => {
+                if(val & this.value) {
                     values.push(val);
                 }
             })
@@ -75,7 +74,3 @@ export default {
         </el-option>
     </el-select>
 </template>
-
-<style lang="scss">
-
-</style>
