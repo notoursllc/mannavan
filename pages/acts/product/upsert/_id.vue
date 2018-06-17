@@ -126,9 +126,22 @@ export default {
         },
 
         goToStore(seoUri) {
+            let productTypeName;
+            let label;
+
+            forEach(this.productInfo.subTypes, (val, key) => {
+                if(val & this.product.type) {
+                    productTypeName = key;
+                }
+            });
+
+            if(productTypeName) {
+                label = this.getProductSubTypeData(productTypeName).label;
+            }
+
             let routeData = this.$router.resolve({
-                name: 'item-id',
-                params: { id: seoUri }
+                name: 'type-name-seouri',
+                params: { name: label || 'tops', seouri: seoUri }
             });
 
             // this opens the page in a new tab
