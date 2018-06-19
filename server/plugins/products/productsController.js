@@ -112,7 +112,7 @@ async function productShareHandler(request, h) {
         return await h.view('views/socialshare', {
             title: p.title || `Welcome to ${helperService.getBrandName()}`,
             description: p.description_short || '',
-            image: featuredPic ? `${urlImages}product/${featuredPic}` : `${urlImages}logo_header.png`,
+            image: featuredPic ? `${urlImages}product/${featuredPic}` : `${urlImages}logo_email.png`,
             url: `${url}/${request.query.uri}`
         });
     }

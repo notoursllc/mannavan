@@ -126,7 +126,7 @@ function getPurchaseDescription(ShoppingCart) {
 }
 
 
-function emailPurchaseReceiptToBuyer(ShoppingCart, transactionId, orderTitle) {
+async function emailPurchaseReceiptToBuyer(ShoppingCart, transactionId, orderTitle) {
     let html = pug.renderFile(
         path.join(__dirname, '../email-templates', 'purchase-receipt.pug'),
         {
@@ -143,7 +143,7 @@ function emailPurchaseReceiptToBuyer(ShoppingCart, transactionId, orderTitle) {
         }
     );
 
-    send({
+    await send({
         to: ShoppingCart.get('shipping_email'),
         subject: `Your goBreadVan.com order of ${orderTitle}`,
         // text: 'sample text for purchase receipt', //TODO:
@@ -152,7 +152,7 @@ function emailPurchaseReceiptToBuyer(ShoppingCart, transactionId, orderTitle) {
 }
 
 
-function emailPurchaseAlertToAdmin(ShoppingCart, transactionId, orderTitle) {
+async function emailPurchaseAlertToAdmin(ShoppingCart, transactionId, orderTitle) {
     let html = pug.renderFile(
         path.join(__dirname, '../email-templates', 'admin-purchase-alert.pug'),
         {
@@ -175,7 +175,7 @@ function emailPurchaseAlertToAdmin(ShoppingCart, transactionId, orderTitle) {
         }
     );
 
-    send({
+    await send({
         to: process.env.EMAIL_ADMIN,
         subject: `NEW ORDER: ${orderTitle}`,
         html: html
@@ -183,11 +183,19 @@ function emailPurchaseAlertToAdmin(ShoppingCart, transactionId, orderTitle) {
 }
 
 
-function sendPurchaseEmails(ShoppingCart, transactionId) {
+async function sendPurchaseEmails(ShoppingCart, transactionId) {
     let orderTitle = getPurchaseDescription(ShoppingCart);
 
-    emailPurchaseReceiptToBuyer(ShoppingCart, transactionId, orderTitle),
-    emailPurchaseAlertToAdmin(ShoppingCart, transactionId, orderTitle)
+    try {
+        await Promise.all([
+            emailPurchaseReceiptToBuyer(ShoppingCart, transactionId, orderTitle),
+            emailPurchaseAlertToAdmin(ShoppingCart, transactionId, orderTitle)
+        ]);
+    }
+    catch(e) {
+        global.logger.error(e);
+        global.bugsnag(e);
+    }
 }
 
 

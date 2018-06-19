@@ -404,16 +404,14 @@ async function cartCheckoutHandler(request, h) {
             }
         });
 
-        // TODO: shoppingCartEmailService may need some refactoring
-        // because the mailcomposer npm lib is deprecated
-        // try {
+        try {
               shoppingCartEmailService.sendPurchaseEmails(ShoppingCart, transactionObj.transaction.id)
-        // }
-        // catch(err) {
-        //     let msg = `Unable to send email confirmation to user after successful purchase: (ShoppingCart ID: ${ShoppingCart.get('id')}) ${err}`;
-        //     global.logger.error(msg);
-        //     global.bugsnag(msg);
-        // }
+        }
+        catch(err) {
+            let msg = `Unable to send email confirmation to user after successful purchase: (ShoppingCart ID: ${ShoppingCart.get('id')}) ${err}`;
+            global.logger.error(msg);
+            global.bugsnag(msg);
+        }
 
         // If the Braintree transaction is successful then anything that happens after this
         // (i.e saving the payment details to DB) needs to fail silently, as the user has

@@ -40,11 +40,11 @@ mixin link(path, linkText)
 
 mixin header
   +ie-open(({cell: 300}))
-  div(style="display: inline-block;")
+  div
     a(href=baseUrl)
-      img(src=baseUrl + '/images/logo_header.png' alt="goBreadVan.com" style="border-style: none; outline: none")
+      img(src=baseUrl + '/images/logo_email.png' alt="goBreadVan.com" style="border-style: none; outline: none")
   +ie-col(({cell: 300}))
-  div(style="display: inline-block;")
+  div
     table(cellspacing="0" cellpadding="0" border="0" width="100%")
       tr
         td(style="text-align:right; font-size:18px; padding:7px 20px; font-family:Montserrat, Arial, sans-serif; line-height:1.7") Order Confirmation
@@ -53,7 +53,7 @@ mixin header
 
 mixin greeting
   table(cellspacing="0" cellpadding="0" border="0" width="100%")
-    tr: td(style="font-size:18px; line-height:30px; color:#ed198a") Thank you!
+    tr: td(style="font-size:18px; line-height:30px; color:#249c32") Thank you!
     tr: td
       | You ordered
       |
@@ -72,6 +72,7 @@ mixin details
               | Order
               |
               +link(`/order-details/${transactionId}`, transactionId)
+              |
 
         include includes/pink-table.pug
           table
@@ -89,9 +90,11 @@ mixin signature
 mixin disclaimer
   p(style="margin:10px 0 8px 0")
     | By placing your order, you agree to goBreadVan.com’s
+    |
     +link('/privacy', 'Privacy Notice')
     |
     | and
+    |
     +link('/conditions-of-use', 'Conditions of Use')
     |.
     |
