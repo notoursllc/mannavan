@@ -6,6 +6,7 @@ import ProductPrice from '@/components/product/ProductPrice'
 import CartTotalsTable from '@/components/cart/CartTotalsTable'
 import product_mixin from '@/mixins/product_mixin'
 import order_mixin from '@/mixins/order_mixin'
+import app_mixin from '@/mixins/app_mixin'
 
 Vue.use(Loading.directive)
 
@@ -18,7 +19,8 @@ export default {
 
     mixins: [
         order_mixin,
-        product_mixin
+        product_mixin,
+        app_mixin
     ],
 
     data: function() {
@@ -44,7 +46,7 @@ export default {
         return {
             title: this.$t('Order Details'),
             meta: [
-                { vmid: 'description', name: 'description', content: `Order Details for your order from Gmnst` }
+                { vmid: 'description', name: 'description', content: `Order Details for your order from ${this.getSiteName()}` }
             ]
         }
     }

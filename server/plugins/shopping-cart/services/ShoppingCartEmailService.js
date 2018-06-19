@@ -7,14 +7,17 @@ const mailgun = require('mailgun-js')({apiKey: Config.get('/mailgun/apiKey'), do
 const MailComposer = require('nodemailer/lib/mail-composer');
 const pug = require('pug');
 const isObject = require('lodash.isobject');
+const helpers = require('../../../helpers.service');
 
 
 
 async function send(config) {
     return new Promise((resolve, reject) => {
+        let domainName = helpers.getDomainName();
+
         // https://www.npmjs.com/package/mailgun-js
         let mail = new MailComposer({
-            from: `${process.env.EMAIL_FROM_CART_SUCCESS_NAME || 'gmnst.com'} <${process.env.EMAIL_FROM_CART_SUCCESS || 'thanks@gmnst.com'}>`,
+            from: `${process.env.EMAIL_FROM_CART_SUCCESS_NAME || domainName} <${process.env.EMAIL_FROM_CART_SUCCESS || 'thanks@'+domainName}>`,
             to: config.to,
             subject: config.subject,
             body: config.text,
@@ -142,7 +145,7 @@ function emailPurchaseReceiptToBuyer(ShoppingCart, transactionId, orderTitle) {
 
     send({
         to: ShoppingCart.get('shipping_email'),
-        subject: `Your gmnst.com order of ${orderTitle}`,
+        subject: `Your goBreadVan.com order of ${orderTitle}`,
         // text: 'sample text for purchase receipt', //TODO:
         html: html
     });

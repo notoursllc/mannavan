@@ -3,6 +3,7 @@ import Vue from 'vue'
 import { Loading } from 'element-ui'
 import PaymentTypeDisplay from '@/components/PaymentTypeDisplay'
 import order_mixin from '@/mixins/order_mixin'
+import app_mixin from '@/mixins/app_mixin'
 import IconVictoryPeace from '@/components/icons/IconVictoryPeace'
 import IconEnvelope from '@/components/icons/IconEnvelope'
 
@@ -16,7 +17,8 @@ export default {
     },
 
     mixins: [
-        order_mixin
+        order_mixin,
+        app_mixin
     ],
 
     data: function() {
@@ -43,7 +45,7 @@ export default {
         return {
             title: this.$t('We have a winner!'),
             meta: [
-                { vmid: 'description', name: 'description', content: `Thanks for your order from Gmnst` }
+                { vmid: 'description', name: 'description', content: `Thanks for your order from ${this.getSiteName()}` }
             ]
         }
     }

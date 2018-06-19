@@ -6,6 +6,7 @@
     import ShippingMethodStep from '@/components/checkout/StepShippingMethod'
     import PlaceOrderStep from '@/components/checkout/StepPlaceOrder'
     import KeepShoppingButton from '@/components/cart/KeepShoppingButton'
+    import app_mixin from '@/mixins/app_mixin'
 
     let currentNotification = null;
 
@@ -17,6 +18,10 @@
             PlaceOrderStep,
             KeepShoppingButton
         },
+
+        mixins: [
+            app_mixin
+        ],
 
         computed: {
             ...mapGetters({
@@ -82,7 +87,7 @@
             return {
                 title: this.$t('Checkout'),
                 meta: [
-                    { vmid: 'description', name: 'description', content: `Your Shopping Cart at gmnst.com` }
+                    { vmid: 'description', name: 'description', content: `Your Shopping Cart at ${this.getSiteName()}` }
                 ]
             }
         }

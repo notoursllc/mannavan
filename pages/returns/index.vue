@@ -25,7 +25,7 @@ export default {
         return {
             title: this.$t('Returns / Exchanges'),
             meta: [
-                { vmid: 'description', name: 'description', content: `Returns and Exchanges for your order at gmnst.com` }
+                { vmid: 'description', name: 'description', content: `Returns and Exchanges for your order at ${this.getSiteName()}` }
             ]
         }
     }

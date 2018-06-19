@@ -27,7 +27,7 @@ export default {
         return {
             title: this.$t('Conditions of Use'),
             meta: [
-                { vmid: 'description', name: 'description', content: `Conditions of Use for gmnst.com` }
+                { vmid: 'description', name: 'description', content: `Conditions of Use for ${this.getSiteName()}` }
             ]
         }
     }

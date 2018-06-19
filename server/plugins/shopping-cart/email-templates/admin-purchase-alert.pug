@@ -1,4 +1,4 @@
-- var baseUrl = "https://www.gmnst.com"
+- var baseUrl = "https://www.goBreadVan.com"
 
 mixin link(path, linkText)
   - url = baseUrl + path;
@@ -13,8 +13,8 @@ mixin header
 
 mixin greeting
     table(cellspacing="0" cellpadding="0" border="0" width="100%")
-        tr: td(style="padding:20px 0 20px 0") 
-            | Order ID: 
+        tr: td(style="padding:20px 0 20px 0")
+            | Order ID:
             |
             +link(`/order-details/${transactionId}`, transactionId)
 
@@ -26,7 +26,7 @@ mixin details
                 include includes/shipping-address-grid.pug
             tr: td(style="padding-top:20px")
                 include includes/totals-table.pug
-            
+
 
 //- MARKUP
 

@@ -21,6 +21,10 @@ function getBrandName() {
     return 'BreadVan';
 }
 
+function getDomainName() {
+    return domainName;
+}
+
 
 function queryHelper(request) {
     let response = {
@@ -225,6 +229,8 @@ function comparePassword(password, userPassword) {
 
 
 module.exports.getSiteUrl = getSiteUrl;
+module.exports.getBrandName = getBrandName;
+module.exports.getDomainName = getDomainName;
 module.exports.queryHelper = queryHelper;
 module.exports.fetchPage = fetchPage;
 module.exports.isDev = isDev;

@@ -7,6 +7,7 @@
     import CartItems from '@/components/cart/CartItems'
     import CartTotalsTable from '@/components/cart/CartTotalsTable'
     import KeepShoppingButton from '@/components/cart/KeepShoppingButton'
+    import app_mixin from '@/mixins/app_mixin'
 
     Vue.use(Button);
 
@@ -17,6 +18,10 @@
             PageHeader,
             KeepShoppingButton
         },
+
+        mixins: [
+            app_mixin
+        ],
 
         computed: {
             ...mapGetters({
@@ -54,7 +59,7 @@
             return {
                 title: this.$t('Shopping Cart'),
                 meta: [
-                    { vmid: 'description', name: 'description', content: `Your Shopping Cart at gmnst.com` }
+                    { vmid: 'description', name: 'description', content: `Your Shopping Cart at ${this.getSiteName()}` }
                 ]
             }
         }

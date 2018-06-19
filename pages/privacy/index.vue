@@ -13,7 +13,8 @@ export default {
 
     data: function() {
         return {
-            helpEmailAddress: this.getHelpEmailAddress()
+            helpEmailAddress: this.getHelpEmailAddress(),
+            brandName: this.getBrandName()
         }
     },
 
@@ -25,7 +26,7 @@ export default {
         return {
             title: this.$t('Privacy Notice'),
             meta: [
-                { vmid: 'description', name: 'description', content: `Privacy Notice for gmnst.com` }
+                { vmid: 'description', name: 'description', content: `Privacy Notice for ${this.getSiteName()}` }
             ]
         }
     }
@@ -39,8 +40,8 @@ export default {
         In keeping with that goal, we have developed this Privacy Notice to outline our guidelines for the collection and use of personal information.
 
         <h2>WHO IS <site-name :uppercase="true"></site-name>?</h2>
-        <site-name></site-name> is the operating name of Not Ours, LLC. This policy applies to <site-name></site-name>and
-        all of its named operations and divisions ("Gmnst", "we", "our" or "us").
+        <site-name></site-name> is the operating name of Not Ours, LLC. This policy applies to <site-name></site-name> and
+        all of its named operations and divisions ("{{ brandName }}", "we", "our" or "us").
 
         <h2>WHAT INFORMATION DOES <site-name :uppercase="true"></site-name> COLLECT AND HOW IS IT USED?</h2>
 
@@ -146,15 +147,15 @@ export default {
         comments, suggestions or other content, including Personal Information (collectively, "User Content"), on blogs and message boards,
         product reviews and other public forums. We or others may store, display, publish, distribute or otherwise use User Content online
         or offline in any media or format and may or may not attribute the User Content to you. Others may have access to this User Content
-        and may have the ability to share it with third parties. Please note that Gmnst does not control who will have access to the
+        and may have the ability to share it with third parties. Please note that {{ brandName }} does not control who will have access to the
         information that you choose to make public, and cannot ensure that parties who have access to such publicly available information
         will respect your privacy or keep it secure. We are not responsible for the privacy or security of any information that you make
         publicly available on the Site or what others do with information you share with them on the Site.
 
         <p>Name and Likeness. - We may also publish your name, voice, likeness and other Personal Information that is part of your User
         Content, and we may use the content, or any portion of the content, for advertising, marketing, publicity and promotional activities.
-        By connecting with the Gmnst brands through our social media pages or accounts, or by posting content using Gmnst-created hashtags
-        or other identifiers, you are providing your consent for Gmnst to use any Personal Information or other content you submit or make
+        By connecting with the {{ brandName }} brands through our social media pages or accounts, or by posting content using {{ brandName }}-created hashtags
+        or other identifiers, you are providing your consent for {{ brandName }} to use any Personal Information or other content you submit or make
         available through such sites for marketing and promotional purposes, including, but not limited to, incorporation into our marketing
         materials, without further notice or compensation.
 

@@ -3,6 +3,8 @@ import { mapGetters } from 'vuex';
 import queryString from 'query-string';
 import ProductCard from '@/components/product/ProductCard';
 import product_mixin from '@/mixins/product_mixin';
+import app_mixin from '@/mixins/app_mixin'
+
 
 
 function getProductSearchConfig(productTypeId) {
@@ -26,7 +28,8 @@ export default {
     },
 
     mixins: [
-        product_mixin
+        product_mixin,
+        app_mixin
     ],
 
     data() {
@@ -75,7 +78,7 @@ export default {
         return {
             title: this.productTypeName,
             meta: [
-                { vmid: 'description', name: 'description', content: `${this.productTypeName} by Gmnst` }
+                { vmid: 'description', name: 'description', content: `${this.productTypeName} by ${this.getBrandName()}` }
             ]
         }
     }
