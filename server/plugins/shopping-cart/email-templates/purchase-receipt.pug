@@ -57,7 +57,7 @@ mixin greeting
     tr: td
       | You ordered
       |
-      +link(`/order-details/${transactionId}`, orderTitle)
+      +link(`/order/details/${transactionId}`, orderTitle)
       |.
 
 
@@ -71,7 +71,7 @@ mixin details
             td(style="padding-bottom:5px")
               | Order
               |
-              +link(`/order-details/${transactionId}`, transactionId)
+              +link(`/order/details/${transactionId}`, transactionId)
               |
 
         include includes/pink-table.pug
