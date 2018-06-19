@@ -165,7 +165,7 @@ script:
   - nanobox run npm run knex:migrate
   - nanobox run npm run knex:seed
   - nanobox run npm run test:server
-  - nanobox run npm run test:e2e
+  - nanobox run npm run e2e
 
 after_success:
   # it seems we need to run another build so the nuxt files are built with

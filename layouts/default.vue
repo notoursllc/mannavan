@@ -103,7 +103,8 @@ export default {
                             <dd>
                                 <nuxt-link tag="a"
                                     class="underline"
-                                    :to="{name: 'returns'}">{{ $t('Returns / Exchanges') }}</nuxt-link>
+                                    :to="{name: 'returns'}"
+                                    data-testid="footer-link-returns">{{ $t('Returns / Exchanges') }}</nuxt-link>
                             </dd>
                         </dl>
                     </nav>
@@ -112,13 +113,19 @@ export default {
                         <dl>
                             <dt>Company</dt>
                             <dd>
-                                <nuxt-link :to="{name: 'contact-us'}">{{ $t('Contact Us!') }}</nuxt-link>
+                                <nuxt-link
+                                    :to="{name: 'contact-us'}"
+                                    data-testid="footer-link-contactus">{{ $t('Contact Us!') }}</nuxt-link>
                             </dd>
                             <dd>
-                                <nuxt-link :to="{name: 'privacy'}">{{ $t('Privacy') }}</nuxt-link>
+                                <nuxt-link
+                                    :to="{name: 'privacy'}"
+                                    data-testid="footer-link-privacy">{{ $t('Privacy') }}</nuxt-link>
                             </dd>
                             <dd>
-                                <nuxt-link :to="{name: 'conditions-of-use'}">{{ $t('Conditions of Use') }}</nuxt-link>
+                                <nuxt-link
+                                    :to="{name: 'conditions-of-use'}"
+                                    data-testid="footer-link-conditions">{{ $t('Conditions of Use') }}</nuxt-link>
                             </dd>
                         </dl>
                     </nav>
