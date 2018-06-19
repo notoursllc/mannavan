@@ -20,7 +20,7 @@
     "test:client": "npm run unit && npm run e2e",
     "test:server": "NODE_ENV=test lab -a code -v --leaks test/server",
     "test:e2eOLD": "node test/client/e2e/runner.js",
-    "e2e": "node --require dotenv/config ./node_modules/testcafe/bin/testcafe.js --require dotenv/config \"saucelabs:Chrome@beta:Windows 10\" test/client/e2e --app \"npm start\" --app-init-delay 10000",
+    "e2e": "./node_modules/testcafe/bin/testcafe.js \"saucelabs:Chrome@beta:Windows 10\" test/client/e2e --app \"npm start\" --app-init-delay 10000",
     "e2e-local": "NODE_ENV=development node --require dotenv/config ./node_modules/testcafe/bin/testcafe.js firefox test/client/e2e --app \"npm run dev\" --app-init-delay 10000",
     "generate": "nuxt generate",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
@@ -101,10 +101,6 @@
     "lab": "^15.5.0",
     "nodemon": "^1.17.5",
     "testcafe": "^0.20.3",
-    "testcafe-vue-selectors": "^3.0.0",
-    "wdio-mocha-framework": "^0.5.12",
-    "wdio-sauce-service": "^0.4.6",
-    "wdio-spec-reporter": "^0.1.3",
-    "webdriverio": "^4.12.0"
+    "testcafe-vue-selectors": "^3.0.0"
   }
 }
