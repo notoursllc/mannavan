@@ -45,7 +45,7 @@ exports.plugin = {
 
         let transports = [
             new (winston.transports.Console)({
-                level: 'error',
+                level: process.env.NODE_ENV === 'production' ? 'error' : 'debug',
                 prettyPrint: true,
                 colorize: true,
                 silent: false
