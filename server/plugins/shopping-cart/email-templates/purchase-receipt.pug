@@ -40,14 +40,14 @@ mixin link(path, linkText)
 
 mixin header
   +ie-open(({cell: 300}))
-  div
+  div(style="text-align:center;")
     a(href=baseUrl)
       img(src=baseUrl + '/images/logo_email.png' alt="goBreadVan.com" style="border-style: none; outline: none")
   +ie-col(({cell: 300}))
   div
     table(cellspacing="0" cellpadding="0" border="0" width="100%")
       tr
-        td(style="text-align:right; font-size:18px; padding:7px 20px; font-family:Montserrat, Arial, sans-serif; line-height:1.7") Order Confirmation
+        td(style="text-align:center; font-size:18px; padding:7px 20px; font-family:Montserrat, Arial, sans-serif; line-height:1.7") Order Confirmation
   +ie-close
 
 
@@ -74,12 +74,15 @@ mixin details
               +link(`/order/details/${transactionId}`, transactionId)
               |
 
-        include includes/pink-table.pug
-          table
-            tr: td
-              include includes/shipping-table-mini.pug
-            tr: td(style="padding-top:20px")
-              include includes/totals-table.pug
+        table(cellspacing="0" cellpadding="0" border="0" width="100%")
+          tr
+            td(style="background-color:#f6f6f6; padding:10px; text-align:left")
+
+              table
+                tr: td
+                  include includes/shipping-table-mini.pug
+                tr: td(style="padding-top:20px")
+                  include includes/totals-table.pug
 
 
 mixin signature

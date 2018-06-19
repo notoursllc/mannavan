@@ -20,8 +20,11 @@ mixin greeting
 
 
 mixin details
-    include includes/pink-table.pug
-        table
+    table(cellspacing="0" cellpadding="0" border="0" width="100%")
+      tr
+        td(style="background-color:#f6f6f6; padding:10px; text-align:left")
+
+          table
             tr: td
                 include includes/shipping-address-grid.pug
             tr: td(style="padding-top:20px")
