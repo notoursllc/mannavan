@@ -226,7 +226,7 @@ export default {
 
 
 <template>
-    <div class="container pvxl">
+    <div class="pageContainerMax">
         <div v-if="this.product">
                 <div class="columns">
                     <div class="column is-6">

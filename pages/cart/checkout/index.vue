@@ -109,8 +109,15 @@
             </div>
         </div>
 
-        <template v-else>
+        <div v-else class="formContainer">
             <component v-bind:is="stepComponent" @done="componentDone"></component>
-        </template>
+        </div>
     </div>
 </template>
+
+<style lang="scss" scoped>
+// need a bit more padding for mobile view
+.formContainer {
+    padding: 0 12px;
+}
+</style>

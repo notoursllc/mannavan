@@ -76,13 +76,11 @@
                         round>{{ $t('PROCEED TO CHECKOUT') }}</el-button>
         </div>
 
-        <div class="pam">
-            <cart-items :highlight-item="added_cart_item"></cart-items>
+        <cart-items :highlight-item="added_cart_item"></cart-items>
 
-            <div class="mtm clearfix">
-                <div class="floatRight">
-                    <cart-totals-table :cart="shoppingCart"></cart-totals-table>
-                </div>
+        <div class="mtm clearfix">
+            <div class="floatRight">
+                <cart-totals-table :cart="shoppingCart"></cart-totals-table>
             </div>
         </div>
 
