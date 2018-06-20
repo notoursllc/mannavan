@@ -131,11 +131,10 @@
                     class="cartItem"
                     :class="{'highlight': highlightItem === item.id, 'fadeout': added_cart_item === item.id}"
                     :id="'cartItem' + item.id">
-                <div class="cartItemPic">
-                    <figure class="image is-128x128">
-                        <img v-bind:src="featuredProductPic(item.product)">
-                    </figure>
+                <div class="cartItemPic" :style="'background-image:url(' + featuredProductPic(item.product) + ');'">
+                    <figure class="image is-128x128"></figure>
                 </div>
+                <!-- <div class="cartItemPicMobile" :style="'background-image:url(' + featuredProductPic(item.product) + ');'">foo</div> -->
 
                 <div class="cartItemInfo">
                     <div class="cartItemInfoContent">
