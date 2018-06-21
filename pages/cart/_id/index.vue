@@ -3,7 +3,6 @@
     import { mapGetters } from 'vuex'
     import isObject from 'lodash.isobject'
     import { Button } from 'element-ui'
-    import PageHeader from '@/components/PageHeader.vue'
     import CartItems from '@/components/cart/CartItems'
     import CartTotalsTable from '@/components/cart/CartTotalsTable'
     import KeepShoppingButton from '@/components/cart/KeepShoppingButton'
@@ -15,7 +14,6 @@
         components: {
             CartItems,
             CartTotalsTable,
-            PageHeader,
             KeepShoppingButton
         },
 

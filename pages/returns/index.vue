@@ -1,12 +1,7 @@
 <script>
-import PageHeader from '@/components/PageHeader'
 import app_mixin from '@/mixins/app_mixin'
 
 export default {
-    components: {
-        PageHeader
-    },
-
     mixins: [
         app_mixin
     ],
