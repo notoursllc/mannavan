@@ -9,38 +9,59 @@
 @import "components/element-ui-overrides";
 @import "components/animations";
 @import "components/svg";
+@import "components/minireset";
 
-// @import '~animate.css';
-// .animated {
-//     animation-duration: .377s;
-// }
 
-@import '~bulma/sass/utilities/functions';
-@import '~bulma/sass/utilities/variables';
-@import '~bulma/sass/utilities/mixins';
-// @import '~bulma/sass/utilities/controls';
-@import '~bulma/sass/base/generic';
-@import '~bulma/sass/base/minireset';
-@import '~bulma/sass/base/helpers'; //?
-@import '~bulma/sass/elements/content';
-@import '~bulma/sass/elements/other';
-@import '~bulma/sass/elements/image';
-@import '~bulma/sass/grid/columns';
-@import '~bulma/sass/layout/hero';
-@import '~bulma/sass/layout/section';
-@import '~bulma/sass/utilities/mixins';
-
+html {
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  min-width: 300px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  text-rendering: optimizeLegibility;
+}
 
 html,
 body {
     height: 100%;
     padding: 0;
     margin: 0;
-    font-size: 16px;
     background-color: #fafafa;
 }
 
+body {
+  color: $colorGrayDarker;
+  font-size: 16px;
+  font-weight: $weight-normal;
+  line-height: 1.5;
+}
 
+body,
+button,
+input,
+select,
+textarea {
+  font-family: $family-sans-serif
+}
+
+a {
+  color: $colorBlue;
+  cursor: pointer;
+  text-decoration: none;
+
+  &:hover {
+    color: $colorBlue;
+    text-decoration: underline;
+  }
+}
+
+hr {
+  background-color: hsl(0, 0%, 86%);
+  border: none;
+  display: block;
+  height: 1px;
+  margin: 1.5rem 0;
+}
 
 label {
     margin-bottom: 0;
@@ -248,3 +269,29 @@ ul.disc {
 .grow:hover {
     @include growHover()
 }
+
+
+/// bulma replacements
+.image {
+  display: block;
+  position: relative;
+
+  img {
+    display: block;
+    height: auto;
+    width: 100%;
+  }
+}
+
+
+// .columns
+//   margin-left: -0.75rem
+//   margin-right: -0.75rem
+//   margin-top: -0.75rem
+//   &:last-child
+//     margin-bottom: -0.75rem
+//   &:not(:last-child)
+//     margin-bottom: 0.75rem
+
+//     &.is-multiline
+//     flex-wrap: wrap

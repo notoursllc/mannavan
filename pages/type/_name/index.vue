@@ -86,18 +86,48 @@ export default {
 </script>
 
 <template>
-    <div>
-        <section class="is-fluid">
-            <div class="columns is-multiline" style="margin:0">
-                <div class="column is-4"
-                    style="padding:0"
-                    v-for="product in products"
-                    :key="product.id">
-                    <span v-on:click="goToProductDetails(product.seo_uri, $route.params.name)" class="cursorPointer">
-                        <product-card :product="product"></product-card>
-                    </span>
-                </div>
-            </div>
-        </section>
+    <div class="flex-container" style="margin:0">
+        <div class="flex-container-column"
+            style="padding:0"
+            v-for="product in products"
+            :key="product.id">
+            <span v-on:click="goToProductDetails(product.seo_uri, $route.params.name)" class="cursorPointer">
+                <product-card :product="product"></product-card>
+            </span>
+        </div>
     </div>
 </template>
+
+<style lang="scss" scoped>
+@import '~assets/css/components/_variables.scss';
+@import "~assets/css/components/_mixins.scss";
+
+.flex-container {
+    @include flexbox();
+    @include flex-wrap(wrap);
+}
+.is-third {
+    @include flex(none);
+    width: 33.33333%;
+}
+.flex-container-column {
+    @include flex(none);
+    width: 33.33333%;
+}
+
+@media #{$medium-and-down} {
+    .flex-container-column {
+        width: 50%;
+    }
+}
+@media #{$small-and-down} {
+    .flex-container {
+        display: block;
+    }
+    .flex-container-column {
+        @include flex(1);
+        width: 100%;
+    }
+}
+
+</style>

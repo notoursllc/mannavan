@@ -112,7 +112,7 @@ export default {
                         class="cartItem"
                         :id="'cartItem' + item.id">
                     <div class="cartItemPic">
-                        <figure class="image is-128x128">
+                        <figure class="image">
                             <img v-bind:src="featuredProductPic(item.product)">
                         </figure>
                     </div>

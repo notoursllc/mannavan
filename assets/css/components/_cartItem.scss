@@ -17,6 +17,11 @@
     overflow: hidden;
     background-size: cover;
     background-position: center;
+
+    .image {
+        height: 128px;
+        width: 128px;
+    }
 }
 
 .cartItemInfo {

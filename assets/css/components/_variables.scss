@@ -28,7 +28,14 @@ $only-screen-and-min-width-m: "only screen and (min-width: #{$m-screens})" !defa
 $only-screen-and-max-width-s: "only screen and (max-width : #{$s-screens})" !default;
 $only-screen-and-max-width-m: "only screen and (max-width : #{$m-screens})" !default;
 
+// Typography
+$family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif !default;
+$family-monospace: "Inconsolata", "Consolas", "Monaco", monospace !default;
 
+$weight-light: 300 !default;
+$weight-normal: 400 !default;
+$weight-semibold: 500 !default;
+$weight-bold: 700 !default;
 
 
 

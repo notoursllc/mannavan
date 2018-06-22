@@ -228,9 +228,9 @@ export default {
 <template>
     <div class="pageContainerMax">
         <div v-if="this.product">
-                <div class="columns">
-                    <div class="column is-6">
-                        <div class="image is-2by2 phm">
+                <div class="prod-container">
+                    <div class="is-half">
+                        <div class="image phm">
                             <no-ssr :placeholder="$t('Loading pictures...')">
                                 <carousel :autoplay="true"
                                             :autoplayHoverPause="true"
@@ -249,7 +249,7 @@ export default {
                         </div>
                     </div>
 
-                    <div class="column is-6 phxl">
+                    <div class="is-half phxl">
                         <!-- <div class="fs30 mbm">{{ product.title }}</div> -->
 
                         <div class="pbl fs16">{{ product.description_long }}</div>
@@ -333,6 +333,27 @@ export default {
 
 <style lang="scss">
 @import '~assets/css/components/_variables.scss';
+@import "~assets/css/components/_mixins.scss";
+
+
+.prod-container {
+    @include flexbox();
+    @include flex-wrap(wrap);
+}
+.is-half {
+    @include flex(none);
+    width: 50%;
+}
+
+@media #{$medium-and-down} {
+    .prod-container {
+        display: block;
+    }
+    .is-half {
+        @include flex(1);
+        width: 100%;
+    }
+}
 
 .prod-attributes-table {
     padding-top: 10px;

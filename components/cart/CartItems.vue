@@ -132,7 +132,7 @@
                     :class="{'highlight': highlightItem === item.id, 'fadeout': added_cart_item === item.id}"
                     :id="'cartItem' + item.id">
                 <div class="cartItemPic" :style="'background-image:url(' + featuredProductPic(item.product) + ');'">
-                    <figure class="image is-128x128"></figure>
+                    <figure class="image"></figure>
                 </div>
                 <!-- <div class="cartItemPicMobile" :style="'background-image:url(' + featuredProductPic(item.product) + ');'">foo</div> -->
 
