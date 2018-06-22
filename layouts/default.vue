@@ -312,14 +312,17 @@ $header-secondary-logo-width: 150px;
         text-decoration: none;
         text-align: center;
         color: #fff;
+        @include transition('background-color', 0.25s);
 
         &:hover,
         &.navbar-item-checkout:hover {
             background-color: rgba(255,255,255,0.1);
+            @include transition('background-color', 0.25s);
         }
 
         &.active {
             background-color: rgba(255,255,255,.2);
+            @include transition('background-color', 0.25s);
         }
 
         .icon-container {
