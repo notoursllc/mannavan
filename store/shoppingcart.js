@@ -99,7 +99,6 @@ export const mutations = {
     CHECKOUT_CLEANUP: (state, data) => {
         state.cart = getCartDefaults();
         state.token = null;
-        Cookies.remove('cart-jwt');
     }
 }
 
