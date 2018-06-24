@@ -37,13 +37,15 @@ module.exports = {
     },
 
     env: {
-        BUG_SNAG_API_KEY: process.env.BUG_SNAG_API_KEY,
+        API_USERNAME: process.env.API_USERNAME,
+        API_PASSWORD: process.env.API_PASSWORD,
         AUTH0_CLIENT_ID: process.env.AUTH0_CLIENT_ID,
         AUTH0_DOMAIN: process.env.AUTH0_DOMAIN,
-        NODE_ENV: process.env.NODE_ENV,
+        BUG_SNAG_API_KEY: process.env.BUG_SNAG_API_KEY,
+        CART_TOKEN_SECRET: process.env.CART_TOKEN_SECRET,
         JWT_CLIENT_ID: process.env.JWT_CLIENT_ID,
         JWT_SERVER_SECRET: process.env.JWT_SERVER_SECRET,
-        CART_TOKEN_SECRET: process.env.CART_TOKEN_SECRET
+        NODE_ENV: process.env.NODE_ENV
     },
 
     /*
@@ -68,6 +70,7 @@ module.exports = {
     ** Plugins to load before mounting the App
     */
     plugins: [
+        '@/plugins/axios.js',
         '@/plugins/i18n.js',
         '@/plugins/element-ui',
         '@/plugins/format8601',
