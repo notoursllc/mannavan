@@ -71,12 +71,12 @@
                 try {
                     const loadingInstance = Loading.service({ target: `#cartItem${item.id}` });
 
-                    const cartData = await this.updateItemQty({
+                    const response = await this.updateItemQty({
                         id: item.id,
                         qty
                     });
+                    this.setCartAndTokenStateFromResponse(response);
 
-                    this.$store.dispatch('shoppingcart/CART_SET', cartData);
                     item.qty = qty;
                     loadingInstance.close();
                 }
@@ -94,9 +94,10 @@
             async removeItem(id) {
                 try {
                     const loadingInstance = Loading.service({ target: `#cartItem${id}` });
-                    const cartData = await this.deleteItem({ id });
 
-                    this.$store.dispatch('shoppingcart/CART_SET', cartData);
+                    const response = await this.deleteItem({ id });
+                    this.setCartAndTokenStateFromResponse(response);
+
                     loadingInstance.close();
                 }
                 catch(err) {

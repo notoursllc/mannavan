@@ -14,9 +14,9 @@ const after = function (server) {
             path: '/cart/get',
             options: {
                 description: 'Finds the cart for the given jwt user',
-                auth: {
-                    strategies: ['xCartToken']
-                },
+                pre: [
+                    { method: ShoppingCartController.pre_cart, assign: 'm1' },
+                ],
                 handler: ShoppingCartController.cartGetHandler
             }
         },
@@ -25,9 +25,6 @@ const after = function (server) {
             path: '/cart/item/add',
             options: {
                 description: 'Adds a new item to the cart',
-                auth: {
-                    strategies: ['xCartToken']
-                },
                 validate: {
                     payload: Joi.object({
                         id: Joi.string().uuid().required(),
@@ -45,14 +42,14 @@ const after = function (server) {
             path: '/cart/item/remove',
             options: {
                 description: 'Removes an item from the cart',
-                auth: {
-                    strategies: ['xCartToken']
-                },
                 validate: {
                     payload: {
                         id: Joi.string().uuid().required()
                     }
                 },
+                pre: [
+                    { method: ShoppingCartController.pre_cart, assign: 'm1' },
+                ],
                 handler: ShoppingCartController.cartItemRemoveHandler
             }
         },
@@ -61,15 +58,15 @@ const after = function (server) {
             path: '/cart/item/qty',
             options: {
                 description: 'Updates the quantity of a shopping cart item (ShoppingCartItem model)',
-                auth: {
-                    strategies: ['xCartToken']
-                },
                 validate: {
                     payload: Joi.object({
                         id: Joi.string().uuid().required(),  // cart item id
                         qty: Joi.number().min(1).required()
                     })
                 },
+                pre: [
+                    { method: ShoppingCartController.pre_cart, assign: 'm1' },
+                ],
                 handler: ShoppingCartController.cartItemQtyHandler
             }
         },
@@ -78,12 +75,12 @@ const after = function (server) {
             path: '/cart/shipping/address',
             options: {
                 description: 'Sets the shipping address for the cart and calculates the sales tax',
-                auth: {
-                    strategies: ['xCartToken']
-                },
                 validate: {
                     payload: Joi.reach(ShoppingCartController.getShoppingCartModelSchema(), 'shipping')
                 },
+                pre: [
+                    { method: ShoppingCartController.pre_cart, assign: 'm1' },
+                ],
                 handler: ShoppingCartController.cartShippingSetAddressHandler
             }
         },
@@ -92,13 +89,13 @@ const after = function (server) {
             path: '/cart/shipping/rate',
             options: {
                 description: 'Sets the selected shipping rate for the cart',
-                auth: {
-                    strategies: ['xCartToken']
-                },
                 validate: {
                     payload: Joi.reach(ShoppingCartController.getShoppingCartModelSchema(), 'shipping_rate')
                 },
-                handler: ShoppingCartController.genericCartUpdateHandler
+                pre: [
+                    { method: ShoppingCartController.pre_cart, assign: 'm1' },
+                ],
+                handler: ShoppingCartController.cartShippingRateHandler
             }
         },
         {
@@ -106,9 +103,6 @@ const after = function (server) {
             path: '/cart/checkout',
             options: {
                 description: 'Braintree nonce received by the client. Complete the transaction',
-                auth: {
-                    strategies: ['xCartToken']
-                },
                 validate: {
                     // NOTE: shipping is not required here because the 'cart/shipping/address' route
                     // should have been called before this route, which persists the shipping info.
@@ -118,6 +112,9 @@ const after = function (server) {
                         ShoppingCartController.getBillingAttributesSchema()
                     )
                 },
+                pre: [
+                    { method: ShoppingCartController.pre_cart, assign: 'm1' },
+                ],
                 handler: ShoppingCartController.cartCheckoutHandler
             }
         },
@@ -158,9 +155,6 @@ const after = function (server) {
             path: '/payment-token',
             options: {
                 description: 'Returns the Braintree client token',
-                auth: {
-                    strategies: ['xCartToken']
-                },
                 handler: ShoppingCartController.getPaymentClientTokenHandler
             }
         },

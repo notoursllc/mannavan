@@ -3,6 +3,9 @@ const Joi = require('joi');
 const Boom = require('boom');
 const cloneDeep = require('lodash.clonedeep');
 const isObject = require('lodash.isobject');
+const uuidV4 = require('uuid/v4');
+const uuidValidate = require('uuid-validate');
+const Cookie = require('cookie');
 const HelperService = require('../../helpers.service');
 const salesTaxService = require('./services/SalesTaxService');
 const shoppingCartEmailService = require('./services/ShoppingCartEmailService');
@@ -116,11 +119,39 @@ function getCartTokenFromJwt(request) {
 }
 
 
-async function getCart(request, withRelatedArr) {
+function getValidCartTokenFromRequest(request) {
+    if (request.headers.cookie) {
+        const token = Cookie.parse(request.headers.cookie)['cart_token'];
+
+        if(token || uuidValidate(token, 4)) {
+            return token;
+        }
+    }
+
+    return false;
+}
+
+
+function getOrCreateCartToken(request) {
+    const uuid = uuidV4();
+
+    if (!request.headers.cookie) {
+        return uuid;
+    }
+
+    const token = Cookie.parse(request.headers.cookie)['cart_token'];
+
+    if(!token || !uuidValidate(token, 4)) {
+        return uuid;
+    }
+
+    return token;
+}
+
+
+async function getCart(cartToken, withRelatedArr) {
     const ShoppingCart = await getShoppingCartModel().query((qb) => {
-        qb.where('token', '=', getCartTokenFromJwt(request));
-        qb.whereNull('closed_at');
-        qb.whereNull('status');
+        qb.where('token', '=', cartToken);
     })
     .orderBy('created_at', 'DESC')
     .fetch({
@@ -132,55 +163,118 @@ async function getCart(request, withRelatedArr) {
 
 
 /**
- * This is just a helper function to determine if the user has an active cart.
+ * This is just a helper function to determine if the cart token being sent
+ * is for an active cart.
  * Used by functions below to determine if we should continue with other operations,
  * or just quit immediately.
  *
- * @param {*} request
+ * @param String    cartToken
  * @throws Error    Throws an Error if the cart is not active
  */
-async function throwIfCartIsNotActive(request) {
+async function getActiveCart(cartToken) {
+    if(!cartToken) {
+        return false
+    }
+
     const ShoppingCart = await getShoppingCartModel().query((qb) => {
-        qb.where('token', '=', getCartTokenFromJwt(request));
-        qb.whereNull('closed_at');
-        qb.whereNull('status');
+        qb.where('token', '=', cartToken);
     })
     .fetch();
 
-    if(!ShoppingCart) {
-        throw new Error('Unable to perform operation because shopping cart is not active');
+    if(!ShoppingCart || ShoppingCart.get('closed_at')) {
+        return false;
+    }
+
+    return ShoppingCart;
+}
+
+
+async function createCart(token) {
+    return await getShoppingCartModel().create({
+        token: token
+    });
+}
+
+
+async function pre_cart(request, h) {
+    let cartToken = getValidCartTokenFromRequest(request);
+    let ShoppingCart = await getActiveCart(cartToken);
+
+    // Quit right here if no shopping cart.
+    // Returning a new shopping cart allong with it's access token
+    // in the response header
+    try {
+        if(!ShoppingCart) {
+            cartToken = uuidV4();
+            ShoppingCart = await createCart(cartToken);
+
+            return h.apiSuccess(
+                ShoppingCart.toJSON()
+            )
+            .header('X-Cart-Token', cartToken)
+            .takeover();
+        }
+
+        return {
+            ShoppingCart,
+            cartToken
+        };
+    }
+    catch(err) {
+        global.logger.error(err);
+        global.bugsnag(err);
+        throw Boom.notFound(err);
+    }
+}
+
+
+async function cartGetHandler(request, h) {
+    try {
+        const cartToken = request.pre.m1.cartToken;
+
+        // Get a fresh cart for the response with all of the relations
+        const ShoppingCart = await getCart(cartToken);
+
+        // Response contains the cart token in the header
+        // plus the shopping cart payload
+        return h.apiSuccess(
+            ShoppingCart.toJSON()
+        ).header('X-Cart-Token', cartToken);
+    }
+    catch(err) {
+        global.logger.error(err);
+        global.bugsnag(err);
+        throw Boom.notFound(err);
     }
 }
 
 
 /**
- * Finds the cart using the cart token from JWT,
- * or creates one if it doesn't exist
+ * This is the users first interaction with the shopping cart.
+ * The response header will contain the cart token that must be used
+ * for subsequent interaction with the cart.
+ * The respose payload will be the shopping cart itself in JSON format.
  *
- * @param request
- * @returns {Promise}
+ * @param {*} request
+ * @param {*} h
  */
-async function findOrCreateCart(request) {
-    // If the shipping rate is a flat cost then adding it to the model now
-    // so it will be readily available at checkout.  If we ever decide to
-    // provide multiple shipping options in the future then this value can
-    // be overridden by whatever option the user chooses at checkout.
-    const ShoppingCart = await getCart(request);
-
-    if(ShoppingCart) {
-        return ShoppingCart;
-    }
-
-    return await getShoppingCartModel().create({
-        token: getCartTokenFromJwt(request)
-    });
-}
-
-
-async function addCartItem(request) {
+async function cartItemAddHandler(request, h) {
     try {
+        let cartToken = getValidCartTokenFromRequest(request);
+        let ShoppingCart = await getActiveCart(cartToken);
+
+        // If the current cart is closed then get a fresh one
+        if(!ShoppingCart) {
+            cartToken = uuidV4();
+            ShoppingCart = await createCart(cartToken);
+        }
+
         const Product = await productsController.getProductByAttribute('id', request.payload.id);
-        const ShoppingCart = await findOrCreateCart(request);
+
+        if(!Product) {
+            throw new Error('Unable to find product');
+        }
+
         const qty = request.payload.options.qty || 1;
 
         // Determine if we simply need to update the qty of an existing item
@@ -193,63 +287,40 @@ async function addCartItem(request) {
         );
 
         // Item with matching variants is already in the cart,
-        // so we just need to update the qty, and we're done.
+        // so we just need to update the qty.
         if(ShoppingCartItem) {
-            return await ShoppingCartItem.save(
+            await ShoppingCartItem.save(
                 { qty: parseInt(ShoppingCartItem.get('qty') + qty, 10) },
                 { method: 'update', patch: true }
             );
         }
+        else {
+            // A variant does not exist, so create a new one.
+            // NOTE: the value of 'variants' should be an object
+            // and knex.js requires use of JSON.stringify() for json values
+            // http://knexjs.org/#Schema-json
+            await getShoppingCartItemModel().create({
+                qty: qty,
+                variants: JSON.stringify({
+                    size: request.payload.options.size
+                }),
+                cart_id: ShoppingCart.get('id'),
+                product_id: Product.get('id')
+            });
+        }
 
-        // A variant does not exist, so create a new one and return it.
-        // NOTE: the value of 'variants' should be an object
-        // and knex.js requires use of JSON.stringify() for json values
-        // http://knexjs.org/#Schema-json
-        return await getShoppingCartItemModel().create({
-            qty: qty,
-            variants: JSON.stringify({
-                size: request.payload.options.size
-            }),
-            cart_id: ShoppingCart.get('id'),
-            product_id: Product.get('id')
-        });
-    }
-    catch(err) {
-        global.logger.error(err);
-        global.bugsnag(err);
-    }
-}
-
-
-async function cartGetHandler(request, h) {
-    try {
-        const ShoppingCart = await findOrCreateCart(request);
-        return h.apiSuccess(
-            ShoppingCart.toJSON()
-        );
-    }
-    catch(err) {
-        global.logger.error(err);
-        global.bugsnag(err);
-        throw Boom.notFound(err);
-    }
-}
-
-
-async function cartItemAddHandler(request, h) {
-    try {
-        await throwIfCartIsNotActive(request);
-
-        await addCartItem(request);
-        const ShoppingCart = await getCart(request);
+        // Get a fresh cart for the response with all of the relations
+        ShoppingCart = await getCart(cartToken);
 
         if(!ShoppingCart) {
             throw new Error("Error getting the shopping cart");
         }
 
+        // Response contains the cart token in the header
+        // plus the shopping cart payload
         return h.apiSuccess(
             ShoppingCart.toJSON()
-        );
+        ).header('X-Cart-Token', cartToken);
     }
     catch(err) {
         global.logger.error(err);
@@ -259,21 +330,25 @@ async function cartItemAddHandler(request, h) {
 };
 
 
+// Note: route handler calles the defined 'pre' method before it gets here
 async function cartItemRemoveHandler(request, h) {
     try {
-        await throwIfCartIsNotActive(request);
-
+        const cartToken = request.pre.m1.cartToken;
         const ShoppingCartItem = await getShoppingCartItemModel().findById(request.payload.id);
 
         if(ShoppingCartItem) {
             await ShoppingCartItem.destroy();
         }
 
-        const ShoppingCart = await getCart(request);
+        // Get a fresh cart for the response with all of the relations
+        const ShoppingCart = await getCart(cartToken);
 
+        // Response contains the cart token in the header
+        // plus the shopping cart payload
         return h.apiSuccess(
             ShoppingCart.toJSON()
-        );
+        ).header('X-Cart-Token', cartToken);
+
     }
     catch(err) {
         global.logger.error(err);
@@ -283,10 +358,10 @@ async function cartItemRemoveHandler(request, h) {
 };
 
 
+// Note: route handler calles the defined 'pre' method before it gets here
 async function cartItemQtyHandler(request, h) {
     try {
-        await throwIfCartIsNotActive(request);
-
+        const cartToken = request.pre.m1.cartToken;
         const ShoppingCartItem = await getShoppingCartItemModel().findById(request.payload.id);
 
         if(!ShoppingCartItem) {
@@ -298,11 +373,12 @@ async function cartItemQtyHandler(request, h) {
             { method: 'update', patch: true }
         );
 
-        const ShoppingCart = await getCart(request);
+        // Get a fresh cart for the response with all of the relations
+        const ShoppingCart = await getCart(cartToken);
 
         return h.apiSuccess(
             ShoppingCart.toJSON()
-        );
+        ).header('X-Cart-Token', cartToken);
     }
     catch(err) {
         global.logger.error(err);
@@ -312,28 +388,30 @@ async function cartItemQtyHandler(request, h) {
 };
 
 
+// Note: route handler calles the defined 'pre' method before it gets here
 async function cartShippingSetAddressHandler(request, h) {
     try {
-        let ShoppingCart = await getCart(request);
-
-        if(!ShoppingCart) {
-            throw new Error('Unable to find shopping cart.')
-        }
+        const cartToken = request.pre.m1.cartToken;
+        let ShoppingCart = request.pre.m1.ShoppingCart;
 
         let salesTaxParams = cloneDeep(request.payload);
-
         salesTaxParams.sub_total = ShoppingCart.get('sub_total');
         salesTaxParams.sales_tax = salesTaxService.getSalesTaxAmount(salesTaxParams);
 
         // Save the shipping params and the sales tax value in the model
-        ShoppingCart = await ShoppingCart.save(
+        await ShoppingCart.save(
             salesTaxParams,
             { method: 'update', patch: true }
         );
 
+        // Get a fresh cart for the response with all of the relations
+        ShoppingCart = await getCart(cartToken);
+
+        // Response contains the cart token in the header
+        // plus the shopping cart payload
         return h.apiSuccess(
             ShoppingCart.toJSON()
-        );
+        ).header('X-Cart-Token', cartToken);
     }
     catch(err) {
         global.logger.error(err);
@@ -343,18 +421,23 @@ async function cartShippingSetAddressHandler(request, h) {
 };
 
 
-async function genericCartUpdateHandler(request, h) {
+// Note: route handler calles the defined 'pre' method before it gets here
+async function cartShippingRateHandler(request, h) {
     try {
-        let ShoppingCart = await getCart(request);
-
-        ShoppingCart = await ShoppingCart.save(
+        const cartToken = request.pre.m1.cartToken;
+        await request.pre.m1.ShoppingCart.save(
             request.payload,
             { method: 'update', patch: true }
         );
 
+        // Get a fresh cart for the response with all of the relations
+        const ShoppingCart = await getCart(cartToken);
+
+        // Response contains the cart token in the header
+        // plus the shopping cart payload
         return h.apiSuccess(
             ShoppingCart.toJSON()
-        );
+        ).header('X-Cart-Token', cartToken);
     }
     catch(err) {
         global.logger.error(err);
@@ -365,9 +448,11 @@ async function genericCartUpdateHandler(request, h) {
 
 
 // TODO: this function uses shoppingCartEmailService
+// Note: route handler calles the defined 'pre' method before it gets here
 async function cartCheckoutHandler(request, h) {
     try {
-        let ShoppingCart = await getCart(request);
+        const cartToken = request.pre.m1.cartToken;
+        const ShoppingCart = request.pre.m1.ShoppingCart;
 
         let transactionObj = await runPayment({
             paymentMethodNonce: request.payload.nonce,
@@ -574,10 +659,20 @@ async function getOrderHandler(request, h) {
 */
 async function getPaymentClientTokenHandler(request, h) {
     try {
+        // just verifyig that a shopping cart exists for this user.
+        // If not, no need to generate the token
+        let ShoppingCart = await getActiveCart(
+            getValidCartTokenFromRequest(request)
+        );
+
+        if(!ShoppingCart) {
+            throw new Error('Shopping cart does not exist.')
+        }
+
         const response = await global.braintreeGateway.clientToken.generate({});
 
         if(!response.clientToken) {
-            throw new Error('Error generating client token.')
+            throw new Error('Error generating payment token.')
         }
 
         return h.apiSuccess(
@@ -667,12 +762,12 @@ async function runPayment(opts) {
 
 module.exports = {
     setServer,
+    pre_cart,
     getShippingAttributesSchema,
     getBillingAttributesSchema,
     getShoppingCartModelSchema,
     getCartTokenFromJwt,
     getCart,
-    findOrCreateCart,
 
     //payments
     getPaymentByAttribute,
@@ -685,7 +780,7 @@ module.exports = {
     cartItemRemoveHandler,
     cartItemQtyHandler,
     cartShippingSetAddressHandler,
-    genericCartUpdateHandler,
+    cartShippingRateHandler,
     cartCheckoutHandler,
     getOrdersHandler,
     getOrderHandler,

@@ -146,15 +146,15 @@ export default {
                 this.isLoading = true;
 
                 try {
-                    const cartData = await this.addItem({
+                    const response = await this.addItem({
                         id: this.product.id,
                         options: {
                             size: this.selectedSize,
                             qty: this.selectedQty
                         }
                     });
+                    this.setCartAndTokenStateFromResponse(response);
 
-                    this.$store.dispatch('shoppingcart/CART_SET', cartData);
                     this.isLoading = false;
                     this.goToCart();
                     return;

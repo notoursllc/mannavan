@@ -2,8 +2,8 @@
 
 import isObject from 'lodash.isobject'
 import forEach from 'lodash.foreach'
+import * as Cookies from 'js-cookie'
 import cloneDeep from 'lodash.clonedeep'
-// import * as Cookie
 
 function getCartDefaults() {
     return {
@@ -62,6 +62,11 @@ export const mutations = {
 
     CART_TOKEN_SET: (state, token) => {
         state.token = token;
+        Cookies.set(
+            'cart_token',
+            token,
+            { secure: process.env.COOKIE_SECURE || false }
+        );
     },
 
     CART_SET: (state, cartData) => {
@@ -69,6 +74,11 @@ export const mutations = {
         forEach(cartData, (val, key) => {
             state.cart[key] = val;
         });
+
+        if(state.cart.num_items === 0) {
+            state.cart.cart_items = [];
+        }
+
         state.updated = new Date();
     },
 
@@ -88,6 +98,8 @@ export const mutations = {
 
     CHECKOUT_CLEANUP: (state, data) => {
         state.cart = getCartDefaults();
+        state.token = null;
+        Cookies.remove('cart-jwt');
     }
 }
 

@@ -6,15 +6,15 @@ const coreController = require('./coreController');
 
 const after = function(server) {
     let routes = [
-        {
-            method: 'GET',
-            path: '/api/v1/jwt',
-            options: {
-                auth: false,
-                description: 'Returns the client token',
-                handler: coreController.getClientJwtHandler
-            }
-        },
+        // {
+        //     method: 'GET',
+        //     path: '/api/v1/jwt',
+        //     options: {
+        //         auth: false,
+        //         description: 'Returns the client token',
+        //         handler: coreController.getClientJwtHandler
+        //     }
+        // },
         {
             method: 'POST',
             path: '/api/v1/logger',
@@ -97,6 +97,7 @@ exports.plugin = {
     register: function (server, options) {
         coreController.setServer(server);
 
+        /*
         server.auth.strategy('xCartToken', 'jwt-cookie', {
             secret: process.env.JWT_SERVER_SECRET,
             cookieKey: 'cart-jwt',
@@ -106,7 +107,7 @@ exports.plugin = {
             }
         });
         server.auth.default('xCartToken');
-
+        */
 
         server.views({
             engines: {

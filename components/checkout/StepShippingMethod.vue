@@ -58,8 +58,8 @@
                 try {
                     this.isLoading = true;
 
-                    const shoppingCart = await this.setShippingRate(r);
-                    await this.$store.dispatch('shoppingcart/CART_SET', shoppingCart);
+                    const response = await this.setShippingRate(r);
+                    this.setCartAndTokenStateFromResponse(response);
 
                     this.$emit('done', 'shipping-method-step') ;
                     this.isLoading = false;

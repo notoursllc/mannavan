@@ -5,73 +5,70 @@ import isObject from 'lodash.isobject'
 
 export default {
     methods: {
+        setCartAndTokenStateFromResponse(response) {
+            this.$store.dispatch('shoppingcart/CART_SET', response.data.data);
+            this.$store.dispatch('shoppingcart/CART_TOKEN_SET', response.headers['x-cart-token']);
+            return response.data.data;
+        },
+
         async getBraintreeClientToken() {
+             // note: using $get instead of get
             const response = await this.$axios.$get('/payment-token');
             return response.data;
         },
 
 
-        async getCartToken() {
-            // Note: not using the shorthand $get method here
-            // because we need the headers property on the response
-            const response = await this.$axios.get('/jwt');
-            return response.headers.authorization;
-        },
-
-
         async getCart() {
-            const response = await this.$axios.$get('/cart/get');
-            return response.data;
+            return await this.$axios.get('/cart/get');
         },
 
 
         async addItem(params) {
-            const response = await this.$axios.$post('/cart/item/add', params);
-            return response.data;
+            return await this.$axios.post('/cart/item/add', params);
         },
 
 
         async updateItemQty(params) {
-            const response = await this.$axios.$post('/cart/item/qty', params);
-            return response.data;
+            return await this.$axios.post('/cart/item/qty', params);
         },
 
 
         async deleteItem(params) {
-            const response = await this.$axios.$post('/cart/item/remove', params);
-            return response.data;
+            return await this.$axios.post('/cart/item/remove', params);
         },
 
 
         async setShippingAddress(address) {
-            const response = await this.$axios.$post('/cart/shipping/address', address);
-            return response.data;
+            return await this.$axios.post('/cart/shipping/address', address);
         },
 
 
         async validateAddress(address) {
+            // note: using $post instead of post
             const response = await this.$axios.$post('/shipping/validateAddress', address);
             return response.data;
         },
 
 
         async getShippingRates(params) {
-            const response = await this.$axios.$post('/shipping/rates', params);
-            return response.data;
+            const response = await this.$axios.post('/shipping/rates', params);
+            return response.data.data;
         },
 
 
         async setShippingRate(obj) {
-            const response = await this.$axios.$post('/cart/shipping/rate', {
+            return await this.$axios.post('/cart/shipping/rate', {
                 shipping_rate: obj
             });
-            return response.data;
         },
 
 
         async checkout(params) {
-            const response = await this.$axios.$post('/cart/checkout', params);
-            return response.data;
+            const response = await this.$axios.post('/cart/checkout', params);
+
+            // note: cart/checkout only returns an object containing a transaction id,
+            // so no need to update the shopping cart or token state
+            return response.data.data;
         },
 
 
