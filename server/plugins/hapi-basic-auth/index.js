@@ -7,11 +7,10 @@ exports.plugin = {
         server.register(require('hapi-auth-basic'));
 
         const validate = async function (request, username, password, h) {
-            console.log("BASIC AUTH VALIDATE", username, password);
             if (!username
                 || !password
                 || username != process.env.API_USERNAME) {
-                    console.log("BASIC AUTH FAIL 1", username, password, process.env.API_USERNAME)
+                global.logger.info('BASIC AUTH VALIDATION FAILED');
                 return { credentials: null, isValid: false };
             }
 
@@ -19,7 +18,9 @@ exports.plugin = {
             const isValid = await Bcrypt.compare(password, process.env.API_PASSWORD_HASH);
             const credentials = { id: username };
 
-            console.log("BASIC AUTH IS VALID", isValid, password, process.env.API_PASSWORD_HASH)
+            if(!isValid) {
+                global.logger.info('BASIC AUTH VALIDATION FAILED - password does not match hash');
+            }
 
             return { isValid, credentials };
         };
