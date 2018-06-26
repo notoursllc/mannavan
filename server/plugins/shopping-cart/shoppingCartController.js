@@ -489,15 +489,6 @@ async function cartCheckoutHandler(request, h) {
             }
         });
 
-        try {
-              shoppingCartEmailService.sendPurchaseEmails(ShoppingCart, transactionObj.transaction.id)
-        }
-        catch(err) {
-            let msg = `Unable to send email confirmation to user after successful purchase: (ShoppingCart ID: ${ShoppingCart.get('id')}) ${err}`;
-            global.logger.error(msg);
-            global.bugsnag(msg);
-        }
-
         // If the Braintree transaction is successful then anything that happens after this
         // (i.e saving the payment details to DB) needs to fail silently, as the user has
         // already been changed and we can't give the impression of an overall transaction
@@ -527,6 +518,7 @@ async function cartCheckoutHandler(request, h) {
             updateParams.closed_at = new Date();
         }
 
+        // Update the cart with the billing info and the closed_at value
         try {
             await ShoppingCart.save(
                 updateParams,
@@ -536,6 +528,18 @@ async function cartCheckoutHandler(request, h) {
         catch(err) {
             global.logger.error(err);
             global.bugsnag(err);
+        }
+
+        // Sending the purchase emails:
+        try {
+            // Get a fresh cart for the response with all of the relations
+            const UpdatedShoppingCart = await getCart(cartToken);
+            shoppingCartEmailService.sendPurchaseEmails(UpdatedShoppingCart, transactionObj.transaction.id)
+        }
+        catch(err) {
+            let msg = `Unable to send email confirmation to user after successful purchase: (ShoppingCart ID: ${UpdatedShoppingCart.get('id')}) ${err}`;
+            global.logger.error(msg);
+            global.bugsnag(msg);
         }
 
         // Successful transactions return the transaction id
