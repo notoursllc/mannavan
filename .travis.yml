@@ -28,7 +28,7 @@ install:
   - nanobox remote add $NANOBOX_APP_NAME
 
   # TEST1
-  - nanobox evar add local TEST1=$TEST1
+  - nanobox evar add local TEST1="$TEST1"
   - nanobox evar add $NANOBOX_APP_NAME TEST1="$TEST1"
 
 
@@ -46,7 +46,7 @@ install:
   - nanobox evar add $NANOBOX_APP_NAME API_PASSWORD=$API_PASSWORD
 
   # API_PASSWORD_HASH
-  - nanobox evar add local API_PASSWORD_HASH=$API_PASSWORD_HASH
+  - nanobox evar add local API_PASSWORD_HASH="$API_PASSWORD_HASH"
   - nanobox evar add $NANOBOX_APP_NAME API_PASSWORD_HASH="$API_PASSWORD_HASH"
 
   # DATA_DB_NAME
