@@ -27,6 +27,11 @@ install:
   # link this code base to the production nanobox so we can add env variables to our prod instance
   - nanobox remote add $NANOBOX_APP_NAME
 
+  # TEST1
+  - nanobox evar add local TEST1=$TEST1
+  - nanobox evar add $NANOBOX_APP_NAME TEST1=$TEST1
+
+
   # adding local and production environment variables
   # NODE_ENV
   - nanobox evar add local NODE_ENV=test
