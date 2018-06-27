@@ -28,8 +28,8 @@ install:
   - nanobox remote add $NANOBOX_APP_NAME
 
   # TEST1
-  - nanobox evar add local TEST1=$TEST1
-  - nanobox evar add $NANOBOX_APP_NAME TEST1=\'$TEST1\'
+  - nanobox evar add local TEST1=\"$TEST1\"
+  - nanobox evar add $NANOBOX_APP_NAME TEST1=\"$TEST1\"
 
 
   # adding local and production environment variables
