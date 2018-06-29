@@ -1,4 +1,4 @@
-const Bcrypt = require('bcrypt');
+const bcrypt = require('bcrypt');
 
 exports.plugin = {
     once: true,
@@ -15,7 +15,7 @@ exports.plugin = {
             }
 
 
-            const isValid = await Bcrypt.compare(password, process.env.API_PASSWORD_HASH);
+            const isValid = await bcrypt.compare(password, process.env.API_PASSWORD_HASH);
             const credentials = { id: username };
 
             if(!isValid) {
