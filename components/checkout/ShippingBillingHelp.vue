@@ -28,7 +28,8 @@
         <el-dialog :title="$t('About Billing and Shipping Addresses')"
                    :visible.sync="modalIsActive"
                    :modal-append-to-body="false"
-                   width="90%">
+                   width="95%"
+                   top="5vh">
             <div class="tal">
                 <div class="colorGray fs16 mbl pbl bbGray">
                     Error-free shipping and billing addresses will avoid unnecessary delays and get your packages delivered as quickly as possible!
