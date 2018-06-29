@@ -91,9 +91,12 @@ export default {
             style="padding:0"
             v-for="product in products"
             :key="product.id">
-            <span v-on:click="goToProductDetails(product.seo_uri, $route.params.name)" class="cursorPointer">
+            <nuxt-link
+                :to="{ name: 'type-name-seouri', params: { name: $route.params.name, seouri: product.seo_uri } }"
+                tag="span"
+                class="cursorPointer">
                 <product-card :product="product"></product-card>
-            </span>
+            </nuxt-link>
         </div>
     </div>
 </template>

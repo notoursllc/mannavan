@@ -1,5 +1,11 @@
 <script>
+import IconLogo from '@/components/icons/IconLogo'
+
 export default {
+    components: {
+        IconLogo
+    },
+
     methods: {
         imageStyle(img) {
             return `background-image:url(${img})`;
@@ -15,128 +21,132 @@ export default {
 
 <template>
     <div class="widthAll">
-        <section class="panel">
-            <article>
-                <h1>some text goes here</h1>
-                <div>
-                    <div class="btn">CALL TO ACTION</div>
+        <div class="top-panel">
+            <div class="top-panel-item logo">
+                <i><icon-logo icon-name="breadvan" class-name="fillGrayLight" width="100%" /></i>
+            </div>
+            <div class="top-panel-item flex-grow">
+                <div class="intro">INTRODUCING BREADVAN<span class="tm">&trade;</span></div>
+                <div class="subhead">
+                    <div>Breadvan is a startup apparel company.</div>
+                    <div>We're inspired by the timeless styles and colors of the good 'ol days of auto racing.</div>
+                    <div class="colorGreen">Yep, we only have 2 products right now!  More coming soon!</div>
                 </div>
-            </article>
-            <div class="bg" :style="imageStyle('sample_calbeamin.jpg')" />
-        </section>
+            </div>
+        </div>
 
-        <section class="panel">
-            <article>
-                <h1>some text goes here</h1>
-                <div>
-                    <div class="btn">CALL TO ACTION</div>
-                </div>
-            </article>
-            <div class="bg" :style="imageStyle('sample-300-x-400.png')" />
+        <section class="featured-container">
+            <nuxt-link
+                :to="{ name: 'type-name-seouri', params: { name:'tops', seouri:'seo_uri_5'} }"
+                tag="div"
+                class="featured-item cursorPointer grow">
+                <img src="https://gmnst-assets.nyc3.digitaloceanspaces.com/development/uploads/images/sample-300-x-400.png" />
+            </nuxt-link>
+
+            <nuxt-link
+                :to="{ name: 'type-name-seouri', params: { name:'tops', seouri:'seo_uri_5'} }"
+                tag="div"
+                class="featured-item cursorPointer grow">
+                <img src="https://gmnst-assets.nyc3.digitaloceanspaces.com/development/uploads/images/sample_calbeamin.jpg" />
+            </nuxt-link>
         </section>
     </div>
 </template>
 
 
-<style lang="scss">
+<style lang="scss" scoped>
+    @import "~assets/css/components/_variables.scss";
     @import "~assets/css/components/_mixins.scss";
 
-    .panel {
-        height: 500px;
-        background-color: #000;
-        overflow: hidden;
-        position: relative;
-        background-repeat: no-repeat;
-        background-position: center center;
-        background-size: cover;
+    .top-panel {
+        @include flexbox();
+        @include flex-direction(row);
+        @include justify-content(center);
+        @include align-items(center);
+        @include flex-wrap(nowrap);
+        background: linear-gradient(0deg, #1b1b1b 10%, #424242 100%) no-repeat scroll center center/cover;
+        padding: 10px;
 
-        article {
-            position: relative;
-            top: 40%;
-            width: 100%;
-            text-align: center;
-            z-index: 5;
-            color: #fff;
-            font-size: 40px;
-        }
+      .intro {
+            color: #88898a;
+            font-size: 14px;
+            font-weight: 600;
 
-        .btn {
-            background-color: rgba(255,255,255,.70);
-            color: #000;
-            cursor: pointer;
-            padding: 10px 35px;
-            font-size: 16px;
-            font-weight: 500;
-            display: inline-block;
-            text-transform: uppercase;
-            @include grow();
-
-            &:hover {
-                background-color: rgba(255,255,255,.80);
-                @include growHover();
+            .tm {
+                font-size: 12px;
+                font-weight: 400;
+                margin-left: 2px;
+                position: relative;
+                top: -2px;
             }
         }
 
-        .bg {
-            background-position: center center;
-            background-size: cover;
-            height: 110%;
-            left: 0;
-            position: absolute;
-            top: 0;
-            width: 100%;
+        .subhead {
+            color:rgba(255,255,255,.8);
+            font-size: 18px;
         }
-    }
-    .promo-strip {
-        height: 400px;
-        // box-sizing: border-box;
-        // margin: 0;
-        // padding: 0;
-        // position: relative;
-        // text-align: center;
-        // overflow: hidden;
-    }
 
-    .promo-strip-desc {
-        background-color: #373e5d;
-        color: #fff;
-    }
+        .top-panel-item {
+            @include align-items(center);
+            @include justify-content(center);
+            @include flex-basis(auto);
+            // border: 1px solid red;
 
-    .promo-item {
-        height: 400px;
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-        position: relative;
-        text-align: center;
-        overflow: hidden;
-
-        img {
-            margin: 0;
-            width: 10%;
-            height: auto;
-            transition: 1s;
-            border: 1px solid red;
+            &.logo {
+                margin: 0 40px 0 0;
+                width: 130px;
+                // border: 1px solid red;
+            }
+            .flex-grow {
+                @include flex-grow(1);
+            }
         }
     }
 
-    .promo-item-desc {
-        background-color: #373e5d;
-        color: #fff;
+    .featured-container {
+        @include flexbox();
+        line-height: 0;
+
+        .featured-item {
+            @include flex-basis(50%);
+
+            img {
+                width: 100%;
+            }
+        }
     }
 
-    .promo-item-image {
-        overflow: hidden;
-        // width: 100%;
-        height: auto;
-        max-height: 500px;
-        top: 0;
+    @media #{$medium-and-down} {
+        .top-panel {
+            .subhead {
+                font-size: 14px;
+            }
 
-        img {
-            margin: 0;
-            width: 100%;
-            height: auto;
-            transition: 1s;
+            .top-panel-item {
+                &.logo {
+                    width: 120px;
+                    margin: 0 20px 0 20px;
+                }
+            }
+        }
+
+        .featured-container {
+            display: block;
+        }
+    }
+
+    @media #{$small-and-down} {
+        .top-panel {
+            .subhead {
+                font-size: 13px;
+            }
+            .top-panel-item {
+                text-align: center;
+
+                &.logo {
+                    display: none;
+                }
+            }
         }
     }
 </style>
