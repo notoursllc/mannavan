@@ -14,6 +14,15 @@ export default {
 
     created() {
         this.$store.dispatch('ui/pageTitle', null);
+    },
+
+    head() {
+        return {
+            title: 'BreadVan',
+            meta: [
+                { vmid: 'description', name: 'description', content: `Apparel inspired by the good ol days of auto racing.` }
+            ]
+        }
     }
 }
 </script>
