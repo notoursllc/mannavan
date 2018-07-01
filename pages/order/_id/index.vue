@@ -31,7 +31,7 @@ export default {
         try {
             this.$store.dispatch('ui/pageTitle', null);
 
-            this.order = await this.getOrder(this.$route.params.id);
+            this.order = await this.getOrderTransaction(this.$route.params.id);
             this.orderExists = true;
             this.loading = false;
         }

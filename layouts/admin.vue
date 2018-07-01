@@ -80,6 +80,17 @@ export default {
                             @click="menuItemClick">List</el-menu-item>
                     </el-submenu>
 
+                    <el-submenu index="order_menu">
+                        <template slot="title">
+                            <span>Orders</span>
+                        </template>
+
+                        <el-menu-item
+                            :route="{ name: 'acts-order-list' }"
+                            index="/orders"
+                            @click="menuItemClick">List</el-menu-item>
+                    </el-submenu>
+
                     <el-menu-item
                         :route="{ name: 'acts-reports' }"
                         index="/reports"

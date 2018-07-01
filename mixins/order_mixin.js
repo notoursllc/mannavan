@@ -1,6 +1,7 @@
 'use strict';
 
-import shopping_cart_mixin from '@/mixins/shopping_cart_mixin'
+import queryString from 'query-string';
+import shopping_cart_mixin from '@/mixins/shopping_cart_mixin';
 
 export default {
     data: function() {
@@ -49,8 +50,8 @@ export default {
     },
 
     methods: {
-        async getOrder(transaction_id, verbose) {
-            const response = await this.$axios.$get('/order', {
+        async getOrderTransaction(transaction_id, verbose) {
+            const response = await this.$axios.$get('/order/transaction', {
                 params: {
                     transaction_id,
                     verbose
@@ -59,6 +60,19 @@ export default {
             return response.data;
         },
 
+        async getOrder(id) {
+            const response = await this.$axios.$get('/order', {
+                params: { id }
+            });
+            return response.data;
+        },
+
+        async getOrders(params) {
+            let paramString = queryString.stringify(params, {arrayFormat: 'bracket'});
+
+            const response = await this.$axios.$get(`/orders?${paramString}`); // TODO: is there a XSS issue here?
+            return response.data;
+        },
 
         goToOrderDetails: function(transactionId) {
             return this.$router.push({

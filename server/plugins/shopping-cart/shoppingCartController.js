@@ -603,6 +603,26 @@ async function getOrdersHandler(request, h) {
 
 async function getOrderHandler(request, h) {
     try {
+        const order = await getPaymentByAttribute('id', request.query.id);
+
+        if(!order) {
+            throw Boom.notFound('Order not found');
+        }
+
+        return h.apiSuccess(
+            order.toJSON()
+        );
+    }
+    catch(err) {
+        global.logger.error(err);
+        global.bugsnag(err);
+        throw Boom.notFound(err);
+    }
+}
+
+
+async function getOrderTransactionHandler(request, h) {
+    try {
         const payment = await getPaymentByAttribute('transaction_id', request.query.transaction_id);
 
         if(!payment) {
@@ -788,5 +808,6 @@ module.exports = {
     cartCheckoutHandler,
     getOrdersHandler,
     getOrderHandler,
+    getOrderTransactionHandler,
     getPaymentClientTokenHandler,
 }

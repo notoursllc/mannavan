@@ -135,11 +135,24 @@ const after = function (server) {
                 description: 'Basic order info',
                 validate: {
                     query: {
+                        id: Joi.string().max(50),
+                    }
+                },
+                handler: ShoppingCartController.getOrderHandler
+            }
+        },
+        {
+            method: 'GET',
+            path: '/order/transaction',
+            options: {
+                description: 'Basic transaction results for a given order',
+                validate: {
+                    query: {
                         transaction_id: Joi.string().max(50),
                         verbose: Joi.boolean().optional()
                     }
                 },
-                handler: ShoppingCartController.getOrderHandler
+                handler: ShoppingCartController.getOrderTransactionHandler
             }
         },
         {
