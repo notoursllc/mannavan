@@ -29,6 +29,7 @@ module.exports.up = (knex) => {
             t.string('shipping_email').nullable();
             t.decimal('shipping_total').nullable();
             t.decimal('sales_tax').nullable();
+            t.string('status').nullable();
             t.timestamp('created_at', true).notNullable().defaultTo(knex.fn.now());
             t.timestamp('updated_at', true).nullable();
             t.timestamp('closed_at', true).nullable();

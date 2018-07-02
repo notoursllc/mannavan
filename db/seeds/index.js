@@ -5,6 +5,7 @@ let product_sizes = require('../initial-data/product_sizes');
 let products = require('../initial-data/products');
 let payments = require('../initial-data/payments');
 let carts = require('../initial-data/carts');
+let package_types = require('../initial-data/package_types');
 
 /**
  * Knex.js's seed functionality does not provide any order of execution guarantees,
@@ -37,7 +38,8 @@ exports.seed = (knex, Promise) => {
             return Promise.all([
                 product_pics.seed(knex, Promise),
                 product_sizes.seed(knex, Promise),
-                payments.seed(knex, Promise)
+                payments.seed(knex, Promise),
+                package_types.seed(knex, Promise)
             ])
         });
 };

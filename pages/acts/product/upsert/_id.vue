@@ -10,6 +10,7 @@ import BitwiseMultiSelect from '@/components/BitwiseMultiSelect'
 import IconNewWindow from '@/components/icons/IconNewWindow'
 import IconPlayVideo from '@/components/icons/IconPlayVideo'
 import product_mixin from '@/mixins/product_mixin'
+import shipping_mixin from '@/mixins/shipping_mixin'
 
 Vue.prototype.$notify = Notification;
 Vue.prototype.$confirm = MessageBox.confirm;
@@ -49,7 +50,8 @@ export default {
     },
 
     mixins: [
-        product_mixin
+        product_mixin,
+        shipping_mixin
     ],
 
     data() {
@@ -59,6 +61,7 @@ export default {
             },
             productInfo: {},
             productPics: [],
+            shippingPackageTypes: [],
             videoPlayerModal: {
                 isActive: false,
                 videoId: null,
@@ -94,6 +97,15 @@ export default {
             let self = this;
             forEach(this.productInfo.genders, function(val, key) {
                 opts[self.$t(key)] = val;
+            });
+            return opts;
+        },
+
+        packageTypeSelectOptions() {
+            let opts = {};
+            let self = this;
+            forEach(this.shippingPackageTypes, function(obj) {
+                opts[obj.label] = obj.type;
             });
             return opts;
         },
@@ -210,6 +222,7 @@ export default {
             }
 
             this.productInfo = await this.getProductInfo();
+            this.shippingPackageTypes = await this.getPackageTypes();
 
             if(!this.productInfo) {
                 throw new Error(this.$t('Product info not found'));
@@ -394,6 +407,24 @@ export default {
                     </div>
                 </div>
             </div>
+
+            <!-- Shipping -->
+            <div class="g-spec">
+                <div class="g-spec-label">Shipping</div>
+                <div class="g-spec-content">
+                    <div class="formContainer">
+
+                        <!-- package type -->
+                        <form-row label="Shipping package type:">
+                            <bitwise-multi-select
+                                v-model="product.shipping_package_type"
+                                :options="packageTypeSelectOptions"></bitwise-multi-select>
+                        </form-row>
+
+                    </div>
+                </div>
+            </div>
+
 
             <div class="g-spec">
                 <div class="g-spec-label"></div>

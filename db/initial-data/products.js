@@ -57,6 +57,9 @@ exports.seed = (knex) => {
                 let uuid = faker.random.uuid();
                 global.productSeedUuids.push(uuid);
 
+                let subType = i % 2 ? productSubTypes.PRODUCT_SUBTYPE_TOP : productSubTypes.PRODUCT_SUBTYPE_HAT;
+                let shippingPackageType = (subType === productSubTypes.PRODUCT_SUBTYPE_TOP ? 0x01 : 0x04);
+
                 promises.push(
                     knex(CoreService.DB_TABLES.products)
                         .insert({
@@ -76,7 +79,8 @@ exports.seed = (knex) => {
                             video_url: 'https://www.youtube.com/watch?v=JUaY0AOLopU',
                             gender: getRandomGenderOption(),
                             type: productTypes.PRODUCT_TYPE_APPAREL,
-                            sub_type: i % 2 ? productSubTypes.PRODUCT_SUBTYPE_TOP : productSubTypes.PRODUCT_SUBTYPE_HAT,
+                            sub_type: subType,
+                            shipping_package_type: shippingPackageType,
                             inventory_count: (100 + i),
                             hide_if_out_of_stock: true,
                             created_at: d,

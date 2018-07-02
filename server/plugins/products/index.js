@@ -23,6 +23,7 @@ const schema = {
     gender: Joi.number().integer().positive(),
     type: Joi.number().integer().positive(),
     sub_type: Joi.number().integer().positive(),
+    shipping_package_type: Joi.number().integer().positive(),
     inventory_count: Joi.number().min(0),
     hide_if_out_of_stock: Joi.boolean(),
     product_artist_id: Joi.string().uuid().allow(null),

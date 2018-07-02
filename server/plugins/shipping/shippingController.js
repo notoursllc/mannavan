@@ -2,6 +2,7 @@
 
 const Wreck = require('wreck');
 const Boom = require('boom');
+const Joi = require('joi');
 const isObject = require('lodash.isobject');
 const forEach = require('lodash.foreach');
 const helpers = require('../../helpers.service');
@@ -15,11 +16,167 @@ const wreck = Wreck.defaults({
     }
 });
 
-const internals = {};
+let server = null;
 
 
+function getPackageTypesModel() {
+    return server.app.bookshelf.model('PackageTypes');
+}
 
-internals.getShipEngineErrorMessage = (err) => {
+
+function setServer(s) {
+    server = s;
+}
+
+
+function getPackageTypeSchema() {
+    return {
+        type: Joi.number().integer().positive().required(),
+        label: Joi.string().max(100).required(),
+        length: Joi.number().precision(2).min(0).required(),
+        width: Joi.number().precision(2).min(0).required(),
+        height: Joi.number().precision(2).min(0).allow(null),
+        weight: Joi.number().precision(2).min(0).allow(null),
+        mass_unit: Joi.string().length(2).required(),
+        distance_unit: Joi.string().length(2).required(),
+        created_at: Joi.date(),
+        updated_at: Joi.date()
+    };
+}
+
+
+/**
+ * Gets a package type by a given attribute, or all results if no attributes are passed
+ *
+ * @param attrName
+ * @param attrValue
+ * @returns {Promise}
+ */
+async function getPackageTypeByAttribute(attrName, attrValue) {
+    let forgeOpts = null;
+
+    if(attrName) {
+        forgeOpts = {};
+        forgeOpts[attrName] = attrValue;
+    }
+
+    return await getPackageTypesModel().forge(forgeOpts).fetch();
+}
+
+
+/**
+ * Route handler for creating a new PackageType
+ *
+ * @param {*} request
+ * @param {*} h
+ */
+async function packageTypeListHandler(request, h) {
+    try {
+        const PackageTypes = await helpers.fetchPage(
+            request,
+            getPackageTypesModel()
+        );
+
+        return h.apiSuccess(
+            PackageTypes,
+            PackageTypes.pagination
+        );
+    }
+    catch(err) {
+        global.logger.error(err);
+        global.bugsnag(err);
+        throw Boom.notFound(err);
+    }
+}
+
+/**
+ * Route handler for creating a new PackageType
+ *
+ * @param {*} request
+ * @param {*} h
+ */
+async function packageTypeCreateHandler(request, h) {
+    try {
+        const PackageType = await getPackageTypesModel().create(request.payload);
+
+        if(!PackageType) {
+            throw Boom.badRequest('Unable to create a a new package type.');
+        }
+
+        return h.apiSuccess(
+            PackageType.toJSON()
+        );
+    }
+    catch(err) {
+        global.logger.error(err);
+        global.bugsnag(err);
+        throw Boom.badRequest(err);
+    }
+}
+
+
+/**
+ * Route handler for updating a package type
+ *
+ * @param {*} request
+ * @param {*} h
+ */
+ async function packageTypeUpdateHandler(request, h) {
+    try {
+        request.payload.updated_at = request.payload.updated_at || new Date();
+
+        const PackageType = await getPackageTypesModel().update(
+            request.payload,
+            { id: request.payload.id }
+        );
+
+        if(!PackageType) {
+            throw Boom.badRequest('Unable to find package type.');
+        }
+
+        return h.apiSuccess(
+            PackageType.toJSON()
+        );
+    }
+    catch(err) {
+        global.logger.error(err);
+        global.bugsnag(err);
+        throw Boom.badRequest(err);
+    }
+}
+
+
+/**
+ * Route handler for deleting a package type
+ *
+ * @param {*} request
+ * @param {*} h
+ */
+async function packageTypeDeleteHandler(request, h) {
+    try {
+        request.payload.updated_at = request.payload.updated_at || new Date();
+
+        const PackageType = await getPackageTypesModel().destroy(
+            { id: request.payload.id }
+        );
+
+        if(!PackageType) {
+            throw Boom.badRequest('Unable to find package type.');
+        }
+
+        return h.apiSuccess(
+            PackageType.toJSON()
+        );
+    }
+    catch(err) {
+        global.logger.error(err);
+        global.bugsnag(err);
+        throw Boom.badRequest(err);
+    }
+}
+
+
+function getShipEngineErrorMessage(err) {
     let message = null;
 
     if(err.data.isResponseError && Array.isArray(err.data.payload.errors)) {
@@ -45,7 +202,7 @@ internals.getShipEngineErrorMessage = (err) => {
  * @param string countryCode
  * @returns []
  */
-internals.getCarrierIdsForCountry = (countryCode) => {
+function getCarrierIdsForCountry(countryCode) {
     switch(countryCode) {
         case 'US':
             return [process.env.SHIPENGINE_CARRIER_ID_STAMPSCOM];
@@ -59,7 +216,7 @@ internals.getCarrierIdsForCountry = (countryCode) => {
 }
 
 
-internals.parseShippingRateResponse = (response) => {
+function parseShippingRateResponse(response) {
     let packageTypeWhitelist = [
         'package',
         'medium_flat_rate_box',
@@ -129,13 +286,13 @@ internals.parseShippingRateResponse = (response) => {
 /**
  * Calls the ShipEngine API to validate a shipping address
  */
-exports.validateAddress = async (request, h) => {
+async function validateAddress(request, h) {
     try {
         const { res, payload } = await wreck.post('/addresses/validate', { payload: helpers.makeArray(request.payload) });
         return h.apiSuccess(payload);
     }
     catch(err) {
-        const error = new Error('ERROR VALIDATING SHIPPING ADDRESS: ' + internals.getShipEngineErrorMessage(err));
+        const error = new Error('ERROR VALIDATING SHIPPING ADDRESS: ' + getShipEngineErrorMessage(err));
         global.logger.error(error);
         global.bugsnag(error);
         throw Boom.badRequest(error);
@@ -146,7 +303,7 @@ exports.validateAddress = async (request, h) => {
 /**
  * Calls the ShipEngine API to get shipping rates
  */
-exports.rates = async (request, h) => {
+async function rates(request, h) {
     try {
         const config = {
             shipment: {
@@ -162,19 +319,37 @@ exports.rates = async (request, h) => {
                 ...request.payload
             },
             rate_options: {
-                carrier_ids: internals.getCarrierIdsForCountry(request.payload.ship_to.country_code)
+                carrier_ids: getCarrierIdsForCountry(request.payload.ship_to.country_code)
             }
         };
 
         const { res, payload } = await wreck.post('/rates', { payload: config });
+        global.logger.info("SHIPPING RATES RESPONSE", payload);
+
         return h.apiSuccess(
-            internals.parseShippingRateResponse(payload)
+            parseShippingRateResponse(payload)
         );
     }
     catch(err) {
-        const error = new Error('ERROR GETTING SHIPPING RATES: ' + internals.getShipEngineErrorMessage(err));
+        const error = new Error('ERROR GETTING SHIPPING RATES: ' + getShipEngineErrorMessage(err));
         global.logger.error(error);
         global.bugsnag(error);
         throw Boom.badRequest(error);
     }
 };
+
+
+
+module.exports = {
+    setServer,
+    rates,
+    validateAddress,
+    getPackageTypeByAttribute,
+    getPackageTypeSchema,
+
+    // route handlers
+    packageTypeCreateHandler,
+    packageTypeUpdateHandler,
+    packageTypeDeleteHandler,
+    packageTypeListHandler
+}
