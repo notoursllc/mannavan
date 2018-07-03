@@ -6,6 +6,7 @@ if(process.env.NODE_ENV === 'development') {
 
 
 exports.init = async function (manifest, options) {
-    const webServer = await Glue.compose(manifest, options);
-    await webServer.start();
+    const server = await Glue.compose(manifest, options);
+    await server.start();
+    return server;
 };

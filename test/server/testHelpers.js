@@ -80,6 +80,15 @@ function getJwtHeaders(server, callback) {
 }
 
 
+async function startServer(manifest, options) {
+    return Server.init(manifest, options);
+}
+
+async function getServer(manifest, options) {
+    return await startServer(manifest, options)
+}
+
+
 function startServerAndGetHeaders(manifest, composeOptions) {
     // Mocking the appInsightsClient object
     global.appInsightsClient = {
@@ -202,7 +211,7 @@ function getBasicManifest() {
                         }
                     }
                 },
-                { plugin: './plugins/auth-scheme-jwt-cookie' },
+                // { plugin: './plugins/auth-scheme-jwt-cookie' },
                 { plugin: './plugins/core' }
             ]
         }
@@ -212,13 +221,17 @@ function getBasicManifest() {
 }
 
 
-module.exports.destroyKnexAndStopServer = destroyKnexAndStopServer;
-module.exports.getFakeBillingAddress = getFakeBillingAddress;
-module.exports.getFakeShippingAddress = getFakeShippingAddress;
-module.exports.getBasicManifest = getBasicManifest;
-module.exports.startServerAndGetHeaders = startServerAndGetHeaders;
-module.exports.getRegistrationIndexFromManifest = getRegistrationIndexFromManifest;
-module.exports.spliceRegistrationFromManifest = spliceRegistrationFromManifest;
-module.exports.getProduct = getProduct;
-module.exports.addToCart = addToCart;
-module.exports.getApiPrefix = getApiPrefix;
+module.exports = {
+    destroyKnexAndStopServer,
+    getFakeBillingAddress,
+    getFakeShippingAddress,
+    getBasicManifest,
+    startServer,
+    getServer,
+    startServerAndGetHeaders,
+    getRegistrationIndexFromManifest,
+    spliceRegistrationFromManifest,
+    getProduct,
+    addToCart,
+    getApiPrefix
+}
