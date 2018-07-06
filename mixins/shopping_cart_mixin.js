@@ -51,7 +51,8 @@ export default {
 
 
         async getShippingRates(params) {
-            const response = await this.$axios.post('/shipping/rates', params);
+            // const response = await this.$axios.post('/shipping/rates', params);
+            const response = await this.$axios.get('/cart/shipping/rates');
             return response.data.data;
         },
 

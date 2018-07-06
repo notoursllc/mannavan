@@ -1,20 +1,19 @@
 require('dotenv').config();
 
-const Code = require('code');
+const { expect } = require('code');
 const Lab = require('lab');
-const { getController, getCarrierAccount } = require('./_shippingControllerHelper');
+const { after, before, describe, it } = exports.lab = Lab.script();
 
-const lab = exports.lab = Lab.script();
-const describe = lab.experiment;
-const expect = Code.expect;
-const it = lab.test;
-
+const { getServer, getController, getCarrierAccount } = require('./_shippingControllerHelper');
 const shippingController = getController();
 
 
-describe('Shippo Controller: listCarrierAccounts', () => {
+describe('Shipping Controller: listCarrierAccounts', () => {
 
     it('should return a list of carrier accounts', async() => {
+        const server = await getServer();
+        shippingController.setServer(server);
+
         let res = null;
         let error = null;
 
@@ -26,9 +25,13 @@ describe('Shippo Controller: listCarrierAccounts', () => {
             console.log(err);
         }
 
+        // console.log("CARRIER ACCOUNTS", res)
+
         expect( res ).to.be.an.object();
         expect( res.results ).to.be.an.array();
         expect( error ).not.to.be.an.object();
+
+        server.stop();
     });
 
 });
@@ -37,6 +40,9 @@ describe('Shippo Controller: listCarrierAccounts', () => {
 describe('Shippo Controller: getCarrierAccount', () => {
 
     it('should return a carrier account for the given id', async() => {
+        const server = await getServer();
+        shippingController.setServer(server);
+
         let res = null;
         let error = null;
         let account = await getCarrierAccount();
@@ -51,10 +57,15 @@ describe('Shippo Controller: getCarrierAccount', () => {
 
         expect( res ).to.be.an.object();
         expect( error ).not.to.be.an.object();
+
+        server.stop();
     });
 
 
     it('should return an error if an invalid id is passed', async() => {
+        const server = await getServer();
+        shippingController.setServer(server);
+
         let res = null;
         let error = null;
         let account = await getCarrierAccount();
@@ -68,6 +79,8 @@ describe('Shippo Controller: getCarrierAccount', () => {
 
         expect( res ).not.to.be.an.object();
         expect( error ).to.be.an.object();
+
+        server.stop();
     });
 
 });

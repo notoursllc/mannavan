@@ -35,7 +35,7 @@ module.exports = function (baseModel, bookshelf, server) {
                         let qty = model.get('qty');
 
                         if(prod && qty) {
-                            weight += parseFloat((prod.get('weight_oz') * qty) || 0); 
+                            weight += parseFloat((prod.get('weight_oz') * qty) || 0);
                         }
                     });
 
@@ -55,8 +55,8 @@ module.exports = function (baseModel, bookshelf, server) {
                 },
                 shipping_total: function() {
                     let obj = this.get('shipping_rate');
-                    if(isObject(obj) && isObject(obj.shipping_amount)) {
-                        return accounting.toFixed(obj.shipping_amount.amount, 2);
+                    if(isObject(obj) && obj.amount) {
+                        return accounting.toFixed(obj.amount, 2);
                     }
                     return null;
                 },
@@ -66,6 +66,10 @@ module.exports = function (baseModel, bookshelf, server) {
                     let shipping = parseFloat(this.get('shipping_total') || 0);
 
                     return accounting.toFixed((subtotal + salesTax + shipping), 2);
+                },
+                shipping_fullName: function() {
+                    let name = `${this.get('shipping_firstName')} ${this.get('shipping_lastName')}`;
+                    return name.trim();
                 }
             },
 

@@ -61,6 +61,7 @@
                     const shippingAttributes = cloneDeep(this.shippingAttributes);
                     delete shippingAttributes.shipping_total;
                     delete shippingAttributes.shipping_rate;
+                    delete shippingAttributes.shipping_fullName;
 
                     // This step needs to clear the shipping rate cache because
                     // we are assuming the shipping address has changed and thus

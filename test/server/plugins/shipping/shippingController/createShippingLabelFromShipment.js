@@ -1,15 +1,12 @@
 require('dotenv').config();
 
-const Code = require('code');
+const { expect } = require('code');
 const Lab = require('lab');
-const { getController, getShipmentData } = require('./_shippingControllerHelper');
+const { after, before, describe, it } = exports.lab = Lab.script();
 
-const lab = exports.lab = Lab.script();
-const describe = lab.experiment;
-const expect = Code.expect;
-const it = lab.test;
-
+const { getServer, getController, getShipmentData } = require('./_shippingControllerHelper');
 const shippingController = getController();
+
 
 function getCreateShippingLabelRequestData() {
     let data = {
@@ -24,65 +21,78 @@ function getCreateShippingLabelRequestData() {
 }
 
 
-describe('Shippo Controller: createShippingLabelFromShipment', () => {
+describe('Shipping Controller: createShippingLabelFromShipment', () => {
 
     it('errors on missing "carrier_account" value when creating a shipping label', async() => {
+        const server = await getServer();
+        shippingController.setServer(server);
+
         let data = getCreateShippingLabelRequestData();
         delete data.carrier_account;
 
-        let shipment = null;
+        let res = null;
         let error = null;
 
         try {
-            shipment = await shippingController.createShippingLabelFromShipment(data)
+            res = await shippingController.createShippingLabelFromShipment(data)
         }
         catch(err) {
             error = err;
         }
 
-        expect( shipment ).not.to.be.an.object();
+        expect( res ).not.to.be.an.object();
         expect( error ).to.be.an.object();
-        expect( error.message ).to.include('"carrier_account" is required');
+        expect( error.message ).to.include('The data you sent was not accepted as valid');
+
+        server.stop();
     });
 
 
     it('errors on missing "servicelevel_token" value when creating a shipping label', async() => {
+        const server = await getServer();
+        shippingController.setServer(server);
+
         let data = getCreateShippingLabelRequestData();
         delete data.servicelevel_token;
 
-        let shipment = null;
+        let res = null;
         let error = null;
 
         try {
-            shipment = await shippingController.createShippingLabelFromShipment(data)
+            res = await shippingController.createShippingLabelFromShipment(data)
         }
         catch(err) {
             error = err;
         }
 
-        expect( shipment ).not.to.be.an.object();
+        expect( res ).not.to.be.an.object();
         expect( error ).to.be.an.object();
-        expect( error.message ).to.include('"servicelevel_token" is required');
+        expect( error.message ).to.include('The data you sent was not accepted as valid');
+
+        server.stop();
     });
 
 
     it('errors if "label_file_type" is an incorrect value', async() => {
+        const server = await getServer();
+        shippingController.setServer(server);
+
         let data = getCreateShippingLabelRequestData();
         data.label_file_type = "FOO";
 
-        let shipment = null;
+        let res = null;
         let error = null;
 
         try {
-            shipment = await shippingController.createShippingLabelFromShipment(data)
+            res = await shippingController.createShippingLabelFromShipment(data)
         }
         catch(err) {
             error = err;
         }
 
-        expect( shipment ).not.to.be.an.object();
+        expect( res ).not.to.be.an.object();
         expect( error ).to.be.an.object();
-        expect( error.message ).to.include('"label_file_type" must be one of');
+        expect( error.message ).to.include('The data you sent was not accepted as valid');
     });
 
 /*

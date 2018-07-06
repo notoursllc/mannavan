@@ -480,14 +480,14 @@
                                     <el-option :label="$t('CREDIT CARD')" value="CREDIT_CARD">
                                         <span class="floatLeft">{{ $t('CREDIT CARD') }}</span>
                                         <icon-credit-card
-                                            icon-name="credit_card" 
+                                            icon-name="credit_card"
                                             width="20px"
                                             class="floatRight mts" />
                                     </el-option>
                                     <el-option :label="$t('PAYPAL')" value="PAYPAL">
                                         <span class="floatLeft">{{ $t('PAYPAL') }}</span>
                                         <icon-paypal
-                                            icon-name="credit_card" 
+                                            icon-name="credit_card"
                                             width="20px"
                                             class="floatRight mts" />
                                     </el-option>
@@ -501,7 +501,7 @@
                 <div class="displayTableRow" v-show="paymentMethod === 'CREDIT_CARD'">
                     <label class="checkout_form_label fwb">{{ $t('CARD NUMBER') }}:</label>
                     <div class="checkout_form_value">
-                        <status-wrapper 
+                        <status-wrapper
                             :success="inputStatus['card-number'] === 'success'"
                             :failed="inputStatus['card-number'] === 'failed'">
                             <div id="card-number" class="el-input__inner"></div>
@@ -516,7 +516,7 @@
                 <div class="displayTableRow" v-show="paymentMethod === 'CREDIT_CARD'">
                     <label class="checkout_form_label fwb">{{ $t('EXPIRES') }}:</label>
                     <div class="checkout_form_value">
-                        <status-wrapper 
+                        <status-wrapper
                             class-name="inline"
                             :success="inputStatus['expiration-month'] === 'success' && inputStatus['expiration-year'] === 'success'"
                             :failed="inputStatus['expiration-month'] === 'failed' || inputStatus['expiration-year'] === 'failed'">
@@ -537,7 +537,7 @@
                     </label>
                     <div class="checkout_form_value">
                         <div class="displayTableCell">
-                            <status-wrapper 
+                            <status-wrapper
                                 class-name="inline"
                                 :success="inputStatus['cvv'] === 'success'"
                                 :failed="inputStatus['cvv'] === 'failed'">

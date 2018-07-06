@@ -1,20 +1,23 @@
-const forEach = require('lodash.foreach');
-const isObject = require('lodash.isobject');
+'use strict';
 
 module.exports = class ShoppingCart {
     constructor(data) {
-        if(isObject(data)) {
-            forEach(data, (val, key) => {
-                this[key] = val;
-            })
-        }
+        this.data = data || {};
     }
 
     get(key) {
-        return this[key];
+        return this.data[key];
+    }
+
+    related(key) {
+        return this.data[key];
     }
 
     set(key, value) {
-        return this[key] = value;
+        return this.data[key] = value;
+    }
+
+    toJSON() {
+        return this.data;
     }
 }

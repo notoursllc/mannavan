@@ -6,57 +6,59 @@ const Hoek = require('hoek');
 const testHelpers = require('../../../testHelpers');
 const serverSetup = require('../_serverSetup');
 
-const { getController, getShipmentData } = require('./_shippingControllerHelper');
+const { getServer, getController, getShipmentData } = require('./_shippingControllerHelper');
 const ShoppingCartMock = require('../../shopping-cart/ShoppingCartMock');
 const shippingController = getController();
 
 
 
 async function expectErrorOnMissingShippingArgument(arg) {
+    const server = await getServer();
+    shippingController.setServer(server);
+
     let data = getShipmentData();
     delete data[arg];
 
-    let shipment = null;
+    let res = null;
     let error = null;
 
     try {
-        shipment = await shippingController.createShipment(data)
+        res = await shippingController.createShipment(data)
     }
     catch(err) {
         error = err;
     }
 
-    expect( shipment ).not.to.be.an.object();
+    expect( res ).not.to.be.an.object();
     expect( error ).to.be.an.object();
-    expect( error.message ).to.include(`"${arg}" is required`);
+    expect( error.message ).to.include(`The data you sent was not accepted as valid`);
+
+    server.stop();
 }
 
 
 async function expectErrorOnMissingAddressArgument(key, addressProp) {
+    const server = await getServer();
+    shippingController.setServer(server);
+
     let data = getShipmentData();
     delete data[key][addressProp];
 
-    let shipment = null;
+    let res = null;
     let error = null;
 
     try {
-        shipment = await shippingController.createShipment(data)
+        res = await shippingController.createShipment(data)
     }
     catch(err) {
         error = err;
     }
 
-    expect( shipment ).not.to.be.an.object();
+    expect( res ).not.to.be.an.object();
     expect( error ).to.be.an.object();
-    expect( error.message ).to.include(`"${addressProp}" is required`);
-}
+    expect( error.message ).to.include(`The data you sent was not accepted as valid`);
 
-
-async function getServer() {
-    return await testHelpers.getServer(
-        Hoek.clone(serverSetup.manifest),
-        serverSetup.composeOptions
-    );
+    server.stop();
 }
 
 
@@ -140,6 +142,9 @@ describe('Shipping Controller: createShipment()', () => {
 */
 
     it('errors on shipment_date if not a ISO-8601 value', async () => {
+        const server = await getServer();
+        shippingController.setServer(server);
+
         let data = getShipmentData();
         // data.shipment_date = '123';
 
@@ -151,21 +156,30 @@ describe('Shipping Controller: createShipment()', () => {
         }
         catch(err) {
             error = err;
-            console.log("ISO - ERR", err)
+            // console.log("ISO - ERR", err)
         }
 
-        console.log("ISO - SHIPMENT", shipment)
-
-        try {
-            expect( shipment ).not.to.be.an.object();
-        }
-        catch(e) {
-            // console.log("E??", e)
-        }
-
+        expect( shipment ).not.to.be.an.object();
         // expect( error ).to.be.an.object();
         expect( error.message ).to.include('The data you sent was not accepted as valid');
+
+        server.stop();
     });
+
+
+    // the controller method calls toJSON on the cart_items object,
+    // so mocking that here
+    function getMockCartWithCartItems(items) {
+        const cartItems = {
+            toJSON: function() {
+                return items
+            }
+        };
+
+        return new ShoppingCartMock({
+            cart_items: cartItems
+        });
+    }
 
 
     it('should create a Parcel object from a ShoppingCart', async () => {
@@ -177,11 +191,9 @@ describe('Shipping Controller: createShipment()', () => {
 
         try {
             parcels = await shippingController.createParcelsFromShoppingCart(
-                new ShoppingCartMock({
-                    cart_items: [
-                        { product: { weight_oz: 5, shipping_package_type: 1 } }
-                    ]
-                })
+                getMockCartWithCartItems([
+                    { product: { weight_oz: 5, shipping_package_type: 1 } }
+                ])
             );
         }
         catch(err) {
@@ -208,12 +220,10 @@ describe('Shipping Controller: createShipment()', () => {
 
         try {
             parcels = await shippingController.createParcelsFromShoppingCart(
-                new ShoppingCartMock({
-                    cart_items: [
-                        { product: { weight_oz: 5, shipping_package_type: 1 } },
-                        { product: { weight_oz: 7, shipping_package_type: 2 } }
-                    ]
-                })
+                getMockCartWithCartItems([
+                    { product: { weight_oz: 5, shipping_package_type: 1 } },
+                    { product: { weight_oz: 7, shipping_package_type: 2 } }
+                ])
             );
         }
         catch(err) {
@@ -240,13 +250,11 @@ describe('Shipping Controller: createShipment()', () => {
 
         try {
             parcels = await shippingController.createParcelsFromShoppingCart(
-                new ShoppingCartMock({
-                    cart_items: [
-                        { product: { weight_oz: 5, shipping_package_type: 1 } },
-                        { product: { weight_oz: 7, shipping_package_type: 1 } },
-                        { product: { weight_oz: 4, shipping_package_type: 1 } }
-                    ]
-                })
+                getMockCartWithCartItems([
+                    { product: { weight_oz: 5, shipping_package_type: 1 } },
+                    { product: { weight_oz: 7, shipping_package_type: 1 } },
+                    { product: { weight_oz: 4, shipping_package_type: 1 } }
+                ])
             );
         }
         catch(err) {

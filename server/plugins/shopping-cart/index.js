@@ -85,6 +85,17 @@ const after = function (server) {
             }
         },
         {
+            method: 'GET',
+            path: '/cart/shipping/rates',
+            options: {
+                description: 'Gets a list of shipping rates for the cart',
+                pre: [
+                    { method: ShoppingCartController.pre_cart, assign: 'm1' },
+                ],
+                handler: ShoppingCartController.getCartShippingRatesHandler
+            }
+        },
+        {
             method: 'POST',
             path: '/cart/shipping/rate',
             options: {
@@ -216,6 +227,6 @@ exports.plugin = {
             privateKey: process.env.BRAINTREE_PRIVATE_KEY
         });
 
-        server.dependency(['BookshelfOrm', 'Core', 'Products'], after);
+        server.dependency(['BookshelfOrm', 'Core', 'Products', 'Shipping'], after);
     }
 };

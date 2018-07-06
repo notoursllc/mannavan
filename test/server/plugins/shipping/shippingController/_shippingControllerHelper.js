@@ -1,10 +1,22 @@
 'use strict';
 
+const Hoek = require('hoek');
+const testHelpers = require('../../../testHelpers');
+const serverSetup = require('../_serverSetup');
 const shippingController = require('../../../../../server/plugins/shipping/shippingController');
 
 
 function getController() {
     return shippingController;
+}
+
+
+async function getServer() {
+    let test = Hoek.clone(serverSetup.manifest)
+    return await testHelpers.getServer(
+        Hoek.clone(serverSetup.manifest),
+        serverSetup.composeOptions
+    );
 }
 
 
@@ -56,6 +68,7 @@ function getShipmentData() {
 
 
 module.exports = {
+    getServer,
     getController,
     getCarrierAccount,
     getShipmentData

@@ -4,9 +4,20 @@ const testHelpers = require('../../testHelpers');
 
 let manifest = testHelpers.getBasicManifest();
 manifest.register.plugins.push(
-    { plugin: './plugins/shipping' }
+    { plugin: './plugins/products' },
+    {
+        plugin: './plugins/shipping',
+        routes: {
+            prefix: '/api/v1'
+        }
+    },
+    {
+        plugin: './plugins/shopping-cart',
+        routes: {
+            prefix: '/api/v1'
+        }
+    }
 );
-
 
 let composeOptions = {
     // Relative to the real hapi server

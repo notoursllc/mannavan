@@ -8,6 +8,7 @@ let manifest = testHelpers.getBasicManifest();
 
 manifest.register.plugins.push(
     { plugin: './plugins/products' },
+    { plugin: './plugins/shipping' },
     { plugin: './plugins/shopping-cart' }
 );
 

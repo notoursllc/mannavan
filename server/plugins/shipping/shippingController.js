@@ -400,6 +400,7 @@ async function getShipment(id) {
     }
 }
 
+
 async function createCustomsItem(data) {
     try {
         return await shippo.customsitem.create(data);
@@ -422,7 +423,6 @@ async function createCustomsItem(data) {
  */
 async function createShippingLabelFromShipment(data) {
     try {
-        validateHelper(getCreateShippingLabelSchema, data);
         return await shippo.transaction.create(data);
     }
     catch(err) {
@@ -467,7 +467,6 @@ async function getCarrierAccount(id) {
  */
 async function createCustomsDeclaration(data) {
     try {
-        // validateHelper(getCustomsDeclarationSchema, data);
         return await shippo.customsdeclaration.create(data)
     }
     catch(err) {
@@ -543,17 +542,17 @@ async function createCustomsItemFromShoppingCart(ShoppingCart) {
 
 
 /**
- * Creates a Shippo "Shipment" object based on the contents of the ShoppingCart
+ * Creates a Shippo "Shipment" object based on the contents of the ShoppingCart.
  *
  * @param {*} ShoppingCart
  */
 async function createShipmentFromShoppingCart(ShoppingCart) {
     let data = {
-        async: true
+        async: false
     };
 
     data.address_to = {
-        name: ShoppingCart.get('shipping_name'),
+        name: ShoppingCart.get('shipping_fullName'),
         company: ShoppingCart.get('shipping_company'),
         street1: ShoppingCart.get('shipping_streetAddress'),
         // street_no:,
@@ -604,47 +603,51 @@ async function createShipmentFromShoppingCart(ShoppingCart) {
  * @param {*} ShoppingCart
  */
 async function createParcelsFromShoppingCart(ShoppingCart) {
-    const cartItems = ShoppingCart.get('cart_items');
+    const cartItems = ShoppingCart.related('cart_items');
     const PackageTypeCollection = await getPackageTypesModel().fetchAll();
     const shippingPackageTypes = {};
 
-    if(Array.isArray(cartItems)) {
-        cartItems.forEach((cartItem) => {
-            let PackageType = PackageTypeCollection.findWhere({type: cartItem.product.shipping_package_type});
+    if(cartItems) {
+        let cartItemsJson = cartItems.toJSON();
 
-            if(PackageType) {
-                let id = PackageType.get('id');
+        if(Array.isArray(cartItemsJson)) {
+            cartItemsJson.forEach((cartItem) => {
+                let PackageType = PackageTypeCollection.findWhere({type: cartItem.product.shipping_package_type});
 
-                if(!shippingPackageTypes.hasOwnProperty(id)) {
-                    shippingPackageTypes[id] = {
-                        packageType: null,
-                        totalWeight: 0
-                    };
+                if(PackageType) {
+                    let id = PackageType.get('id');
+
+                    if(!shippingPackageTypes.hasOwnProperty(id)) {
+                        shippingPackageTypes[id] = {
+                            packageType: null,
+                            totalWeight: 0
+                        };
+                    }
+
+                    // The total the amount of weight for each package type needed.
+                    // The weight includes the product weight plus the weight of the package material itself
+                    shippingPackageTypes[id].packageType = PackageType;
+                    shippingPackageTypes[id].totalWeight += parseFloat(PackageType.get('weight')) + parseFloat(cartItem.product.weight_oz || 5);
                 }
+            });
 
-                // The total the amount of weight for each package type needed.
-                // The weight includes the product weight plus the weight of the package material itself
-                shippingPackageTypes[id].packageType = PackageType;
-                shippingPackageTypes[id].totalWeight += parseFloat(PackageType.get('weight')) + parseFloat(cartItem.product.weight_oz || 5);
-            }
-        });
+            // Create a Shippo "Parcel" object for every package type we have collected:
+            const promises = [];
+            forEach(shippingPackageTypes, async (obj) => {
+                promises.push(
+                    createParcel({
+                        length: parseFloat(obj.packageType.get('length')),
+                        width: parseFloat(obj.packageType.get('width')),
+                        height: parseFloat(obj.packageType.get('height')) || 0.75,
+                        distance_unit: obj.packageType.get('distance_unit'),
+                        weight: obj.totalWeight,
+                        mass_unit: 'oz',
+                    })
+                );
+            });
 
-        // Create a Shippo "Parcel" object for every package type we have collected:
-        const promises = [];
-        forEach(shippingPackageTypes, async (obj) => {
-            promises.push(
-                createParcel({
-                    length: parseFloat(obj.packageType.get('length')),
-                    width: parseFloat(obj.packageType.get('width')),
-                    height: parseFloat(obj.packageType.get('height')) || 0.75,
-                    distance_unit: obj.packageType.get('distance_unit'),
-                    weight: obj.totalWeight,
-                    mass_unit: 'oz',
-                })
-            );
-        });
-
-        return await Promise.all(promises);
+            return await Promise.all(promises);
+        }
     }
 }
 

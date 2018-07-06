@@ -48,6 +48,7 @@
     "cvv_help_3_digit": "The code is printed on the back of your card. It is the last 3 digits AFTER the credit card number in the signature area of the card.",
     "cvv_help_4_digit": "The 4 digit code is printed on the front of your card, above the credit card number, on either the right or left side.",
 
+    "day_days": "day | days",
     "Delete": "Delete",
     "Delete this item?": "Delete this item?",
     "digits_text": "digit | digits",

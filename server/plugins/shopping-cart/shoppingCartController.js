@@ -10,6 +10,7 @@ const HelperService = require('../../helpers.service');
 const salesTaxService = require('./services/SalesTaxService');
 const shoppingCartEmailService = require('./services/ShoppingCartEmailService');
 const productsController = require('../products/productsController')
+const shippingController = require('../shipping/shippingController');
 
 let server = null;
 
@@ -421,6 +422,24 @@ async function cartShippingSetAddressHandler(request, h) {
 };
 
 
+async function getCartShippingRatesHandler(request, h) {
+    try {
+        const cartToken = request.pre.m1.cartToken;
+        const ShoppingCart = await getCart(cartToken);
+        const shipment = await shippingController.createShipmentFromShoppingCart(ShoppingCart);
+
+        return h.apiSuccess(
+            shipment.rates
+        ).header('X-Cart-Token', cartToken);
+    }
+    catch(err) {
+        global.logger.error(err);
+        global.bugsnag(err);
+        throw Boom.badData(err);
+    }
+}
+
+
 // Note: route handler calles the defined 'pre' method before it gets here
 async function cartShippingRateHandler(request, h) {
     try {
@@ -804,6 +823,7 @@ module.exports = {
     cartItemRemoveHandler,
     cartItemQtyHandler,
     cartShippingSetAddressHandler,
+    getCartShippingRatesHandler,
     cartShippingRateHandler,
     cartCheckoutHandler,
     getOrdersHandler,

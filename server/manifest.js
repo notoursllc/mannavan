@@ -33,13 +33,13 @@ const webManifest = {
             { plugin: './plugins/customer' },
             { plugin: './plugins/products' },
             {
-                plugin: './plugins/shopping-cart',
+                plugin: './plugins/shipping',
                 routes: {
                     prefix: routePrefix
                 }
             },
             {
-                plugin: './plugins/shipping',
+                plugin: './plugins/shopping-cart',
                 routes: {
                     prefix: routePrefix
                 }

@@ -1,6 +1,5 @@
 const Joi = require('joi');
 const ShippingController = require('./shippingController');
-const ShippoController = require('./shippoController');
 
 
 const after = function (server) {
