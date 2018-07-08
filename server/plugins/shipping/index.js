@@ -73,62 +73,7 @@ const after = function (server) {
                 },
                 handler: ShippingController.packageTypeDeleteHandler
             }
-        },
-        // {
-        //     method: 'POST',
-        //     path: '/shipping/rates',
-        //     options: {
-        //         description: 'Returns shipping rates',
-        //         validate: {
-        //             payload: {
-        //                 validate_address: Joi.string().required(),
-        //                 ship_to: Joi.object().keys({
-        //                     name: Joi.string().optional(),
-        //                     company_name: Joi.string().allow(''),
-        //                     address_line1: Joi.string().required(),
-        //                     address_line2: Joi.string().allow(''),
-        //                     address_line3: Joi.string().allow(''),
-        //                     city_locality: Joi.string().required(),
-        //                     state_province: Joi.string().required(),
-        //                     postal_code: Joi.string().required(),
-        //                     country_code: Joi.string().max(3).regex(/^[A-z]+$/).required()
-        //                 }),
-        //                 packages: Joi.array().items(
-        //                     Joi.object().keys({
-        //                         weight: Joi.object().keys({
-        //                             value: Joi.number().precision(3).required(),
-        //                             unit: Joi.string().required()
-        //                         })
-        //                     })
-        //                 )
-        //             }
-        //         },
-        //         handler: ShippingController.rates
-        //     }
-        // }
-        // {
-        //     method: 'POST',
-        //     path: '/shipping/rates',
-        //     options: {
-        //         description: 'Returns shipping rates',
-        //         validate: {
-        //             payload: {
-        //                 address_to: ShippoController.getAddressSchema(),
-        //                 parcels:
-
-        //                 packages: Joi.array().items(
-        //                     Joi.object().keys({
-        //                         weight: Joi.object().keys({
-        //                             value: Joi.number().precision(3).required(),
-        //                             unit: Joi.string().required()
-        //                         })
-        //                     })
-        //                 )
-        //             }
-        //         },
-        //         handler: ShippingController.rates
-        //     }
-        // }
+        }
     ]);
 
     // LOADING BOOKSHELF MODELS:
