@@ -81,7 +81,8 @@
                     //     return;
                     // }
 
-                    this.shippingRates = await this.getShippingRates();
+                    const rates = await this.getShippingRates();
+                    this.shippingRates = this.processShippingRates(rates);
                     // this.$store.dispatch('shoppingcart/SET_SHIPPING_RATES_CACHE', cloneDeep(this.shippingRates));
                 }
                 catch(err) {
@@ -96,6 +97,43 @@
                 }
 
                 this.isLoading = false;
+            },
+
+             // Keeping this simple for now... just returning the one lowest rate
+             // and not giving the user a choice of other rates
+            processShippingRates: function(rates) {
+                let lowestRate = null;
+
+                if(Array.isArray(rates)) {
+                    if(!lowestRate) {
+                        lowestRate = rates[0];
+                    }
+
+                    rates.forEach((rate) => {
+                        if(parseFloat(rate.amount) < parseFloat(lowestRate.amount)) {
+                            lowestRate = rate;
+                        }
+                    })
+                }
+
+                // Fallback... hopefully this never happens
+                if(!lowestRate) {
+                    lowestRate = {
+                        amount: '5.00',
+                        currency: 'USD',
+                        provider: 'USPS',
+                        provider_image_75: 'https://shippo-static.s3.amazonaws.com/providers/75/USPS.png',
+                        provider_image_200: 'https://shippo-static.s3.amazonaws.com/providers/200/USPS.png',
+                        servicelevel: {
+                            name: 'First-Class Package/Mail Parcel',
+                            token: 'usps_first',
+                        },
+                        estimated_days: 5
+                    };
+                }
+
+                this.selectedRate = lowestRate;
+                return [lowestRate];
             }
         },
 
