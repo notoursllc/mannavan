@@ -39,8 +39,9 @@ export default {
                     }
                 })
             }
-            else {
-                // Fallback... hopefully this never happens
+
+            // Fallback... hopefully this never happens
+            if(!lowestRate) {
                 lowestRate = {
                     amount: '5.00',
                     currency: 'USD',
@@ -55,9 +56,7 @@ export default {
                 };
             }
 
-            this.shippingRates = [
-                lowestRate
-            ]
+            this.shippingRates = [lowestRate];
 
             // since we're only providing one option for now, making it the
             // default selected option:

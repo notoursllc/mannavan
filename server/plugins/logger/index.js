@@ -1,9 +1,11 @@
 // https://insightops.help.rapid7.com/docs/nodejs
 // const LogEntries = require('r7insight_node');
 const winston = require('winston');
-const Promise = require('bluebird');
 const bugsnag = require('bugsnag');
+const { Loggly } = require('winston-loggly-bulk');
 
+// NOTE: 7/7/18 - Loggly does not work with Winston 3.0 yet:
+// https://github.com/loggly/winston-loggly-bulk/issues/32
 
 exports.plugin = {
     once: true,
@@ -43,23 +45,43 @@ exports.plugin = {
         //     withStack: true
         // });
 
-        let transports = [
-            new (winston.transports.Console)({
-                level: process.env.NODE_ENV === 'production' ? 'error' : 'debug',
-                prettyPrint: true,
-                colorize: true,
-                silent: false
-            }),
-            // LogEntries
-        ];
+        // https://github.com/loggly/winston-loggly-bulk
+        const logglyTransport = new Loggly({
+            token: process.env.LOGGLY_PRIVATE_KEY,
+            subdomain: "notours",
+            tags: ["backend"],
+            json: true,
+            level: 'info',
+            networkErrorsOnConsole: true
+        });
 
-        let exceptionHandlers = [
-            new winston.transports.Console({
-                handleExceptions: true,
-                humanReadableUnhandledException: true
-            }),
-            // LogEntries
-        ];
+        let transports = [];
+        let exceptionHandlers = [];
+
+        if(process.env.NODE_ENV === 'production') {
+            transports.push(logglyTransport);
+            exceptionHandlers.push(logglyTransport);
+        }
+        else {
+            transports.push(
+                new (winston.transports.Console)({
+                    level: 'debug',
+                    prettyPrint: true,
+                    colorize: true,
+                    silent: false
+                })
+            );
+
+            exceptionHandlers.push(
+                new (winston.transports.Console)({
+                    prettyPrint: true,
+                    colorize: true,
+                    silent: false,
+                    handleExceptions: true,
+                    humanReadableUnhandledException: true
+                })
+            )
+        }
 
         const logger = new (winston.Logger)({
             transports,

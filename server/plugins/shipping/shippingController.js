@@ -362,10 +362,13 @@ async function rates(request, h) {
  */
 async function createShipment(data) {
     try {
-        return await shippo.shipment.create(data);
+        let result = await shippo.shipment.create(data);
+        global.logger.debug("RESULT: shippo.shipment.create", result);
+        return result;
     }
     catch(err) {
         global.logger.error("CREATE SHIPMENT ERROR", err)
+        global.logger.error("CREATE SHIPMENT ERROR - DATA", data)
         throw err;
     }
 }
