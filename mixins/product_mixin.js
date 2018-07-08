@@ -104,15 +104,14 @@ export default {
 
         getProductSubTypeData(key) {
             const data = {
-                PRODUCT_SUBTYPE_HAT: {
-                    id: 1,
-                    label: 'hats',
-                    svg: 'icon_cap.svg'
-                },
+                // commenting out until we offer hats:
+                // PRODUCT_SUBTYPE_HAT: {
+                //     id: 1,
+                //     label: 'hats'
+                // },
                 PRODUCT_SUBTYPE_TOP: {
                     id: 2,
-                    label: 'tops',
-                    svg: 'icon_tshirt.svg'
+                    label: 'tops'
                 }
             };
 

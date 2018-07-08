@@ -82,9 +82,7 @@ export default {
         </aside>
 
         <header role="banner" v-if="$store.state.ui.pageTitle">
-            <!-- <div class="header-secondary-logo">
-                secondary logo
-            </div> -->
+            <!-- <div class="header-secondary-logo">secondary logo</div> -->
             <div class="header-grow-container">
                 <div class="inlineBlock header-page-title">{{ $store.state.ui.pageTitle }}</div>
             </div>
