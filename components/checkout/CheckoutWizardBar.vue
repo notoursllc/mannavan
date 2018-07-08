@@ -21,7 +21,10 @@ export default {
 
     data: function() {
         return {
-            currentStep: 1
+            currentStep: 1,
+            shippingAddressStep: 0,
+            shippingMethodStep: 1,
+            placeOrderStep: 2
         }
     },
 
@@ -56,21 +59,23 @@ export default {
 
         <!-- shipping address -->
         <div class="item"
-             :class="{'active': currentStep === 0, 'completed': currentStep > 0}"
-             @click="changeStep(0)">
+             :class="{'active': currentStep === shippingAddressStep, 'completed': currentStep > shippingAddressStep}"
+             @click="changeStep(shippingAddressStep)">
             <div class="item-icon">
                 <icon-check-square
-                    v-if="currentStep > 0"
+                    v-if="currentStep > shippingAddressStep"
                     icon-name="checkmark"
                     class-name="fillGreen"
                     width="20px" />
                 <icon-address
-                    v-if="currentStep === 0"
-                    icon-name="checkmark"
-                    :class-name="currentStep === 0 ? 'fillGreen' : 'fillGrayLight'"
+                    v-if="currentStep === shippingAddressStep"
+                    icon-name="address"
+                    :class-name="currentStep === shippingAddressStep ? 'fillGreen' : 'fillGrayLight'"
                     width="30px" />
             </div>
-            <div class="item-desc">1) {{ $t('SHIPPING ADDRESS') }}</div>
+            <div class="item-desc">
+                {{ shippingAddressStep + 1 }}) {{ $t('SHIPPING ADDRESS') }}
+            </div>
         </div>
 
         <div class="spacer">
@@ -79,21 +84,23 @@ export default {
 
         <!-- shipping method -->
         <div class="item"
-             :class="{'active': currentStep === 1, 'completed': currentStep > 1}"
-             @click="changeStep(1)">
+             :class="{'active': currentStep === shippingMethodStep, 'completed': currentStep > shippingMethodStep}"
+             @click="changeStep(shippingMethodStep)">
             <div class="item-icon">
                 <icon-check-square
-                    v-if="currentStep > 1"
+                    v-if="currentStep > shippingMethodStep"
                     icon-name="checkmark"
                     class-name="fillGreen"
                     width="20px" />
                 <icon-van
-                    v-if="currentStep <= 1"
-                    icon-name="checkmark"
-                    :class-name="currentStep === 0 ? 'fillGrayLight' : 'fillGreen'"
+                    v-if="currentStep <= shippingMethodStep"
+                    icon-name="van"
+                    :class-name="currentStep < shippingMethodStep ? 'fillGrayLight' : 'fillGreen'"
                     width="30px" />
             </div>
-            <div class="item-desc">2) {{ $t('SHIPPING METHOD') }}</div>
+            <div class="item-desc">
+                {{ shippingMethodStep + 1 }}) {{ $t('SHIPPING METHOD') }}
+            </div>
         </div>
 
         <div class="spacer">
@@ -102,21 +109,17 @@ export default {
 
         <!-- place order -->
         <div class="item"
-             :class="{'active': currentStep === 2, 'completed': currentStep > 2}"
-             @click="changeStep(2)">
+             :class="{'active': currentStep === placeOrderStep}"
+             @click="changeStep(placeOrderStep)">
             <div class="item-icon">
-                <icon-check-square
-                    v-if="currentStep > 2"
-                    icon-name="checkmark"
-                    class-name="fillGreen"
-                    width="20px" />
                 <icon-package
-                    v-if="currentStep <= 2"
-                    icon-name="checkmark"
-                    :class-name="currentStep === 2 ? 'fillGreen' : 'fillGrayLight'"
+                    icon-name="package"
+                    :class-name="currentStep === placeOrderStep ? 'fillGreen' : 'fillGrayLight'"
                     width="30px" />
             </div>
-            <div class="item-desc">3) {{ $t('PLACE YOUR ORDER') }}</div>
+            <div class="item-desc">
+                {{ placeOrderStep + 1 }}) {{ $t('PLACE YOUR ORDER') }}
+            </div>
         </div>
     </div>
 </template>
