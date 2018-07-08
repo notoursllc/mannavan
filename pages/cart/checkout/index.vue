@@ -32,10 +32,10 @@
         data: function() {
             return {
                 stepComponent: 'shipping-address-step',
-                STEP_SHIPPING_ADDRESS: 0,
-                STEP_SHIPPING_METHOD: 1,
-                STEP_PLACE_ORDER: 2,
-                currentStep: 0
+                STEP_SHIPPING_ADDRESS: 1,
+                STEP_SHIPPING_METHOD: 2,
+                STEP_PLACE_ORDER: 3,
+                currentStep: 1
             }
         },
 

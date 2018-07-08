@@ -22,9 +22,9 @@ export default {
     data: function() {
         return {
             currentStep: 1,
-            shippingAddressStep: 0,
-            shippingMethodStep: 1,
-            placeOrderStep: 2
+            shippingAddressStep: 1,
+            shippingMethodStep: 2,
+            placeOrderStep: 3
         }
     },
 
@@ -74,7 +74,7 @@ export default {
                     width="30px" />
             </div>
             <div class="item-desc">
-                {{ shippingAddressStep + 1 }}) {{ $t('SHIPPING ADDRESS') }}
+                {{ shippingAddressStep }}) {{ $t('SHIPPING ADDRESS') }}
             </div>
         </div>
 
@@ -99,7 +99,7 @@ export default {
                     width="30px" />
             </div>
             <div class="item-desc">
-                {{ shippingMethodStep + 1 }}) {{ $t('SHIPPING METHOD') }}
+                {{ shippingMethodStep }}) {{ $t('SHIPPING METHOD') }}
             </div>
         </div>
 
@@ -118,7 +118,7 @@ export default {
                     width="30px" />
             </div>
             <div class="item-desc">
-                {{ placeOrderStep + 1 }}) {{ $t('PLACE YOUR ORDER') }}
+                {{ placeOrderStep }}) {{ $t('PLACE YOUR ORDER') }}
             </div>
         </div>
     </div>
