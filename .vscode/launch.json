@@ -20,13 +20,13 @@
                 "dev"
             ],
             // "port": 9229,
-            // "program": "${workspaceFolder}/server/start.js"
+            "program": "${workspaceFolder}/server/start.js"
         },
         {
             "type": "node",
             "request": "attach",
             "name": "Attach to process",
-            // "program": "${workspaceFolder}/server/start.js",
+            "program": "${workspaceFolder}/server/start.js",
             "port": 3000
         }
     ]
