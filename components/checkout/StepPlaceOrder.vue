@@ -466,7 +466,7 @@
 
 <template>
     <div>
-        <div class="fs24 tac mbl">{{ $t('Place your order') }}</div>
+        <!-- <div class="fs24 tac mbl">{{ $t('Place your order') }}</div> -->
 
         <div class="mtl">
             <div class="displayTable widthAll">

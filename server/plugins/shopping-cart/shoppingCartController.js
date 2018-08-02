@@ -393,15 +393,24 @@ async function cartItemQtyHandler(request, h) {
 async function cartShippingSetAddressHandler(request, h) {
     try {
         const cartToken = request.pre.m1.cartToken;
-        let ShoppingCart = request.pre.m1.ShoppingCart;
 
-        let salesTaxParams = cloneDeep(request.payload);
-        salesTaxParams.sub_total = ShoppingCart.get('sub_total');
-        salesTaxParams.sales_tax = salesTaxService.getSalesTaxAmount(salesTaxParams);
+        // Get a fresh cart for the response with all of the relations
+        let ShoppingCart = await getCart(cartToken);
+
+        let updateData = cloneDeep(request.payload);
+        updateData.sub_total = ShoppingCart.get('sub_total');
+        updateData.sales_tax = salesTaxService.getSalesTaxAmount(updateData);
+
+        // This may change in the future when we offer the user the choice of several
+        // different shipping, but for now we are fetching the lowest shipping rate
+        // and saving it in the shopping cart
+        updateData.shipping_rate = await getLowestShippingRate(request);
+
+        global.logger.debug("cartShippingSetAddressHandler - UPDATING CART", updateData);
 
         // Save the shipping params and the sales tax value in the model
         await ShoppingCart.save(
-            salesTaxParams,
+            updateData,
             { method: 'update', patch: true }
         );
 
@@ -437,6 +446,47 @@ async function getCartShippingRatesHandler(request, h) {
         global.bugsnag(err);
         throw Boom.badData(err);
     }
+}
+
+
+async function getLowestShippingRate(request) {
+    let lowestRate = null;
+
+    // Get a fresh cart with all of the relations
+    const ShoppingCart = await getCart(request.pre.m1.cartToken);
+    const shipment = await shippingController.createShipmentFromShoppingCart(ShoppingCart);
+
+    if(Array.isArray(shipment.rates)) {
+        if(!lowestRate) {
+            lowestRate = shipment.rates[0];
+        }
+
+        shipment.rates.forEach((rate) => {
+            if(parseFloat(rate.amount) < parseFloat(lowestRate.amount)) {
+                lowestRate = rate;
+            }
+        })
+    }
+
+    // Fallback... hopefully this never happens
+    if(!lowestRate) {
+        lowestRate = {
+            amount: '5.00',
+            currency: 'USD',
+            provider: 'USPS',
+            provider_image_75: 'https://shippo-static.s3.amazonaws.com/providers/75/USPS.png',
+            provider_image_200: 'https://shippo-static.s3.amazonaws.com/providers/200/USPS.png',
+            servicelevel: {
+                name: 'First-Class Package/Mail Parcel',
+                token: 'usps_first',
+            },
+            estimated_days: 5
+        };
+    }
+
+    global.logger.debug("LOWEST SHIPPING RATE", lowestRate)
+
+    return lowestRate;
 }
 
 

@@ -132,6 +132,15 @@ export default {
                 return name.toUpperCase()
             }
             return null;
+        },
+
+
+        cartEmptyRedirect(shoppingCart) {
+            if(shoppingCart && !shoppingCart.num_items) {
+                this.$router.push({ name: 'cart-empty' });
+                return true;
+            }
+            return false;
         }
     }
 }

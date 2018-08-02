@@ -22,9 +22,14 @@ export default {
     data: function() {
         return {
             currentStep: 1,
+            // shippingAddressStep: 1,
+            // shippingMethodStep: 2,
+            // placeOrderStep: 3
+
+            // Removing the Shipping Method selection step while we
+            // are only offering one selection:
             shippingAddressStep: 1,
-            shippingMethodStep: 2,
-            placeOrderStep: 3
+            placeOrderStep: 2
         }
     },
 

@@ -219,7 +219,7 @@
                             @click="submitShippingForm"
                             :disabled="!shippingButtonEnabled"
                             :loading="shippingFormIsLoading"
-                            round>{{ $t('CONTINUE TO SHIPPING METHOD') }}</el-button>
+                            round>{{ $t('CONTINUE TO PAYMENT') }}</el-button>
 
                 <bottom-popover width="225px"
                                 v-show="!shippingButtonEnabled" >{{ $t('fill_out_form_warning') }}</bottom-popover>
