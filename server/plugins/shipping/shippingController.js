@@ -526,20 +526,33 @@ async function createParcel(data) {
 
 
 async function createCustomsItemFromShoppingCart(ShoppingCart) {
-    const countryCode = ShoppingCart.get('shipping_countryCodeAlpha2');
-    const cartItems = ShoppingCart.get('cart_items');
+    try {
+        const cartJson = ShoppingCart.toJSON();
+        const numCartItems = Array.isArray(cartJson.cart_items) ? cartJson.cart_items.length : 0;
 
-    if(countryCode !== 'US') {
-        return await createCustomsItem({
-            description: 'Clothing',
-            quantity: cartItems.length,
-            net_weight: ShoppingCart.get('product_weight_total'),
-            mass_unit: 'oz',
-            value_amount: cartItems.length * 10, // total guess here: $10 * number of items?
-            value_currency: 'USD',
-            origin_country: 'US',
-            metadata: `Cart ID ${ShoppingCart.get('id')}`
-        });
+        if(!numCartItems) {
+            global.logger.error("In createCustomsItemFromShoppingCart", cartJson);
+            throw new Error('Can not create customs item from Shopping Cart because the cart contains zero items')
+        }
+
+        global.logger.debug("In createCustomsItemFromShoppingCart", cartJson);
+
+        if(cartJson.shipping_countryCodeAlpha2 !== 'US') {
+            return await createCustomsItem({
+                description: 'Clothing',
+                quantity: numCartItems,
+                net_weight: cartJson.product_weight_total,
+                mass_unit: 'oz',
+                value_amount: numCartItems * 10, // total guess here: $10 * number of items?
+                value_currency: 'USD',
+                origin_country: 'US',
+                metadata: `Cart ID ${cartJson.id}`
+            });
+        }
+    }
+    catch(err) {
+        global.logger.error("CREATE PARCEL ERROR", err)
+        throw err;
     }
 }
 
@@ -550,6 +563,8 @@ async function createCustomsItemFromShoppingCart(ShoppingCart) {
  * @param {*} ShoppingCart
  */
 async function createShipmentFromShoppingCart(ShoppingCart) {
+    global.logger.debug("In createShipmentFromShoppingCart", ShoppingCart.toJSON());
+
     let data = {
         async: false
     };

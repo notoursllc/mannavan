@@ -401,16 +401,27 @@ async function cartShippingSetAddressHandler(request, h) {
         updateData.sub_total = ShoppingCart.get('sub_total');
         updateData.sales_tax = salesTaxService.getSalesTaxAmount(updateData);
 
-        // This may change in the future when we offer the user the choice of several
-        // different shipping, but for now we are fetching the lowest shipping rate
-        // and saving it in the shopping cart
-        updateData.shipping_rate = await getLowestShippingRate(request);
+        global.logger.debug("cartShippingSetAddressHandler - CART UPDATE PARAMS", updateData);
 
-        global.logger.debug("cartShippingSetAddressHandler - UPDATING CART", updateData);
-
-        // Save the shipping params and the sales tax value in the model
+        // Save the shipping params and the sales tax value in the model:
+        // Kind of awkward, but need to update the ShoppingCart twice in this
+        // method because the getLowestShippingRate() method needs the shipping
+        // address data from the ShoppingCart object
         await ShoppingCart.save(
             updateData,
+            { method: 'update', patch: true }
+        );
+
+        // This may change in the future when we offer the user the choice of several
+        // different shipping rates, but for now the user doesn't get to choose and
+        // we are fetching the lowest shipping rate and saving it in the shopping cart
+        let updateData2 = {
+            shipping_rate: await getLowestShippingRate(request)
+        }
+
+        // Save the shipping rate in the ShoppingCart:
+        await ShoppingCart.save(
+            updateData2,
             { method: 'update', patch: true }
         );
 
