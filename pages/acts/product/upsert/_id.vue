@@ -416,9 +416,17 @@ export default {
 
                         <!-- package type -->
                         <form-row label="Shipping package type:">
-                            <bitwise-multi-select
+                            <!-- <bitwise-multi-select
                                 v-model="product.shipping_package_type"
-                                :options="packageTypeSelectOptions"></bitwise-multi-select>
+                                :options="packageTypeSelectOptions"></bitwise-multi-select> -->
+                            <el-select v-model="product.shipping_package_type">
+                                <el-option
+                                    v-for="(val, key) in packageTypeSelectOptions"
+                                    :key="val"
+                                    :label="key"
+                                    :value="val">
+                                </el-option>
+                            </el-select>
                         </form-row>
 
                     </div>
