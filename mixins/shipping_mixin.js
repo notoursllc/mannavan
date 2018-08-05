@@ -1,52 +1,32 @@
 'use strict';
 
 import queryString from 'query-string';
+import isObject from 'lodash.isobject';
 
 
 export default {
     methods: {
-        // goToProductDetails(seo_uri, productTypeName) {
-        //     this.$router.push({
-        //         name: 'type-name-seouri',
-        //         params: { name: productTypeName, seouri: seo_uri }
-        //     });
-        // },
-
-
-        // goToAdminProductDetails(id) {
-        //     this.$router.push({
-        //         name: 'acts-product-id',
-        //         params: { id }
-        //     });
-        // },
-
-
-        // goToAdminProductUpsert(productId) {
-        //     this.$router.push({
-        //         name: 'acts-product-upsert-id',
-        //         params: { id: productId }
-        //     });
-        // },
-
-
-        // goToAdminProductAdd() {
-        //     this.$router.push({
-        //         name: 'acts-product-upsert-id'
-        //     });
-        // },
-
-
-        // goToAdminProductList() {
-        //     this.$router.push({
-        //         name: 'acts-product-list'
-        //     });
-        // },
-
-
         async getPackageTypes(params) {
             let paramString = queryString.stringify(params, {arrayFormat: 'bracket'});
 
             const response = await this.$axios.$get(`/shipping/packagetypes?${paramString}`); // TODO: is there a XSS issue here?
+            return response.data;
+        },
+
+        async getPackageTypeById(id, options) {
+            let params = {};
+
+            if(isObject(options)) {
+                params = {
+                    ...options
+                };
+            }
+
+            params.id = id;
+
+            const response = await this.$axios.$get('/shipping/packagetype', {
+                params
+            });
             return response.data;
         },
 
@@ -63,9 +43,47 @@ export default {
         },
 
 
-        async deleteProductSize(id) {
-            const response = await this.$axios.$delete(`/shipping/packagetype`, { id })
+        async deletePackageType(id) {
+            console.log("DEL", id)
+            const response = await this.$axios.$delete('/shipping/packagetype', {
+                params: { id }
+            });
             return response.data;
+        },
+
+
+        goToPackageTypeList() {
+            this.$router.push({
+                name: 'acts-shipping-packagetypes-list'
+            });
+        },
+
+
+        goToPackageTypeUpsert(id) {
+            this.$router.push({
+                name: 'acts-shipping-packagetypes-upsert-id',
+                params: { id: id }
+            });
+        },
+
+        getShippingParcelDistanceUnits() {
+            return [
+                'cm',
+                'in',
+                'ft',
+                'mm',
+                'm',
+                'yd'
+            ]
+        },
+
+        getShippingParcelMassUnits() {
+            return [
+                'g',
+                'oz',
+                'lb',
+                'kg'
+            ]
         }
     }
 }

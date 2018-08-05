@@ -28,6 +28,19 @@ const after = function (server) {
 
         {
             method: 'GET',
+            path: '/shipping/packagetype',
+            options: {
+                description: 'Finds a package type by ID',
+                validate: {
+                    query: {
+                        id: Joi.string().uuid()
+                    }
+                },
+                handler: ShippingController.getPackageTypeByIdHandler
+            }
+        },
+        {
+            method: 'GET',
             path: `/shipping/packagetypes`,
             options: {
                 description: 'Gets a list of package types',
@@ -67,7 +80,7 @@ const after = function (server) {
             options: {
                 description: 'Deletes a package type',
                 validate: {
-                    payload: Joi.object({
+                    query: Joi.object({
                         id: Joi.string().uuid().required(),
                     })
                 },

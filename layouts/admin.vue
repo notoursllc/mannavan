@@ -91,6 +91,17 @@ export default {
                             @click="menuItemClick">List</el-menu-item>
                     </el-submenu>
 
+                    <el-submenu index="shipping_menu">
+                        <template slot="title">
+                            <span>Shipping</span>
+                        </template>
+
+                        <el-menu-item
+                            :route="{ name: 'acts-shipping-packagetypes-list' }"
+                            index="/shipping/packagetypes"
+                            @click="menuItemClick">Package Types</el-menu-item>
+                    </el-submenu>
+
                     <el-menu-item
                         :route="{ name: 'acts-reports' }"
                         index="/reports"
@@ -134,7 +145,7 @@ export default {
 @import "~assets/css/components/_variables.scss";
 @import "~assets/css/components/_mixins.scss";
 
-$sidenav-width-admin: 140px;
+$sidenav-width-admin: 200px;
 $header-height: 50px;
 
 .layoutContainer {

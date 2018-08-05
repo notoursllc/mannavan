@@ -38,7 +38,7 @@ function getPackageTypeSchema() {
         width: Joi.number().precision(2).min(0).required(),
         height: Joi.number().precision(2).min(0).allow(null),
         weight: Joi.number().precision(2).min(0).allow(null),
-        mass_unit: Joi.string().length(2).required(),
+        mass_unit: Joi.string().allow('oz').optional(),  // see note #1 below
         distance_unit: Joi.string().length(2).required(),
         created_at: Joi.date(),
         updated_at: Joi.date()
@@ -62,6 +62,25 @@ async function getPackageTypeByAttribute(attrName, attrValue) {
     }
 
     return await getPackageTypesModel().forge(forgeOpts).fetch();
+}
+
+
+/**
+ * Route handler for getting a PackageType by ID
+ *
+ * @param {*} request
+ * @param {*} h
+ */
+async function getPackageTypeByIdHandler(request, h) {
+    try {
+        const PackageType = await getPackageTypeByAttribute('id', request.query.id)
+        return h.apiSuccess(PackageType);
+    }
+    catch(err) {
+        global.logger.error(err);
+        global.bugsnag(err);
+        throw Boom.badRequest(err);
+    }
 }
 
 
@@ -155,10 +174,9 @@ async function packageTypeCreateHandler(request, h) {
  */
 async function packageTypeDeleteHandler(request, h) {
     try {
-        request.payload.updated_at = request.payload.updated_at || new Date();
-
+        // Note that a successful destroy returns an empty model (an empty object)
         const PackageType = await getPackageTypesModel().destroy(
-            { id: request.payload.id }
+            { id: request.query.id }
         );
 
         if(!PackageType) {
@@ -542,11 +560,12 @@ async function createCustomsItemFromShoppingCart(ShoppingCart) {
                 description: 'Clothing',
                 quantity: numCartItems,
                 net_weight: cartJson.product_weight_total,
-                mass_unit: 'oz',
                 value_amount: numCartItems * 10, // total guess here: $10 * number of items?
                 value_currency: 'USD',
                 origin_country: 'US',
-                metadata: `Cart ID ${cartJson.id}`
+                metadata: `Cart ID ${cartJson.id}`,
+                mass_unit: 'oz'  // see note #1 below
+
             });
         }
     }
@@ -659,7 +678,7 @@ async function createParcelsFromShoppingCart(ShoppingCart) {
                         height: parseFloat(obj.packageType.get('height')) || 0.75,
                         distance_unit: obj.packageType.get('distance_unit'),
                         weight: obj.totalWeight,
-                        mass_unit: 'oz',
+                        mass_unit: 'oz'  // see note #1 below
                     })
                 );
             });
@@ -703,8 +722,18 @@ module.exports = {
     createParcelsFromShoppingCart,
 
     // route handlers
+    getPackageTypeByIdHandler,
     packageTypeCreateHandler,
     packageTypeUpdateHandler,
     packageTypeDeleteHandler,
     packageTypeListHandler
 }
+
+
+/**
+ * NOTES:
+ *
+ * 1) In order to have mass unit consistency with the product weight and she shipping package weight,
+ *      I am forcing the 'oz' mass_unit so we can easily calculate the total weight of the package
+ *      (product weight + package weight)
+ */
