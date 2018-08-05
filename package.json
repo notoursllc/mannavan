@@ -70,7 +70,7 @@
     "mailgun-js": "^0.18.1",
     "node-sass": "^4.9.0",
     "nodemailer": "^4.6.7",
-    "nuxt": "^1.4.1",
+    "nuxt": "^1.4.2",
     "path": "^0.12.7",
     "pg": "^7.4.3",
     "promise.prototype.finally": "^3.1.0",
