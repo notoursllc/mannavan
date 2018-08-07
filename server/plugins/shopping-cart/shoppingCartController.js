@@ -407,7 +407,7 @@ async function cartShippingSetAddressHandler(request, h) {
         // Kind of awkward, but need to update the ShoppingCart twice in this
         // method because the getLowestShippingRate() method needs the shipping
         // address data from the ShoppingCart object
-        await ShoppingCart.save(
+        let UpdatedShoppingCart = await ShoppingCart.save(
             updateData,
             { method: 'update', patch: true }
         );
@@ -416,22 +416,21 @@ async function cartShippingSetAddressHandler(request, h) {
         // different shipping rates, but for now the user doesn't get to choose and
         // we are fetching the lowest shipping rate and saving it in the shopping cart
         let updateData2 = {
-            shipping_rate: await getLowestShippingRate(request)
+            shipping_rate: await getLowestShippingRate(UpdatedShoppingCart)
         }
 
         // Save the shipping rate in the ShoppingCart:
-        await ShoppingCart.save(
+        let UpdatedShoppingCart2 = await ShoppingCart.save(
             updateData2,
             { method: 'update', patch: true }
         );
 
-        // Get a fresh cart for the response with all of the relations
-        ShoppingCart = await getCart(cartToken);
+        global.logger.debug("Updated cart with shipping rate", UpdatedShoppingCart2.toJSON());
 
         // Response contains the cart token in the header
         // plus the shopping cart payload
         return h.apiSuccess(
-            ShoppingCart.toJSON()
+            UpdatedShoppingCart2.toJSON()
         ).header('X-Cart-Token', cartToken);
     }
     catch(err) {
@@ -460,11 +459,16 @@ async function getCartShippingRatesHandler(request, h) {
 }
 
 
-async function getLowestShippingRate(request) {
+/**
+ * Gets the lowest shipping rate via the Shippo API
+ *
+ * @param {*} ShoppingCart  This needs to be a ShoppingCart
+ *                          object with the cart_items relations
+ */
+async function getLowestShippingRate(ShoppingCart) {
     let lowestRate = null;
 
     // Get a fresh cart with all of the relations
-    const ShoppingCart = await getCart(request.pre.m1.cartToken);
     const shipment = await shippingController.createShipmentFromShoppingCart(ShoppingCart);
 
     if(Array.isArray(shipment.rates)) {
