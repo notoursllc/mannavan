@@ -42,7 +42,7 @@ export default {
     data: function() {
         return {
             shippingButtonEnabled: false,
-            shippingFormIsLoading: false
+            loading: false
         }
     },
 
@@ -107,8 +107,6 @@ export default {
                 let self = this;
                 let c = this.shoppingCart;
 
-                this.shippingFormIsLoading = true;
-
                 if(currentNotification) {
                     currentNotification.close();
                 }
@@ -121,8 +119,6 @@ export default {
                     postal_code: c.shipping_postalCode,
                     country_code: c.shipping_countryCodeAlpha2
                 });
-
-                this.shippingFormIsLoading = false;
 
                 const validation = Array.isArray(result) ? result[0] : result;
                 if(isObject(validation)) {
@@ -197,6 +193,12 @@ export default {
                     type: 'error'
                 });
             }
+        },
+
+        async continueToPayment() {
+            this.loading = true;
+            await this.submitShippingForm();
+            this.loading = false;
         }
 
     },
@@ -218,7 +220,7 @@ export default {
 </script>
 
 <template>
-    <div class="pageContainerMax pageContainerMaxSkinny">
+    <div class="pageContainerMax pageContainerMaxSkinny" v-loading="loading" >
         <!-- <div class="fs24 tac mbl">{{ $t('Shipping address') }}</div> -->
         <div class="tac mbl">
             <icon-address
@@ -228,7 +230,7 @@ export default {
             <div class="colorGreen fs20">{{ $t('Shipping address') }}</div>
         </div>
 
-        <div v-loading="shippingFormIsLoading" class="mtm">
+        <div class="mtm">
             <shipping-billing-form type="shipping" @valid="val => { shippingButtonEnabled = val }"></shipping-billing-form>
 
             <div class="ptl displayTable" style="margin:0 auto">
@@ -240,9 +242,8 @@ export default {
             <div class="inlineBlock">
                 <el-button type="success"
                             size="large"
-                            @click="submitShippingForm"
+                            @click="continueToPayment"
                             :disabled="!shippingButtonEnabled"
-                            :loading="shippingFormIsLoading"
                             round>{{ $t('CONTINUE TO PAYMENT') }}</el-button>
 
                 <bottom-popover width="225px"
