@@ -461,12 +461,17 @@ export default {
     },
 
     async created() {
-        if(!this.cartEmptyRedirect(this.shoppingCart)) {
-            await this.hostedFieldsInit();
-
-            this.$store.dispatch('ui/IN_CHECKOUT_FLOW', true);
-            this.$store.dispatch('ui/pageTitle', this.$t('Checkout'));
+        if(this.cartEmptyRedirect(this.shoppingCart)) {
+            return;
         }
+
+        if(this.invalidShippingFormRedirect()) {
+            return;
+        }
+
+        await this.hostedFieldsInit();
+        this.$store.dispatch('ui/IN_CHECKOUT_FLOW', true);
+        this.$store.dispatch('ui/pageTitle', this.$t('Checkout'));
     },
 
     head() {

@@ -172,6 +172,10 @@
         watch: {
             '$v.$invalid': function (to, from) {
                 // console.log("INVALID WATCH", to, this.$v);
+                this.$store.dispatch(
+                    this.type === 'shipping' ? 'shoppingcart/SHIPPING_ADDRESS_IS_VALID' : 'shoppingcart/BILLING_ADDRESS_IS_VALID',
+                    !to
+                );
                 this.$emit('valid', !to)
             }
         },

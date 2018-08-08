@@ -50,6 +50,8 @@ export const state = () => ({
         updated: null,
         cache: null
     },
+    shippingAddressIsValid: false,
+    billingAddressIsValid: false,
 
     //test
     updated: null
@@ -99,7 +101,15 @@ export const mutations = {
     CHECKOUT_CLEANUP: (state, data) => {
         state.cart = getCartDefaults();
         state.token = null;
-    }
+    },
+
+    SHIPPING_ADDRESS_IS_VALID: (state, isValid) => {
+        state.shippingAddressIsValid = isValid;
+    },
+
+    BILLING_ADDRESS_IS_VALID: (state, isValid) => {
+        state.billingAddressIsValid = isValid;
+    },
 }
 
 export const actions = {
@@ -138,6 +148,14 @@ export const actions = {
     CHECKOUT_CLEANUP: ({ commit }) => {
         commit('CHECKOUT_CLEANUP');
         commit('CLEAR_SHIPPING_RATES_CACHE');
+    },
+
+    SHIPPING_ADDRESS_IS_VALID: ({ commit }, isValid) => {
+        commit('SHIPPING_ADDRESS_IS_VALID', isValid)
+    },
+
+    BILLING_ADDRESS_IS_VALID: ({ commit }, isValid) => {
+        commit('BILLING_ADDRESS_IS_VALID', isValid)
     }
 }
 

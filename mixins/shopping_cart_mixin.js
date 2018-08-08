@@ -141,6 +141,15 @@ export default {
                 return true;
             }
             return false;
+        },
+
+        invalidShippingFormRedirect() {
+            if(!this.$store.state.shoppingcart.shippingAddressIsValid) {
+                this.$router.push({ name: 'cart-checkout' });
+                return true;
+            }
+
+            return false;
         }
     }
 }
