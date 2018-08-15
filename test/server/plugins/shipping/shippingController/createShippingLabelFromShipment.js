@@ -4,8 +4,8 @@ const { expect } = require('code');
 const Lab = require('lab');
 const { after, before, describe, it } = exports.lab = Lab.script();
 
-const { getServer, getController, getShipmentData } = require('./_shippingControllerHelper');
-const shippingController = getController();
+const { getShipmentData } = require('./_shippingControllerHelper');
+const { createShippingLabelFromShipment } = require('../../../../../server/plugins/shipping/shippoAPI/transactions.js')
 
 
 function getCreateShippingLabelRequestData() {
@@ -21,12 +21,9 @@ function getCreateShippingLabelRequestData() {
 }
 
 
-describe('Shipping Controller: createShippingLabelFromShipment', () => {
+describe('ShippoAPI: createShippingLabelFromShipment', () => {
 
     it('errors on missing "carrier_account" value when creating a shipping label', async() => {
-        const server = await getServer();
-        shippingController.setServer(server);
-
         let data = getCreateShippingLabelRequestData();
         delete data.carrier_account;
 
@@ -34,7 +31,7 @@ describe('Shipping Controller: createShippingLabelFromShipment', () => {
         let error = null;
 
         try {
-            res = await shippingController.createShippingLabelFromShipment(data)
+            res = await createShippingLabelFromShipment(data)
         }
         catch(err) {
             error = err;
@@ -42,16 +39,11 @@ describe('Shipping Controller: createShippingLabelFromShipment', () => {
 
         expect( res ).not.to.be.an.object();
         expect( error ).to.be.an.object();
-        expect( error.message ).to.include('The data you sent was not accepted as valid');
-
-        server.stop();
+        expect( error.message ).to.include('Request failed with status code 400');
     });
 
 
     it('errors on missing "servicelevel_token" value when creating a shipping label', async() => {
-        const server = await getServer();
-        shippingController.setServer(server);
-
         let data = getCreateShippingLabelRequestData();
         delete data.servicelevel_token;
 
@@ -59,7 +51,7 @@ describe('Shipping Controller: createShippingLabelFromShipment', () => {
         let error = null;
 
         try {
-            res = await shippingController.createShippingLabelFromShipment(data)
+            res = await createShippingLabelFromShipment(data)
         }
         catch(err) {
             error = err;
@@ -67,16 +59,11 @@ describe('Shipping Controller: createShippingLabelFromShipment', () => {
 
         expect( res ).not.to.be.an.object();
         expect( error ).to.be.an.object();
-        expect( error.message ).to.include('The data you sent was not accepted as valid');
-
-        server.stop();
+        // expect( error.message ).to.include('Request failed with status code 400');
     });
 
 
     it('errors if "label_file_type" is an incorrect value', async() => {
-        const server = await getServer();
-        shippingController.setServer(server);
-
         let data = getCreateShippingLabelRequestData();
         data.label_file_type = "FOO";
 
@@ -84,7 +71,7 @@ describe('Shipping Controller: createShippingLabelFromShipment', () => {
         let error = null;
 
         try {
-            res = await shippingController.createShippingLabelFromShipment(data)
+            res = await createShippingLabelFromShipment(data)
         }
         catch(err) {
             error = err;
@@ -92,7 +79,7 @@ describe('Shipping Controller: createShippingLabelFromShipment', () => {
 
         expect( res ).not.to.be.an.object();
         expect( error ).to.be.an.object();
-        expect( error.message ).to.include('The data you sent was not accepted as valid');
+        expect( error.message ).to.include('Request failed with status code 400');
     });
 
 /*
@@ -102,7 +89,7 @@ describe('Shipping Controller: createShippingLabelFromShipment', () => {
         let error = null;
 
         try {
-            shipment = await shippingController.createShippingLabelFromShipment(data)
+            shipment = await createShippingLabelFromShipment(data)
             // shippingController.createShipment(
             //     getShipmentData()
             // ).then((result) => {

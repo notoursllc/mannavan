@@ -538,6 +538,7 @@ async function cartCheckoutHandler(request, h) {
         const cartToken = request.pre.m1.cartToken;
         const ShoppingCart = request.pre.m1.ShoppingCart;
 
+        // throw Error
         let transactionObj = await runPayment({
             paymentMethodNonce: request.payload.nonce,
             amount: ShoppingCart.get('grand_total'),
@@ -572,6 +573,8 @@ async function cartCheckoutHandler(request, h) {
                 submitForSettlement: true
             }
         });
+
+
 
         // If the Braintree transaction is successful then anything that happens after this
         // (i.e saving the payment details to DB) needs to fail silently, as the user has

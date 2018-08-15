@@ -5,8 +5,10 @@ const Boom = require('boom');
 const Joi = require('joi');
 const isObject = require('lodash.isobject');
 const forEach = require('lodash.foreach');
-const shippo = require('shippo')(process.env.SHIPPO_API_KEY_TEST);
 const helpers = require('../../helpers.service');
+const { createCustomsItem } = require('./shippoAPI/customs_items.js');
+const { createShipment } = require('./shippoAPI/shipments.js');
+const { createParcel } = require('./shippoAPI/parcels.js');
 
 const wreck = Wreck.defaults({
     baseUrl: 'https://api.shipengine.com/v1',
@@ -360,187 +362,14 @@ async function rates(request, h) {
 
 
 
-/*************************************
- * SHIPPO
- *************************************/
-
- /**
- * The heart of the Shippo API, a shipment is made up of "to" and "from" addresses
- * and the parcel to be shipped. Once created, a shipment object can be used to
- * retrieve shipping rates and purchase a shipping label.
- *
- * The purpose of the Shipment object is to retrieve rates. It represents a request to
- * ship a given package between the sender and recipient addresses. You could create the
- * Address and Parcel objects in separate API calls but we suggest creating the Address and Parcel
- * objects inline as it will save you time and extra network calls.
- *
- * https://goshippo.com/docs/reference/js#shipments-create
- *
- * @param {*} data
- */
-async function createShipment(data) {
-    try {
-        let result = await shippo.shipment.create(data);
-        global.logger.debug("RESULT: shippo.shipment.create", result);
-        return result;
-    }
-    catch(err) {
-        global.logger.error("CREATE SHIPMENT ERROR", err)
-        global.logger.error("CREATE SHIPMENT ERROR - DATA", data)
-        throw err;
-    }
-}
 
 
-/**
- * https://goshippo.com/docs/reference/js#shipments-list
- */
-async function listShipments() {
-    try {
-        return await shippo.shipment.list();
-    }
-    catch(err) {
-        global.logger.error("LIST SHIPMENTS ERROR", err)
-        throw err;
-    }
-}
 
 
-/**
- * https://goshippo.com/docs/reference/js#shipments-retrieve
- *
- * @param {*} id
- */
-async function getShipment(id) {
-    try {
-        return await shippo.shipment.retrieve(id);
-    }
-    catch(err) {
-        global.logger.error("GET SHIPMENT ERROR", err)
-        throw err;
-    }
-}
 
 
-async function createCustomsItem(data) {
-    try {
-        return await shippo.customsitem.create(data);
-    }
-    catch(err) {
-        global.logger.error("CREATE CUSTOMS ITEM ERROR", err)
-        throw err;
-    }
-}
 
 
-/**
- * There are 2 APIs for creating shipping label ('transaction')
- * 1) Using the 'rate' id:  https://goshippo.com/docs/reference/js#transactions-create
- * 2) Using the 'shipment' object:  https://goshippo.com/docs/reference/js#transactions-create-instant
- *
- * This method is for #2
- *
- * @param {*} data
- */
-async function createShippingLabelFromShipment(data) {
-    try {
-        return await shippo.transaction.create(data);
-    }
-    catch(err) {
-        global.logger.error("CREATE SHIPPING LABEL ERROR", err)
-        throw err;
-    }
-}
-
-
-/**
- * List all carrier accounts.
- */
-async function listCarrierAccounts() {
-    try {
-        return await shippo.carrieraccount.list();
-    }
-    catch(err) {
-        global.logger.error("LIST CARRIER ACCOUNTS ERROR", err)
-        throw err;
-    }
-}
-
-
-/**
- * Retrieve an existing carrier account by object id.
- */
-async function getCarrierAccount(id) {
-    try {
-        return await shippo.carrieraccount.retrieve(id);
-    }
-    catch(err) {
-        global.logger.error("GET CARRIER ACCOUNT ERROR", err)
-        throw err;
-    }
-}
-
-
-/**
- * Creates a new Customs Declaration object.
- *
- * @param {*} data
- */
-async function createCustomsDeclaration(data) {
-    try {
-        return await shippo.customsdeclaration.create(data)
-    }
-    catch(err) {
-        global.logger.error("CREATE CUSTOMS DECLARATION ERROR", err)
-        throw err;
-    }
-}
-
-
-/**
- * Retrieve the entire list of customs declaration objects.
- *
- * @param {*} data
- */
-async function listCustomsDeclarations() {
-    try {
-        return await shippo.customsdeclaration.list();
-    }
-    catch(err) {
-        global.logger.error("LIST CUSTOMS DECLARATIONS ERROR", err)
-        throw err;
-    }
-}
-
-
-/**
- * Retrieve a customs declaration object.
- *
- * @param {*} data
- */
-async function getCustomsDeclaration(id) {
-    try {
-        return await shippo.customsdeclaration.retrieve(id);
-    }
-    catch(err) {
-        global.logger.error("GET CUSTOMS DECLARATION ERROR", err)
-        throw err;
-    }
-}
-
-
-/**
- * https://goshippo.com/docs/reference/js#parcels-create
- */
-async function createParcel(data) {
-    try {
-        return await shippo.parcel.create(data);
-    }
-    catch(err) {
-        global.logger.error("CREATE PARCEL ERROR", err)
-        throw err;
-    }
-}
 
 
 async function createCustomsItemFromShoppingCart(ShoppingCart) {
@@ -695,30 +524,8 @@ module.exports = {
     getPackageTypesModel,
     getPackageTypeByAttribute,
     getPackageTypeSchema,
-
-    // Shippo:
-    // Carrier accounts
-    listCarrierAccounts,
-    getCarrierAccount,
-
-    // Customs
-    listCustomsDeclarations,
-    getCustomsDeclaration,
-    createCustomsDeclaration,
-    createCustomsItem,
     createCustomsItemFromShoppingCart,
-
-    // Labels
-    createShippingLabelFromShipment,
-
-    // Shipments
-    createShipment,
-    listShipments,
-    getShipment,
     createShipmentFromShoppingCart,
-
-    // Parcels
-    createParcel,
     createParcelsFromShoppingCart,
 
     // route handlers

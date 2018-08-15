@@ -2,12 +2,15 @@ const { expect } = require('code');
 const Lab = require('lab');
 const { after, before, describe, it } = exports.lab = Lab.script();
 const ShoppingCartMock = require('../../shopping-cart/ShoppingCartMock');
+const customs_declarations = require('../../../../../server/plugins/shipping/shippoAPI/customs_declarations.js');
+const customs_items = require('../../../../../server/plugins/shipping/shippoAPI/customs_items.js');
 
-const { getController, getCarrierAccount } = require('./_shippingControllerHelper');
+
+const { getController } = require('./_shippingControllerHelper');
 const shippingController = getController();
 
 
-describe('Shippo Controller: createCustomsDeclaration', () => {
+describe('ShippoAPI: createCustomsDeclaration', () => {
 
     // TODO
     it('should create a new customs declaration object', async() => {
@@ -30,51 +33,54 @@ describe('Shippo Controller: createCustomsDeclaration', () => {
 });
 
 
-describe('Shippo Controller: listCustomsDeclarations', () => {
+describe('ShippoAPI: listCustomsDeclarations', () => {
 
     it('should return list of customs declarations', async() => {
         let res = null;
         let error = null;
-        let account = await getCarrierAccount();
 
         try {
-            res = await shippingController.listCustomsDeclarations();
+            res = await customs_declarations.listCustomsDeclarations();
         }
         catch(err) {
             error = err;
             console.log(err);
         }
 
-        expect( res ).to.be.an.object();
+        expect( res ).to.be.an.array();
         expect( error ).not.to.be.an.object();
     });
 
 });
 
 
-describe('Shippo Controller: getCustomsDeclaration', () => {
+describe('ShippoAPI: getCustomsDeclaration', () => {
 
-    function getRequestData() {
-        return {
-            description: 'Clothing',
-            quantity: 2,
-            net_weight: '10.6',
-            mass_unit: 'oz',
-            value_amount: 2 * 10, // total guess here: $10 * number of items?
-            value_currency: 'USD',
-            origin_country: 'US',
-            metadata: `Cart ID: test`
-        }
-    }
+    //TODO: need to create one first
 
+    // it('should return an object if a valid id is passed', async() => {
+    //     let res = null;
+    //     let error = null;
+
+    //     let arr = await customs_declarations.listCustomsDeclarations();
+
+    //     try {
+    //         res = await customs_declarations.getCustomsDeclaration(arr[0].object_id);
+    //     }
+    //     catch(err) {
+    //         error = err;
+    //     }
+
+    //     expect( res ).to.be.an.object();
+    //     expect( error ).not.to.be.an.object();
+    // });
 
     it('should return an error if an invalid id is passed', async() => {
         let res = null;
         let error = null;
-        let account = await getCarrierAccount();
 
         try {
-            res = await shippingController.getCustomsDeclaration('123');
+            res = await customs_declarations.getCustomsDeclaration('123');
         }
         catch(err) {
             error = err;
@@ -87,7 +93,7 @@ describe('Shippo Controller: getCustomsDeclaration', () => {
 });
 
 
-describe('Shippo Controller: createCustomsItem()', () => {
+describe('ShippoAPI: createCustomsItem()', () => {
 
     function getRequestData() {
         return {
@@ -120,7 +126,7 @@ describe('Shippo Controller: createCustomsItem()', () => {
         let error = null;
 
         try {
-            customsItem = await shippingController.createCustomsItem(data)
+            customsItem = await customs_items.createCustomsItem(data)
         }
         catch(err) {
             error = err;

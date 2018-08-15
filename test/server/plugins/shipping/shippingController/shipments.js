@@ -8,6 +8,7 @@ const serverSetup = require('../_serverSetup');
 
 const { getServer, getController, getShipmentData } = require('./_shippingControllerHelper');
 const ShoppingCartMock = require('../../shopping-cart/ShoppingCartMock');
+const { createShipment } = require('../../../../../server/plugins/shipping/shippoAPI/shipments.js')
 const shippingController = getController();
 
 
@@ -23,7 +24,7 @@ async function expectErrorOnMissingShippingArgument(arg) {
     let error = null;
 
     try {
-        res = await shippingController.createShipment(data)
+        res = await createShipment(data)
     }
     catch(err) {
         error = err;
@@ -48,7 +49,7 @@ async function expectErrorOnMissingAddressArgument(key, addressProp) {
     let error = null;
 
     try {
-        res = await shippingController.createShipment(data)
+        res = await createShipment(data)
     }
     catch(err) {
         error = err;
@@ -62,7 +63,7 @@ async function expectErrorOnMissingAddressArgument(key, addressProp) {
 }
 
 
-describe('Shipping Controller: createShipment()', () => {
+describe('ShippoAPI: createShipment()', () => {
 
     /*
     it('errors on missing "address_from" value', async () => {
@@ -125,7 +126,7 @@ describe('Shipping Controller: createShipment()', () => {
             let error = null;
 
             try {
-                shipment = await shippingController.createShipment(data)
+                shipment = await createShipment(data)
             }
             catch(err) {
                 error = err;
@@ -152,7 +153,7 @@ describe('Shipping Controller: createShipment()', () => {
         let error = null;
 
         try {
-            shipment = await shippingController.createShipment(data);
+            shipment = await createShipment(data);
         }
         catch(err) {
             error = err;
@@ -160,8 +161,8 @@ describe('Shipping Controller: createShipment()', () => {
         }
 
         expect( shipment ).not.to.be.an.object();
-        // expect( error ).to.be.an.object();
-        expect( error.message ).to.include('The data you sent was not accepted as valid');
+        expect( error ).to.be.an.object();
+        expect( error.message ).to.include('Request failed with status code 400');
 
         server.stop();
     });

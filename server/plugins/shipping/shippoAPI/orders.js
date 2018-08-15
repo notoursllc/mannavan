@@ -1,26 +1,14 @@
 'use strict';
 
-const Boom = require('boom');
-const isObject = require('lodash.isobject');
-const { getAxios } = require('./helpers')
-
-const $axios = getAxios();
-
+const { getList, getSingle, postCreate } = require('./helpers')
+const basePath = '/orders';
 
 /**
  * API REFERENCE: https://goshippo.com/docs/reference/js#orders-create
  * DOCS: https://goshippo.com/docs/orders/#create-order
  */
 async function listAllOrders() {
-    try {
-        const { data } = await $axios.get('/orders');
-        return data.results || [];
-    }
-    catch(error) {
-        global.logger.error(error);
-        global.bugsnag(error);
-        throw Boom.badRequest(error);
-    }
+    return await getList(basePath)
 }
 
 
@@ -29,15 +17,7 @@ async function listAllOrders() {
  * DOCS: https://goshippo.com/docs/orders/#retrieve-order
  */
 async function getOrder(orderObjectId) {
-    try {
-        const { data } = await $axios.get(`/orders/${orderObjectId}/`);
-        return data;
-    }
-    catch(error) {
-        global.logger.error(error);
-        global.bugsnag(error);
-        throw Boom.badRequest(error);
-    }
+    return await getSingle(`${basePath}/${orderObjectId}`)
 }
 
 
@@ -46,17 +26,7 @@ async function getOrder(orderObjectId) {
  * DOCS: https://goshippo.com/docs/orders/#retrieve-order
  */
 async function createOrder(data) {
-    const d = isObject(data) ? data : {};
-
-    try {
-        const { data } = await $axios.post('/orders', d);
-        return data;
-    }
-    catch(error) {
-        global.logger.error(error);
-        global.bugsnag(error);
-        throw Boom.badRequest(error);
-    }
+    return await postCreate(basePath, data)
 }
 
 

@@ -4,6 +4,8 @@ const Hoek = require('hoek');
 const testHelpers = require('../../../testHelpers');
 const serverSetup = require('../_serverSetup');
 const shippingController = require('../../../../../server/plugins/shipping/shippingController');
+const carrier_accounts = require('../../../../../server/plugins/shipping/shippoAPI/carrier_accounts.js');
+
 
 
 function getController() {
@@ -22,8 +24,8 @@ async function getServer() {
 
 async function getCarrierAccount(index) {
     const key = index ? parseInt(index, 10) : 0;
-    const res = await shippingController.listCarrierAccounts();
-    return res.results[key];
+    const results = await carrier_accounts.listCarrierAccounts();
+    return results[key];
 }
 
 

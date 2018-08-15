@@ -4,21 +4,18 @@ const { expect } = require('code');
 const Lab = require('lab');
 const { after, before, describe, it } = exports.lab = Lab.script();
 
-const { getServer, getController, getCarrierAccount } = require('./_shippingControllerHelper');
-const shippingController = getController();
+const { getCarrierAccount } = require('../shippingController/_shippingControllerHelper');
+const carrier_accounts = require('../../../../../server/plugins/shipping/shippoAPI/carrier_accounts');
 
 
-describe('Shipping Controller: listCarrierAccounts', () => {
+describe('ShippoAPI: listCarrierAccounts', () => {
 
     it('should return a list of carrier accounts', async() => {
-        const server = await getServer();
-        shippingController.setServer(server);
-
         let res = null;
         let error = null;
 
         try {
-            res = await shippingController.listCarrierAccounts();
+            res = await carrier_accounts.listCarrierAccounts();
         }
         catch(err) {
             error = err;
@@ -27,51 +24,41 @@ describe('Shipping Controller: listCarrierAccounts', () => {
 
         // console.log("CARRIER ACCOUNTS", res)
 
-        expect( res ).to.be.an.object();
-        expect( res.results ).to.be.an.array();
+        expect( res ).to.be.an.array();
         expect( error ).not.to.be.an.object();
-
-        server.stop();
     });
 
 });
 
 
-describe('Shippo Controller: getCarrierAccount', () => {
+describe('ShippoAPI: getCarrierAccount', () => {
 
     it('should return a carrier account for the given id', async() => {
-        const server = await getServer();
-        shippingController.setServer(server);
-
         let res = null;
         let error = null;
         let account = await getCarrierAccount();
 
         try {
-            res = await shippingController.getCarrierAccount(account.object_id);
+            res = await carrier_accounts.getCarrierAccount(account.object_id);
         }
         catch(err) {
             error = err;
             console.log(err);
         }
 
+        // console.log("GET CARRIER ACCOUNT", res)
+
         expect( res ).to.be.an.object();
         expect( error ).not.to.be.an.object();
-
-        server.stop();
     });
 
 
     it('should return an error if an invalid id is passed', async() => {
-        const server = await getServer();
-        shippingController.setServer(server);
-
         let res = null;
         let error = null;
-        let account = await getCarrierAccount();
 
         try {
-            res = await shippingController.getCarrierAccount('123');
+            res = await carrier_accounts.getCarrierAccount('123');
         }
         catch(err) {
             error = err;
@@ -79,8 +66,6 @@ describe('Shippo Controller: getCarrierAccount', () => {
 
         expect( res ).not.to.be.an.object();
         expect( error ).to.be.an.object();
-
-        server.stop();
     });
 
 });
