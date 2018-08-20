@@ -9,7 +9,7 @@ function getAxios() {
     if(!getAxios.$axios) {
         getAxios.$axios = axios.create({
             baseURL: 'https://api.goshippo.com',
-            timeout: 1000,
+            timeout: 10000,
             headers: {
                 'Authorization':  `ShippoToken ${process.env.SHIPPO_API_KEY_TEST}`,
                 'Accept': 'application/json',
