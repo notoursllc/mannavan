@@ -26,6 +26,8 @@ async function getOrder(orderObjectId) {
  * DOCS: https://goshippo.com/docs/orders/#retrieve-order
  */
 async function createOrder(data) {
+    global.logger.debug("CREATING SHIPPO ORDER", data);
+
     return await postCreate(basePath, data)
 }
 

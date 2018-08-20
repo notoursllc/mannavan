@@ -14,7 +14,6 @@ function getController() {
 
 
 async function getServer() {
-    let test = Hoek.clone(serverSetup.manifest)
     return await testHelpers.getServer(
         Hoek.clone(serverSetup.manifest),
         serverSetup.composeOptions

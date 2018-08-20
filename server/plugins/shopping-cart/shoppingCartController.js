@@ -6,11 +6,13 @@ const isObject = require('lodash.isobject');
 const uuidV4 = require('uuid/v4');
 const uuidValidate = require('uuid-validate');
 const Cookie = require('cookie');
+const accounting = require('accounting');
 const HelperService = require('../../helpers.service');
 const salesTaxService = require('./services/SalesTaxService');
 const shoppingCartEmailService = require('./services/ShoppingCartEmailService');
 const productsController = require('../products/productsController')
 const shippingController = require('../shipping/shippingController');
+const shippoOrdersAPI = require('../shipping/shippoAPI/orders');
 
 let server = null;
 
@@ -24,6 +26,9 @@ function getShoppingCartItemModel() {
     return server.app.bookshelf.model('ShoppingCartItem');
 }
 
+function getShoppingCartToShippoOrderModel() {
+    return server.app.bookshelf.model('ShoppingCartToShippoOrder');
+}
 
 function getPaymentModel() {
     return server.app.bookshelf.model('Payment');
@@ -531,14 +536,112 @@ async function cartShippingRateHandler(request, h) {
 };
 
 
+/**
+ * Creates an "Order" on Shippo using the ShoppingCart
+ * NOTE: The ShoppingCart with all relations is needed here!
+ *
+ * @param {*} ShoppingCart
+ */
+function createShippoOrderFromShoppingCart(ShoppingCart) {
+    return new Promise((resolve, reject) => {
+        let cart = ShoppingCart.toJSON();
+        let totalWeight = 0;
+
+        let data = {
+            to_address: {
+                city: cart.shipping_city,
+                company: cart.shipping_company,
+                country: cart.shipping_countryCodeAlpha2,
+                email: cart.shipping_email,
+                name: cart.shipping_fullName,
+                state: cart.shipping_state,
+                street1: cart.shipping_streetAddress,
+                zip: cart.shipping_postalCode
+            },
+            line_items: [],
+            placed_at: new Date().toISOString(),
+            order_number: cart.id,
+            order_status: 'PAID',
+            shipping_cost: cart.shipping_rate.amount,
+            shipping_cost_currency: cart.shipping_rate.currency,
+            shipping_method: cart.shipping_rate.servicelevel.name,
+            subtotal_price: cart.sub_total,
+            total_price: cart.grand_total,
+            total_tax: cart.sales_tax,
+            currency: 'USD',
+            weight: 0,
+            weight_unit: 'oz'
+        };
+
+        // building data.line_items
+        cart.cart_items.forEach((obj) => {
+            let itemWeight = obj.product.weight_oz * obj.qty;
+            totalWeight += itemWeight;
+
+            data.line_items.push({
+                quantity: obj.qty,
+                sku: obj.product.id,
+                title: obj.product.title,
+                total_price: obj.total_item_price,
+                currency: 'USD',
+                weight: accounting.toFixed(itemWeight, 2),
+                weight_unit: 'oz'
+            })
+        });
+
+        data.weight = totalWeight;
+
+        shippoOrdersAPI
+            .createOrder(data)
+            .then((ShippoOrder) => {
+                resolve(ShippoOrder);
+            })
+            .catch((err) => {
+                let msg = `ERROR CREATING SHIPPO ORDER: ${err}`;
+                global.logger.error(msg)
+                global.bugsnag(msg);
+
+                reject(err);
+            });
+    });
+}
+
+
+async function saveShippoOrder(cart_id, ShippoOrderJson) {
+    return new Promise((resolve, reject) => {
+        getShoppingCartToShippoOrderModel()
+            .forge()
+            .save(
+                {
+                    cart_id: cart_id,
+                    shippo_order: ShippoOrderJson
+                },
+                {
+                    method: 'insert'
+                }
+            )
+            .then((ShoppingCartToShippoOrder) => {
+                resolve(ShoppingCartToShippoOrder);
+            })
+            .catch((err) => {
+                let msg = `ERROR SAVING SHIPPO ORDER: ${err}`;
+                global.logger.error(msg)
+                global.bugsnag(msg);
+
+                reject(err);
+            });
+    });
+}
+
+
 // TODO: this function uses shoppingCartEmailService
 // Note: route handler calles the defined 'pre' method before it gets here
 async function cartCheckoutHandler(request, h) {
     try {
         const cartToken = request.pre.m1.cartToken;
-        const ShoppingCart = request.pre.m1.ShoppingCart;
+        const ShoppingCart = await getCart(cartToken);
 
-        // throw Error
+        // throws Error
         let transactionObj = await runPayment({
             paymentMethodNonce: request.payload.nonce,
             amount: ShoppingCart.get('grand_total'),
@@ -574,25 +677,25 @@ async function cartCheckoutHandler(request, h) {
             }
         });
 
-
-
-        // If the Braintree transaction is successful then anything that happens after this
-        // (i.e saving the payment details to DB) needs to fail silently, as the user has
-        // already been changed and we can't give the impression of an overall transaction
-        // failure that may prompt them to re-do the purchase.
+        // If we got here then the Braintree transaction was successful
+        // (because runPayment() throws an Error)
+        // Anything that happens after this (i.e saving the payment details to DB)
+        // needs to fail silently, as the user has already been changed and we can't
+        // give the impression of an overall transaction failure that may prompt them
+        // to re-do the purchase.
 
         // Saving the payment transaction whether it was successful (transactionObj.success === true)
         // or not (transactionObj.success === false)
         // Any failures that happen while saving the payment info do not affect the
         // braintree transaction and thus should fail silently.
-        try {
-            await savePayment(ShoppingCart.get('id'), transactionObj)
-        }
-        catch(err) {
-            let msg = `ERROR SAVING PAYMENT INFO: ${err}`;
-            global.logger.error(msg)
-            global.bugsnag(msg);
-        }
+        // NOTE: doing nothing with the promise response here (Payment).  The method logs errors too
+        savePayment(ShoppingCart.get('id'), transactionObj)
+
+        // Create the Order in Shippo so a shipping label can be created in the future.
+        createShippoOrderFromShoppingCart(ShoppingCart).then((ShippoOrder) => {
+            // todo: needs testing
+            saveShippoOrder(ShoppingCart.get('id'), ShippoOrder);
+        })
 
         // Updating the cart with the billing params and the 'closed_at'
         // timestamp if transaction was successful:
@@ -811,23 +914,38 @@ async function getPaymentClientTokenHandler(request, h) {
  * @returns {Promise}
  */
 async function savePayment(cart_id, transactionJson) {
-    if(!isObject(transactionJson) || !isObject(transactionJson.transaction)) {
-        throw new Error('An error occurred while processing the transaction: transactionJson.transaction is not an object')
-    }
-
-    const Payment = await getPaymentModel().forge().save(
-        {
-            cart_id: cart_id,
-            transaction_id: transactionJson.transaction.id,
-            transaction: transactionJson.transaction,
-            success: transactionJson.success || null
-        },
-        {
-            method: 'insert'
+    return new Promise((resolve, reject) => {
+        if(!isObject(transactionJson) || !isObject(transactionJson.transaction)) {
+            reject(new Error('An error occurred while processing the transaction: transactionJson.transaction is not an object'));
+            return;
         }
-    );
 
-    return Payment.toJSON();
+        // const Payment = await getPaymentModel().forge().save(
+        getPaymentModel()
+            .forge()
+            .save(
+                {
+                    cart_id: cart_id,
+                    transaction_id: transactionJson.transaction.id,
+                    transaction: transactionJson.transaction,
+                    success: transactionJson.success || null
+                },
+                {
+                    method: 'insert'
+                }
+            )
+            .then((Payment) => {
+                resolve(Payment.toJSON());
+                return;
+            })
+            .catch((err) => {
+                let msg = `ERROR SAVING PAYMENT INFO: ${err}`;
+                global.logger.error(msg)
+                global.bugsnag(msg);
+
+                reject(err);
+            });
+    });
 }
 
 
@@ -879,6 +997,8 @@ module.exports = {
     getShoppingCartModelSchema,
     getCartTokenFromJwt,
     getCart,
+    createShippoOrderFromShoppingCart,
+    saveShippoOrder,
 
     //payments
     getPaymentByAttribute,
