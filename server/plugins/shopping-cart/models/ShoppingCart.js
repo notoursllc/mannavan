@@ -84,11 +84,6 @@ module.exports = function (baseModel, bookshelf, server) {
                 return this.hasMany('Payment', 'cart_id');
             },
 
-            // http://bookshelfjs.org/#Model-instance-belongsTo
-            customer: function() {
-                return this.belongsTo('Customer', 'customer_id');
-            },
-
             // cart_id is the foreign key in ShoppingCartItem
             cart_items: function() {
                 return this.hasMany('ShoppingCartItem', 'cart_id');

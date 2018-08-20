@@ -5,7 +5,7 @@ exports.seed = (knex) => {
     return knex(CoreService.DB_TABLES.package_types)
         .del()
         // .then(() => {
-        //     return knex.raw(`ALTER SEQUENCE ${CoreService.DB_TABLES.customers}_id_seq RESTART WITH 1`);
+        //     return knex.raw(`ALTER SEQUENCE ${CoreService.DB_TABLES.package_types}_id_seq RESTART WITH 1`);
         // })
         .then(() => {
             let d = new Date();

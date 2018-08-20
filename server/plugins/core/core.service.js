@@ -2,7 +2,6 @@ const DB_TABLES = {
     carts: 'carts',
     cart_items: 'cart_items',
     cart_to_shippo_order: 'cart_to_shippo_order',
-    customers: 'customers',
     package_types: 'package_types',
     payments: 'payments',
     product_artists: 'product_artists',

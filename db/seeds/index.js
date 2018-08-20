@@ -1,4 +1,3 @@
-let customers = require('../initial-data/customers');
 let product_artists = require('../initial-data/product_artists');
 let product_pics = require('../initial-data/product_pics');
 let product_sizes = require('../initial-data/product_sizes');
@@ -17,11 +16,7 @@ let package_types = require('../initial-data/package_types');
  */
 exports.seed = (knex, Promise) => {
 
-    return customers.seed(knex, Promise)
-        // Product Artists
-        .then(() => {
-            return product_artists.seed(knex, Promise);
-        })
+    return product_artists.seed(knex, Promise)
 
         // Products
         .then(() => {

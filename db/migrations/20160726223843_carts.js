@@ -34,15 +34,8 @@ module.exports.up = (knex) => {
             t.timestamp('updated_at', true).nullable();
             t.timestamp('closed_at', true).nullable();
 
-            // Foreign Keys:
-            t.uuid('customer_id')
-                .references('id')
-                .inTable(CoreService.DB_TABLES.customers)
-                .onDelete('CASCADE');
-
             t.index([
-                'id',
-                'customer_id'
+                'id'
             ]);
         }
     );

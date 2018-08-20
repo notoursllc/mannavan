@@ -30,7 +30,6 @@ const webManifest = {
             // { plugin: './plugins/auth-scheme-jwt-cookie' },
             { plugin: './plugins/hapi-basic-auth' },
             { plugin: './plugins/core' },
-            { plugin: './plugins/customer' },
             { plugin: './plugins/products' },
             {
                 plugin: './plugins/shipping',
