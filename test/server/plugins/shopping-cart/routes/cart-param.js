@@ -1,7 +1,6 @@
 const Lab = require('lab');
 const Code = require('code');
-const testHelpers = require('../../../testHelpers');
-const serverSetup = require('../_serverSetup');
+const { getServer } = require('../_controllerHelper');
 
 const lab = exports.lab = Lab.script();
 const describe = lab.experiment;
@@ -10,22 +9,16 @@ const it = lab.test;
 
 
 describe('Testing route: GET /cart/{param*}', () => {
-    it('should return a 404 response', (done) => {
-        testHelpers
-            .startServerAndGetHeaders(serverSetup.manifest, serverSetup.composeOptions)
-            .then(({err, server, headers}) => {
-                expect(err).not.to.exist();
 
-                const request = {
-                    method: 'GET',
-                    url: '/cart/foo',
-                    headers
-                };
+    it('should return a 404 response', async () => {
+        const server = await getServer();
 
-                server.inject(request, (res) => {
-                    expect(res.statusCode, 'Status code').to.equal(404);
-                    testHelpers.destroyKnexAndStopServer(server, done);
-                });
-            });
+        let { statusCode } = await server.inject({
+            method: 'GET',
+            url: '/cart/foo'
+        });
+
+        expect(statusCode, 'Status code').to.equal(404);
     });
+
 });

@@ -342,6 +342,8 @@ async function cartItemRemoveHandler(request, h) {
         const cartToken = request.pre.m1.cartToken;
         const ShoppingCartItem = await getShoppingCartItemModel().findById(request.payload.id);
 
+        global.logger.debug("REMOVING CART ITEM", ShoppingCartItem ? ShoppingCartItem.toJSON() : ShoppingCartItem);
+
         if(ShoppingCartItem) {
             await ShoppingCartItem.destroy();
         }

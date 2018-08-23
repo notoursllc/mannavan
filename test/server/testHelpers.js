@@ -2,8 +2,9 @@ require('dotenv').config();
 
 const Server = require('../../server');
 const isObject = require('lodash.isobject');
-const forEach = require('lodash.foreach');
 const queryString = require('query-string');
+
+let cartToken = null;
 
 
 function destroyKnexAndStopServer(server, done) {
@@ -59,8 +60,6 @@ function setCartCookie(server, callback) {
          });
 
         request.state['cart-jwt'] = res.headers.authorization
-        console.log("CART_JWT COOKIE VALUE", request.state['cart-jwt']);
-
         callback();
     });
 }
@@ -76,6 +75,9 @@ function getJwtHeaders(server, callback) {
             cookie: 'cart-jwt=' + res.headers.authorization
         };
         callback(headers);
+    })
+    .catch((err) => {
+        console.error("ERROR GETTING JWT", err)
     });
 }
 
@@ -87,6 +89,7 @@ async function startServer(manifest, options) {
 async function getServer(manifest, options) {
     return await startServer(manifest, options)
 }
+
 
 
 function startServerAndGetHeaders(manifest, composeOptions) {
@@ -123,8 +126,8 @@ function getRegistrationIndexFromManifest(path, manifest) {
     let i = -1;
 
     if(isObject(manifest) && Array.isArray(manifest.register.plugins)) {
-        forEach(manifest.register.plugins, (obj, index) => {
-            if(isObject(obj) && isObject(obj.plugin) && obj.plugin.register === path) {
+        manifest.register.plugins.forEach((obj, index) => {
+            if(isObject(obj) && obj.plugin === path) {
                 i = index;
             }
         })
@@ -136,14 +139,13 @@ function getRegistrationIndexFromManifest(path, manifest) {
 
 function spliceRegistrationFromManifest(path, manifest) {
     let index = getRegistrationIndexFromManifest(path, manifest);
-
     if(index > -1) {
         manifest.register.plugins.splice(index, 1);
     }
 }
 
 
-function getProduct(server, headers, paramString) {
+async function getProduct(server, paramString) {
     let paramStringDefault = queryString.stringify(
         {
             where: ['is_available', '=', true],
@@ -154,30 +156,13 @@ function getProduct(server, headers, paramString) {
 
     let apiPrefix = getApiPrefix();
 
-    return server.inject({
+    let { result } = await server.inject({
         method: 'GET',
-        url: `${apiPrefix}/products?${paramString || paramStringDefault}`,
-        headers
-    })
-    .then((res) => {
-        let data = JSON.parse(JSON.stringify(res.result.data));
-        return data[0].id;
+        url: `${apiPrefix}/products?${paramString || paramStringDefault}`
     });
-}
 
-
-function addToCart(server, headers, productId, options) {
-    let opts = options || {qty: 1, size: 'SIZE_ADULT_3XL'};
-
-    return server.inject({
-        method: 'POST',
-        url: '/cart/item/add',
-        headers,
-        payload: {
-            id: productId,
-            options: opts
-        }
-    });
+    let data = JSON.parse(JSON.stringify(result.data));
+    return data[0].id;
 }
 
 
@@ -207,7 +192,7 @@ function getBasicManifest() {
                     plugin: './plugins/bookshelf-orm',
                     options: {
                         knex: {
-                            debug: true
+                            debug: false
                         }
                     }
                 },
@@ -218,6 +203,48 @@ function getBasicManifest() {
     };
 
     return manifest;
+}
+
+
+async function addToCart(server, productId, options) {
+    let opts = options || {qty: 1, size: 'SIZE_ADULT_3XL'};
+
+    let config = {
+        method: 'POST',
+        url: '/cart/item/add',
+        payload: {
+            id: productId,
+            options: opts
+        }
+    };
+
+    let headers = getRequestHeader();
+
+    if(headers) {
+        config.headers = headers;
+    }
+
+    let response = await server.inject(config);
+    setCartToken(response);
+
+    return response;
+}
+
+
+function setCartToken(response) {
+    if(isObject(response) && isObject(response.headers) && response.headers['x-cart-token']) {
+        cartToken = response.headers['x-cart-token'];
+    }
+}
+
+function getRequestHeader() {
+    if(!cartToken) {
+        return;
+    }
+
+    return {
+        Cookie: `cart_token=${cartToken}`
+    }
 }
 
 
@@ -233,5 +260,7 @@ module.exports = {
     spliceRegistrationFromManifest,
     getProduct,
     addToCart,
-    getApiPrefix
+    getApiPrefix,
+    setCartToken,
+    getRequestHeader
 }

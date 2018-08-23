@@ -4,7 +4,7 @@ const Hoek = require('hoek');
 const Products = require('../../../../server/plugins/products');
 const BookshelfOrm = require('../../../../server/plugins/bookshelf-orm');
 const testHelpers = require('../../testHelpers');
-const serverSetup = require('./_serverSetup');
+const { getServer, getManifest } = require('./_controllerHelper');
 
 const lab = exports.lab = Lab.script();
 const describe = lab.experiment;
@@ -14,49 +14,45 @@ const it = lab.test;
 
 describe('Testing ShoppingCart plugin', () => {
 
-    it('errors on missing BookshelfOrm plugin', (done) => {
-        const manifest = Hoek.clone(serverSetup.manifest);
+    it('errors on missing BookshelfOrm plugin', async () => {
+        const manifest = Hoek.clone(getManifest());
         testHelpers.spliceRegistrationFromManifest('./plugins/bookshelf-orm', manifest);
 
-        testHelpers
-            .startServerAndGetHeaders(manifest, serverSetup.composeOptions)
-            .then(({err, server}) => {
-                expect(err).to.exist();
-                expect(err.message).to.include(`missing dependency ${BookshelfOrm.register.attributes.name}`);
+        let error = null;
 
-                testHelpers.destroyKnexAndStopServer(server, done);
-            });
+        try {
+            await getServer(manifest);
+        }
+        catch(err) {
+            error = err;
+        }
+
+        expect(error).to.exist();
+        expect(error.message).to.include(`missing dependency ${BookshelfOrm.plugin.pkg.name}`);
     });
 
 
-    it('errors on missing Products plugin', (done) => {
-        const manifest = Hoek.clone(serverSetup.manifest);
+    it('errors on missing Products plugin', async () => {
+        const manifest = Hoek.clone(getManifest());
         testHelpers.spliceRegistrationFromManifest('./plugins/products', manifest);
 
-        testHelpers
-            .startServerAndGetHeaders(manifest, serverSetup.composeOptions)
-            .then(({err, server}) => {
-                expect(err).to.exist();
-                expect(err.message).to.include(`missing dependency ${Products.register.attributes.name}`);
+        let error = null;
 
-                testHelpers.destroyKnexAndStopServer(server, done);
-            });
+        try {
+            await getServer(manifest);
+        }
+        catch(err) {
+            error = err;
+        }
+
+        expect(error).to.exist();
+        expect(error.message).to.include(`missing dependency ${Products.plugin.pkg.name}`);
     });
 
 
-    it('should have a ShoppingCart model', (done) => {
-        testHelpers
-            .startServerAndGetHeaders(serverSetup.manifest, serverSetup.composeOptions)
-            .then(({err, server}) => {
-                expect(err).not.to.exist();
-                expect(server.app.bookshelf.model('ShoppingCart')).to.be.a.function();
-
-                testHelpers.destroyKnexAndStopServer(server, done);
-            });
+    it('should have a ShoppingCart model', async () => {
+        const server = await getServer();
+        expect(server.app.bookshelf.model('ShoppingCart')).to.be.a.function();
     });
-
-    // describe('Testing exposed method: findOrCreate', () => {
-    //     //TODO
-    // });
 
 });
