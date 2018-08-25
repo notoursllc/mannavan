@@ -33,11 +33,11 @@ function getFakeShippingAddress() {
         firstName: 'wayne',
         lastName: 'gretzky',
         company: 'Edmonton Oilers',
-        streetAddress: '123 abc st',
-        city: 'Edmonton',
-        state: 'Alberta',
-        postalCode: '12345',
-        countryCodeAlpha2: 'CA',
+        streetAddress: '215 Clayton St.',
+        city: 'San Francisco',
+        state: 'CA',
+        postalCode: '94117',
+        countryCodeAlpha2: 'US',
         email: 'greg@greg.com'
     }
 }

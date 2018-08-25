@@ -636,6 +636,15 @@ async function saveShippoOrder(cart_id, ShippoOrderJson) {
 }
 
 
+async function getShippoOrder(cartId) {
+    const ShoppingCartToShippoOrder = await getShoppingCartToShippoOrderModel().query((qb) => {
+        qb.where('cart_id', '=', cartId);
+    }).fetch();
+
+    return ShoppingCartToShippoOrder;
+}
+
+
 // TODO: this function uses shoppingCartEmailService
 // Note: route handler calles the defined 'pre' method before it gets here
 async function cartCheckoutHandler(request, h) {
@@ -695,7 +704,6 @@ async function cartCheckoutHandler(request, h) {
 
         // Create the Order in Shippo so a shipping label can be created in the future.
         createShippoOrderFromShoppingCart(ShoppingCart).then((ShippoOrder) => {
-            // todo: needs testing
             saveShippoOrder(ShoppingCart.get('id'), ShippoOrder);
         })
 
@@ -1006,6 +1014,9 @@ module.exports = {
     getPaymentByAttribute,
     savePayment,
     runPayment,
+
+    // shippo orders
+    getShippoOrder,
 
     // route handlers:
     cartGetHandler,

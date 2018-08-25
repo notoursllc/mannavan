@@ -1,6 +1,7 @@
 const Lab = require('lab');
 const Code = require('code');
 const Hoek = require('hoek');
+const forEach = require('lodash.foreach');
 const testHelpers = require('../../../testHelpers');
 const { initController } = require('../_controllerHelper');
 
@@ -18,7 +19,7 @@ async function injectAndExpectStatusCode(server, request, expectedStatusCode) {
 
 describe('Testing route: POST /cart/checkout', () => {
 
-    it('should return 400 (Bad Request) when nonce is not sent in the payload', async (done) => {
+    it('should return 400 (Bad Request) when nonce is not sent in the payload', async () => {
         const { server } = await initController();
 
         const { statusCode } = await server.inject({
@@ -107,7 +108,7 @@ describe('Testing route: POST /cart/checkout', () => {
     });
 
 
-    it('should return 400 (Bad Request) when invalid billing data is sent', async (done) => {
+    it('should return 400 (Bad Request) when invalid billing data is sent', async () => {
         const { server } = await initController();
 
         const goodRequest = {
@@ -175,6 +176,74 @@ describe('Testing route: POST /cart/checkout', () => {
         request = Hoek.clone(goodRequest);
         request.payload.billing.phone = 123;
         await injectAndExpectStatusCode(server, request, 400);
+    });
+
+
+    it('should have all the right data in the DB after a successful checkout', { timeout: 10000 }, async () => {
+        return new Promise(async (resolve) => {
+            const { server, controller } = await initController();
+
+            // Get a random product
+            // Add product to the cart
+            let productId = await testHelpers.getProduct(server);
+            let addResposne = await testHelpers.addToCart(server, productId);
+            expect(addResposne.statusCode, 'Status code').to.equal(200);
+
+            // Set shipping data
+            let shippingData = testHelpers.getFakeShippingAddress();
+            let shippingPayload = {};
+            forEach(shippingData, (val, key) => {
+                shippingPayload[`shipping_${key}`] = val;
+            });
+
+            let shippingResponse = await server.inject({
+                method: 'POST',
+                url: '/cart/shipping/address',
+                headers: testHelpers.getRequestHeader(),
+                payload: shippingPayload
+            });
+            expect(shippingResponse.statusCode, 'Status code').to.equal(200);
+
+
+            let billingData = testHelpers.getFakeBillingAddress();
+            let checkoutPayload = {};
+            forEach(billingData, (val, key) => {
+                checkoutPayload[`billing_${key}`] = val;
+            });
+
+            let checkoutResponse = await server.inject({
+                method: 'POST',
+                url: '/cart/checkout',
+                headers: testHelpers.getRequestHeader(),
+                payload: {
+                    nonce: 'fake-valid-nonce',
+                    ...checkoutPayload
+                }
+            });
+
+            let transactionID = checkoutResponse.result.data.transactionId;
+
+            expect(checkoutResponse.statusCode, 'Status code').to.equal(200);
+            expect(transactionID, 'Transaction ID').to.exist();
+
+            // verify that the DB contains data about the transaction:
+            // wait a few seconds for the other DB transactions to happen
+            setTimeout(async () => {
+                // Payment:
+                const Payment = await controller.getPaymentByAttribute('transaction_id', transactionID);
+                const p = Payment.toJSON();
+                // console.log("PAYMENT", p)
+                expect(p.transaction_id, 'Payment Transaction ID').to.equal(transactionID);
+
+                // ShoppingCartToShippoOrder:
+                const ShippoOrder = await controller.getShippoOrder(p.shoppingCart.id)
+                const order = ShippoOrder.toJSON();
+                // console.log("SHIPPO ORDR", order)
+                expect(order.cart_id, 'ShoppingCartToShippoOrder Cart ID').to.equal(p.shoppingCart.id);
+
+                resolve();
+            }, 3000)
+        })
     });
 
 });

@@ -42,7 +42,7 @@ describe('Testing route: DELETE /cart/item/remove/{id}', () => {
         let productId = await testHelpers.getProduct(server);
         let { result } = await testHelpers.addToCart(server, productId);
         let { cart_items } = result.data;
-        console.log("++CART ITEMS1", cart_items)
+        // console.log("++CART ITEMS1", cart_items)
 
         // getting the id of the item we just added
         let cartItemId = null;
