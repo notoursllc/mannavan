@@ -284,7 +284,7 @@ export default {
 
                         <!-- weight_oz -->
                         <form-row label="Weight (oz):">
-                            <el-input-number v-model="product.weight_oz" controls-position="right" :step=".01"></el-input-number>
+                            <el-input-number v-model="product.weight_oz" controls-position="right" :step=".1"></el-input-number>
                         </form-row>
 
                         <!-- tax_code -->

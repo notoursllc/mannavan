@@ -360,18 +360,6 @@ async function rates(request, h) {
 };
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 async function createCustomsItemFromShoppingCart(ShoppingCart) {
     try {
         const cartJson = ShoppingCart.toJSON();
@@ -394,7 +382,6 @@ async function createCustomsItemFromShoppingCart(ShoppingCart) {
                 origin_country: 'US',
                 metadata: `Cart ID ${cartJson.id}`,
                 mass_unit: 'oz'  // see note #1 below
-
             });
         }
     }

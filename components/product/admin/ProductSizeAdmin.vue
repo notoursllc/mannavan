@@ -370,7 +370,7 @@ export default {
             </form-row>
 
             <form-row label="Weight (oz):">
-                <el-input-number v-model="sizeModal.size.weight_oz" controls-position="right" :step=".01"></el-input-number>
+                <el-input-number v-model="sizeModal.size.weight_oz" controls-position="right" :step=".1"></el-input-number>
             </form-row>
 
             <form-row label="">

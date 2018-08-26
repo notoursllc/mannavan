@@ -33,9 +33,34 @@ module.exports = function (baseModel, bookshelf, server) {
                     this.related('cart_items').forEach((model) => {
                         let prod = model.related('product');
                         let qty = model.get('qty');
+                        let variants = model.get('variants');
+                        let selectedSizeVariant = isObject(variants) ? variants.size : null;
+                        let finalWeight = 0;
 
                         if(prod && qty) {
-                            weight += parseFloat((prod.get('weight_oz') * qty) || 0);
+                            // If any of the product sizes has it's own weight_oz value, then that will
+                            // override the general weight_oz value of the product
+                            let prodSizes = prod.related('sizes');
+
+                            if(selectedSizeVariant && prodSizes) {
+                                // Note 'prodSizes' is a Bookshelf collection object,
+                                // which has a forEach function
+                                prodSizes.forEach((ProductSize) => {
+                                    let weight = ProductSize.get('weight_oz');
+
+                                    if(ProductSize.get('size') === selectedSizeVariant && parseFloat(weight) > 0) {
+                                        finalWeight = parseFloat(weight);
+                                    }
+                                })
+                            }
+
+                            // If none of the product sizes has a weight_oz value, then
+                            // use the general weight_oz value of the product
+                            if(!finalWeight) {
+                                finalWeight = prod.get('weight_oz')
+                            }
+
+                            weight += parseFloat((finalWeight * qty) || 0);
                         }
                     });
 

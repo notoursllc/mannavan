@@ -92,6 +92,11 @@ function getDefaultWithRelated() {
                 // Somehow this is resulting in no pics being returned sometimes.
                 // Commenting out for now
                 // query.limit(1);
+            },
+            // product sizes are needed for the calculation of shipping rates
+            'cart_items.product.sizes': (query) => {
+                query.where('is_visible', '=', true);
+                query.orderBy('sort', 'ASC');
             }
         }
     ];
