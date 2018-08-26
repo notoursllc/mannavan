@@ -221,6 +221,12 @@ export default {
                 :data="product.sizes"
                 class="widthAll">
 
+                <el-table-column type="expand">
+                    <template slot-scope="scope">
+                        <pre style="overflow-x:scroll">{{ scope.row | formatJson }}</pre>
+                    </template>
+                </el-table-column>
+
                 <!-- size name -->
                 <el-table-column prop="size" label="Size">
                     <template slot-scope="scope">{{ $t(scope.row.size) }}</template>
@@ -278,15 +284,13 @@ export default {
                 <!-- base price -->
                 <el-table-column
                     prop="base_price"
-                    label="Base price"
+                    label="Price"
                     align="right">
+                    <template slot-scope="scope">
+                        <div :class="{'colorGrayLighter strikethrough': scope.row.is_on_sale}">{{ scope.row.base_price }}</div>
+                        <div v-if="scope.row.is_on_sale">{{ scope.row.sale_price }}</div>
+                    </template>
                 </el-table-column>
-
-                <!-- sale price -->
-                <el-table-column
-                    prop="sale_price"
-                    label="Sale price"
-                    align="right"></el-table-column>
 
                 <!-- is on sale -->
                 <el-table-column
@@ -302,10 +306,20 @@ export default {
                     </template>
                 </el-table-column>
 
+                <!-- weight -->
+                <el-table-column
+                    prop="weight_oz"
+                    label="Weight (oz)"
+                    align="right">
+                    <template slot-scope="scope">
+                        <div v-if="scope.row.weight_oz > 0">{{ scope.row.weight_oz }}</div>
+                    </template>
+                </el-table-column>
+
                 <!-- inventory count -->
                 <el-table-column
                     prop="inventory_count"
-                    label="Inventory count"
+                    label="Inventory"
                     align="right">
                 </el-table-column>
             </el-table>
@@ -353,6 +367,10 @@ export default {
 
             <form-row label="Inventory count:">
                 <el-input-number v-model="sizeModal.size.inventory_count" controls-position="right" :step="1"></el-input-number>
+            </form-row>
+
+            <form-row label="Weight (oz):">
+                <el-input-number v-model="sizeModal.size.weight_oz" controls-position="right" :step=".01"></el-input-number>
             </form-row>
 
             <form-row label="">

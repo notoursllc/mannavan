@@ -50,7 +50,10 @@ function getSizeTypeSortOrder(size) {
     try {
         request.payload.sort = request.payload.sort || getSizeTypeSortOrder(request.payload.size)
 
-        const ProductSize = await getModel().create(request.payload);
+        const ProductSize = await getModel().forge().save(
+            request.payload,
+            { method: 'insert' }
+        )
 
         if(!ProductSize) {
             throw Boom.badRequest('Unable to create a a new product size.');
@@ -70,12 +73,10 @@ function getSizeTypeSortOrder(size) {
 
  async function productSizeUpdateHandler(request, h) {
     try {
-        request.payload.updated_at = request.payload.updated_at || new Date();
-
-        const ProductSize = await getModel().update(
+        const ProductSize = await getModel().forge().save(
             request.payload,
-            { id: request.payload.id }
-        );
+            { method: 'update', patch: true }
+        )
 
         if(!ProductSize) {
             throw Boom.badRequest('Unable to find product size.');
@@ -95,8 +96,6 @@ function getSizeTypeSortOrder(size) {
 
 async function productSizeDeleteHandler(request, h) {
     try {
-        request.payload.updated_at = request.payload.updated_at || new Date();
-
         const ProductSize = await getModel().destroy(
             { id: request.payload.id }
         );

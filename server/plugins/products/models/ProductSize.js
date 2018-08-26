@@ -24,7 +24,8 @@ module.exports = function (baseModel, bookshelf) {
             is_on_sale: Joi.boolean(),
             is_visible: Joi.boolean(),
             inventory_count: Joi.number().integer().min(0),
-            product_id: Joi.string().uuid()
+            product_id: Joi.string().uuid(),
+            weight_oz: Joi.number().precision(1).max(99999999.9).min(0)
         }
     });
 };

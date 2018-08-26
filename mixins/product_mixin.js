@@ -295,6 +295,9 @@ export default {
                 uri = '/product/size/update';
             }
 
+            delete size.updated_at;
+            delete size.created_at;
+
             const response = await this.$axios.$post(uri, size);
             return response.data;
         },
