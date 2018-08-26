@@ -2,6 +2,7 @@ const Lab = require('lab');
 const Code = require('code');
 const Hoek = require('hoek');
 const forEach = require('lodash.foreach');
+const isObject = require('lodash.isobject');
 const testHelpers = require('../../../testHelpers');
 const { initController } = require('../_controllerHelper');
 
@@ -22,13 +23,18 @@ describe('Testing route: POST /cart/checkout', () => {
     it('should return 400 (Bad Request) when nonce is not sent in the payload', async () => {
         const { server } = await initController();
 
+        let billingData = testHelpers.getFakeBillingAddress();
+        let checkoutPayload = {};
+        forEach(billingData, (val, key) => {
+            checkoutPayload[`billing_${key}`] = val;
+        });
+
         const { statusCode } = await server.inject({
             method: 'POST',
             url: '/cart/checkout',
             payload: {
                 nonce: null,
-                billing: testHelpers.getFakeBillingAddress(),
-                shipping: testHelpers.getFakeShippingAddress()
+                ...checkoutPayload
             }
         });
 
@@ -36,145 +42,74 @@ describe('Testing route: POST /cart/checkout', () => {
     });
 
 
-    it('should return 400 (Bad Request) when invalid shipping data is sent', async () => {
-        const { server } = await initController();
-
-        const goodRequest = {
-            method: 'POST',
-            url: '/cart/checkout',
-            payload: {
-                nonce: 'fake-valid-nonce',
-                billing: testHelpers.getFakeBillingAddress(),
-                shipping: testHelpers.getFakeShippingAddress()
-            }
-        };
-
-        let request = null;
-
-        // missing shipping data
-        request = Hoek.clone(goodRequest);
-        request.payload.shipping = null;
-        await injectAndExpectStatusCode(server, request, 400);
-
-        // invalid firstName
-        request = Hoek.clone(goodRequest);
-        request.payload.shipping.firstName = 123;
-        await injectAndExpectStatusCode(server, request, 400);
-
-        // invalid lastName
-        request = Hoek.clone(goodRequest);
-        request.payload.shipping.lastName = 123;
-        await injectAndExpectStatusCode(server, request, 400);
-
-        // invalid company
-        request = Hoek.clone(goodRequest);
-        request.payload.shipping.company = 123;
-        await injectAndExpectStatusCode(server, request, 400);
-
-        // invalid streetAddress
-        request = Hoek.clone(goodRequest);
-        request.payload.shipping.streetAddress = 123;
-        await injectAndExpectStatusCode(server, request, 400);
-
-        // invalid extendedAddress
-        request = Hoek.clone(goodRequest);
-        request.payload.shipping.extendedAddress = 123;
-        await injectAndExpectStatusCode(server, request, 400);
-
-        // invalid city
-        request = Hoek.clone(goodRequest);
-        request.payload.shipping.city = 123;
-        await injectAndExpectStatusCode(server, request, 400);
-
-        // invalid state
-        request = Hoek.clone(goodRequest);
-        request.payload.shipping.state = 123;
-        await injectAndExpectStatusCode(server, request, 400);
-
-        // invalid postalCode
-        request = Hoek.clone(goodRequest);
-        request.payload.shipping.postalCode = 123;
-        await injectAndExpectStatusCode(server, request, 400);
-
-        // invalid countryCodeAlpha2
-        request = Hoek.clone(goodRequest);
-        request.payload.shipping.countryCodeAlpha2 = 123;
-        await injectAndExpectStatusCode(server, request, 400);
-
-        // invalid email
-        request = Hoek.clone(goodRequest);
-        request.payload.shipping.email = 123;
-        await injectAndExpectStatusCode(server, request, 400);
-    });
-
-
     it('should return 400 (Bad Request) when invalid billing data is sent', async () => {
         const { server } = await initController();
 
+        let billingData = testHelpers.getFakeBillingAddress();
+        let checkoutPayload = {};
+        forEach(billingData, (val, key) => {
+            checkoutPayload[`billing_${key}`] = val;
+        });
+
         const goodRequest = {
             method: 'POST',
             url: '/cart/checkout',
             payload: {
                 nonce: 'fake-valid-nonce',
-                billing: testHelpers.getFakeBillingAddress(),
-                shipping: testHelpers.getFakeShippingAddress()
+                ...checkoutPayload
             }
         };
 
         let request = null;
 
-        request = Hoek.clone(goodRequest);
-        request.payload.billing = null;
-        await injectAndExpectStatusCode(server, request, 400);
-
         // invalid firstName
         request = Hoek.clone(goodRequest);
-        request.payload.billing.firstName = 123;
+        request.payload.billing_firstName = 123;
         await injectAndExpectStatusCode(server, request, 400);
 
         // invalid lastName
         request = Hoek.clone(goodRequest);
-        request.payload.billing.lastName = 123;
+        request.payload.billing_lastName = 123;
         await injectAndExpectStatusCode(server, request, 400);
 
         // invalid company
         request = Hoek.clone(goodRequest);
-        request.payload.billing.company = 123;
+        request.payload.billing_company = 123;
         await injectAndExpectStatusCode(server, request, 400);
 
         // invalid streetAddress
         request = Hoek.clone(goodRequest);
-        request.payload.billing.streetAddress = 123;
+        request.payload.billing_streetAddress = 123;
         await injectAndExpectStatusCode(server, request, 400);
 
         // invalid extendedAddress
         request = Hoek.clone(goodRequest);
-        request.payload.billing.extendedAddress = 123;
+        request.payload.billing_extendedAddress = 123;
         await injectAndExpectStatusCode(server, request, 400);
 
         // invalid city
         request = Hoek.clone(goodRequest);
-        request.payload.billing.city = 123;
+        request.payload.billing_city = 123;
         await injectAndExpectStatusCode(server, request, 400);
 
         // invalid state
         request = Hoek.clone(goodRequest);
-        request.payload.billing.state = 123;
+        request.payload.billing_state = 123;
         await injectAndExpectStatusCode(server, request, 400);
 
         // invalid postalCode
         request = Hoek.clone(goodRequest);
-        request.payload.billing.postalCode = 123;
+        request.payload.billing_postalCode= 123;
         await injectAndExpectStatusCode(server, request, 400);
 
         // invalid countryCodeAlpha2
         request = Hoek.clone(goodRequest);
-        request.payload.billing.countryCodeAlpha2 = 123;
+        request.payload.billing_countryCodeAlpha2 = 123;
         await injectAndExpectStatusCode(server, request, 400);
 
         // invalid phone
         request = Hoek.clone(goodRequest);
-        request.payload.billing.phone = 123;
+        request.payload.billing_phone = 123;
         await injectAndExpectStatusCode(server, request, 400);
     });
 
@@ -220,11 +155,15 @@ describe('Testing route: POST /cart/checkout', () => {
                     ...checkoutPayload
                 }
             });
-
-            let transactionID = checkoutResponse.result.data.transactionId;
-
+            expect(checkoutResponse).to.be.an.object();
             expect(checkoutResponse.statusCode, 'Status code').to.equal(200);
-            expect(transactionID, 'Transaction ID').to.exist();
+
+            let transactionID;
+            if(isObject(checkoutResponse.result.data)) {
+                transactionID = checkoutResponse.result.data.transactionId || null;
+            }
+
+            expect(transactionID, 'Transaction ID').to.be.a.string();
 
             // verify that the DB contains data about the transaction:
             // wait a few seconds for the other DB transactions to happen
@@ -240,6 +179,10 @@ describe('Testing route: POST /cart/checkout', () => {
                 const order = ShippoOrder.toJSON();
                 // console.log("SHIPPO ORDR", order)
                 expect(order.cart_id, 'ShoppingCartToShippoOrder Cart ID').to.equal(p.shoppingCart.id);
+
+                // Purchase confirmation emails:
+                let ShoppingCart = await controller.getCart( testHelpers.getCartToken() )
+                expect(ShoppingCart.get('purchase_confirmation_email_sent_at'), 'Purchase confirmation email sent at').to.be.a.date();
 
                 resolve();
             }, 3000)

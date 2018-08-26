@@ -546,6 +546,14 @@ async function cartShippingRateHandler(request, h) {
  */
 function createShippoOrderFromShoppingCart(ShoppingCart) {
     return new Promise((resolve, reject) => {
+        if(!ShoppingCart) {
+            let err = new Error('createShippoOrderFromShoppingCart: ShoppingCart obejct was not passed as an argument');
+            global.logger.error(err);
+            global.bugsnag(err);
+            reject(err);
+            return;
+        }
+
         let cart = ShoppingCart.toJSON();
         let totalWeight = 0;
 
@@ -593,18 +601,15 @@ function createShippoOrderFromShoppingCart(ShoppingCart) {
 
         data.weight = totalWeight;
 
-        shippoOrdersAPI
-            .createOrder(data)
-            .then((ShippoOrder) => {
-                resolve(ShippoOrder);
-            })
-            .catch((err) => {
-                let msg = `ERROR CREATING SHIPPO ORDER: ${err}`;
-                global.logger.error(msg)
-                global.bugsnag(msg);
-
-                reject(err);
-            });
+        try {
+            let ShippoOrder = shippoOrdersAPI.createOrder(data);
+            resolve(ShippoOrder);
+        }
+        catch(err) {
+            global.logger.error(err)
+            global.bugsnag(err);
+            reject(err);
+        }
     });
 }
 
@@ -642,6 +647,31 @@ async function getShippoOrder(cartId) {
     }).fetch();
 
     return ShoppingCartToShippoOrder;
+}
+
+
+function sendPurchaseConfirmationEmails(cartToken, transactionId) {
+    return new Promise(async (resolve, reject) => {
+        // Get a fresh cart with all of the relations for the email message
+        let ShoppingCart = await getCart(cartToken);
+
+        try {
+            await shoppingCartEmailService.sendPurchaseEmails(ShoppingCart, transactionId);
+
+            let emailSentAt = new Date().toISOString();
+            await ShoppingCart.save(
+                { purchase_confirmation_email_sent_at: emailSentAt },
+                { method: 'update', patch: true }
+            );
+            resolve(emailSentAt)
+        }
+        catch(err) {
+            let msg = `Unable to send email confirmation to user after successful purchase: (ShoppingCart ID: ${ShoppingCart.get('id')})`;
+            global.logger.error(msg, err);
+            global.bugsnag(msg, err);
+            reject(err);
+        }
+    });
 }
 
 
@@ -731,16 +761,7 @@ async function cartCheckoutHandler(request, h) {
         }
 
         // Sending the purchase emails:
-        try {
-            // Get a fresh cart for the response with all of the relations
-            const UpdatedShoppingCart = await getCart(cartToken);
-            shoppingCartEmailService.sendPurchaseEmails(UpdatedShoppingCart, transactionObj.transaction.id)
-        }
-        catch(err) {
-            let msg = `Unable to send email confirmation to user after successful purchase: (ShoppingCart ID: ${UpdatedShoppingCart.get('id')}) ${err}`;
-            global.logger.error(msg);
-            global.bugsnag(msg);
-        }
+        sendPurchaseConfirmationEmails(cartToken, transactionObj.transaction.id)
 
         // Successful transactions return the transaction id
         if(transactionObj.success) {

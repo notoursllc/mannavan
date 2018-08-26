@@ -38,7 +38,7 @@ function getFakeShippingAddress() {
         state: 'CA',
         postalCode: '94117',
         countryCodeAlpha2: 'US',
-        email: 'greg@greg.com'
+        email: 'gregbruins@gmail.com'
     }
 }
 
@@ -237,6 +237,12 @@ function setCartToken(response) {
     }
 }
 
+
+function getCartToken() {
+    return cartToken;
+}
+
+
 function getRequestHeader() {
     if(!cartToken) {
         return;
@@ -262,5 +268,6 @@ module.exports = {
     addToCart,
     getApiPrefix,
     setCartToken,
+    getCartToken,
     getRequestHeader
 }

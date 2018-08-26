@@ -24,23 +24,27 @@ async function send(config) {
             html: config.html
         });
 
-        mail.compile().build((err, message) => {
-            const dataToSend = {
-                to: config.to,
-                message: message.toString('ascii')
-            };
+        mail.compile().build(async (err, message) => {
+            if(err) {
+                global.logger.error(err);
+                global.bugsnag(err);
+                reject(err);
+                return;
+            }
 
-            mailgun.messages().sendMime(dataToSend, (sendError, body) => {
-                if(sendError) {
-                    reject(sendError);
-                }
-                else {
-                    resolve(body);
-                }
-            });
+            try {
+                let body = await mailgun.messages().sendMime({
+                    to: config.to,
+                    message: message.toString('ascii')
+                });
+                resolve(body);
+            }
+            catch(err) {
+                reject(err)
+            }
         });
     });
-};
+}
 
 
 /**
@@ -126,7 +130,7 @@ function getPurchaseDescription(ShoppingCart) {
 }
 
 
-async function emailPurchaseReceiptToBuyer(ShoppingCart, transactionId, orderTitle) {
+function emailPurchaseReceiptToBuyer(ShoppingCart, transactionId, orderTitle) {
     let html = pug.renderFile(
         path.join(__dirname, '../email-templates', 'purchase-receipt.pug'),
         {
@@ -143,7 +147,7 @@ async function emailPurchaseReceiptToBuyer(ShoppingCart, transactionId, orderTit
         }
     );
 
-    await send({
+    return send({
         to: ShoppingCart.get('shipping_email'),
         subject: `Your goBreadVan.com order of ${orderTitle}`,
         // text: 'sample text for purchase receipt', //TODO:
@@ -152,7 +156,7 @@ async function emailPurchaseReceiptToBuyer(ShoppingCart, transactionId, orderTit
 }
 
 
-async function emailPurchaseAlertToAdmin(ShoppingCart, transactionId, orderTitle) {
+function emailPurchaseAlertToAdmin(ShoppingCart, transactionId, orderTitle) {
     let html = pug.renderFile(
         path.join(__dirname, '../email-templates', 'admin-purchase-alert.pug'),
         {
@@ -175,7 +179,7 @@ async function emailPurchaseAlertToAdmin(ShoppingCart, transactionId, orderTitle
         }
     );
 
-    await send({
+    return send({
         to: process.env.EMAIL_ADMIN,
         subject: `NEW ORDER: ${orderTitle}`,
         html: html
@@ -183,20 +187,15 @@ async function emailPurchaseAlertToAdmin(ShoppingCart, transactionId, orderTitle
 }
 
 
-async function sendPurchaseEmails(ShoppingCart, transactionId) {
+function sendPurchaseEmails(ShoppingCart, transactionId) {
     let orderTitle = getPurchaseDescription(ShoppingCart);
 
-    try {
-        await Promise.all([
-            emailPurchaseReceiptToBuyer(ShoppingCart, transactionId, orderTitle),
-            emailPurchaseAlertToAdmin(ShoppingCart, transactionId, orderTitle)
-        ]);
-    }
-    catch(e) {
-        global.logger.error(e);
-        global.bugsnag(e);
-    }
+    Promise.all([
+        emailPurchaseReceiptToBuyer(ShoppingCart, transactionId, orderTitle),
+        emailPurchaseAlertToAdmin(ShoppingCart, transactionId, orderTitle)
+    ]);
 }
+
 
 
 module.exports = {
