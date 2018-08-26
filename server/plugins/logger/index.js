@@ -13,7 +13,8 @@ exports.plugin = {
     register: function (server, options) {
         // Bugsnag setup:
         bugsnag.register(process.env.BUG_SNAG_API_KEY, {
-            releaseStage: 'production'
+            releaseStage: 'production',
+            // autoNotifyUnhandledRejection: false // https://docs.bugsnag.com/platforms/nodejs/other/
         });
 
         global.bugsnag = function() {
