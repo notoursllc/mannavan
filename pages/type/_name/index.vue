@@ -128,7 +128,7 @@ export default {
         display: block;
     }
     .flex-container-column {
-        @include flex(1);
+        @include flex(1 0 auto);
         width: 100%;
     }
 }

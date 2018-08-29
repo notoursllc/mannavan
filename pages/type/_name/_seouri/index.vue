@@ -350,7 +350,7 @@ export default {
         display: block;
     }
     .is-half {
-        @include flex(1);
+        @include flex(1 0 auto);
         width: 100%;
     }
 }
