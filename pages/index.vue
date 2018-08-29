@@ -48,15 +48,15 @@ export default {
             <nuxt-link
                 :to="{ name: 'type-name-seouri', params: { name:'tops', seouri:'seo_uri_5'} }"
                 tag="div"
-                class="featured-item cursorPointer grow">
-                <img src="https://gmnst-assets.nyc3.digitaloceanspaces.com/development/uploads/images/sample-300-x-400.png" />
+                class="featured-item cursorPointer overflowHidden">
+                <img class="grow" src="https://gmnst-assets.nyc3.digitaloceanspaces.com/development/uploads/images/sample-300-x-400.png" />
             </nuxt-link>
 
             <nuxt-link
                 :to="{ name: 'type-name-seouri', params: { name:'tops', seouri:'seo_uri_5'} }"
                 tag="div"
-                class="featured-item cursorPointer grow">
-                <img src="https://gmnst-assets.nyc3.digitaloceanspaces.com/development/uploads/images/sample_calbeamin.jpg" />
+                class="featured-item cursorPointer overflowHidden">
+                <img class="grow" src="https://gmnst-assets.nyc3.digitaloceanspaces.com/development/uploads/images/sample_calbeamin.jpg" />
             </nuxt-link>
         </section>
     </div>
