@@ -6,6 +6,7 @@ import order_mixin from '@/mixins/order_mixin'
 import app_mixin from '@/mixins/app_mixin'
 import IconVictoryPeace from '@/components/icons/IconVictoryPeace'
 import IconEnvelope from '@/components/icons/IconEnvelope'
+import AddressDisplay from '@/components/AddressDisplay'
 
 Vue.use(Loading.directive)
 
@@ -13,7 +14,8 @@ export default {
     components: {
         PaymentTypeDisplay,
         IconVictoryPeace,
-        IconEnvelope
+        IconEnvelope,
+        AddressDisplay
     },
 
     mixins: [
@@ -23,14 +25,21 @@ export default {
 
     data: function() {
         return {
-            loading: true
+            loading: true,
+            orderExists: false,
+            order: {
+                shipping: {},
+                shoppingCart: {},
+                transaction: {
+                    payment: {}
+                }
+            }
         }
     },
 
     async created() {
         try {
             this.$store.dispatch('ui/pageTitle', null);
-
             this.order = await this.getOrderTransaction(this.$route.params.id);
             this.orderExists = true;
             this.loading = false;
@@ -83,14 +92,16 @@ export default {
                 <div class="displayTable mha">
                     <div class="mtl">
                         <div class="fwb">{{ $t('Shipping to') }}:</div>
-                        <div>
-                            <div>{{ formattedName }}</div>
-                            <div v-if="order.shipping.company">{{ companyDisplay }}</div>
-                            <div>{{ order.shipping.streetAddress }}</div>
-                            <div v-if="order.shipping.extendedAddress">{{ order.shipping.extendedAddress }}</div>
-                            <div>{{ formattedCityStateZip }}</div>
-                            <div>{{ order.shipping.countryCodeAlpha2 }}</div>
-                        </div>
+                        <address-display
+                            :first-name="order.shipping.firstName"
+                            :last-name="order.shipping.lastName"
+                            :street-address="order.shipping.streetAddress"
+                            :extended-address="order.shipping.extendedAddress"
+                            :company="order.shipping.company"
+                            :country-code="order.shipping.countryCodeAlpha2"
+                            :city="order.shipping.locality"
+                            :state="order.shipping.region"
+                            :zip="order.shipping.postalCode" />
                     </div>
 
                     <div class="mtl">

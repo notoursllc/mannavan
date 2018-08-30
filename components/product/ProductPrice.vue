@@ -6,6 +6,12 @@
             product: {
                 type: Object,
                 required: true
+            },
+
+            // TODO: still needs implementation in template
+            showStrikethrough: {
+                type: Boolean,
+                default: true
             }
         },
 
@@ -20,7 +26,7 @@
 
             salePrice: function() {
                 if (isObject(this.product)
-                    && this.product.is_on_sale 
+                    && this.product.is_on_sale
                     && this.product.sale_price) {
                         return this.$n(this.product.sale_price, 'currency');
                 }
@@ -34,10 +40,10 @@
 
 <template>
     <div class="inlineBlock">
-        <div class="inlineBlock" v-if="salePrice && basePrice">
-            <div class="inlineBlock colorGrayLighter strikethrough mrs">{{ basePrice }}</div>
-            <div class="inlineBlock">{{ salePrice }}</div>
-        </div> 
+        <div v-if="salePrice && basePrice">
+            <div class="colorGrayLighter strikethrough mrs">{{ basePrice }}</div>
+            <div>{{ salePrice }}</div>
+        </div>
         <div v-else-if="salePrice" class="inlineBlock">{{ salePrice }}</div>
         <div v-else class="inlineBlock">{{ basePrice }}</div>
     </div>
