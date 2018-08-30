@@ -3,7 +3,6 @@ import Vue from 'vue'
 import { Notification, Button } from 'element-ui'
 import order_mixin from '@/mixins/order_mixin'
 import FormRow from '@/components/FormRow'
-import OrderPaymentDisplay from '@/components/order/OrderPaymentDisplay'
 import AddressDisplay from '@/components/AddressDisplay'
 import OrderCartItems from '@/components/order/OrderCartItems'
 
@@ -28,7 +27,6 @@ export default{
 
     components: {
         FormRow,
-        OrderPaymentDisplay,
         AddressDisplay,
         OrderCartItems
     },
