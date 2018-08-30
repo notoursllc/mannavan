@@ -103,7 +103,11 @@ export default{
                 <form-row label="Transaction ID:">{{ order.transaction_id }}</form-row>
 
                 <!-- transaction id -->
-                <form-row label="Success:">{{ order.success }}</form-row>
+                <form-row label="Success:">
+                    <span v-bind:class="{'colorGreen':order.success, 'colorRed':!order.success}">
+                        {{ order.success ? 'Yes' : 'No '}}
+                    </span>
+                </form-row>
 
             </div>
         </div>
