@@ -61,10 +61,8 @@ export default {
                 tag="a"
                 class="navbar-item"
                 active-class="active">
-                <div class="icon-container">
-                    <icon-cap icon-name="cap" class-name="fillWhite" width="35px" v-if="obj.label === 'hats'" />
-                    <icon-tshirt icon-name="tops" class-name="fillWhite" width="35px" v-if="obj.label === 'tops'" />
-                </div>
+                <icon-cap icon-name="cap" class-name="fillWhite" width="35px" v-if="obj.label === 'hats'" />
+                <icon-tshirt icon-name="tops" class-name="fillWhite" width="35px" v-if="obj.label === 'tops'" />
                 <div class="navbar-item-label">{{ $tc(key, 2) }}</div>
             </nuxt-link>
 
@@ -72,11 +70,10 @@ export default {
                 :to="{ name: 'cart-id' }"
                 tag="a"
                 class="navbar-item"
+                :class="{'bounce': numCartItems}"
                 active-class="active">
-                <div class="icon-container" :class="{'bounce': numCartItems}">
-                    <icon-cart icon-name="shopping_cart" :class-name="numCartItems ? 'fillLime': 'fillWhite'" width="35px" />
-                    <span class="badge" v-if="numCartItems">{{ numCartItems }}</span>
-                </div>
+                <icon-cart icon-name="shopping_cart" :class-name="numCartItems ? 'fillLime': 'fillWhite'" width="35px" />
+                <span class="badge" v-if="numCartItems">{{ numCartItems }}</span>
                 <div class="navbar-item-label">{{ $t('Checkout') }}</div>
             </nuxt-link>
         </aside>
@@ -195,8 +192,7 @@ $header-secondary-logo-width: 150px;
 
         .header-grow-container {
             @include flexbox();
-            @include flex(1);
-            @include flex-grow(1);
+            @include flex(1 0 auto);
             @include align-items(center);
             @include justify-content(center);
             // border: 1px solid red;
@@ -311,6 +307,7 @@ $header-secondary-logo-width: 150px;
         text-align: center;
         color: #fff;
         @include transition('background-color', 0.25s);
+        position: relative;
 
         &:hover,
         &.navbar-item-checkout:hover {
@@ -323,27 +320,21 @@ $header-secondary-logo-width: 150px;
             @include transition('background-color', 0.25s);
         }
 
-        .icon-container {
-            position: relative;
+        .badge {
+            background-color: #3ca707;
+            border-radius: 10px;
+            box-shadow: 0 0 1px 1px rgba(255, 255, 12550, 0.5);
+            color: #fff;
             display: inline-block;
-            padding: 0;
-
-            .badge {
-                background-color: #3ca707;
-                border-radius: 10px;
-                box-shadow: 0 0 1px 1px rgba(255, 255, 12550, 0.5);
-                color: #fff;
-                display: inline-block;
-                font-size: 14px;
-                height: 18px;
-                line-height: 18px;
-                padding: 0 6px 0 5px;
-                text-align: center;
-                white-space: nowrap;
-                position: absolute;
-                top: -2px;
-                right: -14px;
-            }
+            font-size: 14px;
+            height: 18px;
+            line-height: 18px;
+            padding: 0 6px 0 5px;
+            text-align: center;
+            white-space: nowrap;
+            position: absolute;
+            top: -2px;
+            right: -14px;
         }
 
         .navbar-item-label {
@@ -417,7 +408,7 @@ $header-secondary-logo-width: 150px;
 
         .navbar-item {
             @include flexbox();
-            @include flex(1);
+            @include flex(1 0 auto);
             @include flex-flow(column nowrap);
             @include align-items(center);
             color: #fff;
