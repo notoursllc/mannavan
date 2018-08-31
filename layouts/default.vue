@@ -72,8 +72,10 @@ export default {
                 class="navbar-item"
                 :class="{'bounce': numCartItems}"
                 active-class="active">
-                <icon-cart icon-name="shopping_cart" :class-name="numCartItems ? 'fillLime': 'fillWhite'" width="35px" height="35px" />
-                <span class="badge" v-if="numCartItems">{{ numCartItems }}</span>
+                <div class="inlineBlock relative">
+                    <icon-cart icon-name="shopping_cart" :class-name="numCartItems ? 'fillLime': 'fillWhite'" width="35px" height="35px" />
+                    <span class="badge" v-if="numCartItems">{{ numCartItems }}</span>
+                </div>
                 <div class="navbar-item-label">{{ $t('Checkout') }}</div>
             </nuxt-link>
         </aside>
