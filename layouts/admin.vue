@@ -175,7 +175,7 @@ $header-height: 50px;
     .header-container {
         @include flexbox();
         @include flex-wrap(nowrap);
-        flex-direction: row;
+        @include flex-direction(row);
         padding: 0 20px;
     }
 
@@ -196,24 +196,12 @@ $header-height: 50px;
         background-color: white;
         padding: 0;
         color: #010101;
-        -webkit-box-ordinal-group: 3;
-        -ms-flex-order: 2;
-        order: 2;
         width: auto;
-        -webkit-box-flex: 2;
-        -ms-flex-positive: 2;
-        flex-grow: 2;
-        -webkit-box-align: center;
-        -ms-flex-align: center;
-        align-items: center;
-        -ms-flex-item-align: center;
-        align-self: center;
-        -webkit-box-pack: end;
-        -ms-flex-pack: end;
-        justify-content: flex-end;
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: flex;
+        @include order(2);
+        @include flex-grow(2);
+        @include align-items(center);
+        @include justify-content(flex-end);
+        @include flexbox();
     }
 
     .navigation-list {

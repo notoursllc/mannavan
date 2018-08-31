@@ -50,7 +50,7 @@ export default {
                     :to="{ name: 'index' }"
                     tag="span"
                     class="cursorPointer">
-                    <icon-victory icon-name="logo" class-name="fillBurntOrange" width="85px" />
+                    <icon-victory icon-name="logo" class-name="fillBurntOrange" width="85px" height="42px" />
                 </nuxt-link>
             </div>
 
@@ -61,8 +61,8 @@ export default {
                 tag="a"
                 class="navbar-item"
                 active-class="active">
-                <icon-cap icon-name="cap" class-name="fillWhite" width="35px" v-if="obj.label === 'hats'" />
-                <icon-tshirt icon-name="tops" class-name="fillWhite" width="35px" v-if="obj.label === 'tops'" />
+                <icon-cap icon-name="cap" class-name="fillWhite" width="35px" height="35px" v-if="obj.label === 'hats'" />
+                <icon-tshirt icon-name="tops" class-name="fillWhite" width="35px" height="35px" v-if="obj.label === 'tops'" />
                 <div class="navbar-item-label">{{ $tc(key, 2) }}</div>
             </nuxt-link>
 
@@ -72,14 +72,13 @@ export default {
                 class="navbar-item"
                 :class="{'bounce': numCartItems}"
                 active-class="active">
-                <icon-cart icon-name="shopping_cart" :class-name="numCartItems ? 'fillLime': 'fillWhite'" width="35px" />
+                <icon-cart icon-name="shopping_cart" :class-name="numCartItems ? 'fillLime': 'fillWhite'" width="35px" height="35px" />
                 <span class="badge" v-if="numCartItems">{{ numCartItems }}</span>
                 <div class="navbar-item-label">{{ $t('Checkout') }}</div>
             </nuxt-link>
         </aside>
 
         <header role="banner" v-if="$store.state.ui.pageTitle">
-            <!-- <div class="header-secondary-logo">secondary logo</div> -->
             <div class="header-grow-container">
                 <div class="inlineBlock header-page-title">{{ $store.state.ui.pageTitle }}</div>
             </div>
@@ -151,9 +150,11 @@ $header-secondary-logo-width: 150px;
 #__nuxt,
 #__layout,
 .layoutContainer {
-    display: flex;
-    min-height: 100vh;
-    flex-direction: column;
+    @include flexbox();
+    @include flex-direction(column);
+    // use height instead of min-height because of an IE10-11 flex bug:
+    // https://github.com/philipwalton/flexbugs#flexbug-3
+    height: 100vh;
 }
 
 .cart-active {
@@ -162,10 +163,8 @@ $header-secondary-logo-width: 150px;
 
 .layoutContainer {
     main {
-        display: flex;
-        flex: 1;
-        flex-direction: row;
-        // padding-bottom: $bottom-bar-height;
+        @include flex-grow(1);
+        @include flex-basis(auto);
     }
 
     header {
@@ -187,7 +186,6 @@ $header-secondary-logo-width: 150px;
             padding: 0;
             white-space: nowrap;
             width: $header-secondary-logo-width;
-            border: 1px solid red;
         }
 
         .header-grow-container {

@@ -136,13 +136,10 @@ export default {
 
     .checkout-wizard {
         width: 100%;
-        display: flex;
-        display: -webkit-flex; /* Safari */
-        align-items: center;
-        flex-direction: row;
-        -webkit-flex-direction: row; /* Safari */
-        flex-wrap: nowrap;
-        -webkit-flex-wrap: nowrap;
+        @include flexbox();
+        @include flex-direction(row);
+        @include align-items(center);
+        @include flex-wrap(nowrap);
 
         .item,
         .spacer {
@@ -153,7 +150,7 @@ export default {
 
         .spacer {
             padding: 0 8px;
-            flex-grow: 1;
+            @include flex-grow(1);
         }
 
         .item {
