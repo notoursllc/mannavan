@@ -178,6 +178,7 @@ $header-secondary-logo-width: 150px;
         box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
         color: $colorOrange;
         height: $header-height;
+        min-height: $header-height;
         padding: 0 20px;
 
         .header-secondary-logo {
