@@ -76,7 +76,6 @@ module.exports = {
         '@/plugins/element-ui',
         '@/plugins/format8601',
         '@/plugins/prettyJson',
-        '@/plugins/promise-finally',
         { src: '@/plugins/bugsnag', ssr: false }
     ],
 
@@ -90,7 +89,6 @@ module.exports = {
     ** Nuxt.js modules
     */
     modules: [
-        // Doc: https://github.com/nuxt-community/axios-module#usage
         '@nuxtjs/axios'
     ],
 
@@ -112,6 +110,21 @@ module.exports = {
      */
     build: {
         vendor: ['vue-i18n'],
+
+        // babel: {
+        //     plugins: [
+        //         ["transform-es2015-template-literals", {
+        //             // "loose": true,
+        //             // "spec": true
+        //         }]
+        //     ],
+        //     presets: [
+        //         ['vue-app', {
+        //             targets: { ie: 9, uglify: true },
+        //             useBuiltIns: false
+        //         }]
+        //     ]
+        // },
 
         /*
         ** You can extend webpack config here
