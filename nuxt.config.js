@@ -1,5 +1,4 @@
 // require('dotenv').config();  // TODO: not sure if this works here
-
 const pkg = require('./package');
 const isNanoboxDev = process.env.NODE_ENV === 'development' && process.env.DATA_DB_USERS === 'nanobox';
 
@@ -109,22 +108,27 @@ module.exports = {
      *  Build configuration
      */
     build: {
+        // vendor: ['babel-polyfill', 'vue-i18n'],
         vendor: ['vue-i18n'],
 
-        // babel: {
-        //     plugins: [
-        //         ["transform-es2015-template-literals", {
-        //             // "loose": true,
-        //             // "spec": true
-        //         }]
-        //     ],
-        //     presets: [
-        //         ['vue-app', {
-        //             targets: { ie: 9, uglify: true },
-        //             useBuiltIns: false
-        //         }]
-        //     ]
-        // },
+        babel: {
+            plugins: [
+                // ['transform-es2015-template-literals', {
+                //     loose: true,
+                //     spec: true
+                // }],
+                // 'transform-runtime',
+                ['transform-es2015-arrow-functions', {
+                    spec: false
+                }]
+            ],
+            presets: [
+                ['vue-app', {
+                    targets: { ie: 11, uglify: false },
+                    useBuiltIns: true
+                }]
+            ]
+        },
 
         /*
         ** You can extend webpack config here
