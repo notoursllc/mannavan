@@ -92,10 +92,6 @@ export default{
         <div class="g-spec">
             <div class="g-spec-label">General Info</div>
             <div class="g-spec-content">
-
-                <!-- id -->
-                <form-row label="ID:">{{ order.id }}</form-row>
-
                 <!-- Order date -->
                 <form-row label="Ordered on:">{{ order.created_at | format8601 }}</form-row>
 
@@ -108,7 +104,27 @@ export default{
                         {{ order.success ? 'Yes' : 'No '}}
                     </span>
                 </form-row>
+            </div>
+        </div>
 
+        <!-- Package -->
+        <div class="g-spec">
+            <div class="g-spec-label">{{ $t('Package') }}:</div>
+            <div class="g-spec-content">
+                <!-- product weight total -->
+                <form-row label="Product weight total (oz):">{{ order.shoppingCart.product_weight_total }}</form-row>
+
+                <!-- postage quoted -->
+                <form-row label="Postage quoted:">{{ $n(order.shoppingCart.shipping_rate.amount, 'currency')  }}</form-row>
+
+                <!-- provider -->
+                <form-row label="Provider:">{{ order.shoppingCart.shipping_rate.provider }}</form-row>
+
+                <!-- service level -->
+                <form-row label="Service level:">{{ order.shoppingCart.shipping_rate.servicelevel.name  }}</form-row>
+
+                <!-- shipping estimate-->
+                <form-row label="Shipping estimate (days):">{{ order.shoppingCart.shipping_rate.estimated_days  }}</form-row>
             </div>
         </div>
 
@@ -129,30 +145,11 @@ export default{
             </div>
         </div>
 
-        <!-- billing -->
+        <!-- cart items-->
         <div class="g-spec">
-            <div class="g-spec-label">{{ $t('Billing address') }}:</div>
+            <div class="g-spec-label">Cart items ({{ order.shoppingCart.num_items }}):</div>
             <div class="g-spec-content">
-                <address-display
-                    :first-name="order.transaction.billing.firstName"
-                    :last-name="order.transaction.billing.lastName"
-                    :street-address="order.transaction.billing.streetAddress"
-                    :extended-address="order.transaction.billing.extendedAddress"
-                    :company="order.transaction.billing.company"
-                    :country-code="order.transaction.billing.countryCodeAlpha2"
-                    :city="order.transaction.billing.locality"
-                    :state="order.transaction.billing.region"
-                    :zip="order.transaction.billing.postalCode" />
-            </div>
-        </div>
-
-        <!-- payment method -->
-        <div class="g-spec">
-            <div class="g-spec-label">{{ $t('Payment method') }}:</div>
-            <div class="g-spec-content">
-                <form-row label="Card number:">{{ order.transaction.creditCard.maskedNumber }}</form-row>
-                <form-row label="Card type:">{{ order.transaction.creditCard.cardType }}</form-row>
-                <form-row label="Expiration:">{{ order.transaction.creditCard.expirationDate }}</form-row>
+                <order-cart-items :cart-items="order.shoppingCart.cart_items" />
             </div>
         </div>
 
@@ -175,11 +172,30 @@ export default{
             </div>
         </div>
 
-        <!-- cart items-->
+        <!-- payment method -->
         <div class="g-spec">
-            <div class="g-spec-label">Cart items ({{ order.shoppingCart.num_items }}):</div>
+            <div class="g-spec-label">{{ $t('Payment method') }}:</div>
             <div class="g-spec-content">
-                <order-cart-items :cart-items="order.shoppingCart.cart_items" />
+                <form-row label="Card number:">{{ order.transaction.creditCard.maskedNumber }}</form-row>
+                <form-row label="Card type:">{{ order.transaction.creditCard.cardType }}</form-row>
+                <form-row label="Expiration:">{{ order.transaction.creditCard.expirationDate }}</form-row>
+            </div>
+        </div>
+
+        <!-- billing -->
+        <div class="g-spec">
+            <div class="g-spec-label">{{ $t('Billing address') }}:</div>
+            <div class="g-spec-content">
+                <address-display
+                    :first-name="order.transaction.billing.firstName"
+                    :last-name="order.transaction.billing.lastName"
+                    :street-address="order.transaction.billing.streetAddress"
+                    :extended-address="order.transaction.billing.extendedAddress"
+                    :company="order.transaction.billing.company"
+                    :country-code="order.transaction.billing.countryCodeAlpha2"
+                    :city="order.transaction.billing.locality"
+                    :state="order.transaction.billing.region"
+                    :zip="order.transaction.billing.postalCode" />
             </div>
         </div>
 
