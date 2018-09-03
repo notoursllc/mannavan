@@ -85,3 +85,9 @@
 .el-select-dropdown__item.selected svg path {
     fill: #409EFF !important;
 }
+
+.el-button.is-huge {
+    border-radius: 35px;
+    padding:25px 45px;
+    font-size: 18px;
+}

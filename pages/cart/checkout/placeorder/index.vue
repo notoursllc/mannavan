@@ -610,7 +610,7 @@ export default {
             <div class="ptl tac">
                 <div class="inlineBlock">
                     <el-button type="success"
-                                size="large"
+                                class="is-huge"
                                 @click="submitPaymentForm"
                                 :loading="placeOrderButtonLoading"
                                 :disabled="!paymentMethodButtonEnabled"

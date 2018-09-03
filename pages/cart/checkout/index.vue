@@ -241,7 +241,6 @@ export default {
         <div class="ptl tac">
             <div class="inlineBlock">
                 <el-button type="success"
-                            size="large"
                             @click="continueToPayment"
                             :disabled="!shippingButtonEnabled"
                             round>{{ $t('CONTINUE TO PAYMENT') }}</el-button>
