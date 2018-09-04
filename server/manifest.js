@@ -12,6 +12,8 @@ const webManifest = {
     },
     register: {
         plugins: [
+            // TEMPORARILY COMMENTING OUT THE OFFICIAL PLUGIN UNTIL THIS IS FIXED:
+            // https://github.com/nuxt-community/hapi-nuxt/issues/14
             // {
             //     plugin: 'hapi-nuxt',
             //     options: path.resolve(__dirname, '../nuxt.config.js')
