@@ -27,6 +27,6 @@
     <span>
         <credit-card-icon :card-type="cardType"></credit-card-icon>&nbsp;
         <span v-show="lastFour">**** {{ lastFour }}</span>
-        <span v-show="payerEmail">{{ payerEmail }}</span>
+        <span v-show="cardType === 'paypal_account'">{{ payerEmail }}</span>
     </span>
 </template>

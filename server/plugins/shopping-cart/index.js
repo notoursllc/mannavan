@@ -154,16 +154,15 @@ const after = function (server) {
         },
         {
             method: 'GET',
-            path: '/order/transaction',
+            path: '/order/summary',
             options: {
                 description: 'Basic transaction results for a given order',
                 validate: {
                     query: {
-                        transaction_id: Joi.string().max(50),
-                        verbose: Joi.boolean().optional()
+                        id: Joi.string().max(50)
                     }
                 },
-                handler: ShoppingCartController.getOrderTransactionHandler
+                handler: ShoppingCartController.getOrderSummaryHandler
             }
         },
         {

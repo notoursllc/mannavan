@@ -40,14 +40,14 @@ export default {
     async created() {
         try {
             this.$store.dispatch('ui/pageTitle', null);
-            this.order = await this.getOrderTransaction(this.$route.params.id);
+            this.order = await this.getOrderSummary(this.$route.params.id);
             this.orderExists = true;
-            this.loading = false;
         }
         catch(e) {
             this.orderExists = false;
-            this.loading = false;
         }
+
+        this.loading = false;
     },
 
     head() {
@@ -63,18 +63,17 @@ export default {
 
 
 <template>
-    <div class="pageContainerMax pageContainerMaxSkinny">
-        <div v-if="!orderExists" class="tac">
-            {{ $t('Oops we could not find the order you are looking for.') }}
-        </div>
-
-        <div v-else>
-            <div class="tac">
-                <icon-victory-peace icon-name="thanks" class-name="fillGreen" width="150px" />
-                <div class="fs30 fwb">{{ $t('We have a winner!') }}</div>
+    <div class="pageContainerMax pageContainerMaxSkinny" v-loading.fullscreen.lock="loading">
+        <template v-if="!loading">
+            <div v-if="!orderExists" class="tac">
+                {{ $t('Oops we could not find the order you are looking for.') }}
             </div>
 
-            <div v-loading="loading">
+            <div v-else>
+                <div class="tac sway">
+                    <icon-victory-peace icon-name="thanks" class-name="fillGreen" width="150px" />
+                </div>
+
                 <div class="mtl grayCell">
                     <div class="colorGreen">
                         <span class="fs16">{{ $t('An email confirmation was sent to:' )}}</span>
@@ -127,13 +126,13 @@ export default {
                         <div class="displayTableRow">
                             <div class="displayTableCell prm pbs">{{ $t('Order') }}:</div>
                             <div class="displayTableCell fwb pbs">
-                                <a v-if="order.id" @click="goToOrderDetails(order.transaction.id)">{{ order.transaction.id }}</a>
+                                <a v-if="order.id" @click="goToOrderDetails(order.id)">{{ order.id }}</a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </template>
     </div>
 </template>
 

@@ -44,7 +44,12 @@ export default{
                     shipping: {},
                     billing: {},
                 },
-                shoppingCart: {}
+                shoppingCart: {
+                    cart_items: [],
+                    shipping_rate: {
+                        servicelevel: {}
+                    }
+                }
             }
         }
     },

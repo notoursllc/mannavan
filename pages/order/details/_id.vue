@@ -34,7 +34,7 @@ export default {
     async created() {
         try {
             this.$store.dispatch('ui/pageTitle', this.$t('Order Details'));
-            this.order = await this.getOrderTransaction(this.$route.params.id, true)
+            this.order = await this.getOrder(this.$route.params.id)
             this.orderExists = true;
             this.loading = false;
         }
@@ -56,14 +56,16 @@ export default {
 </script>
 
 <template>
-    <div class="pageContainerMax" v-loading="loading">
+    <div class="pageContainerMax" v-loading.fullscreen.lock="loading">
 
-        <div v-if="!orderExists" class="tac">
-            {{ $t('Oops we could not find the order you are looking for.') }}
-        </div>
-        <div v-else>
-            <order-details :order="order" />
-        </div>
+        <template v-if="!loading">
+            <div v-if="!orderExists" class="tac">
+                {{ $t('Oops we could not find the order you are looking for.') }}
+            </div>
+            <div v-else>
+                <order-details :order="order" />
+            </div>
+        </template>
 
     </div>
 </template>

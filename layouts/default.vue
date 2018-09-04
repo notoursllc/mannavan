@@ -70,9 +70,8 @@ export default {
                 :to="{ name: 'cart-id' }"
                 tag="a"
                 class="navbar-item"
-                :class="{'bounce': numCartItems}"
                 active-class="active">
-                <div class="inlineBlock relative">
+                <div class="inlineBlock relative" :class="{'bounce': numCartItems}">
                     <icon-cart icon-name="shopping_cart" :class-name="numCartItems ? 'fillLime': 'fillWhite'" width="35px" height="35px" />
                     <span class="badge" v-if="numCartItems">{{ numCartItems }}</span>
                 </div>

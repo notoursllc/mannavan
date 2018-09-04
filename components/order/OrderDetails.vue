@@ -23,7 +23,17 @@ export default {
 
     mixins:[
         order_mixin
-    ]
+    ],
+
+    computed: {
+        cardType: function() {
+            if(this.order.transaction.paymentInstrumentType === 'paypal_account') {
+                return 'paypal';
+            }
+
+            return this.order.transaction.creditCard.cardType;
+        }
+    }
 }
 </script>
 
@@ -32,12 +42,12 @@ export default {
         <div class="mbl">
             <div class="displayTableRow">
                 <div class="displayTableCell prm">{{ $t('Ordered on') }}:</div>
-                <div class="displayTableCell">{{ order.created | format8601 }}</div>
+                <div class="displayTableCell">{{ order.created_at | format8601 }}</div>
             </div>
 
             <div class="displayTableRow">
                 <div class="displayTableCell prm">{{ $t('Order') }}:</div>
-                <div class="displayTableCell">{{ order.transaction.id }}</div>
+                <div class="displayTableCell">{{ order.id }}</div>
             </div>
         </div>
 
@@ -45,23 +55,23 @@ export default {
             <div class="mbl mrxl inlineBlock vat">
                 <div class="fwb">{{ $t('Shipping to') }}:</div>
                 <address-display
-                    :first-name="order.shipping.firstName"
-                    :last-name="order.shipping.lastName"
-                    :street-address="order.shipping.streetAddress"
-                    :extended-address="order.shipping.extendedAddress"
-                    :company="order.shipping.company"
-                    :country-code="order.shipping.countryCodeAlpha2"
-                    :city="order.shipping.locality"
-                    :state="order.shipping.region"
-                    :zip="order.shipping.postalCode" />
+                    :first-name="order.shoppingCart.shipping_firstName"
+                    :last-name="order.shoppingCart.shipping_lastName"
+                    :street-address="order.shoppingCart.shipping_streetAddress"
+                    :extended-address="order.shoppingCart.shipping_extendedAddress"
+                    :company="order.shoppingCart.shipping_company"
+                    :country-code="order.shoppingCart.shipping_countryCodeAlpha2"
+                    :city="order.shoppingCart.shipping_city"
+                    :state="order.shoppingCart.shipping_state"
+                    :zip="order.shoppingCart.shipping_postalCode" />
             </div>
 
             <div class="mbl mrxl inlineBlock vat">
                 <div class="fwb">{{ $t('Payment method') }}:</div>
                 <div>
                     <payment-type-display :card-type="cardType"
-                                        :last-four="order.transaction.payment.last4"
-                                        :payer-email="order.transaction.payment.payerEmail"></payment-type-display>
+                                        :last-four="order.transaction.creditCard.last4"
+                                        :payer-email="order.transaction.customer.email"></payment-type-display>
                 </div>
             </div>
 

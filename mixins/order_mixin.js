@@ -14,19 +14,18 @@ export default {
     },
 
     methods: {
-        async getOrderTransaction(transaction_id, verbose) {
-            const response = await this.$axios.$get('/order/transaction', {
-                params: {
-                    transaction_id,
-                    verbose
-                }
+        async getOrder(id) {
+            const response = await this.$axios.$get('/order', {
+                params: { id }
             });
             return response.data;
         },
 
-        async getOrder(id) {
-            const response = await this.$axios.$get('/order', {
-                params: { id }
+        async getOrderSummary(id) {
+            const response = await this.$axios.$get('/order/summary', {
+                params: {
+                    id
+                }
             });
             return response.data;
         },

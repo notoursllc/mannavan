@@ -16,3 +16,22 @@
     animation-duration: 3s;
     animation-iteration-count: infinite;
 }
+
+
+@keyframes sway {
+    0% {
+        transform: rotate(0deg);
+    }
+    30% {
+        transform: rotate(5deg);
+    }
+    60% {
+        transform: rotate(-5deg);
+    }
+}
+
+.sway {
+    animation-name: sway;
+    animation-duration: 4s;
+    animation-iteration-count: infinite;
+}

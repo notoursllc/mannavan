@@ -1,6 +1,3 @@
-- var baseUrl = "https://www.goBreadVan.com"
-
-
 //- IE Conditional Comment Opening
 mixin ie-open(props)
   - props = props || {};
@@ -34,8 +31,7 @@ mixin ie-close(props)
 
 
 mixin link(path, linkText)
-  - url = baseUrl + path;
-  |<a href="!{url}">!{linkText}</a>
+  |<a href="!{path}">!{linkText}</a>
 
 
 mixin header
@@ -54,11 +50,8 @@ mixin header
 mixin greeting
   table(cellspacing="0" cellpadding="0" border="0" width="100%")
     tr: td(style="font-size:18px; line-height:30px; color:#249c32") Thank you!
-    tr: td
-      | You ordered
-      |
-      +link(`/order/details/${transactionId}`, orderTitle)
-      |.
+    tr: td(style="padding-top:20px") You ordered:
+      div(style="font-size:18px") !{orderTitle}
 
 
 mixin details
@@ -71,7 +64,7 @@ mixin details
             td(style="padding-bottom:5px")
               | Order
               |
-              +link(`/order/details/${transactionId}`, transactionId)
+              +link(`${baseUrl}/order/details/${id}`, id)
               |
 
         table(cellspacing="0" cellpadding="0" border="0" width="100%")
@@ -94,11 +87,11 @@ mixin disclaimer
   p(style="margin:10px 0 8px 0")
     | By placing your order, you agree to goBreadVan.com’s
     |
-    +link('/privacy', 'Privacy Notice')
+    +link(`${baseUrl}/privacy`, 'Privacy Notice')
     |
     | and
     |
-    +link('/conditions-of-use', 'Conditions of Use')
+    +link(`${baseUrl}/conditions-of-use`, 'Conditions of Use')
     |.
     |
     | Unless otherwise noted, items sold by goBreadVan.com are subject to sales tax in select states in accordance with the applicable laws of that state.

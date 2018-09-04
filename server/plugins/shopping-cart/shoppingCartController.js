@@ -655,13 +655,13 @@ async function getShippoOrder(cartId) {
 }
 
 
-function sendPurchaseConfirmationEmails(cartToken, transactionId) {
+function sendPurchaseConfirmationEmails(cartToken, payment_id) {
     return new Promise(async (resolve, reject) => {
         // Get a fresh cart with all of the relations for the email message
         let ShoppingCart = await getCart(cartToken);
 
         try {
-            await shoppingCartEmailService.sendPurchaseEmails(ShoppingCart, transactionId);
+            await shoppingCartEmailService.sendPurchaseEmails(ShoppingCart, payment_id);
 
             let emailSentAt = new Date().toISOString();
             await ShoppingCart.save(
@@ -723,19 +723,19 @@ async function cartCheckoutHandler(request, h) {
             }
         });
 
-        // If we got here then the Braintree transaction was successful
-        // (because runPayment() throws an Error)
-        // Anything that happens after this (i.e saving the payment details to DB)
-        // needs to fail silently, as the user has already been changed and we can't
-        // give the impression of an overall transaction failure that may prompt them
-        // to re-do the purchase.
-
         // Saving the payment transaction whether it was successful (transactionObj.success === true)
         // or not (transactionObj.success === false)
-        // Any failures that happen while saving the payment info do not affect the
-        // braintree transaction and thus should fail silently.
-        // NOTE: doing nothing with the promise response here (Payment).  The method logs errors too
-        savePayment(ShoppingCart.get('id'), transactionObj)
+        // NOTE: Originally I was not raising any errors to the user that happen while saving to the DB.
+        // However I think it's worth doing so because immediately after the transaction we display
+        // the transaction summary to the user, and we would have nothing to display if there
+        // was an error saving that data, giving the impression that the order was not successful.
+        // Therefore any errors that happen here (promise is rejected) will be caught below
+        const payment = await savePayment(ShoppingCart.get('id'), transactionObj);
+
+        // NOTE: Any failures that happen after this do not affect the braintree transaction
+        // and thus should fail silently (catching and logging errors), as the user has already been changed
+        // and we can't give the impression of an overall transaction failure that may prompt them
+        // to re-do the purchase.
 
         // Create the Order in Shippo so a shipping label can be created in the future.
         createShippoOrderFromShoppingCart(ShoppingCart).then((ShippoOrder) => {
@@ -766,12 +766,12 @@ async function cartCheckoutHandler(request, h) {
         }
 
         // Sending the purchase emails:
-        sendPurchaseConfirmationEmails(cartToken, transactionObj.transaction.id)
+        sendPurchaseConfirmationEmails(cartToken, payment.id)
 
         // Successful transactions return the transaction id
         if(transactionObj.success) {
             return h.apiSuccess({
-                transactionId: transactionObj.transaction.id
+                transactionId: payment.id
             });
         }
         else {
@@ -847,9 +847,9 @@ async function getOrderHandler(request, h) {
 }
 
 
-async function getOrderTransactionHandler(request, h) {
+async function getOrderSummaryHandler(request, h) {
     try {
-        const payment = await getPaymentByAttribute('transaction_id', request.query.transaction_id);
+        const payment = await getPaymentByAttribute('id', request.query.id);
 
         if(!payment) {
             throw Boom.notFound('Order not found');
@@ -857,17 +857,14 @@ async function getOrderTransactionHandler(request, h) {
 
         let p = payment.toJSON();
 
-        // Much less data can be sent over the wire in this case,
-        // so trimming the transaction value in the response
-        let cartResponse = request.query.verbose
-                            ? p.shoppingCart
-                            : { num_items: p.shoppingCart.num_items, shipping_email: p.shoppingCart.shipping_email };
-
         let response = {
             id: p.id,
             created: p.created_at,
             shipping: p.transaction.shipping,
-            shoppingCart: cartResponse,
+            shoppingCart: {
+                num_items: p.shoppingCart.num_items,
+                shipping_email: p.shoppingCart.shipping_email
+            },
             transaction: {
                 id: p.transaction_id,
                 amount: p.transaction.amount,
@@ -893,7 +890,6 @@ async function getOrderTransactionHandler(request, h) {
         throw Boom.badRequest(err);
     }
 }
-
 
 /**
 * From Braintree docs:
@@ -1055,6 +1051,6 @@ module.exports = {
     cartCheckoutHandler,
     getOrdersHandler,
     getOrderHandler,
-    getOrderTransactionHandler,
+    getOrderSummaryHandler,
     getPaymentClientTokenHandler,
 }

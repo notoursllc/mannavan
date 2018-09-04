@@ -130,12 +130,13 @@ function getPurchaseDescription(ShoppingCart) {
 }
 
 
-function emailPurchaseReceiptToBuyer(ShoppingCart, transactionId, orderTitle) {
+function emailPurchaseReceiptToBuyer(ShoppingCart, payment_id, orderTitle) {
     let html = pug.renderFile(
         path.join(__dirname, '../email-templates', 'purchase-receipt.pug'),
         {
             orderTitle,
-            transactionId,
+            baseUrl: helpers.getSiteUrl(true),
+            id: payment_id,
             shipping: {
                 name: getShippingName(ShoppingCart),
                 address: ShoppingCart.get('shipping_streetAddress')
@@ -149,19 +150,20 @@ function emailPurchaseReceiptToBuyer(ShoppingCart, transactionId, orderTitle) {
 
     return send({
         to: ShoppingCart.get('shipping_email'),
-        subject: `Your goBreadVan.com order of ${orderTitle}`,
+        subject: `Your order from goBreadVan.com - ${orderTitle}`,
         // text: 'sample text for purchase receipt', //TODO:
         html: html
     });
 }
 
 
-function emailPurchaseAlertToAdmin(ShoppingCart, transactionId, orderTitle) {
+function emailPurchaseAlertToAdmin(ShoppingCart, payment_id, orderTitle) {
     let html = pug.renderFile(
         path.join(__dirname, '../email-templates', 'admin-purchase-alert.pug'),
         {
             orderTitle,
-            transactionId,
+            baseUrl: helpers.getSiteUrl(true),
+            id: payment_id,
             shipping_firstName: ShoppingCart.get('shipping_firstName'),
             shipping_lastName: ShoppingCart.get('shipping_lastName'),
             shipping_streetAddress: ShoppingCart.get('shipping_streetAddress'),
@@ -187,12 +189,12 @@ function emailPurchaseAlertToAdmin(ShoppingCart, transactionId, orderTitle) {
 }
 
 
-function sendPurchaseEmails(ShoppingCart, transactionId) {
+function sendPurchaseEmails(ShoppingCart, payment_id) {
     let orderTitle = getPurchaseDescription(ShoppingCart);
 
     Promise.all([
-        emailPurchaseReceiptToBuyer(ShoppingCart, transactionId, orderTitle),
-        emailPurchaseAlertToAdmin(ShoppingCart, transactionId, orderTitle)
+        emailPurchaseReceiptToBuyer(ShoppingCart, payment_id, orderTitle),
+        emailPurchaseAlertToAdmin(ShoppingCart, payment_id, orderTitle)
     ]);
 }
 

@@ -1,8 +1,7 @@
-- var baseUrl = "https://www.goBreadVan.com"
+
 
 mixin link(path, linkText)
-  - url = baseUrl + path;
-  |<a href="!{url}">!{linkText}</a>
+  |<a href="!{path}">!{linkText}</a>
 
 
 mixin header
@@ -16,7 +15,7 @@ mixin greeting
         tr: td(style="padding:20px 0 20px 0")
             | Order ID:
             |
-            +link(`/order/details/${transactionId}`, transactionId)
+            +link(`${baseUrl}/acts/order/${id}`, id)
 
 
 mixin details
@@ -31,9 +30,6 @@ mixin details
                 include includes/totals-table.pug
 
 
-//- MARKUP
-
-//- Pseudo Header
 include includes/html-body.pug
     table(cellspacing="0" cellpadding="0" border="0" width="100%")
       tr: td(style="padding: 0 20px")
