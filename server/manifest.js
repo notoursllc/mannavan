@@ -12,8 +12,12 @@ const webManifest = {
     },
     register: {
         plugins: [
+            // {
+            //     plugin: 'hapi-nuxt',
+            //     options: path.resolve(__dirname, '../nuxt.config.js')
+            // },
             {
-                plugin: 'hapi-nuxt',
+                plugin: './plugins/hapi-nuxt',
                 options: path.resolve(__dirname, '../nuxt.config.js')
             },
             { plugin: 'inert' },

@@ -112,38 +112,51 @@ module.exports = {
         vendor: ['vue-i18n'],
 
         babel: {
-            plugins: [
+            // plugins: [
                 // ['transform-es2015-template-literals', {
                 //     loose: true,
                 //     spec: true
                 // }],
                 // 'transform-runtime',
-                ['transform-es2015-arrow-functions', {
-                    spec: false
-                }]
-            ],
-            presets: [
-                ['vue-app', {
-                    targets: { ie: 11, uglify: false },
-                    useBuiltIns: true
-                }]
-            ]
+                // ['transform-es2015-arrow-functions', {
+                //     spec: true
+                // }]
+            // ],
+            // presets: [
+            //     ['vue-app', {
+            //         targets: { ie: 11, uglify: false },
+            //         useBuiltIns: true
+            //     }]
+            // ]
+            // presets: ['es2015', 'stage-2'],
+            // plugins: ['transform-runtime']
+            // presets: [
+            //     ['env', {
+            //         'targets': {
+            //             'browsers': ['last 2 versions', 'ie >= 11']
+            //             // 'browsers': [
+            //             //     'Explorer 11'
+            //             // ]
+            //         },
+            //         'useBuiltIns': true
+            //     }]
+            // ]
         },
 
         /*
         ** You can extend webpack config here
         */
-        extend(config, ctx) {
-            // Run ESLint on save
-            if (ctx.isDev && ctx.isClient) {
-                config.module.rules.push({
-                    enforce: 'pre',
-                    test: /\.(js|vue)$/,
-                    loader: 'eslint-loader',
-                    exclude: /(node_modules)/
-                })
-            }
-        }
+        // extend(config, ctx) {
+        //     // Run ESLint on save
+        //     if (ctx.isDev && ctx.isClient) {
+        //         config.module.rules.push({
+        //             enforce: 'pre',
+        //             test: /\.(js|vue)$/,
+        //             loader: 'eslint-loader',
+        //             exclude: /(node_modules)/
+        //         })
+        //     }
+        // }
     },
 
     transition: {
