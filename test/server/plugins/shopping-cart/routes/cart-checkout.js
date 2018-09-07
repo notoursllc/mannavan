@@ -158,26 +158,26 @@ describe('Testing route: POST /cart/checkout', () => {
             expect(checkoutResponse).to.be.an.object();
             expect(checkoutResponse.statusCode, 'Status code').to.equal(200);
 
-            let transactionID;
+            let paymentID;
             if(isObject(checkoutResponse.result.data)) {
-                transactionID = checkoutResponse.result.data.transactionId || null;
+                paymentID = checkoutResponse.result.data.transactionId || null;
             }
 
-            expect(transactionID, 'Transaction ID').to.be.a.string();
+            expect(paymentID, 'Payment ID').to.be.a.string();
 
             // verify that the DB contains data about the transaction:
             // wait a few seconds for the other DB transactions to happen
             setTimeout(async () => {
                 // Payment:
-                const Payment = await controller.getPaymentByAttribute('transaction_id', transactionID);
+                const Payment = await controller.getPaymentByAttribute('id', paymentID);
                 const p = Payment.toJSON();
-                // console.log("PAYMENT", p)
-                expect(p.transaction_id, 'Payment Transaction ID').to.equal(transactionID);
+
+                expect(p.id, 'Payment ID').to.equal(paymentID);
 
                 // ShoppingCartToShippoOrder:
                 const ShippoOrder = await controller.getShippoOrder(p.shoppingCart.id)
                 const order = ShippoOrder.toJSON();
-                // console.log("SHIPPO ORDR", order)
+
                 expect(order.cart_id, 'ShoppingCartToShippoOrder Cart ID').to.equal(p.shoppingCart.id);
 
                 // Purchase confirmation emails:

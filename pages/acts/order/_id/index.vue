@@ -101,12 +101,12 @@ export default{
                 <form-row label="Ordered on:">{{ order.created_at | format8601 }}</form-row>
 
                 <!-- transaction id -->
-                <form-row label="Transaction ID:">{{ order.transaction_id }}</form-row>
+                <form-row label="Transaction ID:">{{ order.transaction.id }}</form-row>
 
                 <!-- transaction id -->
                 <form-row label="Success:">
-                    <span v-bind:class="{'colorGreen':order.success, 'colorRed':!order.success}">
-                        {{ order.success ? 'Yes' : 'No '}}
+                    <span v-bind:class="{'colorGreen':order.transaction.success, 'colorRed':!order.transaction.success}">
+                        {{ order.transaction.success ? 'Yes' : 'No '}}
                     </span>
                 </form-row>
             </div>

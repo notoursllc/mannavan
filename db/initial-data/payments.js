@@ -20,15 +20,15 @@ exports.seed = (knex) => {
                 knex(CoreService.DB_TABLES.payments)
                     .insert({
                         id: faker.random.uuid(),
-                        transaction_id: 'abc1',
                         transaction: {
+                            "id": "abc1",
+                            "success": true,
                             "paymentInstrumentType": "credit_card",
                             "creditCard": {
                                 "cardType": "Visa",
                                 "last4": "1111"
                             }
                         },
-                        success: true,
                         created_at: d,
                         updated_at: d,
                         cart_id: global.cartSeedUuids[0]
@@ -39,14 +39,14 @@ exports.seed = (knex) => {
                 knex(CoreService.DB_TABLES.payments)
                     .insert({
                         id: faker.random.uuid(),
-                        transaction_id: 'abc2',
                         transaction: {
+                            "id": "abc2",
+                            "success": true,
                             "paymentInstrumentType": "paypal_account",
                             "paypalAccount": {
                                 "payerEmail": "payer@example.com"
                             }
                         },
-                        success: true,
                         created_at: d,
                         updated_at: d,
                         cart_id: global.cartSeedUuids[1]

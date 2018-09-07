@@ -807,6 +807,18 @@ async function getPaymentByAttribute(attrName, attrValue) {
 }
 
 
+/**
+ * Gets a payment by a given attribute
+ *
+ * @param attrName
+ * @param attrValue
+ * @param fetchOptions  Object
+ */
+async function getPaymentTransactionByAttribute(attrName, attrValue, fetchOptions) {
+    return getPaymentModel().findByTransactionAttribute(attrName, attrValue, fetchOptions);
+}
+
+
 async function getOrdersHandler(request, h) {
     try {
         const orders = await HelperService.fetchPage(
@@ -866,7 +878,7 @@ async function getOrderSummaryHandler(request, h) {
                 shipping_email: p.shoppingCart.shipping_email
             },
             transaction: {
-                id: p.transaction_id,
+                id: p.transaction.id,
                 amount: p.transaction.amount,
                 payment: {
                     type: p.transaction.paymentInstrumentType
@@ -958,9 +970,7 @@ async function savePayment(cart_id, transactionJson) {
             .save(
                 {
                     cart_id: cart_id,
-                    transaction_id: transactionJson.transaction.id,
                     transaction: transactionJson.transaction,
-                    success: transactionJson.success || null
                 },
                 {
                     method: 'insert'
@@ -1034,6 +1044,7 @@ module.exports = {
 
     //payments
     getPaymentByAttribute,
+    getPaymentTransactionByAttribute,
     savePayment,
     runPayment,
 
