@@ -199,11 +199,6 @@ const after = function (server) {
     );
 
     server.app.bookshelf.model(
-        'ShoppingCartToShippoOrder',
-        require('./models/ShoppingCartToShippoOrder')(baseModel, server.app.bookshelf, server)
-    );
-
-    server.app.bookshelf.model(
         'Payment',
         require('./models/Payment')(baseModel, server.app.bookshelf, server)
     );

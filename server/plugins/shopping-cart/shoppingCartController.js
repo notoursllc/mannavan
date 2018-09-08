@@ -26,10 +26,6 @@ function getShoppingCartItemModel() {
     return server.app.bookshelf.model('ShoppingCartItem');
 }
 
-function getShoppingCartToShippoOrderModel() {
-    return server.app.bookshelf.model('ShoppingCartToShippoOrder');
-}
-
 function getPaymentModel() {
     return server.app.bookshelf.model('Payment');
 }
@@ -607,8 +603,8 @@ function createShippoOrderFromShoppingCart(ShoppingCart) {
         data.weight = totalWeight;
 
         try {
-            let ShippoOrder = shippoOrdersAPI.createOrder(data);
-            resolve(ShippoOrder);
+            let shippoOrderJSON = shippoOrdersAPI.createOrder(data);
+            resolve(shippoOrderJSON);
         }
         catch(err) {
             global.logger.error(err)
@@ -616,42 +612,6 @@ function createShippoOrderFromShoppingCart(ShoppingCart) {
             reject(err);
         }
     });
-}
-
-
-async function saveShippoOrder(cart_id, ShippoOrderJson) {
-    return new Promise((resolve, reject) => {
-        getShoppingCartToShippoOrderModel()
-            .forge()
-            .save(
-                {
-                    cart_id: cart_id,
-                    shippo_order: ShippoOrderJson
-                },
-                {
-                    method: 'insert'
-                }
-            )
-            .then((ShoppingCartToShippoOrder) => {
-                resolve(ShoppingCartToShippoOrder);
-            })
-            .catch((err) => {
-                let msg = `ERROR SAVING SHIPPO ORDER: ${err}`;
-                global.logger.error(msg)
-                global.bugsnag(msg);
-
-                reject(err);
-            });
-    });
-}
-
-
-async function getShippoOrder(cartId) {
-    const ShoppingCartToShippoOrder = await getShoppingCartToShippoOrderModel().query((qb) => {
-        qb.where('cart_id', '=', cartId);
-    }).fetch();
-
-    return ShoppingCartToShippoOrder;
 }
 
 
@@ -737,15 +697,13 @@ async function cartCheckoutHandler(request, h) {
         // and we can't give the impression of an overall transaction failure that may prompt them
         // to re-do the purchase.
 
-        // Create the Order in Shippo so a shipping label can be created in the future.
-        createShippoOrderFromShoppingCart(ShoppingCart).then((ShippoOrder) => {
-            saveShippoOrder(ShoppingCart.get('id'), ShippoOrder);
-        })
-
         // Updating the cart with the billing params and the 'closed_at'
         // timestamp if transaction was successful:
         let updateParams = cloneDeep(request.payload);
         delete updateParams.nonce;
+
+         // Create the Order in Shippo so a shipping label can be created in the future.
+        updateParams.shippo_order = await createShippoOrderFromShoppingCart(ShoppingCart);
 
         if(transactionObj.success) {
             // This will cause the cart not to be re-used
@@ -1040,16 +998,12 @@ module.exports = {
     getCartTokenFromJwt,
     getCart,
     createShippoOrderFromShoppingCart,
-    saveShippoOrder,
 
     //payments
     getPaymentByAttribute,
     getPaymentTransactionByAttribute,
     savePayment,
     runPayment,
-
-    // shippo orders
-    getShippoOrder,
 
     // route handlers:
     cartGetHandler,

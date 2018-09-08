@@ -27,7 +27,6 @@ async function getOrder(orderObjectId) {
  */
 async function createOrder(data) {
     global.logger.debug("CREATING SHIPPO ORDER", data);
-
     return await postCreate(basePath, data)
 }
 

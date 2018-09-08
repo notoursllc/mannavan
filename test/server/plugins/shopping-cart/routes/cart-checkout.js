@@ -174,12 +174,6 @@ describe('Testing route: POST /cart/checkout', () => {
 
                 expect(p.id, 'Payment ID').to.equal(paymentID);
 
-                // ShoppingCartToShippoOrder:
-                const ShippoOrder = await controller.getShippoOrder(p.shoppingCart.id)
-                const order = ShippoOrder.toJSON();
-
-                expect(order.cart_id, 'ShoppingCartToShippoOrder Cart ID').to.equal(p.shoppingCart.id);
-
                 // Purchase confirmation emails:
                 let ShoppingCart = await controller.getCart( testHelpers.getCartToken() )
                 expect(ShoppingCart.get('purchase_confirmation_email_sent_at'), 'Purchase confirmation email sent at').to.be.a.date();
