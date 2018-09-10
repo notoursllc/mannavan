@@ -18,6 +18,7 @@
     import IconPaypal from '@/components/icons/IconPaypal'
     import shopping_cart_mixin from '@/mixins/shopping_cart_mixin'
     import app_mixin from '@/mixins/app_mixin'
+    import payment_mixin from '@/mixins/payment_mixin'
 
     Vue.use(Checkbox)
     Vue.use(Input)
@@ -46,7 +47,8 @@
 
         mixins: [
             shopping_cart_mixin,
-            app_mixin
+            app_mixin,
+            payment_mixin
         ],
 
         computed: {

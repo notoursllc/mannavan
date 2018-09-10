@@ -11,12 +11,6 @@ export default {
             return response.data.data;
         },
 
-        async getBraintreeClientToken() {
-             // note: using $get instead of get
-            const response = await this.$axios.$get('/payment-token');
-            return response.data;
-        },
-
 
         async getCart() {
             return await this.$axios.get('/cart/get');

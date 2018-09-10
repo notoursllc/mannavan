@@ -44,6 +44,7 @@
     "correct_address_statement": "If the address contains typos or other errors, your package may be undeliverable.",
     "COUNTRY": "COUNTRY",
     "Country": "Country",
+    "Create": "Create",
     "CREDIT CARD": "CREDIT CARD",
     "cvv_help_3_digit": "The code is printed on the back of your card. It is the last 3 digits AFTER the credit card number in the signature area of the card.",
     "cvv_help_4_digit": "The 4 digit code is printed on the front of your card, above the credit card number, on either the right or left side.",
@@ -99,6 +100,7 @@
     "Payment method": "Payment method",
     "PAYMENT METHOD": "PAYMENT METHOD",
     "Payment method error": "Payment method error",
+    "Payment not found": "Payment not found",
     "PAYPAL": "PAYPAL",
     "PayPal tokenization failed": "PayPal tokenization failed",
     "PAYPAL_ACCOUNT_TOKENIZATION_FAILED": "PayPal tokenization failed",
@@ -183,6 +185,8 @@
 
     "Unable to initialize PayPal flow. Are your options correct?": "Unable to initialize PayPal flow. Are your options correct?",
     "USE A DIFFERENT BILLING ADDRESS": "USE A DIFFERENT BILLING ADDRESS",
+
+    "View": "View",
 
     "We have a winner!": "We have a winner!",
     "We want to make sure it fits!": "We want to make sure it fits!",

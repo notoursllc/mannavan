@@ -2,7 +2,6 @@ let product_artists = require('../initial-data/product_artists');
 let product_pics = require('../initial-data/product_pics');
 let product_sizes = require('../initial-data/product_sizes');
 let products = require('../initial-data/products');
-let payments = require('../initial-data/payments');
 let carts = require('../initial-data/carts');
 let package_types = require('../initial-data/package_types');
 
@@ -33,7 +32,6 @@ exports.seed = (knex, Promise) => {
             return Promise.all([
                 product_pics.seed(knex, Promise),
                 product_sizes.seed(knex, Promise),
-                payments.seed(knex, Promise),
                 package_types.seed(knex, Promise)
             ])
         });

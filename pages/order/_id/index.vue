@@ -2,7 +2,7 @@
 import Vue from 'vue'
 import { Loading } from 'element-ui'
 import PaymentTypeDisplay from '@/components/PaymentTypeDisplay'
-import order_mixin from '@/mixins/order_mixin'
+import payment_mixin from '@/mixins/payment_mixin'
 import app_mixin from '@/mixins/app_mixin'
 import IconVictoryPeace from '@/components/icons/IconVictoryPeace'
 import IconEnvelope from '@/components/icons/IconEnvelope'
@@ -19,7 +19,7 @@ export default {
     },
 
     mixins: [
-        order_mixin,
+        payment_mixin,
         app_mixin
     ],
 
@@ -40,7 +40,7 @@ export default {
     async created() {
         try {
             this.$store.dispatch('ui/pageTitle', null);
-            this.order = await this.getOrderSummary(this.$route.params.id);
+            this.order = await this.getPaymentSummary(this.$route.params.id);
             this.orderExists = true;
         }
         catch(e) {
@@ -126,7 +126,7 @@ export default {
                         <div class="displayTableRow">
                             <div class="displayTableCell prm pbs">{{ $t('Order') }}:</div>
                             <div class="displayTableCell fwb pbs">
-                                <a v-if="order.id" @click="goToOrderDetails(order.id)">{{ order.id }}</a>
+                                <a v-if="order.id" @click="goToPaymentDetails(order.id)">{{ order.id }}</a>
                             </div>
                         </div>
                     </div>

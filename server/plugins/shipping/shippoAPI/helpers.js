@@ -29,7 +29,7 @@ async function getList(path) {
         const { data } = await getAxios().get(path);
         return data.results || [];
     }
-    catch(err) {
+    catch(error) {
         global.logger.error(error);
         global.bugsnag(error);
         throw Boom.badRequest(error);

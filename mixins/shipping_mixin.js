@@ -52,6 +52,17 @@ export default {
         },
 
 
+        async getShippingLabel(id) {
+            try {
+                const response = await this.$axios.$post('/shipping/label', { id });
+                return response.data;
+            }
+            catch(err) {
+                console.error(err)
+            }
+        },
+
+
         goToPackageTypeList() {
             this.$router.push({
                 name: 'acts-shipping-packagetypes-list'

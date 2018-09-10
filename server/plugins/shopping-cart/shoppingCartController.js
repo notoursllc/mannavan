@@ -2,12 +2,12 @@
 const Joi = require('joi');
 const Boom = require('boom');
 const cloneDeep = require('lodash.clonedeep');
-const isObject = require('lodash.isobject');
+
 const uuidV4 = require('uuid/v4');
 const uuidValidate = require('uuid-validate');
 const Cookie = require('cookie');
 const accounting = require('accounting');
-const HelperService = require('../../helpers.service');
+
 const salesTaxService = require('./services/SalesTaxService');
 const shoppingCartEmailService = require('./services/ShoppingCartEmailService');
 const productsController = require('../products/productsController')
@@ -24,10 +24,6 @@ function getShoppingCartModel() {
 
 function getShoppingCartItemModel() {
     return server.app.bookshelf.model('ShoppingCartItem');
-}
-
-function getPaymentModel() {
-    return server.app.bookshelf.model('Payment');
 }
 
 
@@ -156,14 +152,41 @@ function getOrCreateCartToken(request) {
 }
 
 
-async function getCart(cartToken, withRelatedArr) {
+/**
+ * Gets a ShoppingCart by a given attribute
+ *
+ * @param attrName
+ * @param attrValue
+ * @param withRelatedArr
+ */
+async function getCartByAttribute(attrName, attrValue, withRelatedArr) {
+    let fetchObj = null;
+
+    if(Array.isArray(withRelatedArr)) {
+        fetchObj = {
+            withRelated: withRelatedArr
+        }
+    }
+
     const ShoppingCart = await getShoppingCartModel().query((qb) => {
-        qb.where('token', '=', cartToken);
+        qb.where(attrName, '=', attrValue);  // TODO: Is there a SQL injection risk here?
     })
-    .orderBy('created_at', 'DESC')
-    .fetch({
-        withRelated: Array.isArray(withRelatedArr) ? withRelatedArr : getDefaultWithRelated()
-    });
+    .fetch(fetchObj);
+
+    global.logger.debug("CART BY ATTRIBUTE", attrName, attrValue, (ShoppingCart ? ShoppingCart.toJSON() : null));
+
+    return ShoppingCart;
+}
+
+
+async function getCart(cartToken, withRelatedArr) {
+    let withRelated = Array.isArray(withRelatedArr) ? withRelatedArr : getDefaultWithRelated();
+
+    const ShoppingCart = await getCartByAttribute(
+        'token',
+        cartToken,
+        withRelated
+    );
 
     return ShoppingCart;
 }
@@ -183,10 +206,10 @@ async function getActiveCart(cartToken) {
         return false
     }
 
-    const ShoppingCart = await getShoppingCartModel().query((qb) => {
-        qb.where('token', '=', cartToken);
-    })
-    .fetch();
+    const ShoppingCart = await getCartByAttribute(
+        'token',
+        cartToken
+    )
 
     if(!ShoppingCart || ShoppingCart.get('closed_at')) {
         return false;
@@ -233,6 +256,9 @@ async function pre_cart(request, h) {
         throw Boom.notFound(err);
     }
 }
+
+
+
 
 
 async function cartGetHandler(request, h) {
@@ -420,6 +446,8 @@ async function cartShippingSetAddressHandler(request, h) {
             { method: 'update', patch: true }
         );
 
+        console.log("UpdatedShoppingCart", UpdatedShoppingCart.toJSON())
+
         // This may change in the future when we offer the user the choice of several
         // different shipping rates, but for now the user doesn't get to choose and
         // we are fetching the lowest shipping rate and saving it in the shopping cart
@@ -545,73 +573,66 @@ async function cartShippingRateHandler(request, h) {
  *
  * @param {*} ShoppingCart
  */
-function createShippoOrderFromShoppingCart(ShoppingCart) {
-    return new Promise((resolve, reject) => {
-        if(!ShoppingCart) {
-            let err = new Error('createShippoOrderFromShoppingCart: ShoppingCart obejct was not passed as an argument');
-            global.logger.error(err);
-            global.bugsnag(err);
-            reject(err);
-            return;
-        }
+async function createShippoOrderFromShoppingCart(ShoppingCart) {
+    if(!ShoppingCart) {
+        let err = new Error('createShippoOrderFromShoppingCart: ShoppingCart obejct was not passed as an argument');
+        global.logger.error(err);
+        global.bugsnag(err);
 
-        let cart = ShoppingCart.toJSON();
-        let totalWeight = 0;
+        throw err;
+    }
 
-        let data = {
-            to_address: {
-                city: cart.shipping_city,
-                company: cart.shipping_company,
-                country: cart.shipping_countryCodeAlpha2,
-                email: cart.shipping_email,
-                name: cart.shipping_fullName,
-                state: cart.shipping_state,
-                street1: cart.shipping_streetAddress,
-                zip: cart.shipping_postalCode
-            },
-            line_items: [],
-            placed_at: new Date().toISOString(),
-            order_number: cart.id,
-            order_status: 'PAID',
-            shipping_cost: cart.shipping_rate.amount,
-            shipping_cost_currency: cart.shipping_rate.currency,
-            shipping_method: cart.shipping_rate.servicelevel.name,
-            subtotal_price: cart.sub_total,
-            total_price: cart.grand_total,
-            total_tax: cart.sales_tax,
+    let cart = ShoppingCart.toJSON();
+    let totalWeight = 0;
+
+    let data = {
+        to_address: {
+            city: cart.shipping_city,
+            company: cart.shipping_company,
+            country: cart.shipping_countryCodeAlpha2,
+            email: cart.shipping_email,
+            name: cart.shipping_fullName,
+            state: cart.shipping_state,
+            street1: cart.shipping_streetAddress,
+            zip: cart.shipping_postalCode
+        },
+        line_items: [],
+        placed_at: new Date().toISOString(),
+        order_number: cart.id,
+        order_status: 'PAID',
+        shipping_cost: cart.shipping_rate.amount,
+        shipping_cost_currency: cart.shipping_rate.currency,
+        shipping_method: cart.shipping_rate.servicelevel.name,
+        subtotal_price: cart.sub_total,
+        total_price: cart.grand_total,
+        total_tax: cart.sales_tax,
+        currency: 'USD',
+        weight: 0,
+        weight_unit: 'oz'
+    };
+
+    // building data.line_items
+    cart.cart_items.forEach((obj) => {
+        let itemWeight = obj.product.weight_oz * obj.qty;
+        totalWeight += itemWeight;
+
+        data.line_items.push({
+            quantity: obj.qty,
+            sku: obj.product.id,
+            title: obj.product.title,
+            total_price: obj.total_item_price,
             currency: 'USD',
-            weight: 0,
+            weight: accounting.toFixed(itemWeight, 2),
             weight_unit: 'oz'
-        };
-
-        // building data.line_items
-        cart.cart_items.forEach((obj) => {
-            let itemWeight = obj.product.weight_oz * obj.qty;
-            totalWeight += itemWeight;
-
-            data.line_items.push({
-                quantity: obj.qty,
-                sku: obj.product.id,
-                title: obj.product.title,
-                total_price: obj.total_item_price,
-                currency: 'USD',
-                weight: accounting.toFixed(itemWeight, 2),
-                weight_unit: 'oz'
-            })
-        });
-
-        data.weight = totalWeight;
-
-        try {
-            let shippoOrderJSON = shippoOrdersAPI.createOrder(data);
-            resolve(shippoOrderJSON);
-        }
-        catch(err) {
-            global.logger.error(err)
-            global.bugsnag(err);
-            reject(err);
-        }
+        })
     });
+
+    data.weight = totalWeight;
+
+    let shippoOrderJSON = await shippoOrdersAPI.createOrder(data);
+    global.logger.debug("CREATE SHIPPO ORDER FROM SHOPPING CART RESPONSE", shippoOrderJSON);
+
+    return shippoOrderJSON;
 }
 
 
@@ -643,6 +664,8 @@ function sendPurchaseConfirmationEmails(cartToken, payment_id) {
 // TODO: this function uses shoppingCartEmailService
 // Note: route handler calles the defined 'pre' method before it gets here
 async function cartCheckoutHandler(request, h) {
+    const { runPayment, savePayment } = require('../payment/paymentController');
+
     try {
         const cartToken = request.pre.m1.cartToken;
         const ShoppingCart = await getCart(cartToken);
@@ -690,7 +713,8 @@ async function cartCheckoutHandler(request, h) {
         // the transaction summary to the user, and we would have nothing to display if there
         // was an error saving that data, giving the impression that the order was not successful.
         // Therefore any errors that happen here (promise is rejected) will be caught below
-        const payment = await savePayment(ShoppingCart.get('id'), transactionObj);
+
+        const Payment = await savePayment(ShoppingCart.get('id'), transactionObj);
 
         // NOTE: Any failures that happen after this do not affect the braintree transaction
         // and thus should fail silently (catching and logging errors), as the user has already been changed
@@ -703,7 +727,8 @@ async function cartCheckoutHandler(request, h) {
         delete updateParams.nonce;
 
          // Create the Order in Shippo so a shipping label can be created in the future.
-        updateParams.shippo_order = await createShippoOrderFromShoppingCart(ShoppingCart);
+        // let shippoOrder = await createShippoOrderFromShoppingCart(ShoppingCart);
+        // updateParams.shippo_order_id = shippoOrder.object_id;
 
         if(transactionObj.success) {
             // This will cause the cart not to be re-used
@@ -724,12 +749,12 @@ async function cartCheckoutHandler(request, h) {
         }
 
         // Sending the purchase emails:
-        sendPurchaseConfirmationEmails(cartToken, payment.id)
+        sendPurchaseConfirmationEmails(cartToken, Payment.get('id'))
 
         // Successful transactions return the transaction id
         if(transactionObj.success) {
             return h.apiSuccess({
-                transactionId: payment.id
+                transactionId: Payment.get('id')
             });
         }
         else {
@@ -745,265 +770,19 @@ async function cartCheckoutHandler(request, h) {
 };
 
 
-/**
- * Gets a payment by a given attribute
- *
- * @param attrName
- * @param attrValue
- */
-async function getPaymentByAttribute(attrName, attrValue) {
-    const payment = await getPaymentModel().query((qb) => {
-        qb.where(attrName, '=', attrValue);  // TODO: Is there a SQL injection risk here?
-    })
-    .fetch({
-        withRelated: [
-            'shoppingCart.cart_items.product' // https://stackoverflow.com/questions/35679855/always-fetch-from-related-models-in-bookshelf-js#35841710
-        ]
-    });
-
-    return payment;
-}
-
-
-/**
- * Gets a payment by a given attribute
- *
- * @param attrName
- * @param attrValue
- * @param fetchOptions  Object
- */
-async function getPaymentTransactionByAttribute(attrName, attrValue, fetchOptions) {
-    return getPaymentModel().findByTransactionAttribute(attrName, attrValue, fetchOptions);
-}
-
-
-async function getOrdersHandler(request, h) {
-    try {
-        const orders = await HelperService.fetchPage(
-            request,
-            getPaymentModel(),
-            ['shoppingCart.cart_items.product']
-        );
-
-        return h.apiSuccess(
-            orders, orders.pagination
-        );
-    }
-    catch(err) {
-        global.logger.error(err);
-        global.bugsnag(err);
-        throw Boom.notFound(err);
-    }
-}
-
-
-async function getOrderHandler(request, h) {
-    try {
-        const order = await getPaymentByAttribute('id', request.query.id);
-
-        if(!order) {
-            throw Boom.notFound('Order not found');
-        }
-
-        return h.apiSuccess(
-            order.toJSON()
-        );
-    }
-    catch(err) {
-        global.logger.error(err);
-        global.bugsnag(err);
-        throw Boom.notFound(err);
-    }
-}
-
-
-async function getOrderSummaryHandler(request, h) {
-    try {
-        const payment = await getPaymentByAttribute('id', request.query.id);
-
-        if(!payment) {
-            throw Boom.notFound('Order not found');
-        }
-
-        let p = payment.toJSON();
-
-        let response = {
-            id: p.id,
-            created: p.created_at,
-            shipping: p.transaction.shipping,
-            shoppingCart: {
-                num_items: p.shoppingCart.num_items,
-                shipping_email: p.shoppingCart.shipping_email
-            },
-            transaction: {
-                id: p.transaction.id,
-                amount: p.transaction.amount,
-                payment: {
-                    type: p.transaction.paymentInstrumentType
-                }
-            }
-        };
-
-        if(p.transaction.paymentInstrumentType === 'credit_card') {
-            response.transaction.payment.last4 = p.transaction.creditCard.last4;
-            response.transaction.payment.cardType = p.transaction.creditCard.cardType;
-        }
-        else {
-            response.transaction.payment.payerEmail = p.transaction.paypalAccount.payerEmail;
-        }
-
-        return h.apiSuccess(response);
-    }
-    catch(err) {
-        global.logger.error(err);
-        global.bugsnag(err);
-        throw Boom.badRequest(err);
-    }
-}
-
-/**
-* From Braintree docs:
-* "A client token is a signed data blob that includes configuration and authorization information
-* required by the Braintree Client SDK. These should not be reused; a new client token should be
-* generated for each customer request that's sent to Braintree.
-* For security, we will revoke client tokens if they are reused excessively within a short time period."
-*
-* https://developers.braintreepayments.com/start/overview
-* https://developers.braintreepayments.com/reference/request/client-token/generate/node
-*
-* @returns {Promise}
-*/
-async function getPaymentClientTokenHandler(request, h) {
-    try {
-        // just verifyig that a shopping cart exists for this user.
-        // If not, no need to generate the token
-        let ShoppingCart = await getActiveCart(
-            getValidCartTokenFromRequest(request)
-        );
-
-        if(!ShoppingCart) {
-            throw new Error('Shopping cart does not exist.')
-        }
-
-        const response = await global.braintreeGateway.clientToken.generate({});
-
-        if(!response.clientToken) {
-            throw new Error('Error generating payment token.')
-        }
-
-        return h.apiSuccess(
-            response.clientToken
-        );
-    }
-    catch(err) {
-        global.logger.error(err);
-        global.bugsnag(err);
-        throw Boom.badRequest(err);
-    }
-}
-
-
-/**
- * Persists some of the Braintree transaction data
- *
- * Since the Braintree API allows searching for transaction data (https://developers.braintreepayments.com/reference/general/searching/search-fields/node)
- * it seems redundant and perhaps a bit insecure to store the entire transaction JSON here as well.
- * Therefore, pulling out only a few relevant transaction attributes (most importantly the transaction id)
- * and persisting those only.
- *
- * @param cart_id
- * @param transactionJson
- * @returns {Promise}
- */
-async function savePayment(cart_id, transactionJson) {
-    return new Promise((resolve, reject) => {
-        if(!isObject(transactionJson) || !isObject(transactionJson.transaction)) {
-            reject(new Error('An error occurred while processing the transaction: transactionJson.transaction is not an object'));
-            return;
-        }
-
-        // const Payment = await getPaymentModel().forge().save(
-        getPaymentModel()
-            .forge()
-            .save(
-                {
-                    cart_id: cart_id,
-                    transaction: transactionJson.transaction,
-                },
-                {
-                    method: 'insert'
-                }
-            )
-            .then((Payment) => {
-                resolve(Payment.toJSON());
-                return;
-            })
-            .catch((err) => {
-                let msg = `ERROR SAVING PAYMENT INFO: ${err}`;
-                global.logger.error(msg)
-                global.bugsnag(msg);
-
-                reject(err);
-            });
-    });
-}
-
-
-/**
- * Submits a payment 'sale' to Braintree
- *
- * @param opts  Options object to pass to braintree.transaction.sale
- * @returns {Promise}
- */
-async function runPayment(opts) {
-    try {
-        let schema = Joi.object().keys({
-            paymentMethodNonce: Joi.string().trim().required(),
-            amount: Joi.number().precision(2).positive().required(),
-            shipping: Joi.object().unknown().required(),
-            customer: Joi.object().unknown(),
-            billing: Joi.object().unknown(),
-            options: Joi.object().unknown()
-        });
-
-        const validateResult = schema.validate(opts);
-        if (validateResult.error) {
-            throw new Error(validateResult.error);
-        }
-
-        const result = await global.braintreeGateway.transaction.sale(opts);
-
-        if (result.success) {
-            return result
-        }
-        else {
-            throw new Error(result.message);
-        }
-    }
-    catch(err) {
-        global.logger.error(err);
-        global.bugsnag(err);
-        throw new Error(err);
-    }
-}
-
-
-
 module.exports = {
     setServer,
     pre_cart,
+    getDefaultWithRelated,
     getShippingAttributesSchema,
     getBillingAttributesSchema,
     getShoppingCartModelSchema,
     getCartTokenFromJwt,
     getCart,
+    getCartByAttribute,
+    getActiveCart,
+    getValidCartTokenFromRequest,
     createShippoOrderFromShoppingCart,
-
-    //payments
-    getPaymentByAttribute,
-    getPaymentTransactionByAttribute,
-    savePayment,
-    runPayment,
 
     // route handlers:
     cartGetHandler,
@@ -1013,9 +792,5 @@ module.exports = {
     cartShippingSetAddressHandler,
     getCartShippingRatesHandler,
     cartShippingRateHandler,
-    cartCheckoutHandler,
-    getOrdersHandler,
-    getOrderHandler,
-    getOrderSummaryHandler,
-    getPaymentClientTokenHandler,
+    cartCheckoutHandler
 }

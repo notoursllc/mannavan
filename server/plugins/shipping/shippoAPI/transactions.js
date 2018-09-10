@@ -1,6 +1,7 @@
 'use strict';
 
 const { getList, getSingle, postCreate } = require('./helpers')
+const { getOrder } = require('./orders')
 const basePath = '/transactions';
 
 
@@ -19,9 +20,23 @@ async function createShippingLabelFromShipment(data) {
 }
 
 
+async function getShippingLabelByOrderId(orderId) {
+    let orderResposne = await getOrder(orderId);
+    console.log("ORDERRESPOSNE", orderResposne);
+
+    return await getShippingLabel(orderResposne.data.transaction.object_id);
+}
+
+async function getShippingLabel(transactionId) {
+    return await getSingle(`${basePath}/${transactionId}`)
+}
+
+
 
 module.exports = {
-    createShippingLabelFromShipment
+    createShippingLabelFromShipment,
+    getShippingLabelByOrderId,
+    getShippingLabel
 }
 
 

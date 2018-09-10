@@ -1,13 +1,17 @@
 <script>
 import Vue from 'vue'
-import { Button, Table, TableColumn } from 'element-ui'
+import { Button, Table, TableColumn, Dropdown, DropdownItem, DropdownMenu } from 'element-ui'
 import forEach from 'lodash.foreach'
-import order_mixin from '@/mixins/order_mixin'
+import payment_mixin from '@/mixins/payment_mixin'
+import shipping_mixin from '@/mixins/shipping_mixin'
 import IconPencil from '@/components/icons/IconPencil'
 
 Vue.use(Button)
 Vue.use(Table)
 Vue.use(TableColumn)
+Vue.use(Dropdown)
+Vue.use(DropdownItem)
+Vue.use(DropdownMenu)
 
 export default {
     middleware: [
@@ -21,7 +25,7 @@ export default {
     },
 
     mixins: [
-        order_mixin
+        shipping_mixin
     ],
 
     data() {
@@ -35,7 +39,7 @@ export default {
     },
 
     async asyncData({ params, store, app }) {
-        const orders = await order_mixin.methods.getOrders.call(app, {
+        const payments = await payment_mixin.methods.getPayments.call(app, {
             // where: ['is_available', '=', true],
             // andWhere: [
             //     ['inventory_count', '>', 0]
@@ -45,13 +49,13 @@ export default {
         });
 
         return {
-            orders
+            payments
         }
     },
 
     methods: {
         async fetchOrders() {
-            this.orders = await this.getOrders({
+            this.payments = await this.getPayments({
                 // where: ['is_available', '=', true],
                 // whereRaw: ['sub_type & ? > 0', [productTypeId]],
                 // andWhere: [
@@ -65,6 +69,23 @@ export default {
             this.sortData.orderBy = val.prop || 'updated_at';
             this.sortData.orderDir = val.order === 'ascending' ? 'ASC' : 'DESC';
             this.fetchOrders();
+        },
+
+        async handleActionsClick(command) {
+            let arr = command.split('|');
+            let data;
+
+            switch(arr[0]) {
+                case 'download_packing_slip':
+                    data = await this.getShippingPackingSlip(arr[1]);
+                    window.open(data.slip_url);
+                    break;
+
+                case 'create_label':
+                    data = await this.getShippingLabel(arr[1]);
+                    window.open(data.slip_url);
+                    break;
+            }
         }
     }
 }
@@ -79,7 +100,7 @@ export default {
         </div> -->
 
         <el-table
-            :data="orders"
+            :data="payments"
             class="widthAll"
             @sort-change="sortChanged">
 
@@ -130,6 +151,23 @@ export default {
             <el-table-column label="Grand total">
                 <template slot-scope="scope">
                     {{ scope.row.shoppingCart.grand_total }}
+                </template>
+            </el-table-column>
+
+            <!-- grand total -->
+            <el-table-column label="Actions">
+                <template slot-scope="scope">
+                    <el-dropdown
+                        split-button
+                        type="primary"
+                        size="medium"
+                        @command="handleActionsClick">
+                        Actions
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item :command="`create_label|${scope.row.shoppingCart.shippo_order_id}`">Create Label</el-dropdown-item>
+                            <el-dropdown-item :command="`download_packing_slip|${scope.row.shoppingCart.shippo_order_id}`">Download Packing Slip</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
                 </template>
             </el-table-column>
         </el-table>

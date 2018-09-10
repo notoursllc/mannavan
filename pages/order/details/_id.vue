@@ -3,7 +3,7 @@ import Vue from 'vue'
 import { Loading } from 'element-ui'
 import OrderDetails from '@/components/order/OrderDetails'
 import app_mixin from '@/mixins/app_mixin'
-import order_mixin from '@/mixins/order_mixin'
+import payment_mixin from '@/mixins/payment_mixin'
 
 Vue.use(Loading.directive)
 
@@ -14,7 +14,7 @@ export default {
 
     mixins: [
         app_mixin,
-        order_mixin
+        payment_mixin
     ],
 
     data: function() {
@@ -34,7 +34,7 @@ export default {
     async created() {
         try {
             this.$store.dispatch('ui/pageTitle', this.$t('Order Details'));
-            this.order = await this.getOrder(this.$route.params.id)
+            this.order = await this.getPayment(this.$route.params.id)
             this.orderExists = true;
             this.loading = false;
         }

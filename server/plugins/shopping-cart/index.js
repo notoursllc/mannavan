@@ -1,9 +1,7 @@
 'use strict';
 
 const Joi = require('joi');
-const Hoek = require('hoek');
 const Boom = require('boom');
-const braintree = require('braintree');
 const ShoppingCartController = require('./shoppingCartController');
 
 
@@ -138,49 +136,7 @@ const after = function (server) {
                     throw Boom.notFound();
                 }
             }
-        },
-        {
-            method: 'GET',
-            path: '/order',
-            options: {
-                description: 'Basic order info',
-                validate: {
-                    query: {
-                        id: Joi.string().max(50),
-                    }
-                },
-                handler: ShoppingCartController.getOrderHandler
-            }
-        },
-        {
-            method: 'GET',
-            path: '/order/summary',
-            options: {
-                description: 'Basic transaction results for a given order',
-                validate: {
-                    query: {
-                        id: Joi.string().max(50)
-                    }
-                },
-                handler: ShoppingCartController.getOrderSummaryHandler
-            }
-        },
-        {
-            method: 'GET',
-            path: '/orders',
-            options: {
-                description: 'Gets a list of orders',
-                handler: ShoppingCartController.getOrdersHandler
-            }
-        },
-        {
-            method: 'GET',
-            path: '/payment-token',
-            options: {
-                description: 'Returns the Braintree client token',
-                handler: ShoppingCartController.getPaymentClientTokenHandler
-            }
-        },
+        }
     ]);
 
 
@@ -197,11 +153,6 @@ const after = function (server) {
         'ShoppingCartItem',
         require('./models/ShoppingCartItem')(baseModel, server.app.bookshelf, server)
     );
-
-    server.app.bookshelf.model(
-        'Payment',
-        require('./models/Payment')(baseModel, server.app.bookshelf, server)
-    );
 };
 
 
@@ -210,22 +161,6 @@ exports.plugin = {
     pkg: require('./package.json'),
     register: function (server, options) {
         ShoppingCartController.setServer(server);
-
-        let env;
-        if(process.env.NODE_ENV === 'test' || process.env.BRAINTREE_USE_SANDBOX) {
-            env = braintree.Environment.Sandbox;
-        }
-        else {
-            env = braintree.Environment.Production;
-        }
-
-        global.braintreeGateway = braintree.connect({
-            environment: env,
-            merchantId: process.env.BRAINTREE_MERCHANT_ID,
-            publicKey: process.env.BRAINTREE_PUBLIC_KEY,
-            privateKey: process.env.BRAINTREE_PRIVATE_KEY
-        });
-
-        server.dependency(['BookshelfOrm', 'Core', 'Products', 'Shipping'], after);
+        server.dependency(['BookshelfOrm', 'Core', 'Products', 'Shipping', 'Payment'], after);
     }
 };

@@ -1,6 +1,6 @@
 'use strict';
 
-const { getList, getSingle, postCreate } = require('./helpers')
+const { getList, getSingle, postCreate, getAxios } = require('./helpers')
 const basePath = '/orders';
 
 /**
@@ -31,8 +31,16 @@ async function createOrder(data) {
 }
 
 
+async function getPackingSlipForOrder(orderObjectId) {
+    const response = await getAxios().get(`${basePath}/${orderObjectId}/packingslip`);
+    global.logger.debug(`PACKING SLIP FOR ORDER_ID ${orderObjectId}`, response.data)
+    return response.data;
+}
+
+
 module.exports = {
     listAllOrders,
     getOrder,
-    createOrder
+    createOrder,
+    getPackingSlipForOrder
 }

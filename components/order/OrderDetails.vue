@@ -3,7 +3,7 @@ import PaymentTypeDisplay from '@/components/PaymentTypeDisplay'
 import CartTotalsTable from '@/components/cart/CartTotalsTable'
 import AddressDisplay from '@/components/AddressDisplay'
 import OrderCartItems from '@/components/order/OrderCartItems'
-import order_mixin from '@/mixins/order_mixin';
+import payment_mixin from '@/mixins/payment_mixin';
 
 
 export default {
@@ -22,7 +22,7 @@ export default {
     },
 
     mixins:[
-        order_mixin
+        payment_mixin
     ],
 
     computed: {

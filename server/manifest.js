@@ -44,6 +44,12 @@ const webManifest = {
                 }
             },
             {
+                plugin: './plugins/payment',
+                routes: {
+                    prefix: routePrefix
+                }
+            },
+            {
                 plugin: './plugins/shopping-cart',
                 routes: {
                     prefix: routePrefix

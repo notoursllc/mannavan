@@ -9,6 +9,8 @@ const helpers = require('../../helpers.service');
 const { createCustomsItem } = require('./shippoAPI/customs_items.js');
 const { createShipment } = require('./shippoAPI/shipments.js');
 const { createParcel } = require('./shippoAPI/parcels.js');
+// const { getShippingLabel } = require('./shippoAPI/transactions.js');
+// const shoppingCartController = require('../shopping-cart/shoppingCartController');
 
 const wreck = Wreck.defaults({
     baseUrl: 'https://api.shipengine.com/v1',
@@ -187,6 +189,33 @@ async function packageTypeDeleteHandler(request, h) {
 
         return h.apiSuccess(
             PackageType.toJSON()
+        );
+    }
+    catch(err) {
+        global.logger.error(err);
+        global.bugsnag(err);
+        throw Boom.badRequest(err);
+    }
+}
+
+
+/**
+ * Route handler for getting a PackageType by ID
+ *
+ * @param {*} request
+ * @param {*} h
+ */
+async function getShippingLabelHandler(request, h) {
+    try {
+        console.log("getShippingLabelHandler", request.payload.id)
+        const response = await getShippingLabelByOrderId(request.payload.id);
+
+        if(!response) {
+            throw Boom.badRequest(`Unable to get a shipping label for order ID ${request.payload.id}.`);
+        }
+
+        return h.apiSuccess(
+            response.data
         );
     }
     catch(err) {
@@ -520,7 +549,8 @@ module.exports = {
     packageTypeCreateHandler,
     packageTypeUpdateHandler,
     packageTypeDeleteHandler,
-    packageTypeListHandler
+    packageTypeListHandler,
+    getShippingLabelHandler
 }
 
 

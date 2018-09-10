@@ -82,7 +82,7 @@ export default {
 
                     <el-submenu index="order_menu">
                         <template slot="title">
-                            <span>Orders</span>
+                            <span>Payments</span>
                         </template>
 
                         <el-menu-item
