@@ -6,6 +6,7 @@ const isObject = require('lodash.isobject');
 const HelperService = require('../../helpers.service');
 const cartController = require('../shopping-cart/shoppingCartController')
 const shippoOrdersAPI = require('../shipping/shippoAPI/orders');
+const shippoTransactionsAPI = require('../shipping/shippoAPI/transactions');
 let server = null;
 
 
@@ -236,55 +237,53 @@ async function shippingPackingSlipHandler(request, h) {
  * @param {*} request
  * @param {*} h
  */
-async function createShippingLabelHandler(request, h) {
+async function purchaseShippingLabelHandler(request, h) {
     try {
-        let packingSlip;
         const Payment = await getPaymentByAttribute(
             'id',
             request.payload.id,
-            ['shoppingCart']
         );
 
         if(!Payment) {
             throw new Error('Payment does not exist.')
         }
 
-        global.logger.debug("CREATE SHIPPING LABEL - PAYMENT", Payment.toJSON())
+        delete request.payload.id;
 
-        //temp
-        return;
+        const response = await shippoTransactionsAPI.createShippingLabel(request.payload);
+        global.logger.debug('CREATE SHIPPING LABEL RESPONSE', response);
 
-
-        // If we already have the shippo_order_id then just need to
-        // call the Shippo API to return the packing slip
-        if(Payment.get('shippo_order_id')) {
-            packingSlip = await shippoOrdersAPI.getPackingSlipForOrder(Payment.get('shippo_order_id'));
-        }
-        else {
-            // We dont have an shippo_order_id yet:
-            const ShoppingCart = await cartController.getCartByAttribute(
-                'id',
-                Payment.get('cart_id'),
-                cartController.getDefaultWithRelated()
-            );
-
-            if(!ShoppingCart) {
-                throw new Error('Shopping cart does not exist.')
-            }
-
-            const shippoOrder = await cartController.createShippoOrderFromShoppingCart(ShoppingCart);
-
-            // no need to await here:
-            Payment.save(
-                { shippo_order_id: shippoOrder.object_id },
-                { method: 'update', patch: true }
-            );
-
-            packingSlip = await shippoOrdersAPI.getPackingSlipForOrder(shippoOrder.object_id);
-        }
+        // no need to await here:
+        Payment.save(
+            { shippo_transaction_id: response.object_id },
+            { method: 'update', patch: true }
+        );
 
         return h.apiSuccess(
-            packingSlip
+            response
+        );
+    }
+    catch(err) {
+        global.logger.error(err);
+        global.bugsnag(err);
+        throw Boom.badRequest(err);
+    }
+}
+
+
+/**
+ * Purchases a Shipping Label from Shippo, by Payment ID
+ *
+ * @param {*} request
+ * @param {*} h
+ */
+async function getShippingLabelHandler(request, h) {
+    try {
+        const response = await shippoTransactionsAPI.getShippingLabel(request.query.id);
+        global.logger.debug('GET SHIPPING LABEL RESPONSE', response);
+
+        return h.apiSuccess(
+            response
         );
     }
     catch(err) {
@@ -379,5 +378,6 @@ module.exports = {
     getPaymentHandler,
     getPaymentClientTokenHandler,
     shippingPackingSlipHandler,
-    createShippingLabelHandler
+    purchaseShippingLabelHandler,
+    getShippingLabelHandler
 }

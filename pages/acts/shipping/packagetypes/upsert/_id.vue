@@ -157,17 +157,29 @@ export default {
 
                         <!-- length -->
                         <form-row label="Length:">
-                            <el-input-number v-model="packageType.length" :precision="2" :step="0.01"></el-input-number>
+                            <el-input-number
+                                v-model="packageType.length"
+                                :precision="2"
+                                :step="0.01"
+                                :min="0.01"></el-input-number>
                         </form-row>
 
                         <!-- width -->
                         <form-row label="Width:">
-                            <el-input-number v-model="packageType.width" :precision="2" :step="0.01"></el-input-number>
+                            <el-input-number
+                                v-model="packageType.width"
+                                :precision="2"
+                                :step="0.01"
+                                :min="0.01"></el-input-number>
                         </form-row>
 
                         <!-- height -->
                         <form-row label="Height:">
-                            <el-input-number v-model="packageType.height" :precision="2" :step="0.01"></el-input-number>
+                            <el-input-number
+                                v-model="packageType.height"
+                                :precision="2"
+                                :step="0.01"
+                                :min="0.01"></el-input-number>
                         </form-row>
 
                         <!-- distance unit -->

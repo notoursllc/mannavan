@@ -86,19 +86,6 @@ const after = function (server) {
                 },
                 handler: ShippingController.packageTypeDeleteHandler
             }
-        },
-        {
-            method: 'POST',
-            path: '/shipping/label',
-            options: {
-                description: 'For downloading a shipping label',
-                validate: {
-                    payload: Joi.object({
-                        id: Joi.string().required(),
-                    })
-                },
-                handler: ShippingController.getShippingLabelHandler
-            }
         }
     ]);
 

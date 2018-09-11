@@ -15,17 +15,10 @@ const basePath = '/transactions';
  *
  * @param {*} data
  */
-async function createShippingLabelFromShipment(data) {
+async function createShippingLabel(data) {
     return await postCreate(basePath, data);
 }
 
-
-async function getShippingLabelByOrderId(orderId) {
-    let orderResposne = await getOrder(orderId);
-    console.log("ORDERRESPOSNE", orderResposne);
-
-    return await getShippingLabel(orderResposne.data.transaction.object_id);
-}
 
 async function getShippingLabel(transactionId) {
     return await getSingle(`${basePath}/${transactionId}`)
@@ -34,8 +27,7 @@ async function getShippingLabel(transactionId) {
 
 
 module.exports = {
-    createShippingLabelFromShipment,
-    getShippingLabelByOrderId,
+    createShippingLabel,
     getShippingLabel
 }
 

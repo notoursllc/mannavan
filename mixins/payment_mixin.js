@@ -45,6 +45,7 @@ export default {
             return response.data;
         },
 
+
         async createPackingSlipFromPayment(paymentId) {
             const response = await this.$axios.$post('/payment/shipping/packingslip', {
                 id: paymentId
@@ -52,10 +53,20 @@ export default {
             return response.data;
         },
 
-        async purchaseShippingLabelFromPayment(paymentId) {
-            const response = await this.$axios.$post('/payment/shipping/shippinglabel', {
-                id: paymentId
+
+        async purchaseShippingLabel(data) {
+            const response = await this.$axios.$post('/payment/shipping/label', data);
+            return response.data;
+        },
+
+
+        async getShippingLabel(paymentId) {
+            const response = await this.$axios.$get('/payment/shipping/label', {
+                params: {
+                    id: paymentId
+                }
             });
+
             return response.data;
         },
 

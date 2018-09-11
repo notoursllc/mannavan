@@ -56,15 +56,37 @@ const after = function (server) {
         },
         {
             method: 'POST',
-            path: '/payment/shipping/shippinglabel',
+            path: '/payment/shipping/label',
             options: {
                 description: 'Creates a shipping label for a given payment ID',
                 validate: {
                     payload: Joi.object({
+                        id: Joi.string().uuid().required(), // payment id
+                        shipment: Joi.object().keys({
+                            address_from: Joi.object().unknown().required(),
+                            address_to: Joi.object().unknown().required(),
+                            parcels: Joi.array().required(),
+                        }).required(),
+                        carrier_account: Joi.string().required(),
+                        servicelevel_token: Joi.string().required(),
+                        label_file_type: Joi.string().optional(),
+                        metadata: Joi.string().optional(),
+                    })
+                },
+                handler: PaymentController.purchaseShippingLabelHandler
+            }
+        },
+        {
+            method: 'GET',
+            path: '/payment/shipping/label',
+            options: {
+                description: 'Gets a shipping label for a given payment ID',
+                validate: {
+                    query: Joi.object({
                         id: Joi.string().uuid().required()
                     })
                 },
-                handler: PaymentController.createShippingLabelHandler
+                handler: PaymentController.getShippingLabelHandler
             }
         },
         {

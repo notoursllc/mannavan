@@ -69,23 +69,6 @@ export default {
             this.sortData.orderBy = val.prop || 'updated_at';
             this.sortData.orderDir = val.order === 'ascending' ? 'ASC' : 'DESC';
             this.fetchOrders();
-        },
-
-        async handleActionsClick(command) {
-            let arr = command.split('|');
-            let data;
-
-            switch(arr[0]) {
-                case 'download_packing_slip':
-                    data = await this.getShippingPackingSlip(arr[1]);
-                    window.open(data.slip_url);
-                    break;
-
-                case 'create_label':
-                    data = await this.getShippingLabel(arr[1]);
-                    window.open(data.slip_url);
-                    break;
-            }
         }
     }
 }
@@ -151,23 +134,6 @@ export default {
             <el-table-column label="Grand total">
                 <template slot-scope="scope">
                     {{ scope.row.shoppingCart.grand_total }}
-                </template>
-            </el-table-column>
-
-            <!-- grand total -->
-            <el-table-column label="Actions">
-                <template slot-scope="scope">
-                    <el-dropdown
-                        split-button
-                        type="primary"
-                        size="medium"
-                        @command="handleActionsClick">
-                        Actions
-                        <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item :command="`create_label|${scope.row.shoppingCart.shippo_order_id}`">Create Label</el-dropdown-item>
-                            <el-dropdown-item :command="`download_packing_slip|${scope.row.shoppingCart.shippo_order_id}`">Download Packing Slip</el-dropdown-item>
-                        </el-dropdown-menu>
-                    </el-dropdown>
                 </template>
             </el-table-column>
         </el-table>

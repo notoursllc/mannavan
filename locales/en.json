@@ -17,6 +17,7 @@
     "Are you sure you want to return to your Shopping Cart?": "Are you sure you want to return to your Shopping Cart?",
 
     "BILLING ADDRESS": "BILLING ADDRESS",
+    "Billing address": "Billing address",
 
     "cancel": "cancel",
     "card_expiration_hint": "MM/YY",
@@ -95,6 +96,7 @@
     "Order total": "Order total",
     "Ordered on": "Ordered on",
 
+    "Package": "Package",
     "Pay with PAYPAL": "Pay with PAYPAL",
     "PAYMENT": "PAYMENT",
     "Payment method": "Payment method",
