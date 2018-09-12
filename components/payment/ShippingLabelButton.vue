@@ -87,6 +87,25 @@ export default{
             window.open(response.label_url);
         },
 
+
+        async deleteShippingLabel() {
+            try {
+                await this.$confirm('Delete this shipping label?', 'Please confirm', {
+                    confirmButtonText: 'OK',
+                    cancelButtonText: 'Cancel',
+                    type: 'warning'
+                });
+
+                await this.deleteShippingLabelForPayment(this.payment.id);
+
+                this.$emit('deleted', this.payment.id);
+            }
+            catch(err) {
+                // DO NOTHING
+            }
+        },
+
+
         async buyShippingLabel() {
             try {
                 await this.$confirm('Purchase a shipping label from Shippo?', 'Please confirm', {
@@ -236,6 +255,11 @@ export default{
                 <el-button
                     size="mini"
                     @click="viewShippingLabel">{{ $t('View') }}</el-button>
+
+                <el-button
+                    size="mini"
+                    type="danger"
+                    @click="deleteShippingLabel">{{ $t('Delete') }}</el-button>
             </template>
             <template v-else>
                 <el-button

@@ -71,6 +71,16 @@ export default {
         },
 
 
+        async deleteShippingLabelForPayment(paymentId) {
+            const response = await this.$axios.$delete('/payment/shipping/label', {
+                params: {
+                    id: paymentId
+                }
+            });
+            return response.data;
+        },
+
+
         goToPaymentDetails: function(transactionId) {
             return this.$router.push({
                 name: 'order-details-id',

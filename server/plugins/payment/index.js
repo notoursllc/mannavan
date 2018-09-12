@@ -90,6 +90,19 @@ const after = function (server) {
             }
         },
         {
+            method: 'DELETE',
+            path: '/payment/shipping/label',
+            options: {
+                description: 'Deletes a shipping label',
+                validate: {
+                    query: Joi.object({
+                        id: Joi.string().uuid().required()  // payment ID
+                    })
+                },
+                handler: PaymentController.deleteShippingLabelHandler
+            }
+        },
+        {
             method: 'GET',
             path: '/payment/token',
             options: {

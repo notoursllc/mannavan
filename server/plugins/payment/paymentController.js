@@ -293,6 +293,44 @@ async function getShippingLabelHandler(request, h) {
     }
 }
 
+/**
+ * Deletes a Shipping Label
+ *
+ * @param {*} request
+ * @param {*} h
+ */
+async function deleteShippingLabelHandler(request, h) {
+    try {
+        const Payment = await getPaymentByAttribute(
+            'id',
+            request.query.id,
+        );
+
+        if(!Payment) {
+            throw new Error('Payment does not exist.')
+        }
+
+        // NOTE: Shippo does not have an API endpoint to delete a transaction
+        // document, so the best we can do is to delete the 'shippo_transaction_id'
+        // value so a new transaction can be created.
+
+        // no need to await here:
+        Payment.save(
+            { shippo_transaction_id: null },
+            { method: 'update', patch: true }
+        );
+
+        return h.apiSuccess({
+            id: request.query.id
+        });
+    }
+    catch(err) {
+        global.logger.error(err);
+        global.bugsnag(err);
+        throw Boom.badRequest(err);
+    }
+}
+
 
 /**
  * Submits a payment 'sale' to Braintree
@@ -379,5 +417,6 @@ module.exports = {
     getPaymentClientTokenHandler,
     shippingPackingSlipHandler,
     purchaseShippingLabelHandler,
-    getShippingLabelHandler
+    getShippingLabelHandler,
+    deleteShippingLabelHandler
 }

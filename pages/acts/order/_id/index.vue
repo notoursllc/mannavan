@@ -102,6 +102,18 @@ export default{
                     duration: 4000
                 })
             );
+        },
+
+        labelDeleted() {
+            this.loadPayment();
+
+            showNotification(
+                this.$notify({
+                    type: 'success',
+                    title: "Shipping label deleted successfully",
+                    duration: 4000
+                })
+            );
         }
     },
 
@@ -145,7 +157,8 @@ export default{
                 <form-row label="Shipping Label:">
                     <shipping-label-button
                         :payment="payment"
-                        @purchased="labelPurchased" />
+                        @purchased="labelPurchased"
+                        @deleted="labelDeleted" />
                 </form-row>
             </div>
         </div>
