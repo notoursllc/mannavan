@@ -18,6 +18,7 @@ tmp/*
 app.yaml
 wdio
 hs_err_pid*
+sw.*
 
 .DS_Store
 .idea
