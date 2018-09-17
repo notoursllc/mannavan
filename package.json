@@ -31,7 +31,7 @@
     "@nuxtjs/axios": "^5.3.1",
     "@nuxtjs/pwa": "^2.5.0",
     "accounting": "^0.4.1",
-    "auth0-lock": "^11.9.0",
+    "auth0-lock": "^11.7.2",
     "aws-sdk": "^2.307.0",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-polyfill": "^6.26.0",

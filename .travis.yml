@@ -23,6 +23,8 @@ branches:
 
 install:
   - npm i -g npm@6.4.1
+  - npm ci             # instead of default npm install
+
   - sudo bash -c "$(curl -fsSL https://s3.amazonaws.com/tools.nanobox.io/bootstrap/ci.sh)"
 
   # link this code base to the production nanobox so we can add env variables to our prod instance
