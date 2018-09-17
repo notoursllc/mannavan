@@ -22,6 +22,7 @@ branches:
   - master
 
 install:
+  - npm i -g npm@6.4.1
   - sudo bash -c "$(curl -fsSL https://s3.amazonaws.com/tools.nanobox.io/bootstrap/ci.sh)"
 
   # link this code base to the production nanobox so we can add env variables to our prod instance
