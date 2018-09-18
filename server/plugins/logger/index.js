@@ -40,11 +40,11 @@ exports.plugin = {
         });
 
         // https://github.com/rapid7/r7insight_node#options
-        // const LogEntries = new (winston.transports.Logentries)({
-        //     token: process.env.LOGENTRIES_TOKEN,
-        //     region: 'us',
-        //     withStack: true
-        // });
+        const LogEntries = new (winston.transports.Logentries)({
+            token: process.env.LOGENTRIES_TOKEN,
+            region: 'us',
+            withStack: true
+        });
 
         // https://github.com/loggly/winston-loggly-bulk
         const logglyTransport = new Loggly({
