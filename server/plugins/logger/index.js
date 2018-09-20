@@ -1,5 +1,3 @@
-// https://insightops.help.rapid7.com/docs/nodejs
-// const LogEntries = require('r7insight_node');
 const winston = require('winston');
 const bugsnag = require('bugsnag');
 const { Loggly } = require('winston-loggly-bulk');
@@ -39,12 +37,6 @@ exports.plugin = {
             error: 'red'
         });
 
-        // https://github.com/rapid7/r7insight_node#options
-        const LogEntries = new (winston.transports.Logentries)({
-            token: process.env.LOGENTRIES_TOKEN,
-            region: 'us',
-            withStack: true
-        });
 
         // https://github.com/loggly/winston-loggly-bulk
         const logglyTransport = new Loggly({
@@ -55,6 +47,7 @@ exports.plugin = {
             level: 'info',
             networkErrorsOnConsole: true
         });
+
 
         let transports = [];
         let exceptionHandlers = [];

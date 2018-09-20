@@ -78,7 +78,6 @@
     "pg": "^7.4.3",
     "pug": "^2.0.3",
     "query-string": "^5.1.1",
-    "r7insight_node": "^1.8.1",
     "sass-loader": "^7.1.0",
     "sharp": "^0.20.7",
     "uuid": "^3.3.2",
