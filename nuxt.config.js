@@ -26,6 +26,7 @@ module.exports = {
         AUTH0_DOMAIN: process.env.AUTH0_DOMAIN,
         BUG_SNAG_API_KEY: process.env.BUG_SNAG_API_KEY,
         CART_TOKEN_SECRET: process.env.CART_TOKEN_SECRET,
+        EMAIL_CONTACT_US: process.env.EMAIL_CONTACT_US,
         JWT_CLIENT_ID: process.env.JWT_CLIENT_ID,
         JWT_SERVER_SECRET: process.env.JWT_SERVER_SECRET,
         NODE_ENV: process.env.NODE_ENV,
@@ -102,7 +103,6 @@ module.exports = {
      */
     build: {
         // vendor: ['babel-polyfill', 'vue-i18n'],
-        vendor: ['vue-i18n'],
 
         babel: {
             // plugins: [

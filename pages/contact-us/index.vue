@@ -1,15 +1,21 @@
 <script>
-import SiteName from '@/components/SiteName'
 import app_mixin from '@/mixins/app_mixin'
+import IconEnvelope from '@/components/icons/IconEnvelope'
 
 export default {
     components: {
-        SiteName
+        IconEnvelope
     },
 
     mixins: [
         app_mixin
     ],
+
+    data: function() {
+        return {
+            emailAddress: process.env.EMAIL_CONTACT_US
+        }
+    },
 
     created() {
         this.$store.dispatch('ui/pageTitle', this.$t('Contact Us!'));
@@ -29,6 +35,13 @@ export default {
 
 <template>
     <div class="pageContainerMax priv">
-TODO
+
+        <div class="tac">
+            <icon-envelope icon-name="email" class-name="fillGrayLight" width="80px" />
+            <div class="mts fs24">{{ $t('We want to hear from you!') }}</div>
+            <div class="fs16">{{ $t("We'll get back to you within 1 business day.") }}</div>
+            <div class="fs20 mtm"><a :href="`mailto:${emailAddress}`">{{ emailAddress }}</a></div>
+        </div>
+
     </div>
 </template>
