@@ -74,6 +74,11 @@ export default {
                     <icon-victory-peace icon-name="thanks" class-name="fillGreen" width="150px" />
                 </div>
 
+                <div class="mts tac">
+                    <div class="fs24 fwb">{{ $t('Victory!') }}</div>
+                    <div class="fs16">{{ $t('We have received your order.') }}</div>
+                </div>
+
                 <div class="mtl grayCell">
                     <div class="colorGreen">
                         <span class="fs16">{{ $t('An email confirmation was sent to:' )}}</span>
