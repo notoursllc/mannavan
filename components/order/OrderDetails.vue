@@ -3,6 +3,7 @@ import PaymentTypeDisplay from '@/components/PaymentTypeDisplay'
 import CartTotalsTable from '@/components/cart/CartTotalsTable'
 import AddressDisplay from '@/components/AddressDisplay'
 import OrderCartItems from '@/components/order/OrderCartItems'
+import FormRow from '@/components/FormRow'
 import payment_mixin from '@/mixins/payment_mixin';
 
 
@@ -18,7 +19,8 @@ export default {
         PaymentTypeDisplay,
         CartTotalsTable,
         OrderCartItems,
-        AddressDisplay
+        AddressDisplay,
+        FormRow
     },
 
     mixins:[
@@ -40,15 +42,13 @@ export default {
 <template>
     <div>
         <div class="mbl">
-            <div class="displayTableRow">
-                <div class="displayTableCell prm">{{ $t('Ordered on') }}:</div>
-                <div class="displayTableCell">{{ order.created_at | format8601 }}</div>
-            </div>
+            <form-row :label="$t('Ordered on') + ':'">
+                {{ order.created_at | format8601 }}
+            </form-row>
 
-            <div class="displayTableRow">
-                <div class="displayTableCell prm">{{ $t('Order') }}:</div>
-                <div class="displayTableCell">{{ order.id }}</div>
-            </div>
+            <form-row :label="$t('Order') + ':'">
+                {{ order.id }}
+            </form-row>
         </div>
 
         <div>
