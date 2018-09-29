@@ -29,9 +29,74 @@
         transform: rotate(-5deg);
     }
 }
-
 .sway {
     animation-name: sway;
     animation-duration: 4s;
     animation-iteration-count: infinite;
 }
+
+.animated {
+    animation-duration: 2s;
+    animation-fill-mode: both;
+}
+
+@keyframes fadeInUp {
+    0% {
+        opacity:0;
+        transform:translate3d(0,30%,0)
+    }
+    to {
+        opacity:1;
+        transform:translateZ(0)
+    }
+}
+.fadeInUp {
+    animation-name: fadeInUp;
+}
+
+@keyframes fadeInDown {
+    0% {
+        opacity:0;
+        transform:translate3d(0,-30%,0)
+    }
+    to {
+        opacity:1;
+        transform:translateZ(0)
+    }
+}
+.fadeInDown {
+    animation-name:fadeInDown
+}
+
+@keyframes fadeInLeft {
+    0% {
+        opacity:0;
+        transform:translate3d(-30%,0,0)
+    }
+    to {
+        opacity:1;
+        transform:translateZ(0)
+    }
+}
+.fadeInLeft {
+    animation-name:fadeInLeft
+}
+
+@keyframes fadeInRight {
+    0% {
+        opacity:0;
+        transform:translate3d(30%,0,0)
+    }
+    to {
+        opacity:1;
+        transform:translateZ(0)
+    }
+}
+.fadeInRight {
+    animation-name:fadeInRight
+}
+
+.animation-delay-1 { animation-delay: .3s }
+.animation-delay-2 { animation-delay: .6s }
+.animation-delay-3 { animation-delay: .9s }
+.animation-delay-4 { animation-delay: 1.2s }

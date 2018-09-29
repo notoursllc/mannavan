@@ -1,9 +1,9 @@
 <script>
-import IconLogo from '@/components/icons/IconLogo'
+import IconVictory from '@/components/icons/IconVictory'
 
 export default {
     components: {
-        IconLogo
+        IconVictory
     },
 
     methods: {
@@ -30,17 +30,16 @@ export default {
 
 <template>
     <div class="widthAll">
-        <div class="top-panel">
-            <div class="top-panel-item logo">
-                <i><icon-logo icon-name="breadvan" class-name="fillGrayLight" width="100%" /></i>
+
+        <div class="intro tac">
+            <div class="animated fadeInDown animation-delay-3">
+                <icon-victory icon-name="breadvan" class-name="fillGrayLight" />
             </div>
-            <div class="top-panel-item flex-grow">
-                <div class="intro">INTRODUCING BREADVAN<span class="tm">&trade;</span></div>
-                <div class="subhead">
-                    <div>Breadvan is a startup apparel company.</div>
-                    <div>We're inspired by the timeless styles and colors of the good 'ol days of auto racing.</div>
-                    <div class="colorGreen">Yep, we only have 2 products right now!  More coming soon!</div>
-                </div>
+
+            <div class="animated fadeInDown">
+                <div class="headline">{{ $t("Introducing Breadvan")}}</div>
+                <div class="subheadline">We're inspired by the timeless styles and colors of the good 'ol days of auto racing.</div>
+                <div class="colorGreen subheadline2">Yep, we only have 2 products right now!  More on the way!</div>
             </div>
         </div>
 
@@ -49,16 +48,17 @@ export default {
                 :to="{ name: 'type-name-seouri', params: { name:'tops', seouri:'seo_uri_5'} }"
                 tag="div"
                 class="featured-item cursorPointer overflowHidden">
-                <img class="grow" src="https://gmnst-assets.nyc3.digitaloceanspaces.com/development/uploads/images/sample-300-x-400.png" />
+                <img class="animated fadeInLeft" src="https://gmnst-assets.nyc3.digitaloceanspaces.com/development/uploads/images/sample-300-x-400.png" />
             </nuxt-link>
 
             <nuxt-link
                 :to="{ name: 'type-name-seouri', params: { name:'tops', seouri:'seo_uri_5'} }"
                 tag="div"
                 class="featured-item cursorPointer overflowHidden">
-                <img class="grow" src="https://gmnst-assets.nyc3.digitaloceanspaces.com/development/uploads/images/sample_calbeamin.jpg" />
+                <img class="animated fadeInRight" src="https://gmnst-assets.nyc3.digitaloceanspaces.com/development/uploads/images/sample_calbeamin.jpg" />
             </nuxt-link>
         </section>
+
     </div>
 </template>
 
@@ -66,51 +66,6 @@ export default {
 <style lang="scss" scoped>
     @import "~assets/css/components/_variables.scss";
     @import "~assets/css/components/_mixins.scss";
-
-    .top-panel {
-        @include flexbox();
-        @include flex-direction(row);
-        @include justify-content(center);
-        @include align-items(center);
-        @include flex-wrap(nowrap);
-        background: linear-gradient(0deg, #1b1b1b 10%, #424242 100%) no-repeat scroll center center/cover;
-        padding: 10px;
-
-      .intro {
-            color: #88898a;
-            font-size: 14px;
-            font-weight: 600;
-
-            .tm {
-                font-size: 12px;
-                font-weight: 400;
-                margin-left: 2px;
-                position: relative;
-                top: -2px;
-            }
-        }
-
-        .subhead {
-            color:rgba(255,255,255,.8);
-            font-size: 18px;
-        }
-
-        .top-panel-item {
-            @include align-items(center);
-            @include justify-content(center);
-            @include flex-basis(auto);
-            // border: 1px solid red;
-
-            &.logo {
-                margin: 0 40px 0 0;
-                width: 130px;
-                // border: 1px solid red;
-            }
-            .flex-grow {
-                @include flex-grow(1);
-            }
-        }
-    }
 
     .featured-container {
         @include flexbox();
@@ -125,36 +80,63 @@ export default {
         }
     }
 
-    @media #{$medium-and-down} {
-        .top-panel {
-            .subhead {
-                font-size: 14px;
-            }
+    .intro {
+        position: relative;
+        padding: 20px 0 20px;
+        overflow: hidden;
 
-            .top-panel-item {
-                &.logo {
-                    width: 120px;
-                    margin: 0 20px 0 20px;
-                }
-            }
+        svg {
+            width: 190px !important;
         }
 
-        .featured-container {
-            display: block;
+        .headline {
+            font-size: 36px;
+        }
+        .subheadline {
+            font-size: 20px;
+        }
+        .subheadline2 {
+            font-size: 16px;
         }
     }
 
-    @media #{$small-and-down} {
-        .top-panel {
-            .subhead {
-                font-size: 13px;
-            }
-            .top-panel-item {
-                text-align: center;
+    @media #{$medium-and-down} {
+        .featured-container {
+            display: block;
+        }
 
-                &.logo {
-                    display: none;
-                }
+        .intro {
+            padding: 20px 0 30px;
+
+            svg {
+                width: 120px !important;
+            }
+
+            .headline {
+                font-size: 26px;
+            }
+            .subheadline,
+            .subheadline2 {
+                font-size: 16px;
+            }
+        }
+    }
+
+
+    @media #{$small-and-down} {
+        .intro {
+            padding: 10px;
+
+            svg {
+                width: 100px !important;
+            }
+
+            .headline {
+                font-size: 20px;
+            }
+            .subheadline,
+            .subheadline2 {
+                font-size: 12px;
             }
         }
     }
