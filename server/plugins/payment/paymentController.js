@@ -153,7 +153,7 @@ async function getPaymentHandler(request, h) {
         const Payment = await getPaymentByAttribute(
             'id',
             request.query.id,
-            ['shoppingCart.cart_items.product']
+            ['shoppingCart.cart_items.product.pics']
         );
 
         if(!Payment) {
