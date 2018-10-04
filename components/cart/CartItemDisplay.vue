@@ -84,6 +84,7 @@ export default {
 
         .picCell {
             width: 128px;
+            min-height: 128px;
             position: relative;
         }
 

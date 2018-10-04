@@ -1,6 +1,13 @@
 <script>
+import Vue from 'vue'
+import { Dialog } from 'element-ui'
 import ProductPrice from '@/components/product/ProductPrice'
+import ProductDetailsDisplay from '@/components/product/ProductDetailsDisplay'
+import ProductImageCarousel from '@/components/product/ProductImageCarousel'
+import CartItemDisplay from '@/components/cart/CartItemDisplay'
 import product_mixin from '@/mixins/product_mixin'
+
+Vue.use(Dialog)
 
 export default {
     props: {
@@ -11,54 +18,109 @@ export default {
     },
 
     components: {
-        ProductPrice
+        ProductDetailsDisplay,
+        ProductPrice,
+        ProductImageCarousel,
+        CartItemDisplay
     },
 
     mixins: [
         product_mixin,
-    ]
+    ],
+
+    data: function() {
+        return {
+            dialogVisible: false,
+            dialogCartItem: {
+                product: {},
+                variants: {}
+            }
+        }
+    },
+
+    methods: {
+        showDialog(cartItem) {
+            this.dialogVisible = true;
+            this.dialogCartItem = cartItem;
+        }
+    }
 }
 </script>
 
 <template>
     <div>
-        <article v-for="item in cartItems"
-                :key="item.id"
-                class="cartItem"
-                :id="'cartItem' + item.id">
-            <div class="cartItemPic">
-                <figure class="image">
-                    <img v-bind:src="featuredProductPic(item.product)">
-                </figure>
-            </div>
 
-            <div class="cartItemInfo">
-                <div class="cartItemInfoContent">
-                    <div class="cartItemMain">
-                        <a class="itemTitle" @click="goToProductDetails(item.product.seo_uri)">{{ item.product.title }}</a>
-                    </div>
+        <cart-item-display
+            v-for="item in cartItems"
+            :key="item.id">
 
-                    <!-- Variants -->
-                    <div class="cartItemCol">
-                        <div v-if="item.variants && item.variants.size">
-                            <label class="itemLabel">{{ $t('Size') }}:</label>
-                            <div class="itemVal">{{ $t(item.variants.size) }}</div>
+            <!-- pic -->
+            <template slot="pic">
+                <figure class="cartItemPic"
+                    :style="'background-image:url(' + featuredProductPic(item.product) + ');'"></figure>
+            </template>
+
+            <!-- title -->
+            <template slot="title">
+                <a class="itemTitle" @click="showDialog(item)">{{ item.product.title }}</a>
+            </template>
+
+            <!-- size -->
+            <template slot="size">
+                {{ $t(item.variants.size) }}
+            </template>
+
+            <!-- price -->
+            <template slot="price">
+                <product-price :product="item.product" />
+            </template>
+
+            <!-- quantity -->
+            <template slot="quantity">
+                {{ item.qty }}
+            </template>
+        </cart-item-display>
+
+
+        <el-dialog
+            :title="dialogCartItem.product.title"
+            :visible.sync="dialogVisible"
+            width="95%"
+            top="5vh">
+
+            <div class="pageContainerMax">
+                <product-details-display>
+                    <!-- pics -->
+                    <template slot="pics">
+                        <product-image-carousel :product="dialogCartItem.product" />
+                    </template>
+
+                    <!-- description -->
+                    <template slot="description">
+                        <div class="pbl fs16">{{ dialogCartItem.product.description_long }}</div>
+                    </template>
+
+                    <!-- price -->
+                    <template slot="price">
+                        <div class="fs20">
+                            <product-price :product="dialogCartItem.product"></product-price>
                         </div>
-                    </div>
+                    </template>
 
-                    <!-- Price -->
-                    <div class="cartItemCol">
-                        <label class="itemLabel">{{ $t('Price' )}}:</label>
-                        <div class="itemVal"><product-price :product="item.product" :show-strikethrough="false"></product-price></div>
-                    </div>
+                    <!-- size -->
+                    <template slot="size">
+                        <div class="fwb">{{ $t('Size') }}:</div>
+                        {{ $t(dialogCartItem.variants.size) }}
+                    </template>
 
-                    <!-- Quantity -->
-                    <div class="cartItemCol">
-                        <label class="itemLabel">{{ $t('Quantity' )}}:</label>
-                        <div>{{ item.qty }}</div>
-                    </div>
-                </div>
+                    <!-- quantity -->
+                    <template slot="quantity">
+                        <div class="fwb">{{ $t('Quantity') }}:</div>
+                        {{ dialogCartItem.qty }}
+                    </template>
+                </product-details-display>
             </div>
-        </article>
+
+        </el-dialog>
     </div>
 </template>
