@@ -6,7 +6,7 @@ import TreeView from 'vue-json-tree-view'
 import payment_mixin from '@/mixins/payment_mixin'
 import FormRow from '@/components/FormRow'
 import AddressDisplay from '@/components/AddressDisplay'
-import OrderCartItems from '@/components/order/OrderCartItems'
+import CartItems from '@/components/cart/CartItems'
 import ShippingLabelButton from '@/components/payment/ShippingLabelButton'
 
 let currentNotification = null;
@@ -35,8 +35,8 @@ export default{
     components: {
         FormRow,
         AddressDisplay,
-        OrderCartItems,
-        ShippingLabelButton
+        ShippingLabelButton,
+        CartItems
     },
 
     mixins: [
@@ -224,7 +224,9 @@ export default{
         <div class="g-spec">
             <div class="g-spec-label">Cart items ({{ payment.shoppingCart.num_items }}):</div>
             <div class="g-spec-content">
-                <order-cart-items :cart-items="payment.shoppingCart.cart_items" />
+                <cart-items
+                    :shopping-cart="payment.shoppingCart"
+                    :allow-edit="false" />
             </div>
         </div>
 

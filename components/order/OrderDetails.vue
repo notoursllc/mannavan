@@ -2,7 +2,7 @@
 import PaymentTypeDisplay from '@/components/PaymentTypeDisplay'
 import CartTotalsTable from '@/components/cart/CartTotalsTable'
 import AddressDisplay from '@/components/AddressDisplay'
-import OrderCartItems from '@/components/order/OrderCartItems'
+import CartItems from '@/components/cart/CartItems'
 import FormRow from '@/components/FormRow'
 import payment_mixin from '@/mixins/payment_mixin';
 
@@ -18,9 +18,9 @@ export default {
     components: {
         PaymentTypeDisplay,
         CartTotalsTable,
-        OrderCartItems,
         AddressDisplay,
-        FormRow
+        FormRow,
+        CartItems
     },
 
     mixins:[
@@ -28,7 +28,7 @@ export default {
     ],
 
     computed: {
-        cardType: function() {
+        creditCardType: function() {
             if(this.order.transaction.paymentInstrumentType === 'paypal_account') {
                 return 'paypal';
             }
@@ -69,7 +69,7 @@ export default {
             <div class="mbl mrxl inlineBlock vat">
                 <div class="fwb">{{ $t('Payment method') }}:</div>
                 <div>
-                    <payment-type-display :card-type="cardType"
+                    <payment-type-display :card-type="creditCardType"
                                         :last-four="order.transaction.creditCard.last4"
                                         :payer-email="order.transaction.customer.email"></payment-type-display>
                 </div>
@@ -86,6 +86,8 @@ export default {
             </div>
         </div>
 
-        <order-cart-items :cart-items="order.shoppingCart.cart_items" />
+        <cart-items
+            :shopping-cart="order.shoppingCart"
+            :allow-edit="false" />
     </div>
 </template>

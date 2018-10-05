@@ -37,6 +37,16 @@ export default {
         }
     },
 
+    computed: {
+        cardType: function() {
+            if(this.order.transaction.payment.type === 'paypal_account') {
+                return 'paypal';
+            }
+
+            return this.order.transaction.payment.cardType;
+        }
+    },
+
     async created() {
         try {
             this.$store.dispatch('ui/pageTitle', null);

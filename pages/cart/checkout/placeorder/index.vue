@@ -635,7 +635,9 @@ export default {
             </div>
 
             <div class="ptl">
-                <cart-items :allow-edit="false"></cart-items>
+                <cart-items
+                    :shopping-cart="shoppingCart"
+                    :allow-edit="false"></cart-items>
             </div>
 
             <!-- CVV Modal -->

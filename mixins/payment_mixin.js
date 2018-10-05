@@ -3,16 +3,6 @@
 import queryString from 'query-string';
 
 export default {
-    computed: {
-        cardType: function() {
-            if(this.order.transaction.payment.type === 'paypal_account') {
-                return 'paypal';
-            }
-
-            return this.order.transaction.payment.cardType;
-        }
-    },
-
     methods: {
         async getBraintreeClientToken() {
            const response = await this.$axios.$get('/payment/token');

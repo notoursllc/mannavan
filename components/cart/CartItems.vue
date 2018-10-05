@@ -3,10 +3,12 @@ import accounting from 'accounting'
 import Vue from 'vue'
 import { mapGetters } from 'vuex'
 import isObject from 'lodash.isobject'
-import { Select, Option, InputNumber, Loading, Button, Popover, Notification } from 'element-ui'
+import { Select, Option, InputNumber, Loading, Button, Popover, Notification, Dialog } from 'element-ui'
 import ProductPrice from '@/components/product/ProductPrice'
 import NumberButtons from '@/components/NumberButtons'
 import CartItemDisplay from '@/components/cart/CartItemDisplay'
+import ProductDetailsDisplay from '@/components/product/ProductDetailsDisplay'
+import ProductImageCarousel from '@/components/product/ProductImageCarousel'
 import product_mixin from '@/mixins/product_mixin'
 import shopping_cart_mixin from '@/mixins/shopping_cart_mixin'
 
@@ -15,6 +17,7 @@ Vue.use(Option);
 Vue.use(InputNumber);
 Vue.use(Button);
 Vue.use(Popover);
+Vue.use(Dialog)
 Vue.use(Loading.directive);
 
 Vue.prototype.$notify = Notification;
@@ -31,6 +34,11 @@ function showNotification(Notification) {
 
 export default {
     props: {
+        shoppingCart: {
+            type: Object,
+            default: null
+        },
+
         allowEdit: {
             type: Boolean,
             default: true
@@ -45,7 +53,9 @@ export default {
     components: {
         ProductPrice,
         NumberButtons,
-        CartItemDisplay
+        CartItemDisplay,
+        ProductDetailsDisplay,
+        ProductImageCarousel
     },
 
     mixins: [
@@ -58,14 +68,15 @@ export default {
             added_cart_item: {},
             selectedQty: 0,
             loading: true,
-            confirmDeleteModals: {}
+            confirmDeleteModals: {},
+            productDetailsDialog: {
+                visible: false,
+                cartItem: {
+                    product: {},
+                    variants: {}
+                }
+            }
         }
-    },
-
-    computed: {
-        ...mapGetters({
-            shoppingCart: 'shoppingcart/cart'
-        })
     },
 
     methods: {
@@ -111,6 +122,11 @@ export default {
                     })
                 )
             }
+        },
+
+        showProductDetailsDialog(cartItem) {
+            this.productDetailsDialog.visible = true;
+            this.productDetailsDialog.cartItem = cartItem;
         }
     },
 
@@ -124,7 +140,7 @@ export default {
 
 
 <template>
-    <div>
+    <div v-if="shoppingCart">
         <div v-if="!shoppingCart.num_items" class="fs16 tac pal">
             {{ $t('Your shopping cart does not contain any items.') }}
         </div>
@@ -137,14 +153,13 @@ export default {
 
                 <!-- pic -->
                 <template slot="pic">
-                    <figure class="cartItemPic" :style="'background-image:url(' + featuredProductPic(item.product) + ');'"></figure>
+                    <figure class="cartItemPic"
+                        :style="'background-image:url(' + featuredProductPic(item.product) + ');'"></figure>
                 </template>
 
                 <!-- title -->
                 <template slot="title">
-                    <nuxt-link :to="{ name: 'type-name-seouri', params: { seouri: item.product.seo_uri} }"
-                            tag="a"
-                            class="itemTitle">{{ item.product.title }}</nuxt-link>
+                    <a class="itemTitle" @click="showProductDetailsDialog(item)">{{ item.product.title }}</a>
 
                     <div v-if="allowEdit" class="mts">
                         <el-popover
@@ -200,6 +215,46 @@ export default {
                     </div>
                 </template>
             </cart-item-display>
+
+            <el-dialog
+                :title="productDetailsDialog.cartItem.product.title"
+                :visible.sync="productDetailsDialog.visible"
+                width="95%"
+                top="5vh">
+
+                <div class="pageContainerMax">
+                    <product-details-display>
+                        <!-- pics -->
+                        <template slot="pics">
+                            <product-image-carousel :product="productDetailsDialog.cartItem.product" />
+                        </template>
+
+                        <!-- description -->
+                        <template slot="description">
+                            <div class="pbl fs16">{{ productDetailsDialog.cartItem.product.description_long }}</div>
+                        </template>
+
+                        <!-- price -->
+                        <template slot="price">
+                            <div class="fs20">
+                                <product-price :product="productDetailsDialog.cartItem.product"></product-price>
+                            </div>
+                        </template>
+
+                        <!-- size -->
+                        <template slot="size">
+                            <div class="fwb">{{ $t('Size') }}:</div>
+                            {{ $t(productDetailsDialog.cartItem.variants.size) }}
+                        </template>
+
+                        <!-- quantity -->
+                        <template slot="quantity">
+                            <div class="fwb">{{ $t('Quantity') }}:</div>
+                            {{ productDetailsDialog.cartItem.qty }}
+                        </template>
+                    </product-details-display>
+                </div>
+            </el-dialog>
         </div>
     </div>
 </template>

@@ -67,14 +67,16 @@
 
 <template>
     <div class="pageContainerMax">
-        <div class="tac ptl" v-if="this.shoppingCart.cart_items && this.shoppingCart.cart_items.length > 2">
+        <div class="tac ptl" v-if="shoppingCart.cart_items && shoppingCart.cart_items.length > 2">
             <el-button type="success"
                         size="large"
                         @click="goToCheckout"
                         round>{{ $t('PROCEED TO CHECKOUT') }}</el-button>
         </div>
 
-        <cart-items :highlight-item="added_cart_item"></cart-items>
+        <cart-items
+            :shopping-cart="shoppingCart"
+            :highlight-item="added_cart_item"></cart-items>
 
         <div class="mtm clearfix">
             <div class="floatRight">
@@ -82,7 +84,7 @@
             </div>
         </div>
 
-        <div class="tac mtl" v-if="this.shoppingCart.num_items">
+        <div class="tac mtl" v-if="shoppingCart.num_items">
             <el-button type="success"
                         size="large"
                         @click="goToCheckout"
