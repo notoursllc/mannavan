@@ -3,7 +3,7 @@ import accounting from 'accounting'
 import Vue from 'vue'
 import { mapGetters } from 'vuex'
 import isObject from 'lodash.isobject'
-import { Select, Option, InputNumber, Loading, Button, Popover, Notification, Dialog } from 'element-ui'
+import { Select, Option, InputNumber, Loading, Button, Popover, Notification, Dialog, Tooltip } from 'element-ui'
 import ProductPrice from '@/components/product/ProductPrice'
 import NumberButtons from '@/components/NumberButtons'
 import CartItemDisplay from '@/components/cart/CartItemDisplay'
@@ -17,7 +17,8 @@ Vue.use(Option);
 Vue.use(InputNumber);
 Vue.use(Button);
 Vue.use(Popover);
-Vue.use(Dialog)
+Vue.use(Dialog);
+Vue.use(Tooltip);
 Vue.use(Loading.directive);
 
 Vue.prototype.$notify = Notification;
@@ -159,7 +160,12 @@ export default {
 
                 <!-- title -->
                 <template slot="title">
-                    <a class="itemTitle" @click="showProductDetailsDialog(item)">{{ item.product.title }}</a>
+                    <el-tooltip
+                        effect="light"
+                        :content="$t('Product quick view')"
+                        placement="top-start">
+                        <a class="underlineDotted" @click="showProductDetailsDialog(item)">{{ item.product.title }}</a>
+                    </el-tooltip>
 
                     <div v-if="allowEdit" class="mts">
                         <el-popover
@@ -219,8 +225,7 @@ export default {
             <el-dialog
                 :title="productDetailsDialog.cartItem.product.title"
                 :visible.sync="productDetailsDialog.visible"
-                width="95%"
-                top="5vh">
+                custom-class="productDialog">
 
                 <div class="pageContainerMax">
                     <product-details-display>
@@ -258,3 +263,18 @@ export default {
         </div>
     </div>
 </template>
+
+<style lang="scss">
+    @import "~assets/css/components/_variables.scss";
+
+    .productDialog {
+        margin-top: 5vh !important;
+        width: 95% !important;
+    }
+
+    @media #{$medium-and-up} {
+        .productDialog {
+            max-width: 1000px;
+        }
+    }
+</style>

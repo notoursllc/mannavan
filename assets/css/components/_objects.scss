@@ -83,6 +83,7 @@
 
 .underline { text-decoration: underline !important }
 .underlineDotted { border-bottom: 1px dotted !important }
+.underlineDotted:hover { text-decoration: none !important; border-bottom: 0!important; }
 
 .vab { vertical-align: baseline !important }
 .vam { vertical-align: middle !important }
