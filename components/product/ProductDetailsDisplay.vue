@@ -54,6 +54,10 @@ export default {
             </div>
         </div>
 
+        <div>
+            <slot name="under"></slot>
+        </div>
+
         <div class="social">
             <!-- <social-sharing :url="siteUrl + '/product/share?id=' + product.id" -->
             <!-- <social-sharing :url="pageUrl"

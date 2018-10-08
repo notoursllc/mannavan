@@ -7,6 +7,7 @@ import { Select, Option, InputNumber, Notification, Button, Loading } from 'elem
 import ProductPrice from '@/components/product/ProductPrice'
 import ProductDetailsDisplay from '@/components/product/ProductDetailsDisplay'
 import ProductImageCarousel from '@/components/product/ProductImageCarousel'
+import TshirtSizeChart from '@/components/product/TshirtSizeChart'
 import NumberButtons from '@/components/NumberButtons'
 import product_mixin from '@/mixins/product_mixin'
 import app_mixin from '@/mixins/app_mixin'
@@ -38,7 +39,8 @@ export default {
         ProductPrice,
         NumberButtons,
         ProductDetailsDisplay,
-        ProductImageCarousel
+        ProductImageCarousel,
+        TshirtSizeChart
     },
 
     data() {
@@ -245,6 +247,14 @@ export default {
                             @click="addToCart"
                             :loading="isLoading"
                             round>{{ $t('ADD TO CART') }}</el-button>
+                </div>
+            </template>
+
+            <!-- size chart -->
+            <template slot="under">
+                <div class="ptl">
+                    <div class="fs16 mbm">Sizing:</div>
+                    <tshirt-size-chart type="mens" />
                 </div>
             </template>
         </product-details-display>

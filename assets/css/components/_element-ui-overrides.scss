@@ -91,3 +91,7 @@
     padding:25px 45px;
     font-size: 18px;
 }
+
+.el-table.header-break-word th>.cell {
+    word-break: break-word;
+}
