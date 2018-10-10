@@ -1,27 +1,21 @@
 const Promise = require('bluebird');
 const faker = require('faker');
 const CoreService = require('../../server/plugins/core/core.service');
-const productsController = require('../../server/plugins/products/productsController');
-
-const productTypes = productsController.getProductTypes();
-const productSubTypes = productsController.getProductSubTypes();
+const { product } = require('../../client_server_shared/global_types')
 const fakeGenderOptions = buildSampleGenderOptions();
 
 
 function buildSampleGenderOptions() {
-    let types = productsController.getGenderTypes();
     let opts = [];
 
     // adding one option for each gender
-    Object.keys(types).forEach((key) => {
-        opts.push(types[key]);
+    Object.keys(product.genders).forEach((key) => {
+        opts.push(product.genders[key]);
     });
 
     // adding a few multi-gender options
-    opts.push(types.GENDER_TYPE_MENS | types.GENDER_TYPE_WOMENS);  // mens and womens
-    opts.push(types.GENDER_TYPE_MENS | types.GENDER_TYPE_BOYS);  // mens and boys
-    opts.push(types.GENDER_TYPE_WOMENS | types.GENDER_TYPE_GIRLS);  // womens and girls
-    opts.push(types.GENDER_TYPE_BOYS | types.GENDER_TYPE_GIRLS);  // boys and girls
+    opts.push(product.genders.GENDER_TYPE_MENS | product.genders.GENDER_TYPE_BOYS);  // mens and boys
+    opts.push(product.genders.GENDER_TYPE_WOMENS | product.genders.GENDER_TYPE_GIRLS);  // womens and girls
 
     return opts;
 }
@@ -57,8 +51,8 @@ exports.seed = (knex) => {
                 let uuid = faker.random.uuid();
                 global.productSeedUuids.push(uuid);
 
-                let subType = i % 2 ? productSubTypes.PRODUCT_SUBTYPE_TOP : productSubTypes.PRODUCT_SUBTYPE_HAT;
-                let shippingPackageType = (subType === productSubTypes.PRODUCT_SUBTYPE_TOP ? 0x01 : 0x04);
+                let subType = i % 2 ? product.subtypes.PRODUCT_SUBTYPE_TOP : product.subtypes.PRODUCT_SUBTYPE_HAT;
+                let shippingPackageType = (subType === product.subtypes.PRODUCT_SUBTYPE_TOP ? 0x01 : 0x04);
 
                 promises.push(
                     knex(CoreService.DB_TABLES.products)
@@ -78,7 +72,7 @@ exports.seed = (knex) => {
                             tax_code: 20010,
                             video_url: 'https://www.youtube.com/watch?v=JUaY0AOLopU',
                             gender: getRandomGenderOption(),
-                            type: productTypes.PRODUCT_TYPE_APPAREL,
+                            type: product.types.PRODUCT_TYPE_APPAREL,
                             sub_type: subType,
                             shipping_package_type: shippingPackageType,
                             inventory_count: (100 + i),

@@ -4,7 +4,7 @@ const isObject = require('lodash.isobject');
 const Boom = require('boom');
 const helperService = require('../../helpers.service');
 const productPicController = require('./productPicController');
-const productSizeController = require('./productSizeController');
+const { product } = require('../../../client_server_shared/global_types');
 
 
 let server = null;
@@ -17,35 +17,6 @@ function getModel() {
 
 function setServer(s) {
     server = s;
-}
-
-
-function getProductTypes() {
-    return {
-        PRODUCT_TYPE_APPAREL: 0x01 // 00000001
-    };
-}
-
-
-function getProductSubTypes() {
-    return {
-        PRODUCT_SUBTYPE_HAT: 0x01, // 00000001
-        PRODUCT_SUBTYPE_TOP: 0x02  // 00000010
-    };
-}
-
-
-/**
- * Returns the integer representation for each binary gender type
- * @returns {}
- */
-function getGenderTypes() {
-    return {
-        GENDER_TYPE_MENS: 0x01, // 00000001
-        GENDER_TYPE_WOMENS: 0x02, // 00000010
-        GENDER_TYPE_BOYS: 0x04, // 00000100
-        GENDER_TYPE_GIRLS: 0x08  // 00001000
-    };
 }
 
 
@@ -167,10 +138,10 @@ async function productSeoHandler(request, h) {
 
 function productInfoHandler(request, h) {
     return h.apiSuccess({
-        types: getProductTypes(),
-        subTypes: getProductSubTypes(),
-        sizes: productSizeController.getSizeTypes(),
-        genders: getGenderTypes()
+        types: product.types,
+        subTypes: product.subtypes,
+        sizes: product.sizes,
+        genders: product.genders
     });
 }
 
@@ -243,9 +214,6 @@ async function productUpdateHandler(request, h) {
 
 module.exports = {
     setServer,
-    getProductTypes,
-    getProductSubTypes,
-    getGenderTypes,
     getProductByAttribute,
 
     // route handlers

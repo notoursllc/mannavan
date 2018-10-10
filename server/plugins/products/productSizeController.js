@@ -1,6 +1,7 @@
 'use strict';
 
 const Boom = require('boom');
+const { product } = require('../../../client_server_shared/global_types')
 
 let server = null;
 
@@ -15,28 +16,8 @@ function setServer(s) {
 }
 
 
-function getSizeTypes() {
-    return [
-        'SIZE_YOUTH_XS',
-        'SIZE_YOUTH_S',
-        'SIZE_YOUTH_M',
-        'SIZE_YOUTH_L',
-        'SIZE_YOUTH_XL',
-        'SIZE_ADULT_XS',
-        'SIZE_ADULT_S',
-        'SIZE_ADULT_M',
-        'SIZE_ADULT_L',
-        'SIZE_ADULT_XL',
-        'SIZE_ADULT_2XL',
-        'SIZE_ADULT_3XL',
-        'SIZE_ADULT_4XL',
-        'SIZE_ADULT_5XL'
-    ];
-}
-
-
 function getSizeTypeSortOrder(size) {
-    let types = getSizeTypes();
+    let types = product.sizes;
     let index = types.indexOf(size);
     return index > -1 ? index : types.length;
 }
@@ -118,7 +99,6 @@ async function productSizeDeleteHandler(request, h) {
 
 module.exports = {
     setServer,
-    getSizeTypes,
     getSizeTypeSortOrder,
     productSizeCreateHandler,
     productSizeUpdateHandler,

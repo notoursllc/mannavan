@@ -23,6 +23,11 @@
     color: #555555;
     background-color: #e7f8e9;
   }
+  tbody tr.highlight {
+    color: #fff;
+    font-weight: bold;
+    background-color: #64c42d;
+  }
 }
 .table th {
   font-size: 14px;

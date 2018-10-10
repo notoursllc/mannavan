@@ -254,7 +254,7 @@ export default {
             <template slot="under">
                 <div class="ptl">
                     <div class="fs16 mbm">Sizing:</div>
-                    <tshirt-size-chart type="mens" />
+                    <tshirt-size-chart :gender="product.gender" :highlight="selectedSize" />
                 </div>
             </template>
         </product-details-display>
