@@ -93,6 +93,8 @@
     "LOGOUT": "LOGOUT",
 
     "Make sure your address is correct": "Make sure your address is correct",
+    "MATERIAL_TYPE_COTTON": "Cotton",
+    "MATERIAL_TYPE_TRI_BLEND": "Tri-Blend",
 
     "No matching values": "No matching values",
     "No results": "No results",

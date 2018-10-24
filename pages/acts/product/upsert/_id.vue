@@ -11,6 +11,7 @@ import IconNewWindow from '@/components/icons/IconNewWindow'
 import IconPlayVideo from '@/components/icons/IconPlayVideo'
 import product_mixin from '@/mixins/product_mixin'
 import shipping_mixin from '@/mixins/shipping_mixin'
+import globalTypes from '@/client_server_shared/global_types.json';
 
 Vue.prototype.$notify = Notification;
 Vue.prototype.$confirm = MessageBox.confirm;
@@ -56,6 +57,7 @@ export default {
 
     data() {
         return {
+            globalTypes: globalTypes,
             product: {
                 sizes: []
             },
@@ -295,6 +297,18 @@ export default {
                         <!-- sku -->
                         <form-row label="SKU:">
                             <el-input v-model="product.sku"></el-input>
+                        </form-row>
+
+                        <!-- material type -->
+                        <form-row label="Material type:">
+                            <el-select v-model="product.material_type">
+                                <el-option
+                                    v-for="(val, key) in globalTypes.product.material_types"
+                                    :key="val"
+                                    :label="$t(key)"
+                                    :value="val">
+                                </el-option>
+                            </el-select>
                         </form-row>
 
                     </div>

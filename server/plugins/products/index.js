@@ -28,7 +28,8 @@ const schema = {
     hide_if_out_of_stock: Joi.boolean(),
     product_artist_id: Joi.string().uuid().allow(null),
     created_at: Joi.date().optional(),
-    updated_at: Joi.date().optional()
+    updated_at: Joi.date().optional(),
+    material_type: Joi.number().integer().positive(),
 };
 
 const productPicSchema = {

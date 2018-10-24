@@ -4,7 +4,7 @@ const isObject = require('lodash.isobject');
 const Boom = require('boom');
 const helperService = require('../../helpers.service');
 const productPicController = require('./productPicController');
-const { product } = require('../../../client_server_shared/global_types');
+const globalTypes = require('../../../client_server_shared/global_types.json');
 
 
 let server = null;
@@ -138,10 +138,10 @@ async function productSeoHandler(request, h) {
 
 function productInfoHandler(request, h) {
     return h.apiSuccess({
-        types: product.types,
-        subTypes: product.subtypes,
-        sizes: product.sizes,
-        genders: product.genders
+        types: globalTypes.product.types,
+        subTypes: globalTypes.product.subtypes,
+        sizes: globalTypes.product.sizes,
+        genders: globalTypes.product.genders
     });
 }
 

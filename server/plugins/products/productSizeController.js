@@ -1,7 +1,7 @@
 'use strict';
 
 const Boom = require('boom');
-const { product } = require('../../../client_server_shared/global_types')
+const globalTypes = require('../../../client_server_shared/global_types.json')
 
 let server = null;
 
@@ -17,7 +17,7 @@ function setServer(s) {
 
 
 function getSizeTypeSortOrder(size) {
-    let types = product.sizes;
+    let types = globalTypes.product.sizes;
     let index = types.indexOf(size);
     return index > -1 ? index : types.length;
 }

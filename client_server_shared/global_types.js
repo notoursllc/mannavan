@@ -31,8 +31,14 @@ const globalTypes = {
 
         types: {
             PRODUCT_TYPE_APPAREL: 0x01 // 00000001
+        },
+
+        material_types: {
+            MATERIAL_TYPE_COTTON: 0x01,
+            MATERIAL_TYPE_TRI_BLEND: 0x02
         }
     }
 };
 
-exports.product = globalTypes.product;
+// exports.product = globalTypes.product;
+module.exports = globalTypes;
