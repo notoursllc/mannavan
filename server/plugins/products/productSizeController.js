@@ -1,7 +1,7 @@
 'use strict';
 
 const Boom = require('boom');
-const globalTypes = require('../../../client_server_shared/global_types.json')
+const globalTypes = require('../../../client_server_shared/global_types.js')
 
 let server = null;
 

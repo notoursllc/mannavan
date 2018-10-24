@@ -2,7 +2,7 @@ const Promise = require('bluebird');
 const faker = require('faker');
 const CoreService = require('../../server/plugins/core/core.service');
 const productSizeController = require('../../server/plugins/products/productSizeController');
-const globalTypes = require('../../client_server_shared/global_types.json')
+const globalTypes = require('../../client_server_shared/global_types.js')
 
 
 exports.seed = (knex) => {

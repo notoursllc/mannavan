@@ -4,7 +4,7 @@ const isObject = require('lodash.isobject');
 const Boom = require('boom');
 const helperService = require('../../helpers.service');
 const productPicController = require('./productPicController');
-const globalTypes = require('../../../client_server_shared/global_types.json');
+const globalTypes = require('../../../client_server_shared/global_types.js');
 
 
 let server = null;
