@@ -1,8 +1,9 @@
 run.config:
   engine: nodejs
   engine.config:
-    runtime: nodejs-8.9
+    runtime: nodejs-10.4
     python_version: python-2.7
+    dep_manager: npm
 
   extra_packages:
     - nginx
