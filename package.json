@@ -84,7 +84,7 @@
     "uuid": "^3.3.2",
     "uuid-validate": "0.0.3",
     "v-img": "^0.2.0",
-    "vision": "^5.4.1",
+    "vision": "^5.4.2",
     "vue-carousel": "^0.8.1",
     "vue-i18n": "^7.8.1",
     "vue-json-tree-view": "^2.1.4",
@@ -94,7 +94,7 @@
     "vuex-router-sync": "^5.0.0",
     "winston": "^2.4.4",
     "winston-loggly-bulk": "^2.0.3",
-    "wreck": "^14.1.1"
+    "wreck": "^14.1.2"
   },
   "devDependencies": {
     "cross-env": "^5.2.0",
