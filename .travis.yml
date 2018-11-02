@@ -5,7 +5,7 @@ dist: trusty
 sudo: required
 
 node_js:
-  - "8.9"
+  - "10.4"
 
 # cache:
 #   directories:
