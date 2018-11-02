@@ -55,6 +55,7 @@
     "fs": "0.0.1-security",
     "glue": "^5.0.0",
     "handlebars": "^4.0.12",
+    "hapi": "^17.6.2",
     "hapi-auth-basic": "^5.0.0",
     "hapi-nuxt": "^1.0.1",
     "hoek": "^5.0.4",
