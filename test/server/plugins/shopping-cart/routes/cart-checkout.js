@@ -5,6 +5,7 @@ const forEach = require('lodash.foreach');
 const isObject = require('lodash.isobject');
 const testHelpers = require('../../../testHelpers');
 const { initController } = require('../_controllerHelper');
+const paymentControllerHelper = require('../../payment/_controllerHelper');
 
 const lab = exports.lab = Lab.script();
 const describe = lab.experiment;
@@ -117,6 +118,7 @@ describe('Testing route: POST /cart/checkout', () => {
     it('should have all the right data in the DB after a successful checkout', { timeout: 10000 }, async () => {
         return new Promise(async (resolve) => {
             const { server, controller } = await initController();
+            const paymentControllerInit = await paymentControllerHelper.initController();
 
             // Get a random product
             // Add product to the cart
@@ -169,7 +171,7 @@ describe('Testing route: POST /cart/checkout', () => {
             // wait a few seconds for the other DB transactions to happen
             setTimeout(async () => {
                 // Payment:
-                const Payment = await controller.getPaymentByAttribute('id', paymentID);
+                const Payment = await paymentControllerInit.controller.getPaymentByAttribute('id', paymentID);
                 const p = Payment.toJSON();
 
                 expect(p.id, 'Payment ID').to.equal(paymentID);

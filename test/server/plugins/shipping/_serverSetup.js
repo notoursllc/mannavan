@@ -12,6 +12,12 @@ manifest.register.plugins.push(
         }
     },
     {
+        plugin: './plugins/payment',
+        routes: {
+            prefix: '/api/v1'
+        }
+    },
+    {
         plugin: './plugins/shopping-cart',
         routes: {
             prefix: '/api/v1'

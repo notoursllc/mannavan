@@ -9,6 +9,7 @@ let manifest = testHelpers.getBasicManifest();
 manifest.register.plugins.push(
     { plugin: './plugins/products' },
     { plugin: './plugins/shipping' },
+    { plugin: './plugins/payment' },
     { plugin: './plugins/shopping-cart' }
 );
 

@@ -5,7 +5,7 @@ const Lab = require('lab');
 const { after, before, describe, it } = exports.lab = Lab.script();
 
 const { getShipmentData } = require('./_shippingControllerHelper');
-const { createShippingLabelFromShipment } = require('../../../../../server/plugins/shipping/shippoAPI/transactions.js')
+const { createShippingLabel } = require('../../../../../server/plugins/shipping/shippoAPI/transactions')
 
 
 function getCreateShippingLabelRequestData() {
@@ -31,7 +31,7 @@ describe('ShippoAPI: createShippingLabelFromShipment', () => {
         let error = null;
 
         try {
-            res = await createShippingLabelFromShipment(data)
+            res = await createShippingLabel(data)
         }
         catch(err) {
             error = err;
@@ -51,7 +51,7 @@ describe('ShippoAPI: createShippingLabelFromShipment', () => {
         let error = null;
 
         try {
-            res = await createShippingLabelFromShipment(data)
+            res = await createShippingLabel(data)
         }
         catch(err) {
             error = err;
@@ -71,7 +71,7 @@ describe('ShippoAPI: createShippingLabelFromShipment', () => {
         let error = null;
 
         try {
-            res = await createShippingLabelFromShipment(data)
+            res = await createShippingLabel(data)
         }
         catch(err) {
             error = err;
@@ -82,14 +82,14 @@ describe('ShippoAPI: createShippingLabelFromShipment', () => {
         expect( error.message ).to.include('Request failed with status code 400');
     });
 
-/*
+    /*
     it('returns a shipment object when creating a shipping label', async() => {
         let data = getCreateShippingLabelRequestData();
         let shipment = null;
         let error = null;
 
         try {
-            shipment = await createShippingLabelFromShipment(data)
+            shipment = await createShippingLabel(data)
             // shippingController.createShipment(
             //     getShipmentData()
             // ).then((result) => {
