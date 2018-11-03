@@ -28,7 +28,7 @@
     "precommit": "npm run lint"
   },
   "dependencies": {
-    "@nuxtjs/axios": "^5.3.1",
+    "@nuxtjs/axios": "^5.3.4",
     "@nuxtjs/pwa": "^2.6.0",
     "accounting": "^0.4.1",
     "auth0-lock": "^11.11.0",
