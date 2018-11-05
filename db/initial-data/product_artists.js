@@ -23,6 +23,7 @@ exports.seed = (knex) => {
                     promises.push(
                         knex(CoreService.DB_TABLES.product_artists).insert({
                             id: uuid,
+                            name: `${faker.name.firstName()} ${faker.name.lastName()}`,
                             description_short: 'Product artist ' + i + ' - ' + faker.lorem.sentence(),
                             description_long: 'Product artist ' + i + ' - ' + faker.lorem.paragraph(),
                             icon: 'sample_artist_icon.jpg',

@@ -3,7 +3,7 @@ import Vue from 'vue'
 import Promise from 'bluebird';
 import isObject from 'lodash.isobject'
 import _forEach from 'lodash.foreach'
-import { Select, Option, InputNumber, Notification, Button, Loading } from 'element-ui'
+import { Select, Option, InputNumber, Notification, Button, Loading, Dialog } from 'element-ui'
 import ProductPrice from '@/components/product/ProductPrice'
 import ProductDetailsDisplay from '@/components/product/ProductDetailsDisplay'
 import ProductImageCarousel from '@/components/product/ProductImageCarousel'
@@ -18,6 +18,7 @@ Vue.use(Select);
 Vue.use(Option);
 Vue.use(InputNumber);
 Vue.use(Button);
+Vue.use(Dialog);
 Vue.use(Loading.directive)
 
 
@@ -52,7 +53,10 @@ export default {
             isLoading: false,
             siteUrl: this.getSiteUrl(true),
             pageUrl: `${this.getSiteUrl(true)}${this.$route.fullPath}`,
-            twitterUser: this.getTwitterUser()
+            twitterUser: this.getTwitterUser(),
+            artistDialog: {
+                visible: false
+            }
         }
     },
 
@@ -198,16 +202,19 @@ export default {
             </template>
 
             <!-- description -->
-            <template slot="description">
-                <div class="pbl fs16">{{ product.description_long }}</div>
-            </template>
+            <div slot="description" class="fs16">{{ product.description_long }}</div>
+
+            <!-- artist -->
+            <div slot="artist" v-if="product.artist.id" class="mtl fs12">
+                {{ $t('Artist') }}:
+                <span class="underlineDotted cursorPointer mls"
+                    @click="artistDialog.visible = true">{{ product.artist.name }}</span>
+            </div>
 
             <!-- price -->
-            <template slot="price">
-                <div class="fs20">
-                    <product-price :product="product"></product-price>
-                </div>
-            </template>
+            <div slot="price" class="mtl fs20">
+                <product-price :product="product"></product-price>
+            </div>
 
             <!-- size -->
             <template slot="size">
@@ -241,26 +248,30 @@ export default {
             </template>
 
             <!-- add to cart button -->
-            <template slot="button">
-                <div class="ptl">
-                    <el-button type="success"
-                            @click="addToCart"
-                            :loading="isLoading"
-                            round>{{ $t('ADD TO CART') }}</el-button>
-                </div>
-            </template>
+            <div slot="button" class="ptl">
+                <el-button type="success"
+                        @click="addToCart"
+                        :loading="isLoading"
+                        round>{{ $t('ADD TO CART') }}</el-button>
+            </div>
 
             <!-- size chart -->
-            <template slot="under">
-                <div class="ptl">
-                    <div class="fs16 mbm">Sizing:</div>
-                    <tshirt-size-chart
-                        :gender="product.gender"
-                        :material="product.material_type"
-                        :highlight="selectedSize" />
-                </div>
-            </template>
+            <div slot="under" class="ptl">
+                <div class="fs16 mbm">{{ $t('Sizing') }}:</div>
+                <tshirt-size-chart
+                    :gender="product.gender"
+                    :material="product.material_type"
+                    :highlight="selectedSize" />
+            </div>
         </product-details-display>
+
+        <!-- artist dialog -->
+        <el-dialog :title="product.artist.name "
+                :visible.sync="artistDialog.visible"
+                top="5vh"
+                width="320px">
+            <div class="mtm">{{ product.artist.description_long }}</div>
+        </el-dialog>
     </div>
 </template>
 

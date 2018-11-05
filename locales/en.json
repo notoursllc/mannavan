@@ -15,6 +15,7 @@
     "An email confirmation was sent to:": "An email confirmation was sent to:",
     "An error occurred": "An error occurred",
     "Are you sure you want to return to your Shopping Cart?": "Are you sure you want to return to your Shopping Cart?",
+    "Artist": "Artist",
 
     "BILLING ADDRESS": "BILLING ADDRESS",
     "Billing address": "Billing address",
@@ -182,6 +183,7 @@
     "SIZE_YOUTH_M": "Youth M",
     "SIZE_YOUTH_L": "Youth L",
     "SIZE_YOUTH_XL": "Youth XL",
+    "Sizing": "Sizing",
     "Sleeve": "Sleeve",
     "Sleeve measurement": "Sleeve measurement",
     "sleeve_measurement_description": "The sleeve length is measured from the shoulder seam to the end of the sleeve.",

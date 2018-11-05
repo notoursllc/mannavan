@@ -32,6 +32,10 @@ export default {
                     <slot name="description"></slot>
                 </div>
 
+                <div>
+                    <slot name="artist"></slot>
+                </div>
+
                 <div class="fs20">
                     <slot name="price"></slot>
                 </div>
@@ -48,6 +52,7 @@ export default {
                     <slot name="quantity"></slot>
                 </div>
 
+                <!-- button -->
                 <div>
                     <slot name="button"></slot>
                 </div>
