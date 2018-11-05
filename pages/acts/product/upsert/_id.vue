@@ -1,7 +1,6 @@
 <script>
 import Vue from 'vue'
 import { Notification, MessageBox, Dialog, Button, Input, InputNumber, Checkbox, Select, Option } from 'element-ui'
-import VueYouTubeEmbed from 'vue-youtube-embed'
 import forEach from 'lodash.foreach'
 import FormRow from '@/components/FormRow'
 import ProductSizeAdmin from '@/components/product/admin/ProductSizeAdmin'
@@ -23,7 +22,6 @@ Vue.use(InputNumber);
 Vue.use(Checkbox);
 Vue.use(Select);
 Vue.use(Option);
-Vue.use(VueYouTubeEmbed)
 
 let currentNotification = null;
 
@@ -466,11 +464,13 @@ export default {
                 @close="modalClosed"
                 width="90%"
                 top="5vh">
-            <youtube
-                :video-id="videoPlayerModal.videoId"
-                :player-vars="{ autoplay: 1 }"
-                player-width="100%"
-                @playing="videoPlaying"></youtube>
+            <no-ssr  placeholder="Loading...">
+                <youtube
+                    :video-id="videoPlayerModal.videoId"
+                    :player-vars="{ autoplay: 1 }"
+                    player-width="100%"
+                    @playing="videoPlaying"></youtube>
+            </no-ssr>
         </el-dialog>
     </div>
 </template>

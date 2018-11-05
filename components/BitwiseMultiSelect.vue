@@ -1,9 +1,10 @@
 <script>
 import Vue from 'vue'
-import { Select } from 'element-ui'
+import { Select, Option } from 'element-ui'
 import forEach from 'lodash.foreach'
 
 Vue.use(Select);
+Vue.use(Option);
 
 export default {
     props: {
@@ -22,7 +23,7 @@ export default {
 
     data: function() {
         return {
-            selectedVal: null
+            selectedVal: []
         }
     },
 
