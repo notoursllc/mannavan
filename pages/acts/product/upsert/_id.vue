@@ -92,10 +92,10 @@ export default {
             return opts;
         },
 
-        genderSelectOptions() {
+        fitSelectOptions() {
             let opts = {};
             let self = this;
-            forEach(this.productInfo.genders, function(val, key) {
+            forEach(this.productInfo.fits, function(val, key) {
                 opts[self.$t(key)] = val;
             });
             return opts;
@@ -409,11 +409,11 @@ export default {
                                 :options="subTypeSelectOptions"></bitwise-multi-select>
                         </form-row>
 
-                        <!-- gender -->
-                        <form-row label="Gender type:">
+                        <!-- fits -->
+                        <form-row label="Fit type:">
                             <bitwise-multi-select
-                                v-model="product.gender"
-                                :options="genderSelectOptions"></bitwise-multi-select>
+                                v-model="product.fit"
+                                :options="fitSelectOptions"></bitwise-multi-select>
                         </form-row>
 
                     </div>

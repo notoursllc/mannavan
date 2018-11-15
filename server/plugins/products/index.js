@@ -20,7 +20,7 @@ const schema = {
     is_available: Joi.boolean(),
     tax_code: Joi.number().allow(null),
     video_url: Joi.string().max(500).allow(null),
-    gender: Joi.number().integer().positive(),
+    fit: Joi.number().integer().positive(),
     type: Joi.number().integer().positive(),
     sub_type: Joi.number().integer().positive(),
     shipping_package_type: Joi.number().integer().positive(),

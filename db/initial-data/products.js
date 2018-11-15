@@ -2,27 +2,27 @@ const Promise = require('bluebird');
 const faker = require('faker');
 const CoreService = require('../../server/plugins/core/core.service');
 const globalTypes = require('../../client_server_shared/global_types.js')
-const fakeGenderOptions = buildSampleGenderOptions();
+const fakeFitOptions = buildSampleFitOptions();
 
 
-function buildSampleGenderOptions() {
+function buildSampleFitOptions() {
     let opts = [];
 
-    // adding one option for each gender
-    Object.keys(globalTypes.product.genders).forEach((key) => {
-        opts.push(globalTypes.product.genders[key]);
+    // adding one option for each fit
+    Object.keys(globalTypes.product.fits).forEach((key) => {
+        opts.push(globalTypes.product.fits[key]);
     });
 
-    // adding a few multi-gender options
-    opts.push(globalTypes.product.genders.GENDER_TYPE_MENS | globalTypes.product.genders.GENDER_TYPE_BOYS);  // mens and boys
-    opts.push(globalTypes.product.genders.GENDER_TYPE_WOMENS | globalTypes.product.genders.GENDER_TYPE_GIRLS);  // womens and girls
+    // adding a few multi-fit options
+    opts.push(globalTypes.product.fits.FIT_TYPE_MENS | globalTypes.product.fits.FIT_TYPE_BOYS);  // mens and boys
+    opts.push(globalTypes.product.fits.FIT_TYPE_WOMENS | globalTypes.product.fits.FIT_TYPE_GIRLS);  // womens and girls
 
     return opts;
 }
 
 
-function getRandomGenderOption() {
-    return fakeGenderOptions[Math.floor(Math.random() * fakeGenderOptions.length)];
+function getRandomFitOption() {
+    return fakeFitOptions[Math.floor(Math.random() * fakeFitOptions.length)];
 }
 
 
@@ -72,7 +72,7 @@ exports.seed = (knex) => {
                             is_available: faker.random.boolean(),
                             tax_code: 20010,
                             video_url: 'https://www.youtube.com/watch?v=JUaY0AOLopU',
-                            gender: getRandomGenderOption(),
+                            fit: getRandomFitOption(),
                             type: globalTypes.product.types.PRODUCT_TYPE_APPAREL,
                             sub_type: subType,
                             material_type: materialType,

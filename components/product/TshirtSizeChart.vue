@@ -20,7 +20,7 @@ Vue.use(Dialog);
 
 export default {
     props: {
-        gender: {
+        fit: {
             type: Number,
             required: true
         },
@@ -105,7 +105,7 @@ export default {
         tableData() {
             let materialType = reverseMaterialTypes[this.material] || 'MATERIAL_TYPE_COTTON';
 
-            if(this.gender & globalTypes.product.genders.GENDER_TYPE_GIRLS) {
+            if(this.fit & globalTypes.product.fits.FIT_TYPE_GIRLS) {
                 return this.womens[materialType];
             }
             else {

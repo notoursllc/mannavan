@@ -259,7 +259,7 @@ export default {
             <div slot="under" class="ptl">
                 <div class="fs16 mbm">{{ $t('Sizing') }}:</div>
                 <tshirt-size-chart
-                    :gender="product.gender"
+                    :fit="product.fit"
                     :material="product.material_type"
                     :highlight="selectedSize" />
             </div>

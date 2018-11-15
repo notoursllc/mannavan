@@ -141,7 +141,7 @@ function productInfoHandler(request, h) {
         types: globalTypes.product.types,
         subTypes: globalTypes.product.subtypes,
         sizes: globalTypes.product.sizes,
-        genders: globalTypes.product.genders
+        fits: globalTypes.product.fits
     });
 }
 

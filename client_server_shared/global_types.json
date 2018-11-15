@@ -1,10 +1,10 @@
 {
     "product": {
-        "genders": {
-            "GENDER_TYPE_MENS": 1,
-            "GENDER_TYPE_WOMENS": 2,
-            "GENDER_TYPE_BOYS": 4,
-            "GENDER_TYPE_GIRLS": 8
+        "fits": {
+            "FIT_TYPE_MENS": 1,
+            "FIT_TYPE_WOMENS": 2,
+            "FIT_TYPE_BOYS": 4,
+            "FIT_TYPE_GIRLS": 8
         },
         "sizes": [
             "SIZE_YOUTH_XS",

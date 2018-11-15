@@ -70,10 +70,10 @@
     "FIRST NAME": "FIRST NAME",
     "First name": "First name",
 
-    "GENDER_TYPE_BOYS": "Boys",
-    "GENDER_TYPE_GIRLS": "Girls",
-    "GENDER_TYPE_MENS": "Mens",
-    "GENDER_TYPE_WOMENS": "Womens",
+    "FIT_TYPE_BOYS": "Boys",
+    "FIT_TYPE_GIRLS": "Girls",
+    "FIT_TYPE_MENS": "Mens",
+    "FIT_TYPE_WOMENS": "Womens",
 
     "HATS": "HATS",
     "Hip": "Hip",

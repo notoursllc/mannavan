@@ -63,6 +63,6 @@ describe('Testing route: GET /products', () => {
         expect(prod.hasOwnProperty('pics'), 'Related info: pics').to.equal(true);
         expect(prod.hasOwnProperty('type'), 'Related info: type').to.equal(true);
         expect(prod.hasOwnProperty('sub_type'), 'Related info: sub_type').to.equal(true);
-        expect(prod.hasOwnProperty('gender'), 'Related info: gender').to.equal(true);
+        expect(prod.hasOwnProperty('fit'), 'Related info: fit').to.equal(true);
     });
 });
