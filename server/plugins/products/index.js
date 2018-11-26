@@ -3,6 +3,7 @@ const path = require('path');
 const productsController = require('./productsController');
 const productPicController = require('./productPicController');
 const productSizeController = require('./productSizeController');
+const productArtistController = require('./productArtistController');
 
 const routePrefix = '/api/v1';
 
@@ -205,7 +206,43 @@ const after = function (server) {
                 },
                 handler: productPicController.productPicDeleteHandler
             }
-        }
+        },
+
+        // Artists
+        {
+            method: 'GET',
+            path: `${routePrefix}/artists`,
+            options: {
+                description: 'Gets a list of artists',
+                handler: productArtistController.artistListHandler
+            }
+        },
+        {
+            method: 'DELETE',
+            path: `${routePrefix}/artist`,
+            options: {
+                description: 'Deletes an artist',
+                validate: {
+                    query: Joi.object({
+                        id: Joi.string().uuid().required()  // payment ID
+                    })
+                },
+                handler: productArtistController.artistDeleteHandler
+            }
+        },
+        {
+            method: 'GET',
+            path: `${routePrefix}/artist/products`,
+            options: {
+                description: 'Gets a list of products for an artist',
+                validate: {
+                    query: {
+                        id: Joi.string().max(100)
+                    }
+                },
+                handler: productArtistController.artistGetProductsHandler
+            }
+        },
     ]);
 
 
@@ -246,6 +283,7 @@ exports.plugin = {
         productsController.setServer(server);
         productSizeController.setServer(server);
         productPicController.setServer(server);
+        productArtistController.setServer(server);
 
         server.dependency(['BookshelfOrm', 'Core'], after);
     }

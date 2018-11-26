@@ -102,6 +102,44 @@ export default {
         },
 
 
+        async getArtists(params) {
+            let paramString = queryString.stringify(params, {arrayFormat: 'bracket'});
+
+            const response = await this.$axios.$get(`/artists?${paramString}`); // TODO: is there a XSS issue here?
+            return response.data;
+        },
+
+
+        async deleteProductArtist(artistId) {
+            const response = await this.$axios.$delete('/artist', {
+                params: {
+                    id: artistId
+                }
+            });
+
+            return response.data;
+        },
+
+
+        async getProductsForArtist(artistId) {
+            const response = await this.$axios.$get('/artist/products', {
+                params: {
+                    id: artistId
+                }
+            });
+
+            return response;
+        },
+
+
+        goToProductArtistUpsert(id) {
+            this.$router.push({
+                name: 'acts-product-artist-upsert-id',
+                params: { id: id }
+            });
+        },
+
+
         getProductSubTypeData(key) {
             const data = {
                 // commenting out until we offer hats:

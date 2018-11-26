@@ -71,13 +71,18 @@ export default {
 
                     <el-submenu index="1">
                         <template slot="title">
-                            <span>{{ $t('Products') }}</span>
+                            <span>Product</span>
                         </template>
 
                         <el-menu-item
                             :route="{ name: 'acts-product-list' }"
                             index="/products"
                             @click="menuItemClick">List</el-menu-item>
+
+                        <el-menu-item
+                            :route="{ name: 'acts-product-artist-list' }"
+                            index="/product-artists"
+                            @click="menuItemClick">Artists</el-menu-item>
                     </el-submenu>
 
                     <el-submenu index="order_menu">

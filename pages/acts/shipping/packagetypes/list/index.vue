@@ -95,7 +95,6 @@ export default {
 
         async deleteType(data) {
             try {
-                console.log("DATA", data.id)
                 await this.$confirm(`Remove this package type? "${ data.label }"`, 'Please confirm', {
                     confirmButtonText: 'OK',
                     cancelButtonText: 'Cancel',
