@@ -50,7 +50,7 @@
     "confidence": "^3.0.2",
     "cookie": "^0.3.1",
     "dotenv": "^6.1.0",
-    "element-ui": "^2.4.9",
+    "element-ui": "^2.4.11",
     "file-type": "^7.7.1",
     "fs": "0.0.1-security",
     "glue": "^5.0.0",
