@@ -110,6 +110,27 @@ export default {
         },
 
 
+        async getProductArtistById(artistId) {
+            const response = await this.$axios.$get('/artist', {
+                params: {
+                    id: artistId
+                }
+            });
+
+            return response.data;
+        },
+
+        async upsertProductArtist(artist) {
+            let uri = '/artist/create' ;
+
+            if(artist.id) {
+                uri = '/artist/update';
+            }
+
+            const response = await this.$axios.$post(uri, artist);
+            return response.data;
+        },
+
         async deleteProductArtist(artistId) {
             const response = await this.$axios.$delete('/artist', {
                 params: {
@@ -131,6 +152,12 @@ export default {
             return response;
         },
 
+
+        goToProductArtistList() {
+            this.$router.push({
+                name: 'acts-product-artist-list',
+            });
+        },
 
         goToProductArtistUpsert(id) {
             this.$router.push({

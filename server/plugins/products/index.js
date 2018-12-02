@@ -218,6 +218,46 @@ const after = function (server) {
             }
         },
         {
+            method: 'GET',
+            path: `${routePrefix}/artist`,
+            options: {
+                description: 'Gets an artist by ID',
+                validate: {
+                    query: Joi.object({
+                        id: Joi.string().uuid().required()  // artist ID
+                    })
+                },
+                handler: productArtistController.getProductArtistByIdHandler
+            }
+        },
+        {
+            method: 'POST',
+            path: `${routePrefix}/artist/create`,
+            options: {
+                description: 'Creates a product artist',
+                validate: {
+                    payload: Joi.object({
+                        ...productArtistController.getProductArtistSchema()
+                    })
+                },
+                handler: productArtistController.artistCreateHandler
+            }
+        },
+        {
+            method: 'POST',
+            path: `${routePrefix}/artist/update`,
+            options: {
+                description: 'Updates a product artist',
+                validate: {
+                    payload: Joi.object({
+                        id: Joi.string().uuid().required(),
+                        ...productArtistController.getProductArtistSchema()
+                    })
+                },
+                handler: productArtistController.artistUpdateHandler
+            }
+        },
+        {
             method: 'DELETE',
             path: `${routePrefix}/artist`,
             options: {
