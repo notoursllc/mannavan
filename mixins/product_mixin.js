@@ -102,7 +102,7 @@ export default {
         },
 
 
-        async getArtists(params) {
+        async getProductArtists(params) {
             let paramString = queryString.stringify(params, {arrayFormat: 'bracket'});
 
             const response = await this.$axios.$get(`/artists?${paramString}`); // TODO: is there a XSS issue here?

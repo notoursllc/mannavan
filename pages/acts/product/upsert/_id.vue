@@ -8,6 +8,7 @@ import ProductPicturesAdmin from '@/components/product/admin/ProductPicturesAdmi
 import BitwiseMultiSelect from '@/components/BitwiseMultiSelect'
 import IconNewWindow from '@/components/icons/IconNewWindow'
 import IconPlayVideo from '@/components/icons/IconPlayVideo'
+import ProductArtistSelect from '@/components/product/admin/ProductArtistSelect'
 import product_mixin from '@/mixins/product_mixin'
 import shipping_mixin from '@/mixins/shipping_mixin'
 import globalTypes from '@/client_server_shared/global_types.js';
@@ -45,7 +46,8 @@ export default {
         ProductPicturesAdmin,
         BitwiseMultiSelect,
         IconNewWindow,
-        IconPlayVideo
+        IconPlayVideo,
+        ProductArtistSelect
     },
 
     mixins: [
@@ -307,6 +309,11 @@ export default {
                                     :value="val">
                                 </el-option>
                             </el-select>
+                        </form-row>
+
+                        <!-- artist -->
+                        <form-row label="Artist:">
+                            <product-artist-select v-model="product.product_artist_id" />
                         </form-row>
 
                     </div>

@@ -137,7 +137,7 @@ export default {
 
             <div class="displayTable">
                 <div class="g-spec">
-                    <div class="g-spec-label">General Info</div>
+                    <div class="g-spec-label">Personal</div>
                     <div class="g-spec-content">
 
                         <!-- name -->
@@ -192,7 +192,7 @@ export default {
                 </div>
 
                 <div class="g-spec" v-if="$route.params.id">
-                    <div class="g-spec-label"></div>
+                    <div class="g-spec-label">General</div>
                     <div class="g-spec-content">
                         <!-- created -->
                         <form-row label="Created:">{{ artist.created_at | format8601 }}</form-row>

@@ -53,7 +53,7 @@ export default {
     },
 
     async asyncData({ params, store, app }) {
-        const artists = await product_mixin.methods.getArtists.call(app, {
+        const artists = await product_mixin.methods.getProductArtists.call(app, {
             // where: ['is_available', '=', true],
             // andWhere: [
             //     ['inventory_count', '>', 0]
@@ -69,7 +69,7 @@ export default {
 
     methods: {
         async fetchArtists() {
-            this.artists = await this.getArtists({
+            this.artists = await this.getProductArtists({
                 // where: ['is_available', '=', true],
                 // whereRaw: ['sub_type & ? > 0', [productTypeId]],
                 // andWhere: [
