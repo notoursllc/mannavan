@@ -10,8 +10,8 @@ let bgImages = [
     'bg_silver_car.jpg',
     'bg_black_5.jpg',
     'bg_yellow_mclaren.jpg',
-    'bg_green_yellow_6.jpg',
-    'bg_seven_eleven.jpg'
+    // 'bg_green_yellow_6.jpg',
+    // 'bg_seven_eleven.jpg'
 ];
 
 function randomIntFromInterval(min, max) {
