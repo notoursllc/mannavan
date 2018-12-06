@@ -4,8 +4,8 @@
     import { Input } from 'element-ui'
     import isObject from 'lodash.isobject'
     import forEach from 'lodash.foreach'
-    import CountrySelect from '../CountrySelect.vue'
-    import StateProvinceSelect from '../StateProvinceSelect.vue'
+    import CountrySelect from '@/components/CountrySelect.vue'
+    import SelectStateProvince from '@/components/SelectStateProvince'
     import Validations from 'vuelidate'
     import { email, required } from 'vuelidate/lib/validators'
     import StatusWrapper from '@/components/StatusWrapper'
@@ -52,7 +52,7 @@
     export default {
         components: {
             CountrySelect,
-            StateProvinceSelect,
+            SelectStateProvince,
             StatusWrapper
         },
 
@@ -285,8 +285,9 @@
             <div>{{ $t('City') }}</div>
             <div class="checkout_form_value">
                 <status-wrapper :success="canShowGreenCheck('city')" :failed="canShowValidationMsg('city')">
-                    <el-input v-model.trim="city"
-                            :class="{ 'inputError': $v.form.city.$error }"></el-input>
+                    <el-input
+                        v-model.trim="city"
+                        :class="{ 'inputError': $v.form.city.$error }"></el-input>
                     <p role="alert" v-show="canShowValidationMsg('city')">{{ $t('Required') }}</p>
                 </status-wrapper>
             </div>
@@ -297,13 +298,11 @@
             <div>{{ $t('State/Province/Region') }}</div>
             <div class="checkout_form_value">
                 <status-wrapper :success="canShowGreenCheck('state')" :failed="canShowValidationMsg('state')">
-                    <state-province-select
+                    <select-state-province
                         v-model.trim="state"
-                        :init-value="state"
                         :country="countryCodeAlpha2"
                         :disabled="!stateSelectEnabled"
-                        @change="newVal => state = newVal"
-                        :class="{ 'inputError': $v.form.state.$error }"></state-province-select>
+                        :class="{ 'inputError': $v.form.state.$error }"></select-state-province>
                     <p role="alert" v-show="canShowValidationMsg('state')">{{ $t('Required') }}</p>
                     <p v-show="!stateSelectEnabled" class="colorGray fs12">{{ $t('Please select a Country first') }}</p>
                 </status-wrapper>

@@ -1,12 +1,19 @@
 <script>
     import Vue from 'vue'
-    import { Select } from 'element-ui'
+    import { Select, Option, Input } from 'element-ui'
     import states from '@/utils/countryStates.js'
 
-    Vue.use(Select)
+    Vue.use(Select);
+    Vue.use(Option);
+    Vue.use(Input);
 
     export default{
         props: {
+            value: {
+                type: String,
+                default: ''
+            },
+
             placeholder: {
                 type: String,
                 default: ''
@@ -19,11 +26,18 @@
             disabled: {
                 type: Boolean,
                 default: false,
-            },
+            }
+        },
 
-            // this allows using the `value` prop for a different purpose
-            initValue: {
-                type: String
+        computed: {
+            stateOptions: function() {
+                return (this.country && states.hasOwnProperty(this.country)) ? states[this.country] : null;
+            }
+        },
+
+        data() {
+            return {
+                selectedState: null
             }
         },
 
@@ -33,26 +47,12 @@
 
         methods: {
             emitChange(val) {
-                this.$emit('change', val)
-            },
-
-            emitVisibleChange(val) {
-               this.$emit('visible-change', val)
-            }
-        },
-
-        computed: {
-            optionValueAttr: function() {
-                return (this.valueType && this.countries[0].hasOwnProperty(this.valueType) ? this.valueType : 'alpha2');
-            },
-
-            stateOptions: function() {
-                return (this.country && states.hasOwnProperty(this.country)) ? states[this.country] : null;
+                this.$emit('input', val)
             }
         },
 
         watch: {
-            'initValue' (to, from) {
+            'value' (to, from) {
                 this.selectedState = to;
             },
 
@@ -62,12 +62,6 @@
             'country' (to, from) {
                 this.selectedState = null;
                 this.emitChange(null);
-            }
-        },
-
-        data() {
-            return {
-                selectedState: null
             }
         }
     }
@@ -81,7 +75,6 @@
                :placeholder="placeholder"
                :no-match-text="$t('No matching values')"
                @change="emitChange"
-               @visible-change="emitVisibleChange"
                :disabled="disabled"
                class="widthAll">
         <el-option
