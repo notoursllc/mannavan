@@ -184,7 +184,7 @@ export default {
                     <th class="colorGray">{{ $t('In inches') }}</th>
                     <th class="fwb">
                         {{ $t('Chest') }}
-                        <span @click="openHeaderDialog('chest')">
+                        <span class="header-icon" @click="openHeaderDialog('chest')">
                             <icon-eye
                                 icon-name="view"
                                 width="16px"
@@ -193,7 +193,7 @@ export default {
                     </th>
                     <th class="fwb">
                         {{ $t('Hip') }}
-                        <span @click="openHeaderDialog('hip')">
+                        <span class="header-icon" @click="openHeaderDialog('hip')">
                             <icon-eye
                                 icon-name="view"
                                 width="16px"
@@ -202,7 +202,7 @@ export default {
                     </th>
                     <th class="fwb">
                         {{ $t('Length') }}
-                        <span @click="openHeaderDialog('length')">
+                        <span class="header-icon" @click="openHeaderDialog('length')">
                             <icon-eye
                                 icon-name="view"
                                 width="16px"
@@ -211,7 +211,7 @@ export default {
                     </th>
                     <th class="fwb">
                         {{ $t('Sleeve') }}
-                        <span @click="openHeaderDialog('sleeve')">
+                        <span class="header-icon" @click="openHeaderDialog('sleeve')">
                             <icon-eye
                                 icon-name="view"
                                 width="16px"
@@ -234,5 +234,20 @@ export default {
 </template>
 
 <style lang="scss">
-@import "~assets/css/components/_table.scss";
+    @import "~assets/css/components/_table.scss";
+    @import "~assets/css/components/_variables.scss";
+
+    .header-icon {
+        display: inline;
+        margin: 0;
+        padding-left: 3px;
+    }
+
+    @media #{$small-and-down} {
+        .header-icon {
+            display: block;
+            margin: 2px 0 0 0;
+            padding: 0;
+        }
+    }
 </style>
