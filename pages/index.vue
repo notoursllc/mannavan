@@ -137,37 +137,25 @@ export default {
         }
     }
 
-    @media #{$medium-and-down} {
+    @media #{$small-and-down} {
         .intro {
-            padding: 20px 0 30px;
+            padding: 10px;
 
             svg {
                 width: 120px !important;
             }
 
             .headline {
-                font-size: 26px;
+                font-size: 1.2em;
+                margin-top: 10px;
             }
             .subheadline {
-                font-size: 16px;
-            }
-        }
-    }
-
-
-    @media #{$small-and-down} {
-        .intro {
-            padding: 10px;
-
-            svg {
-                width: 100px !important;
+                font-size: .9em;
+                margin-top: 0;
             }
 
-            .headline {
-                font-size: 20px;
-            }
-            .subheadline {
-                font-size: 12px;
+            .btn {
+                margin-top: 20px;
             }
         }
     }
