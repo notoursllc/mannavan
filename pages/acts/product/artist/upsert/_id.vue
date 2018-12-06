@@ -181,8 +181,6 @@ export default {
 
                         <!-- state / province -->
                         <form-row label="State / Province:">
-                            <!-- <el-input v-model="artist.prov_state"></el-input> -->
-                            artist.prov_state: {{ artist.prov_state }}
                             <select-state-province
                                 v-model.trim="artist.prov_state"
                                 :country="artist.country" />
