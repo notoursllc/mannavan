@@ -10,7 +10,7 @@ let bgImages = [
     'bg_silver_car.jpg',
     'bg_black_5.jpg',
     'bg_yellow_mclaren.jpg',
-    // 'bg_green_yellow_6.jpg',
+    'bg_green_yellow_6.jpg',
     // 'bg_seven_eleven.jpg'
 ];
 
@@ -32,10 +32,6 @@ export default {
     },
 
     methods: {
-        imageStyle(img) {
-            return `background-image:url(${img})`;
-        },
-
         heroRedirect() {
             this.$router.push({
                 name: 'type-name',
@@ -46,6 +42,10 @@ export default {
         },
 
         setbBgImage() {
+            if(this.bgImage) {
+                return;
+            }
+
             let index = randomIntFromInterval(0, (bgImages.length - 1));
             this.bgImage = `/images/backgrounds/${ bgImages[index] }`;
         }
