@@ -15,8 +15,9 @@ module.exports = {
         ]
     },
 
-    manifest: {
-        theme_color: '#67c23a'
+    meta: {
+        name: 'BreadVan',
+        theme_color: '#e66d17'
     },
 
     env: {
@@ -80,7 +81,7 @@ module.exports = {
     */
     modules: [
         '@nuxtjs/axios',
-        '@nuxtjs/pwa'
+        ['@nuxtjs/pwa', { oneSignal: false }]
     ],
 
     /*
