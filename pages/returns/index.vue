@@ -6,9 +6,9 @@ export default {
         app_mixin
     ],
 
-    data: function() {
-        return {
-            returnsEmailAddress: this.getHelpEmailAddress()
+    computed: {
+        returnsEmailAddress() {
+            return this.getHelpEmailAddress();
         }
     },
 
