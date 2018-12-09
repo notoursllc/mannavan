@@ -126,7 +126,7 @@ export default {
                     </nav>
 
                     <nav class="nav-item" id="footer-logo">
-                        <icon-logo icon-name="breadvan" class-name="fillWhite" width="150px" />
+                        <icon-logo icon-name="breadvan_vintage_racing_apparel" class-name="fillWhite" width="150px" />
                     </nav>
                 </div>
             </div>
