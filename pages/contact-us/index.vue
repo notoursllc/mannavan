@@ -11,9 +11,9 @@ export default {
         app_mixin
     ],
 
-    data: function() {
-        return {
-            emailAddress: process.env.EMAIL_CONTACT_US
+    computed: {
+        emailAddress() {
+            return process.env.EMAIL_CONTACT_US;
         }
     },
 
