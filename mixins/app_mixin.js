@@ -6,7 +6,7 @@ export default {
 
     methods: {
         getHelpEmailAddress() {
-            return `help@${domainName}`;
+            return `info@${domainName}`;
         },
 
         getBrandName() {

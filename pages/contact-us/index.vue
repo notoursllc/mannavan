@@ -13,7 +13,7 @@ export default {
 
     computed: {
         emailAddress() {
-            return process.env.EMAIL_CONTACT_US;
+            return process.env.EMAIL_INFO;
         }
     },
 

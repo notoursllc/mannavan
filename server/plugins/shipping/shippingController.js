@@ -330,7 +330,7 @@ async function rates(request, h) {
         const config = {
             shipment: {
                 ship_from: {
-                    name: process.env.SHIPPING_ADDRESS_FROM_NAME,
+                    name: process.env.DOMAIN_NAME,
                     address_line1: process.env.SHIPPING_ADDRESS_FROM_ADDRESS1,
                     city_locality: process.env.SHIPPING_ADDRESS_FROM_CITY,
                     state_province: process.env.SHIPPING_ADDRESS_FROM_STATE,
@@ -424,7 +424,7 @@ async function createShipmentFromShoppingCart(ShoppingCart) {
     };
 
     data.address_from = {
-        name: process.env.SHIPPING_ADDRESS_FROM_NAME,
+        name: process.env.DOMAIN_NAME,
         company: 'BreadVan',
         street1: process.env.SHIPPING_ADDRESS_FROM_ADDRESS1,
         // street_no:,
@@ -435,7 +435,7 @@ async function createShipmentFromShoppingCart(ShoppingCart) {
         zip: process.env.SHIPPING_ADDRESS_FROM_ZIP,
         country: process.env.SHIPPING_ADDRESS_FROM_COUNTRY_CODE,
         // phone: ,
-        email: process.env.EMAIL_FROM_CART_SUCCESS,
+        email: process.env.EMAIL_INFO,
         // is_residential: ,
         validate: false,
         metadata: null

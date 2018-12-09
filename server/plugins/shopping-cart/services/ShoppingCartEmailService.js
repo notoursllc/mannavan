@@ -17,7 +17,7 @@ async function send(config) {
 
         // https://www.npmjs.com/package/mailgun-js
         let mail = new MailComposer({
-            from: `${process.env.EMAIL_FROM_CART_SUCCESS_NAME || domainName} <${process.env.EMAIL_FROM_CART_SUCCESS || 'thanks@'+domainName}>`,
+            from: `${process.env.DOMAIN_NAME || domainName} <${process.env.EMAIL_INFO || 'info@'+domainName}>`,
             to: config.to,
             subject: config.subject,
             body: config.text,
