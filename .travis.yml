@@ -120,10 +120,6 @@ install:
   - nanobox evar add local EMAIL_INFO=$EMAIL_INFO
   - nanobox evar add $NANOBOX_APP_NAME EMAIL_INFO=$EMAIL_INFO
 
-  # EMAIL_FROM_CART_SUCCESS
-  - nanobox evar add local EMAIL_FROM_CART_SUCCESS=$EMAIL_FROM_CART_SUCCESS
-  - nanobox evar add $NANOBOX_APP_NAME EMAIL_FROM_CART_SUCCESS=$EMAIL_FROM_CART_SUCCESS
-
   # JWT_CLIENT_ID
   - nanobox evar add local JWT_CLIENT_ID=$JWT_CLIENT_ID
   - nanobox evar add $NANOBOX_APP_NAME JWT_CLIENT_ID=$JWT_CLIENT_ID
