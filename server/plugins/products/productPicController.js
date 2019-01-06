@@ -306,22 +306,20 @@ async function upsertPicVariant(request, productPicId) {
     const resizeResponse = await resizeAndWrite(request, 1000);
     global.logger.info('PRODUCT PIC VARIANT - FILE RESIZED (1000)', resizeResponse);
 
-    let payload = cloneDeep(request.payload);
-    delete payload.file;
-    delete payload.product_id;
-    delete payload.sort_order;
-    delete payload.id;
+    const createParams = {
+        product_pic_id: productPicId,
+        is_visible: request.payload.is_visible === true ? true : false
+    };
 
     if(isObject(resizeResponse)) {
-        payload.url = resizeResponse.url;
-        payload.width = resizeResponse.width || null;
-        payload.height = resizeResponse.height || null;
+        createParams.url = resizeResponse.url;
+        createParams.width = resizeResponse.width || null;
+        createParams.height = resizeResponse.height || null;
     }
-    payload.product_pic_id = productPicId;
 
-    global.logger.info('PRODUCT PIC VARIANT - CREATING', payload);
+    global.logger.info('PRODUCT PIC VARIANT - CREATING', createParams);
 
-    const ProductPicVariant = getProductPicVariantModel().create(payload);
+    const ProductPicVariant = getProductPicVariantModel().create(createParams);
 
     global.logger.info('PRODUCT PIC VARIANT- CREATED', ProductPicVariant.get('product_pic_id'));
 
