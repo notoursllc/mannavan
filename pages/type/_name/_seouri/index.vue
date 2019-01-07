@@ -205,7 +205,7 @@ export default {
             <div slot="description" class="fs16">{{ product.description_long }}</div>
 
             <!-- artist -->
-            <div slot="artist" v-if="product.artist.id" class="mtl fs12">
+            <div slot="artist" v-if="product.artist && product.artist.id" class="mtl fs12">
                 {{ $t('Artist') }}:
                 <span class="underlineDotted cursorPointer mls"
                     @click="artistDialog.visible = true">{{ product.artist.name }}</span>
@@ -266,11 +266,12 @@ export default {
         </product-details-display>
 
         <!-- artist dialog -->
-        <el-dialog :title="product.artist.name "
-                :visible.sync="artistDialog.visible"
-                top="5vh"
-                width="320px">
-            <div class="mtm">{{ product.artist.description_long }}</div>
+        <el-dialog
+            :title="product.artist ? product.artist.name : null"
+            :visible.sync="artistDialog.visible"
+            top="5vh"
+            width="320px">
+            <div class="mtm">{{ product.artist ? product.artist.description_long : null }}</div>
         </el-dialog>
     </div>
 </template>
