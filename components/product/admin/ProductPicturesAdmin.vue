@@ -26,6 +26,10 @@ Vue.use(TableColumn);
 Vue.use(Validations)
 
 let currentNotification = null;
+const picModalFormDefaults = {
+    is_visible: true,
+    sort_order: 1
+};
 
 
 function showNotification(Notification) {
@@ -212,7 +216,7 @@ export default {
                 showNotification(
                     this.$notify({
                         type: 'success',
-                        title: 'Picture saved:',
+                        title: 'Picture saved',
                         message: picJson.url,
                         duration: 3000
                     })
@@ -231,7 +235,7 @@ export default {
 
 
         openPicEditModal(pic) {
-            this.picModal.form = pic || {};
+            this.picModal.form = pic || picModalFormDefaults;
             this.picModal.isActive = true;
         },
 

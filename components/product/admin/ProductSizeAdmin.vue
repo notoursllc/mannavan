@@ -21,6 +21,9 @@ Vue.use(Table);
 Vue.use(TableColumn);
 
 let currentNotification = null;
+const sizeModalFormDefaults = {
+    is_visible: true
+};
 
 
 function showNotification(Notification) {
@@ -70,13 +73,13 @@ export default {
     methods: {
         resetSizeModalData() {
             this.sizeModal.isActive = false;
-            this.sizeModal.size = {};
+            this.sizeModal.size = sizeModalFormDefaults;
         },
 
 
         openSizeUpsertModal(size) {
             this.setSizeOptions(this.product.sizes);
-            this.sizeModal.size = size || {};
+            this.sizeModal.size = size || sizeModalFormDefaults;
             this.sizeModal.isActive = true;
         },
 
