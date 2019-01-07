@@ -157,7 +157,7 @@ async function resizeAndWrite(req, width) {
                                 return reject(err);
                             }
 
-                            console.log('Image successfully uploaded.', data);
+                            global.logger.info('IMAGE SUCCESSFULLY UPLOADED', data);
 
                             return resolve({
                                 url: `${getCloudUrl()}/${fileKey}`,
@@ -252,12 +252,13 @@ function deleteVariants(ProductPic) {
 }
 
 
-/*
-    * Upserts and resizes a standard product pic as well as its larger variant
-    * @param {*} req
-    * @param {*} options
-    */
-async function upsertPic(request, options) {
+/**
+ * Upserts and resizes a standard product pic as well as its larger variant (ProductPicVariant)
+ *
+ * @param {*} req
+ * @param {*} options
+ **/
+async function upsertPic(request) {
     try {
         const ProductPic = await unlinkFileAndVariantsIfBeingReplaced(request);
 
@@ -273,38 +274,53 @@ async function upsertPic(request, options) {
     }
 
     const resizeResponse = await resizeAndWrite(request, 600);
-    global.logger.info('PRODUCT PIC - FILE RESIZED (600)', resizeResponse);
+
+    global.logger.info(
+        'PRODUCT PIC - FILE RESIZED (600)',
+        resizeResponse
+    );
 
     // update or create the ProductPic
-    let payload = cloneDeep(request.payload);
-    delete payload.file; // not needed when updatng the model
+    const createParams = {
+        product_id: request.payload.product_id,
+        is_visible: request.payload.is_visible === true ? true : false,
+        sort_order: parseInt(request.payload.sort_order, 10) || 1
+    };
 
     // resizeResponse will be empty if the HTTP request did not include a file
     // (which it may not if the user in only updating other attributes)
-    if(resizeResponse) {
-        // Additional data needed for the ProductPic model
-        payload.url = resizeResponse.url;
-        payload.width = resizeResponse.width || null;
-        payload.height = resizeResponse.height || null;
+    if(isObject(resizeResponse)) {
+        createParams.url = resizeResponse.url;
+        createParams.width = resizeResponse.width || null;
+        createParams.height = resizeResponse.height || null;
     }
 
     let ProductPic;
-    if(payload.id) {
-        ProductPic = await getProductPicModel().update(payload, { id: payload.id });
+    if(request.payload.id) {
+        ProductPic = await getProductPicModel().update(createParams, { id: request.payload.id });
     }
     else {
-        ProductPic = await getProductPicModel().create(payload);
+        ProductPic = await getProductPicModel().create(createParams);
     }
-    global.logger.info('PRODUCT PIC UPSERTED', ProductPic.get('id'));
 
-    let ProductPicVariant = await upsertPicVariant(request, ProductPic.get('id'));
+    global.logger.info(
+        'PRODUCT PIC UPSERTED',
+        ProductPic.get('id')
+    );
+
+    let ProductPicVariant = await createPicVariant(request, ProductPic.get('id'), 1000);
     return ProductPicVariant.get('product_pic_id');
 }
 
 
-async function upsertPicVariant(request, productPicId) {
-    const resizeResponse = await resizeAndWrite(request, 1000);
-    global.logger.info('PRODUCT PIC VARIANT - FILE RESIZED (1000)', resizeResponse);
+async function createPicVariant(request, productPicId, width) {
+    const picWidth = width || 1000;
+    const resizeResponse = await resizeAndWrite(request, picWidth);
+
+    global.logger.info(
+        `PRODUCT PIC VARIANT - FILE RESIZED (${picWidth})`,
+        resizeResponse
+    );
 
     const createParams = {
         product_pic_id: productPicId,
@@ -317,11 +333,17 @@ async function upsertPicVariant(request, productPicId) {
         createParams.height = resizeResponse.height || null;
     }
 
-    global.logger.info('PRODUCT PIC VARIANT - CREATING', createParams);
+    global.logger.info(
+        'PRODUCT PIC VARIANT - CREATING BEGIN',
+        createParams
+    );
 
     const ProductPicVariant = getProductPicVariantModel().create(createParams);
 
-    global.logger.info('PRODUCT PIC VARIANT- CREATED', ProductPicVariant.get('product_pic_id'));
+    global.logger.info(
+        'PRODUCT PIC VARIANT - CREATING END',
+        ProductPicVariant.get('product_pic_id')
+    );
 
     return ProductPicVariant;
 }
