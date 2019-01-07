@@ -52,11 +52,11 @@ exports.plugin = {
         let transports = [];
         let exceptionHandlers = [];
 
-        if(process.env.NODE_ENV === 'production') {
-            transports.push(logglyTransport);
-            exceptionHandlers.push(logglyTransport);
-        }
-        else {
+        // if(process.env.NODE_ENV === 'production') {
+        //     transports.push(logglyTransport);
+        //     exceptionHandlers.push(logglyTransport);
+        // }
+        // else {
             transports.push(
                 new (winston.transports.Console)({
                     level: 'debug',
@@ -75,7 +75,7 @@ exports.plugin = {
                     humanReadableUnhandledException: true
                 })
             )
-        }
+        // }
 
         const logger = new (winston.Logger)({
             transports,
