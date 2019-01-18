@@ -1,6 +1,6 @@
 require('dotenv').config();
 
-const Server = require('../../server');
+const Server = require('../../shopBac/server');
 const isObject = require('lodash.isobject');
 const queryString = require('query-string');
 

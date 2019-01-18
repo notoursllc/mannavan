@@ -3,9 +3,9 @@
 const Hoek = require('hoek');
 const testHelpers = require('../../testHelpers');
 const serverSetup = require('./_serverSetup');
-const productsController = require('../../../../server/plugins/products/productsController');
-const productPicController = require('../../../../server/plugins/products/productPicController');
-const productSizeController = require('../../../../server/plugins/products/productSizeController');
+const productsController = require('../../../../shopBac/server/plugins/products/productsController');
+const productPicController = require('../../../../shopBac/server/plugins/products/productPicController');
+const productSizeController = require('../../../../shopBac/server/plugins/products/productSizeController');
 
 
 async function getServer() {

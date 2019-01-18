@@ -5,7 +5,7 @@ const Lab = require('lab');
 const { after, before, describe, it } = exports.lab = Lab.script();
 
 const { getCarrierAccount } = require('../shippingController/_shippingControllerHelper');
-const carrier_accounts = require('../../../../../server/plugins/shipping/shippoAPI/carrier_accounts');
+const carrier_accounts = require('../../../../../shopBac/server/plugins/shipping/shippoAPI/carrier_accounts');
 
 
 describe('ShippoAPI: listCarrierAccounts', () => {

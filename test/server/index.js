@@ -4,7 +4,6 @@ const Hapi = require('hapi');
 const Code = require('code');
 const Lab = require('lab');
 // const App = require('../server');
-// const Version = require('../server/plugins/version');
 const Path = require('path');
 
 const internals = {};
@@ -82,5 +81,5 @@ internals.manifest = {
 
 internals.composeOptions = {
     // Relative to the real hapi server
-    relativeTo: Path.resolve(__dirname, '../../../server')
+    relativeTo: Path.resolve(__dirname, '../../../shopBac/server')
 };

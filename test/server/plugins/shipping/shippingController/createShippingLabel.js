@@ -5,7 +5,7 @@ const Lab = require('lab');
 const { after, before, describe, it } = exports.lab = Lab.script();
 
 const { getShipmentData } = require('./_shippingControllerHelper');
-const { createShippingLabel } = require('../../../../../server/plugins/shipping/shippoAPI/transactions')
+const { createShippingLabel } = require('../../../../../shopBac/server/plugins/shipping/shippoAPI/transactions')
 
 
 function getCreateShippingLabelRequestData() {

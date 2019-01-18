@@ -1,8 +1,8 @@
 const Code = require('code');
 const Lab = require('lab');
 const Hoek = require('hoek');
-const Products = require('../../../../server/plugins/products');
-const BookshelfOrm = require('../../../../server/plugins/bookshelf-orm');
+const Products = require('../../../../shopBac/server/plugins/products');
+const BookshelfOrm = require('../../../../shopBac/server/plugins/bookshelf-orm');
 const testHelpers = require('../../testHelpers');
 const { getServer, getManifest } = require('./_controllerHelper');
 

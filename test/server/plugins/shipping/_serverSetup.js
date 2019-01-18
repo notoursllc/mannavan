@@ -27,7 +27,7 @@ manifest.register.plugins.push(
 
 let composeOptions = {
     // Relative to the real hapi server
-    relativeTo: Path.resolve(__dirname, '../../../../server')
+    relativeTo: Path.resolve(__dirname, '../../../../shopBac/server')
 };
 
 

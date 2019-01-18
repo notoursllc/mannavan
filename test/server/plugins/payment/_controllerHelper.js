@@ -3,7 +3,7 @@
 const Hoek = require('hoek');
 const testHelpers = require('../../testHelpers');
 const serverSetup = require('./_serverSetup');
-const controller = require('../../../../server/plugins/payment/paymentController');
+const controller = require('../../../../shopBac/server/plugins/payment/paymentController');
 
 let manifest = Hoek.clone(serverSetup.manifest);
 

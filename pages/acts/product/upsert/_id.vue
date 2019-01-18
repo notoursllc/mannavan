@@ -11,7 +11,7 @@ import IconPlayVideo from '@/components/icons/IconPlayVideo'
 import ProductArtistSelect from '@/components/product/admin/ProductArtistSelect'
 import product_mixin from '@/mixins/product_mixin'
 import shipping_mixin from '@/mixins/shipping_mixin'
-import globalTypes from '@/client_server_shared/global_types.js';
+import globalTypes from '@/global_types.js';
 
 Vue.prototype.$notify = Notification;
 Vue.prototype.$confirm = MessageBox.confirm;

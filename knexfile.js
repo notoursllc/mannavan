@@ -17,11 +17,11 @@ let common = {
         }
     },
     migrations: {
-        directory: './db/migrations',
+        directory: './shopBac/db/migrations',
         tableName: 'knex_migrations'
     },
     seeds: {
-        directory: './db/seeds'
+        directory: './shopBac/db/seeds'
     },
     connection: {
         host: process.env.DATA_DB_HOST || 'localhost',
