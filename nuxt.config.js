@@ -100,39 +100,7 @@ module.exports = {
      *  Build configuration
      */
     build: {
-        // vendor: ['babel-polyfill', 'vue-i18n'],
-
-        babel: {
-            // plugins: [
-                // ['transform-es2015-template-literals', {
-                //     loose: true,
-                //     spec: true
-                // }],
-                // 'transform-runtime',
-                // ['transform-es2015-arrow-functions', {
-                //     spec: true
-                // }]
-            // ],
-            // presets: [
-            //     ['vue-app', {
-            //         targets: { ie: 11, uglify: false },
-            //         useBuiltIns: true
-            //     }]
-            // ]
-            // presets: ['es2015', 'stage-2'],
-            // plugins: ['transform-runtime']
-            // presets: [
-            //     ['env', {
-            //         'targets': {
-            //             'browsers': ['last 2 versions', 'ie >= 11']
-            //             // 'browsers': [
-            //             //     'Explorer 11'
-            //             // ]
-            //         },
-            //         'useBuiltIns': true
-            //     }]
-            // ]
-        },
+        // analyze: true,
 
         /*
         ** You can extend webpack config here
