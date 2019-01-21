@@ -310,11 +310,11 @@ export default {
 
             if (Array.isArray(product.sizes)) {
                 product.sizes.forEach((obj) => {
-                    if (obj.is_visible && obj.inventory_count) {
+                    if (obj.is_visible && obj.total_inventory_count) {
                         sizeOpts.push(obj.size);
 
-                        if (obj.inventory_count > maxInventoryCount) {
-                            maxInventoryCount = obj.inventory_count;
+                        if (obj.total_inventory_count > maxInventoryCount) {
+                            maxInventoryCount = obj.total_inventory_count;
                         }
                     }
                 });

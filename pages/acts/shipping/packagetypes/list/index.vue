@@ -53,7 +53,7 @@ export default {
         const shippingPackageTypes = await shipping_mixin.methods.getPackageTypes.call(app, {
             // where: ['is_available', '=', true],
             // andWhere: [
-            //     ['inventory_count', '>', 0]
+            //     ['total_inventory_count', '>', 0]
             // ],
             orderBy: 'updated_at',
             orderDir: 'DESC'
@@ -71,7 +71,7 @@ export default {
                     // where: ['is_available', '=', true],
                     // whereRaw: ['sub_type & ? > 0', [productTypeId]],
                     // andWhere: [
-                    //     ['inventory_count', '>', 0]
+                    //     ['total_inventory_count', '>', 0]
                     // ],
                     ...this.sortData
                 });

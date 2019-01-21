@@ -11,9 +11,9 @@ function getProductSearchConfig(productTypeId) {
     return {
         where: ['is_available', '=', true],
         whereRaw: ['sub_type & ? > 0', [productTypeId]],
-        andWhere: [
-            ['inventory_count', '>', 0]
-        ],
+        // andWhere: [
+        //     ['total_inventory_count', '>', 0]  // doesn't work because 'total_inventory_count' is a virtual attribute
+        // ],
         orderBy: 'updated_at',
         orderDir: 'DESC'
     }

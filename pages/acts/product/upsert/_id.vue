@@ -383,11 +383,6 @@ export default {
                 <div class="g-spec-content">
                     <div class="formContainer">
 
-                        <!-- inventory_count -->
-                        <form-row label="Inventory count:">
-                            <el-input-number v-model="product.inventory_count" controls-position="right" :step="1"></el-input-number>
-                        </form-row>
-
                         <!-- hide_if_out_of_stock -->
                         <form-row label="Hide if out of stock:">
                             <el-checkbox v-model="product.hide_if_out_of_stock"></el-checkbox>

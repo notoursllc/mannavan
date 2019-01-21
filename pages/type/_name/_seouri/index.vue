@@ -240,7 +240,7 @@ export default {
                     <div class="displayTableCell">
                         <number-buttons :step="1"
                                         :min="1"
-                                        :max="product.inventory_count"
+                                        :max="product.total_inventory_count"
                                         :init-value="1"
                                         v-on:change="val => { selectedQty = val }"></number-buttons>
                     </div>
