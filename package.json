@@ -66,6 +66,7 @@
     "vuex-router-sync": "^5.0.0"
   },
   "devDependencies": {
+    "code": "^5.2.4",
     "cross-env": "^5.2.0",
     "eslint": "^4.15.0",
     "eslint-loader": "^1.7.1",
