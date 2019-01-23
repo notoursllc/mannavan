@@ -3,6 +3,7 @@
     import { mapGetters } from 'vuex'
     import isObject from 'lodash.isobject'
     import { Button } from 'element-ui'
+    import cloneDeep from 'lodash.clonedeep'
     import CartItems from '@/components/cart/CartItems'
     import CartTotalsTable from '@/components/cart/CartTotalsTable'
     import KeepShoppingButton from '@/components/cart/KeepShoppingButton'
@@ -21,15 +22,10 @@
             app_mixin
         ],
 
-        computed: {
-            ...mapGetters({
-                shoppingCart:'shoppingcart/cart'
-            })
-        },
-
         data: function() {
             return {
-                added_cart_item: null
+                added_cart_item: null,
+                shoppingCart: {}
             }
         },
 
@@ -37,9 +33,15 @@
             goToCheckout() {
                 this.$router.push({ name: 'cart-checkout' });
             },
+
+            cloneCartFromState() {
+                this.shoppingCart = cloneDeep(this.$store.state.shoppingcart.cart);
+            }
         },
 
         created() {
+            this.cloneCartFromState();
+
             if(this.$route.params.id) {
                 if(isObject(this.shoppingCart) && Array.isArray(this.shoppingCart.cart_items)) {
                     this.shoppingCart.cart_items.forEach((item) => {
@@ -76,7 +78,8 @@
 
         <cart-items
             :shopping-cart="shoppingCart"
-            :highlight-item="added_cart_item"></cart-items>
+            :highlight-item="added_cart_item"
+            v-on:updated="cloneCartFromState"></cart-items>
 
         <div class="mtm clearfix">
             <div class="floatRight">

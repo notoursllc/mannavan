@@ -8,7 +8,7 @@ import ProductPrice from '@/components/product/ProductPrice'
 import ProductDetailsDisplay from '@/components/product/ProductDetailsDisplay'
 import ProductImageCarousel from '@/components/product/ProductImageCarousel'
 import TshirtSizeChart from '@/components/product/TshirtSizeChart'
-import NumberButtons from '@/components/NumberButtons'
+import ProductQuantityInput from '@/components/product/ProductQuantityInput'
 import product_mixin from '@/mixins/product_mixin'
 import app_mixin from '@/mixins/app_mixin'
 import shopping_cart_mixin from '@/mixins/shopping_cart_mixin'
@@ -38,7 +38,7 @@ function showNotification(Notification) {
 export default {
     components: {
         ProductPrice,
-        NumberButtons,
+        ProductQuantityInput,
         ProductDetailsDisplay,
         ProductImageCarousel,
         TshirtSizeChart
@@ -219,30 +219,30 @@ export default {
             <!-- size -->
             <template slot="size">
                 <div class="fwb">{{ $t('Size') }}</div>
-                <el-select v-model="selectedSize"
-                        :no-data-text="$t('Sorry this item does not have any sizes available')"
-                        placeholder="Select"
-                        class="width125">
+                <el-select
+                    v-model="selectedSize"
+                    :no-data-text="$t('Sorry this item does not have any sizes available')"
+                    placeholder="Select"
+                    class="width125">
                     <el-option
-                            v-for="size in sizeOptions"
-                            :key="size"
-                            :label="$t(size)"
-                            :value="size">
-                    </el-option>
+                        v-for="size in sizeOptions"
+                        :key="size"
+                        :label="$t(size)"
+                        :value="size" />
                 </el-select>
             </template>
 
             <!-- quantity -->
             <template slot="quantity">
                 <div class="fwb">{{ $t('Quantity') }}</div>
+
                 <div>
-                    <div class="displayTableCell prl fs20 vam colorGreen fw600">{{ selectedQty }}</div>
+                    <div class="displayTableCell prl fs20 vat pts colorGreen fw600">{{ selectedQty }}</div>
                     <div class="displayTableCell">
-                        <number-buttons :step="1"
-                                        :min="1"
-                                        :max="product.total_inventory_count"
-                                        :init-value="1"
-                                        v-on:change="val => { selectedQty = val }"></number-buttons>
+                        <product-quantity-input
+                            v-model="selectedQty"
+                            :sizes="product.sizes"
+                            :selected-size="selectedSize" />
                     </div>
                 </div>
             </template>

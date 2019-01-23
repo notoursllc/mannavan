@@ -7,6 +7,12 @@ Vue.use(ButtonGroup);
 
 export default {
     props: {
+        value: {
+            type: Number,
+            default: 0,
+            required: false
+        },
+
         min: {
             type: Number,
             default: 0,
@@ -27,13 +33,7 @@ export default {
         size: {
             type: String,
             required: false
-        },
-
-        // this allows using the `value` prop for a different purpose
-        initValue: {
-            type: Number,
-            default: 0
-        },
+        }
     },
 
     computed: {
@@ -48,89 +48,94 @@ export default {
         },
 
         plusDisabled() {
-            return this.max && this.selectedVal >= this.max;
+            if(this.max && this.selectedVal >= this.max) {
+                return true;
+            }
+            return false;
         },
 
         minusDisabled() {
-            return this.min && this.selectedVal <= this.min;
+            if(this.min && this.selectedVal <= this.min) {
+                return true;
+            }
+            return false;
         }
-    },
-
-    created() {
-        this.selectedVal = this.setInRange(this.initValue);
-        // this.emitVal();
     },
 
     methods: {
-        setInRange(val) {
-            let newVal = 0;
-
-            if(this.min) {
-                if(val >= this.min) {
-                    newVal = val;
-                }
+        /**
+         * Sets the selected value to the max possible value if
+         * the selected value is greater than max
+         */
+        capSelectedValue(newValue, maxValue) {
+            // trim it down if the new value is > max allowed
+            if(maxValue && newValue > maxValue) {
+                this.selectedVal = maxValue;
             }
             else {
-                newVal = val;
+                this.selectedVal = newValue;
             }
 
-            if(this.max) {
-                if(val <= this.max) {
-                    newVal = val;
-                }
+            this.emitVal();
+        },
+
+        /**
+         * Sets the selected value to the min possible value if
+         * the selected value is less than min
+         */
+        floorSelectedValue(newValue, minValue) {
+            if(minValue && newValue < minValue) {
+                this.selectedVal = minValue;
             }
             else {
-                newVal = val;
+                this.selectedVal = newValue;
             }
 
-            return newVal;
+            this.emitVal();
         },
 
         up() {
-            let tempVal = this.selectedVal + this.step;
-
-            if(this.max) {
-                if(tempVal <= this.max) {
-                    this.selectedVal = tempVal;
-                    this.emitVal();
-                }
-            }
-            else {
-                this.selectedVal = tempVal;
-                this.emitVal();
-            }
+            let newValue = this.selectedVal + this.step;
+            this.capSelectedValue(newValue, this.max)
         },
 
         down() {
-            let tempVal = this.selectedVal - this.step;
-
-            if(this.min) {
-                if(tempVal >= this.min) {
-                    this.selectedVal = tempVal;
-                    this.emitVal();
-                }
-            }
-            else {
-                this.selectedVal = tempVal;
-                this.emitVal();
-            }
+            let newValue = this.selectedVal - this.step;
+            this.floorSelectedValue(newValue, this.min);
         },
 
         emitVal() {
-            this.$emit('change', this.selectedVal)
-            // this.$emit('input', this.selectedVal)
-        }
-    },
-
-    watch: {
-        'initValue' (val) {
-            this.selectedVal = this.setInRange(val);
+            if(this.selectedVal != this.value) {
+                this.$emit('input', this.selectedVal)
+            }
         }
     },
 
     data() {
         return {
             selectedVal: null
+        }
+    },
+
+    watch: {
+        value: {
+            immediate: true,
+            handler(newVal) {
+                this.capSelectedValue(newVal, this.max);
+                this.floorSelectedValue(newVal, this.min);
+            }
+        },
+        max: {
+            immediate: true,
+            handler(newMax) {
+                this.capSelectedValue(this.selectedVal, newMax);
+            }
+        },
+        min: {
+            immediate: true,
+            handler(newMin) {
+                this.floorSelectedValue(this.selectedVal, newMin);
+            }
         }
     }
 }

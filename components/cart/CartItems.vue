@@ -5,7 +5,7 @@ import { mapGetters } from 'vuex'
 import isObject from 'lodash.isobject'
 import { Select, Option, InputNumber, Loading, Button, Popover, Notification, Dialog, Tooltip } from 'element-ui'
 import ProductPrice from '@/components/product/ProductPrice'
-import NumberButtons from '@/components/NumberButtons'
+import ProductQuantityInput from '@/components/product/ProductQuantityInput'
 import CartItemDisplay from '@/components/cart/CartItemDisplay'
 import ProductDetailsDisplay from '@/components/product/ProductDetailsDisplay'
 import ProductImageCarousel from '@/components/product/ProductImageCarousel'
@@ -53,7 +53,7 @@ export default {
 
     components: {
         ProductPrice,
-        NumberButtons,
+        ProductQuantityInput,
         CartItemDisplay,
         ProductDetailsDisplay,
         ProductImageCarousel
@@ -81,17 +81,16 @@ export default {
     },
 
     methods: {
-        async updateCartItemQuantity(item, qty) {
+        async updateCartItemQuantity(item) {
             try {
                 const loadingInstance = Loading.service({ target: `#cartItem${item.id}` });
 
                 const response = await this.updateItemQty({
                     id: item.id,
-                    qty
+                    qty: item.qty
                 });
                 this.setCartAndTokenStateFromResponse(response);
-
-                item.qty = qty;
+                this.$emit('updated');
                 loadingInstance.close();
             }
             catch(err) {
@@ -111,7 +110,7 @@ export default {
 
                 const response = await this.deleteItem({ id });
                 this.setCartAndTokenStateFromResponse(response);
-
+                this.$emit('updated');
                 loadingInstance.close();
             }
             catch(err) {
@@ -208,12 +207,12 @@ export default {
                     <div v-if="allowEdit" class="itemVal">
                         <div class="displayTableCell prl fwb vat">{{ item.qty }}</div>
                         <div class="displayTableCell">
-                            <number-buttons :step="1"
-                                            :min="1"
-                                            :max="item.variants.size.inventory_count"
-                                            :init-value="item.qty"
-                                            size="small"
-                                            v-on:change="val => {updateCartItemQuantity(item, val)}"></number-buttons>
+                            <product-quantity-input
+                                v-model="item.qty"
+                                :sizes="item.product.sizes"
+                                :selected-size="item.variants.size"
+                                button-size="small"
+                                v-on:input="val => {updateCartItemQuantity(item)}" />
                         </div>
                     </div>
                     <div v-else class="itemVal">
