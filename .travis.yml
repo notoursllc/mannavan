@@ -24,9 +24,6 @@ branches:
 git:
   submodules: true
 
-before_install:
-    - git submodule update --init --recursive
-
 install:
   - npm i -g npm@6.4.1
   - npm ci             # instead of default npm install

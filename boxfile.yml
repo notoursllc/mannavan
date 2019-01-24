@@ -9,7 +9,9 @@ run.config:
     - nginx
 
   extra_steps:
+    - git submodule update --init --recursive
     - npm install
+    - git submodule foreach npm install
 
   cache_dirs:
     - node_modules
