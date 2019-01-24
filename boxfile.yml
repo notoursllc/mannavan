@@ -7,7 +7,6 @@ run.config:
 
     extra_packages:
         - nginx
-        - git
 
   extra_steps:
     - npm install
