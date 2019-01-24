@@ -5,11 +5,11 @@ run.config:
     python_version: python-2.7
     dep_manager: npm
 
-  extra_packages:
-    - nginx
+    extra_packages:
+        - nginx
+        - git
 
   extra_steps:
-    - git submodule update --init --recursive
     - npm install
     - git submodule foreach npm install
 
