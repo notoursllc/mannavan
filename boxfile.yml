@@ -10,7 +10,6 @@ run.config:
 
   extra_steps:
     - npm install
-    - npm --prefix shopBac/ install
 
   cache_dirs:
     - node_modules
@@ -24,6 +23,9 @@ data.db:
 
 
 deploy.config:
+  transform:
+    - npm --prefix shopBac/ install
+
   before_live:
     web.main:
       - npm run knex:migrate
