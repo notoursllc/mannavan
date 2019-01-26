@@ -10,7 +10,6 @@ run.config:
 
   extra_steps:
     - npm install
-    - npm --prefix shopBac/ install
 
   cache_dirs:
     - node_modules
@@ -36,4 +35,4 @@ web.main:
   writable_dirs:
     - tmp
     - logs
-    - shopBac/node_modules
+    - shopBac

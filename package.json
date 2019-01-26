@@ -26,7 +26,7 @@
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
     "hash": "node ./hash.js",
     "precommit": "npm run lint",
-    "postinstall": "git submodule foreach npm install"
+    "postinstall": "npm --prefix shopBac/ install"
   },
   "dependencies": {
     "@nuxtjs/axios": "^5.3.4",
