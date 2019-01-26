@@ -1,18 +1,25 @@
 run.config:
+
   engine: nodejs
+
   engine.config:
     runtime: nodejs-10.4
     python_version: python-2.7
     dep_manager: npm
 
-    extra_packages:
-        - nginx
+  extra_packages:
+    - nginx
+
+  extra_path_dirs:
+    - node_modules/.bin
+    - shopBac/node_modules/.bin
 
   extra_steps:
     - npm install
 
   cache_dirs:
     - node_modules
+    - shopBac/node_modules
 
   # Enable filesystem watcher
   fs_watch: true
