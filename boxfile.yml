@@ -36,4 +36,4 @@ web.main:
   writable_dirs:
     - tmp
     - logs
-    - shopBac
+    - shopBac/node_modules

@@ -27,7 +27,8 @@ git:
 install:
   - npm i -g npm@6.4.1
   - npm ci             # instead of default npm install
-  - git submodule update --init --recursive
+  - npm --prefix shopBac/ install
+#   - git submodule update --init --recursive
 
   - sudo bash -c "$(curl -fsSL https://s3.amazonaws.com/tools.nanobox.io/bootstrap/ci.sh)"
 
