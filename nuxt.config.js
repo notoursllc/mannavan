@@ -88,8 +88,8 @@ module.exports = {
     *  See https://github.com/nuxt-community/axios-module#options
     */
     axios: {
-        baseURL: process.env.API_URL || (isNanoboxDev ? 'http://gobreadvan.local:3000/api/v1' : 'http://localhost:3000/api/v1'),
-        // baseURL: process.env.API_URL || '/api/v1',
+        // baseURL: process.env.API_URL || (isNanoboxDev ? 'http://gobreadvan.local:3000/api/v1' : 'http://localhost:3000/api/v1'),
+        baseURL: '/api/v1',
         debug: process.env.API_DEBUG || false,
         https: process.env.API_USE_HTTPS || true,
         retry: { retries: 3 },
