@@ -27,7 +27,7 @@ addons:
 
 install:
   - npm i -g npm@6.4.1
-  - npm run install
+  - npm install
   - npm run postinstall
   - npm run build
 
