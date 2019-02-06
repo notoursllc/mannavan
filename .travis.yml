@@ -5,16 +5,11 @@ dist: trusty
 sudo: required
 
 node_js:
-  - "10.4"
+- '10.4'
 
-# cache:
-#   directories:
-#     - node_modules
-
-#addons:
-#  sauce_connect:
-#    username: $SAUCE_USERNAME
-#    access_key: $SAUCE_ACCESS_KEY
+cache:
+  directories:
+    - node_modules
 
 # safelist of branches to build
 branches:
@@ -24,185 +19,26 @@ branches:
 git:
   submodules: true
 
+services:
+  - postgresql
+
+addons:
+  postgresql: "9.6"
+
 install:
   - npm i -g npm@6.4.1
-#   - npm ci             # instead of default npm install
-  - npm install
-#   - git submodule update --init --recursive
+  - npm run after-deploy
 
-  - sudo bash -c "$(curl -fsSL https://s3.amazonaws.com/tools.nanobox.io/bootstrap/ci.sh)"
-
-  # link this code base to the production nanobox so we can add env variables to our prod instance
-  - nanobox remote add $NANOBOX_APP_NAME
-
-  # TEST1
-  - nanobox evar add local TEST1=\"$TEST1\"
-  - nanobox evar add $NANOBOX_APP_NAME TEST1=\"$TEST1\"
-
-
-  # adding local and production environment variables
-  # NODE_ENV
-  - nanobox evar add local NODE_ENV=test
-  - nanobox evar add $NANOBOX_APP_NAME NODE_ENV=production
-
-  # API_USERNAME
-  - nanobox evar add local API_USERNAME=$API_USERNAME
-  - nanobox evar add $NANOBOX_APP_NAME API_USERNAME=$API_USERNAME
-
-  # API_PASSWORD
-  - nanobox evar add local API_PASSWORD=$API_PASSWORD
-  - nanobox evar add $NANOBOX_APP_NAME API_PASSWORD=$API_PASSWORD
-
-  # API_PASSWORD_HASH
-  - nanobox evar add local API_PASSWORD_HASH=$API_PASSWORD_HASH
-  - nanobox evar add $NANOBOX_APP_NAME API_PASSWORD_HASH=$API_PASSWORD_HASH
-
-  # DATA_DB_NAME
-  - nanobox evar add local DATA_DB_NAME=$DATA_DB_NAME
-  - nanobox evar add $NANOBOX_APP_NAME DATA_DB_NAME=$DATA_DB_NAME
-
-  # AUTH0_CLIENT_ID
-  - nanobox evar add local AUTH0_CLIENT_ID=$AUTH0_CLIENT_ID
-  - nanobox evar add $NANOBOX_APP_NAME AUTH0_CLIENT_ID=$AUTH0_CLIENT_ID
-
-  # AUTH0_CLIENT_SECRET
-  - nanobox evar add local AUTH0_CLIENT_SECRET=$AUTH0_CLIENT_SECRET
-  - nanobox evar add $NANOBOX_APP_NAME AUTH0_CLIENT_SECRET=$AUTH0_CLIENT_SECRET
-
-  # AUTH0_DOMAIN
-  - nanobox evar add local AUTH0_DOMAIN=$AUTH0_DOMAIN
-  - nanobox evar add $NANOBOX_APP_NAME AUTH0_DOMAIN=$AUTH0_DOMAIN
-
-  # BRAINTREE_USE_SANDBOX
-  - nanobox evar add local BRAINTREE_USE_SANDBOX=$BRAINTREE_USE_SANDBOX
-  - nanobox evar add $NANOBOX_APP_NAME BRAINTREE_USE_SANDBOX=$BRAINTREE_USE_SANDBOX
-
-  # BRAINTREE_MERCHANT_ID
-  - nanobox evar add local BRAINTREE_MERCHANT_ID=$BRAINTREE_MERCHANT_ID
-  - nanobox evar add $NANOBOX_APP_NAME BRAINTREE_MERCHANT_ID=$BRAINTREE_MERCHANT_ID
-
-  # BRAINTREE_PRIVATE_KEY
-  - nanobox evar add local BRAINTREE_PRIVATE_KEY=$BRAINTREE_PRIVATE_KEY
-  - nanobox evar add $NANOBOX_APP_NAME BRAINTREE_PRIVATE_KEY=$BRAINTREE_PRIVATE_KEY
-
-  # BRAINTREE_PUBLIC_KEY
-  - nanobox evar add local BRAINTREE_PUBLIC_KEY=$BRAINTREE_PUBLIC_KEY
-  - nanobox evar add $NANOBOX_APP_NAME BRAINTREE_PUBLIC_KEY=$BRAINTREE_PUBLIC_KEY
-
-  # BUG_SNAG_API_KEY
-  - nanobox evar add local BUG_SNAG_API_KEY=$BUG_SNAG_API_KEY
-  - nanobox evar add $NANOBOX_APP_NAME BUG_SNAG_API_KEY=$BUG_SNAG_API_KEY
-
-  # CART_TOKEN_SECRET
-  - nanobox evar add local CART_TOKEN_SECRET=$CART_TOKEN_SECRET
-  - nanobox evar add $NANOBOX_APP_NAME CART_TOKEN_SECRET=$CART_TOKEN_SECRET
-
-  # DIGITAL_OCEAN_SPACES_ACCESS_KEY
-  - nanobox evar add local DIGITAL_OCEAN_SPACES_ACCESS_KEY=$DIGITAL_OCEAN_SPACES_ACCESS_KEY
-  - nanobox evar add $NANOBOX_APP_NAME DIGITAL_OCEAN_SPACES_ACCESS_KEY=$DIGITAL_OCEAN_SPACES_ACCESS_KEY
-
-  # DIGITAL_OCEAN_SPACES_SECRET
-  - nanobox evar add local DIGITAL_OCEAN_SPACES_SECRET=$DIGITAL_OCEAN_SPACES_SECRET
-  - nanobox evar add $NANOBOX_APP_NAME DIGITAL_OCEAN_SPACES_SECRET=$DIGITAL_OCEAN_SPACES_SECRET
-
-  # DIGITAL_OCEAN_SPACES_ENDPOINT
-  - nanobox evar add local DIGITAL_OCEAN_SPACES_ENDPOINT=$DIGITAL_OCEAN_SPACES_ENDPOINT
-  - nanobox evar add $NANOBOX_APP_NAME DIGITAL_OCEAN_SPACES_ENDPOINT=$DIGITAL_OCEAN_SPACES_ENDPOINT
-
-  # DIGITAL_OCEAN_SPACE_NAME
-  - nanobox evar add local DIGITAL_OCEAN_SPACE_NAME=$DIGITAL_OCEAN_SPACE_NAME
-  - nanobox evar add $NANOBOX_APP_NAME DIGITAL_OCEAN_SPACE_NAME=$DIGITAL_OCEAN_SPACE_NAME
-
-  # DOMAIN_NAME
-  - nanobox evar add local DOMAIN_NAME=$DOMAIN_NAME
-  - nanobox evar add $NANOBOX_APP_NAME DOMAIN_NAME=$DOMAIN_NAME
-
-  # EMAIL_ADMIN
-  - nanobox evar add local EMAIL_ADMIN=$EMAIL_ADMIN
-  - nanobox evar add $NANOBOX_APP_NAME EMAIL_ADMIN=$EMAIL_ADMIN
-
-  # EMAIL_INFO
-  - nanobox evar add local EMAIL_INFO=$EMAIL_INFO
-  - nanobox evar add $NANOBOX_APP_NAME EMAIL_INFO=$EMAIL_INFO
-
-  # JWT_CLIENT_ID
-  - nanobox evar add local JWT_CLIENT_ID=$JWT_CLIENT_ID
-  - nanobox evar add $NANOBOX_APP_NAME JWT_CLIENT_ID=$JWT_CLIENT_ID
-
-  # JWT_CLIENT_SECRET
-  - nanobox evar add local JWT_CLIENT_SECRET=$JWT_CLIENT_SECRET
-  - nanobox evar add $NANOBOX_APP_NAME JWT_CLIENT_SECRET=$JWT_CLIENT_SECRET
-
-  # JWT_SERVER_SECRET
-  - nanobox evar add local JWT_SERVER_SECRET=$JWT_SERVER_SECRET
-  - nanobox evar add $NANOBOX_APP_NAME JWT_SERVER_SECRET=$JWT_SERVER_SECRET
-
-  # LOGGLY_PRIVATE_KEY
-  - nanobox evar add local LOGGLY_PRIVATE_KEY=$LOGGLY_PRIVATE_KEY
-  - nanobox evar add $NANOBOX_APP_NAME LOGGLY_PRIVATE_KEY=$LOGGLY_PRIVATE_KEY
-
-  # MAILGUN_API_KEY
-  - nanobox evar add local MAILGUN_API_KEY=$MAILGUN_API_KEY
-  - nanobox evar add $NANOBOX_APP_NAME MAILGUN_API_KEY=$MAILGUN_API_KEY
-
-  # MAILGUN_DOMAIN
-  - nanobox evar add local MAILGUN_DOMAIN=$MAILGUN_DOMAIN
-  - nanobox evar add $NANOBOX_APP_NAME MAILGUN_DOMAIN=$MAILGUN_DOMAIN
-
-  # MAILGUN_DOMAIN_PROD
-  - nanobox evar add local MAILGUN_DOMAIN_PROD=$MAILGUN_DOMAIN_PROD
-  - nanobox evar add $NANOBOX_APP_NAME MAILGUN_DOMAIN_PROD=$MAILGUN_DOMAIN_PROD
-
-  # SAUCE_USERNAME
-  - nanobox evar add local SAUCE_USERNAME=$SAUCE_USERNAME
-  - nanobox evar add $NANOBOX_APP_NAME SAUCE_USERNAME=$SAUCE_USERNAME
-
-  # SAUCE_ACCESS_KEY
-  - nanobox evar add local SAUCE_ACCESS_KEY=$SAUCE_ACCESS_KEY
-  - nanobox evar add $NANOBOX_APP_NAME SAUCE_ACCESS_KEY=$SAUCE_ACCESS_KEY
-
-  # SHIPENGINE_API_KEY_PROD
-  - nanobox evar add local SHIPENGINE_API_KEY_PROD=$SHIPENGINE_API_KEY_PROD
-  - nanobox evar add $NANOBOX_APP_NAME SHIPENGINE_API_KEY_PROD=$SHIPENGINE_API_KEY_PROD
-
-  # SHIPENGINE_CARRIER_ID_FEDEX
-  - nanobox evar add local SHIPENGINE_CARRIER_ID_FEDEX=$SHIPENGINE_CARRIER_ID_FEDEX
-  - nanobox evar add $NANOBOX_APP_NAME SHIPENGINE_CARRIER_ID_FEDEX=$SHIPENGINE_CARRIER_ID_FEDEX
-
-  # SHIPPO_API_KEY_TEST
-  - nanobox evar add local SHIPPO_API_KEY_TEST=$SHIPPO_API_KEY_TEST
-  - nanobox evar add $NANOBOX_APP_NAME SHIPPO_API_KEY_TEST=$SHIPPO_API_KEY_TEST
-
-  # TAX_RATE_CALIFORNIA
-  - nanobox evar add local TAX_RATE_CALIFORNIA=$TAX_RATE_CALIFORNIA
-  - nanobox evar add $NANOBOX_APP_NAME TAX_RATE_CALIFORNIA=$TAX_RATE_CALIFORNIA
-
-  # Needed for prod only
-  - nanobox evar add $NANOBOX_APP_NAME API_URL=https://www.gobreadvan.com/api/v1
-  - nanobox evar add $NANOBOX_APP_NAME SHIPENGINE_CARRIER_ID_STAMPSCOM=$SHIPENGINE_CARRIER_ID_STAMPSCOM
-  - nanobox evar add $NANOBOX_APP_NAME SHIPPING_ADDRESS_FROM_COMPANY=$SHIPPING_ADDRESS_FROM_COMPANY
-  - nanobox evar add $NANOBOX_APP_NAME SHIPPING_ADDRESS_FROM_ADDRESS1=$SHIPPING_ADDRESS_FROM_ADDRESS1
-  - nanobox evar add $NANOBOX_APP_NAME SHIPPING_ADDRESS_FROM_CITY=$SHIPPING_ADDRESS_FROM_CITY
-  - nanobox evar add $NANOBOX_APP_NAME SHIPPING_ADDRESS_FROM_STATE=$SHIPPING_ADDRESS_FROM_STATE
-  - nanobox evar add $NANOBOX_APP_NAME SHIPPING_ADDRESS_FROM_ZIP=$SHIPPING_ADDRESS_FROM_ZIP
-  - nanobox evar add $NANOBOX_APP_NAME SHIPPING_ADDRESS_FROM_COUNTRY_CODE=$SHIPPING_ADDRESS_FROM_COUNTRY_CODE
-  - nanobox evar add $NANOBOX_APP_NAME SHIPPING_ADDRESS_FROM_PHONE=$SHIPPING_ADDRESS_FROM_PHONE
-  - nanobox evar add $NANOBOX_APP_NAME LOG_LEVEL=$LOG_LEVEL
-
-  - nanobox run npm run build
+before_script:
+  - psql -c 'create database travis_ci_test;' -U postgres
 
 script:
-  - nanobox run npm run knex:migrate
-  - nanobox run npm run knex:seed
-  - nanobox run npm run test:server
-  - nanobox run npm run e2e
+  - npm run knex:seed
+  - npm run test:server
+  - npm run e2e
 
-after_success:
-  # it seems we need to run another build so the nuxt files are built with
-  # the updated environment variable values needed for production
-  - nanobox evar add local API_URL=https://www.gobreadvan.com/api/v1
-  - nanobox run npm run build
-  - nanobox deploy $NANOBOX_APP_NAME -m "Deploying from TravisCI"
+
+# after_success:
 
 notifications:
   email:
