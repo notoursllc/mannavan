@@ -27,16 +27,18 @@ addons:
 
 install:
   - npm i -g npm@6.4.1
-  - npm run after-deploy
+  - npm run install
+  - npm run postinstall
+  - npm run build
 
 before_script:
   - psql -c 'create database travis_ci_test;' -U postgres
 
 script:
+  - npm run knex:migrate
   - npm run knex:seed
   - npm run test:server
   - npm run e2e
-
 
 # after_success:
 
