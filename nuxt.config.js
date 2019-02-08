@@ -1,6 +1,5 @@
 // require('dotenv').config();  // TODO: not sure if this works here
 const pkg = require('./package');
-const isNanoboxDev = process.env.NODE_ENV === 'development' && process.env.DATA_DB_USERS === 'nanobox';
 
 module.exports = {
     mode: 'universal',
@@ -88,7 +87,6 @@ module.exports = {
     *  See https://github.com/nuxt-community/axios-module#options
     */
     axios: {
-        // baseURL: process.env.API_URL || (isNanoboxDev ? 'http://gobreadvan.local:3000/api/v1' : 'http://localhost:3000/api/v1'),
         baseURL: '/api/v1',
         debug: process.env.API_DEBUG || false,
         https: process.env.API_USE_HTTPS || true,
@@ -101,6 +99,7 @@ module.exports = {
      */
     build: {
         // analyze: true,
+        transpile: [/^element-ui/],
 
         /*
         ** You can extend webpack config here
