@@ -35,7 +35,11 @@ export default {
     computed: {
         ...mapGetters({
             numCartItems: 'shoppingcart/numItems',
-        })
+        }),
+
+        pageTitle() {
+            return this.$store.state.ui.pageTitle;
+        }
     }
 }
 </script>
@@ -79,10 +83,8 @@ export default {
             </nuxt-link>
         </aside>
 
-        <header role="banner" v-if="$store.state.ui.pageTitle">
-            <div class="header-grow-container">
-                <div class="inlineBlock header-page-title">{{ $store.state.ui.pageTitle }}</div>
-            </div>
+        <header role="banner" v-show="$store.state.ui.pageTitle">
+            <div class="inlineBlock header-page-title">{{ $store.state.ui.pageTitle }}</div>
         </header>
 
         <main>
@@ -172,7 +174,7 @@ $header-secondary-logo-width: 150px;
         @include flexbox();
         @include flex-direction(row);
         @include flex-wrap(nowrap);
-        // @include align-items(center);
+        @include align-items(center);
         @include justify-content(center);
         // background-color: #313131;
         background-color: #fff;
@@ -188,14 +190,6 @@ $header-secondary-logo-width: 150px;
             padding: 0;
             white-space: nowrap;
             width: $header-secondary-logo-width;
-        }
-
-        .header-grow-container {
-            @include flexbox();
-            @include flex(1 0 auto);
-            @include align-items(center);
-            @include justify-content(center);
-            // border: 1px solid red;
         }
 
         .header-page-title {
