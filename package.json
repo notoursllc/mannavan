@@ -30,6 +30,8 @@
     "postinstall": "npm --prefix shopBac/ install"
   },
   "dependencies": {
+    "@bugsnag/js": "^5.2.0",
+    "@bugsnag/plugin-vue": "^5.2.0",
     "@nuxtjs/axios": "^5.3.4",
     "@nuxtjs/pwa": "^2.6.0",
     "accounting": "^0.4.1",
@@ -39,8 +41,6 @@
     "bcrypt": "^2.0.1",
     "bluebird": "^3.5.3",
     "braintree-web": "^3.42.0",
-    "bugsnag-js": "^4.7.3",
-    "bugsnag-vue": "^1.0.1",
     "confidence": "^3.0.2",
     "cookie": "^0.3.1",
     "cross-env": "^5.2.0",
