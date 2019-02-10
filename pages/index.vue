@@ -18,6 +18,9 @@ function randomIntFromInterval(min, max) {
     return Math.floor(Math.random()*(max-min+1)+min);
 }
 
+const randomInt = randomIntFromInterval(0, (bgImages.length - 1));
+const randomImage = `/images/backgrounds/${ bgImages[randomInt] }`;
+
 
 export default {
     components: {
@@ -27,7 +30,7 @@ export default {
 
     data: function() {
         return {
-            bgImage: null
+            bgImage: randomImage,
         }
     },
 
@@ -39,20 +42,10 @@ export default {
                     name: 'tops'
                 }
             });
-        },
-
-        setbBgImage() {
-            if(this.bgImage) {
-                return;
-            }
-
-            let index = randomIntFromInterval(0, (bgImages.length - 1));
-            this.bgImage = `/images/backgrounds/${ bgImages[index] }`;
         }
     },
 
     created() {
-        this.setbBgImage();
         this.$store.dispatch('ui/pageTitle', null);
     },
 
