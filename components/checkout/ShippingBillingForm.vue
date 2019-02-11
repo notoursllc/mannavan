@@ -212,7 +212,7 @@
             <div>{{ $t('Email address') }}</div>
             <div class="checkout_form_value">
                 <status-wrapper :success="canShowGreenCheck('email')" :failed="canShowValidationMsg('email')">
-                    <el-input v-model.trim="email"
+                    <el-input v-model="email"
                             :class="{ 'inputError': $v.form.email.$error }"></el-input>
                     <div role="alert" v-show="canShowValidationMsg('email')">
                         <p v-if="!$v.form.email.required">{{ $t('Required') }}</p>
@@ -240,7 +240,7 @@
             <div>{{ $t('First name') }}</div>
             <div class="checkout_form_value">
                 <status-wrapper :success="canShowGreenCheck('firstName')" :failed="canShowValidationMsg('firstName')">
-                    <el-input v-model.trim="firstName"
+                    <el-input v-model="firstName"
                             :class="{ 'inputError': $v.form.firstName.$error }"></el-input>
                     <p role="alert" v-show="canShowValidationMsg('firstName')">{{ $t('Required') }}</p>
                 </status-wrapper>
@@ -252,7 +252,7 @@
             <div>{{ $t('Last name') }}</div>
             <div class="checkout_form_value">
                 <status-wrapper :success="canShowGreenCheck('lastName')" :failed="canShowValidationMsg('lastName')">
-                    <el-input v-model.trim="lastName"
+                    <el-input v-model="lastName"
                             :class="{ 'inputError': $v.form.lastName.$error }"></el-input>
                     <p role="alert" v-show="canShowValidationMsg('lastName')">{{ $t('Required') }}</p>
                 </status-wrapper>
@@ -264,7 +264,7 @@
             <div>{{ $t('Address line 1') }}</div>
             <div class="checkout_form_value">
                 <status-wrapper :success="canShowGreenCheck('streetAddress')" :failed="canShowValidationMsg('streetAddress')">
-                    <el-input v-model.trim="streetAddress"
+                    <el-input v-model="streetAddress"
                             :class="{ 'inputError': $v.form.streetAddress.$error }"></el-input>
                     <p role="alert" v-show="canShowValidationMsg('streetAddress')">{{ $t('Required') }}</p>
                 </status-wrapper>
@@ -276,7 +276,7 @@
         <div v-if="form.extendedAddress">
             <div>{{ $t('Address line 2') }}:</div>
             <div class="checkout_form_value">
-                <el-input v-model.trim="extendedAddress"></el-input>
+                <el-input v-model="extendedAddress"></el-input>
             </div>
         </div>
 
@@ -286,7 +286,7 @@
             <div class="checkout_form_value">
                 <status-wrapper :success="canShowGreenCheck('city')" :failed="canShowValidationMsg('city')">
                     <el-input
-                        v-model.trim="city"
+                        v-model="city"
                         :class="{ 'inputError': $v.form.city.$error }"></el-input>
                     <p role="alert" v-show="canShowValidationMsg('city')">{{ $t('Required') }}</p>
                 </status-wrapper>
@@ -299,7 +299,7 @@
             <div class="checkout_form_value">
                 <status-wrapper :success="canShowGreenCheck('state')" :failed="canShowValidationMsg('state')">
                     <select-state-province
-                        v-model.trim="state"
+                        v-model="state"
                         :country="countryCodeAlpha2"
                         :disabled="!stateSelectEnabled"
                         :class="{ 'inputError': $v.form.state.$error }"></select-state-province>
@@ -314,7 +314,7 @@
             <div>{{ $t('Postal code') }}</div>
             <div class="checkout_form_value">
                 <status-wrapper :success="canShowGreenCheck('postalCode')" :failed="canShowValidationMsg('postalCode')">
-                    <el-input v-model.trim="postalCode"
+                    <el-input v-model="postalCode"
                             :class="{ 'inputError': $v.form.postalCode.$error }"></el-input>
                     <p role="alert" v-show="canShowValidationMsg('postalCode')">{{ $t('Required') }}</p>
                 </status-wrapper>
@@ -326,7 +326,7 @@
             <div>{{ $t('Company name') }}</div>
             <div class="checkout_form_value">
                 <status-wrapper :success="canShowGreenCheck('company')">
-                    <el-input v-model.trim="company"
+                    <el-input v-model="company"
                             :placeholder="'(' + $t('optional') + ')'"></el-input>
                 </status-wrapper>
             </div>

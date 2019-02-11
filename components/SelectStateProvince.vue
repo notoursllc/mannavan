@@ -86,7 +86,7 @@
     </el-select>
 
     <el-input v-else
-            v-model.trim="selectedState"
+            v-model="selectedState"
             @change="emitChange"
             :disabled="disabled"></el-input>
 </template>
