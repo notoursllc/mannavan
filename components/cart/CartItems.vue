@@ -145,7 +145,6 @@ export default {
             {{ $t('Your shopping cart does not contain any items.') }}
         </div>
         <div v-else class="ptl">
-            confirmDeleteModals {{ confirmDeleteModals }}
             <cart-item-display
                 v-for="item in shoppingCart.cart_items"
                 :key="item.id"
