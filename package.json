@@ -33,7 +33,7 @@
     "@bugsnag/js": "^5.2.0",
     "@bugsnag/plugin-vue": "^5.2.0",
     "@nuxtjs/axios": "^5.3.4",
-    "@nuxtjs/pwa": "^2.6.0",
+    "@nuxtjs/pwa": "^3.0.0-beta.6",
     "accounting": "^0.4.1",
     "auth0-lock": "^11.12.1",
     "babel-plugin-transform-runtime": "^6.23.0",
