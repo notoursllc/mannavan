@@ -145,6 +145,7 @@ export default {
             {{ $t('Your shopping cart does not contain any items.') }}
         </div>
         <div v-else class="ptl">
+            confirmDeleteModals {{ confirmDeleteModals }}
             <cart-item-display
                 v-for="item in shoppingCart.cart_items"
                 :key="item.id"
@@ -168,8 +169,8 @@ export default {
 
                     <div v-if="allowEdit" class="mts">
                         <el-popover
-                            width="200"
                             v-model="confirmDeleteModals[item.id]"
+                            width="200"
                             trigger="click"
                             placement="start/right-end">
                             <div>{{ $t('Delete this item?') }}</div>
@@ -186,8 +187,7 @@ export default {
                             </div>
                             <el-button
                                 slot="reference"
-                                type="text"
-                                @click="confirmDeleteModals[item.id] = true">{{ $t('Delete') }}</el-button>
+                                type="text">{{ $t('Delete') }}</el-button>
                         </el-popover>
                     </div>
                 </template>
