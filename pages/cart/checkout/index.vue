@@ -203,9 +203,13 @@ export default {
 
     },
 
-    mounted() {
+    created() {
         this.$store.dispatch('ui/IN_CHECKOUT_FLOW', true);
         this.$store.dispatch('ui/pageTitle', this.$t('Checkout'));
+
+        if(this.cartEmptyRedirect(this.shoppingCart)) {
+            return;
+        }
     },
 
     head() {
