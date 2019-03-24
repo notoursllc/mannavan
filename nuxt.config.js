@@ -11,6 +11,9 @@ module.exports = {
     head: {
         link: [
             { rel: 'icon', type: 'image/x-icon', href: '/images/favicon.ico' }
+        ],
+        script: [
+            { src: 'https://js.squareup.com/v2/paymentform', async: true, body: true }
         ]
     },
 
@@ -35,6 +38,9 @@ module.exports = {
         SHIPPING_ADDRESS_FROM_ZIP: process.env.SHIPPING_ADDRESS_FROM_ZIP,
         SHIPPING_ADDRESS_FROM_COUNTRY_CODE: process.env.SHIPPING_ADDRESS_FROM_COUNTRY_CODE,
         SHIPPING_ADDRESS_FROM_PHONE: process.env.SHIPPING_ADDRESS_FROM_PHONE,
+        SQUARE_APP_ID: process.env.NODE_ENV === 'development' ? process.env.SQUARE_SANDBOX_APP_ID : process.env.SQUARE_PRODUCTION_APP_ID,
+        SQUARE_ACCESS_TOKEN: process.env.NODE_ENV === 'development' ? process.env.SQUARE_SANDBOX_ACCESS_TOKEN : process.env.SQUARE_PRODUCTION_ACCESS_TOKEN,
+        SQUARE_LOCATION_ID: process.env.SQUARE_LOCATION_ID
     },
 
     /*
