@@ -15,16 +15,46 @@
     }
 </script>
 
-
 <template>
     <div>
-        <form-row label="Size:">{{ $t(size.size) }}</form-row>
-        <form-row label="Sort order:">{{ $t(size.sort) }}</form-row>
-        <form-row label="Is visible:">{{ $t(size.is_visible) }}</form-row>
-        <form-row label="Cost:">{{ $t(size.cost) }}</form-row>
-        <form-row label="Base price:">{{ $t(size.base_price) }}</form-row>
-        <form-row label="Sale price:">{{ $t(size.sale_price) }}</form-row>
-        <form-row label="Is on sale:">{{ $t(size.is_on_sale) }}</form-row>
-        <form-row label="Inventory count:">{{ $t(size.inventory_count) }}</form-row>
+        <form-row>
+            <template slot="label">Size:</template>
+            <template slot="value">{{ $t(size.size) }}</template>
+        </form-row>
+
+        <form-row>
+            <template slot="label">Sort order:</template>
+            <template slot="value">{{ $t(size.sort) }}</template>
+        </form-row>
+
+        <form-row>
+            <template slot="label">Is visible:</template>
+            <template slot="value">{{ $t(size.is_visible) }}</template>
+        </form-row>
+
+        <form-row>
+            <template slot="label">Cost:</template>
+            <template slot="value">{{ $t(size.cost) }}</template>
+        </form-row>
+
+        <form-row>
+            <template slot="label">Base price:</template>
+            <template slot="value">{{ $t(size.base_price) }}</template>
+        </form-row>
+
+        <form-row>
+            <template slot="label">Sale price:</template>
+            <template slot="value">{{ $t(size.sale_price) }}</template>
+        </form-row>
+
+        <form-row>
+            <template slot="label">Is on sale:</template>
+            <template slot="value">{{ $t(size.is_on_sale) }}</template>
+        </form-row>
+
+        <form-row>
+            <template slot="label">Inventory count:</template>
+            <template slot="value">{{ $t(size.inventory_count) }}</template>
+        </form-row>
     </div>
 </template>

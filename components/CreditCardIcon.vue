@@ -1,5 +1,5 @@
 <script>
-    let supportedCardIcons = ['american-express', 'diners-club', 'discover', 'jcb', 'maestro', 'master-card', 'paypal', 'visa'];
+    let supportedCardIcons = ['americanExpress', 'discoverDiners', 'discover', 'JCB', 'maestro', 'masterCard', 'paypal', 'visa'];
 
     export default{
         props: {
@@ -23,7 +23,7 @@
 
 
 <template>
-    <img class="ccIcon" :src="cardTypeIcon" v-show="cardTypeIcon"/>
+    <img class="ccIcon" :src="cardTypeIcon" v-show="cardTypeIcon" />
 </template>
 
 

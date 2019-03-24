@@ -352,53 +352,70 @@ export default {
                    :modal-append-to-body="false">
 
             <!-- Is visible -->
-            <form-row label="Is visible:">
-                <el-checkbox v-model="picModal.form.is_visible"></el-checkbox>
+            <form-row>
+                <template slot="label">Is visible:</template>
+                <template slot="value">
+                    <el-checkbox v-model="picModal.form.is_visible" />
+                </template>
             </form-row>
 
             <!-- Sort order -->
-            <form-row label="Sort order:">
-                <el-input-number
-                    v-model="picModal.form.sort_order"
-                    controls-position="right"
-                    :step="1"></el-input-number>
-                <p role="alert" v-show="$v.picModal.form.sort_order.$invalid">{{ $t('Required') }}</p>
+            <form-row>
+                <template slot="label">Sort order:</template>
+                <template slot="value">
+                    <el-input-number
+                        v-model="picModal.form.sort_order"
+                        controls-position="right"
+                        :step="1" />
+                    <p role="alert"
+                        v-show="$v.picModal.form.sort_order.$invalid">{{ $t('Required') }}</p>
+                </template>
             </form-row>
 
             <!-- Current picture -->
-            <form-row label="Current picture:" v-if="picModal.form.file_name">
-                <img :src="picModal.form.url" width="200" />
+            <form-row v-if="picModal.form.file_name">
+                <template slot="label">Current picture:</template>
+                <template slot="value">
+                    <img :src="picModal.form.url" width="200" />
+                </template>
             </form-row>
 
             <!-- Upload picture -->
-            <form-row :label="picModal.form.file_name ? 'Replacement picture:' : 'Upload picture:'">
-                <div v-if="!picModal.tempImage">
-                    <input type="file" ref="file" @change="onFileChange" />
-                </div>
-                <div v-else class="mtm">
-                    <img :src="picModal.tempImage" width="200" />
-                    <div class="colorRed tal vat">
-                        <span class="cursorPointer" @click="deleteTempImage()">
-                            <icon-trash
-                                icon-name="delete"
-                                class-name="fillRed"
-                                class="vam"
-                                width="15px" /> remove
-                        </span>
+            <form-row>
+                <template slot="label">
+                    {{ picModal.form.file_name ? 'Replacement picture:' : 'Upload picture:' }}:
+                </template>
+                <template slot="value">
+                    <div v-if="!picModal.tempImage">
+                        <input type="file" ref="file" @change="onFileChange" />
                     </div>
-                </div>
+                    <div v-else class="mtm">
+                        <img :src="picModal.tempImage" width="200" />
+                        <div class="colorRed tal vat">
+                            <span class="cursorPointer" @click="deleteTempImage()">
+                                <icon-trash
+                                    icon-name="delete"
+                                    class-name="fillRed"
+                                    class="vam"
+                                    width="15px" /> remove
+                            </span>
+                        </div>
+                    </div>
+                </template>
             </form-row>
 
             <!-- buttons -->
-            <form-row label="">
-                <div class="ptl nowrap">
-                    <el-button
-                        type="primary"
-                        class="mrm"
-                        @click="savePic(picModal.form.id)"
-                        :disabled="$v.picModal.form.$invalid">SAVE</el-button>
-                    <el-button @click="picModal.isActive = false">CANCEL</el-button>
-                </div>
+            <form-row>
+                <template slot="value">
+                    <div class="ptl nowrap">
+                        <el-button
+                            type="primary"
+                            class="mrm"
+                            @click="savePic(picModal.form.id)"
+                            :disabled="$v.picModal.form.$invalid">SAVE</el-button>
+                        <el-button @click="picModal.isActive = false">CANCEL</el-button>
+                    </div>
+                </template>
             </form-row>
         </el-dialog>
     </div>

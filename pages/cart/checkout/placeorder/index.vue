@@ -4,7 +4,7 @@ import { mapGetters } from 'vuex'
 import isObject from 'lodash.isobject'
 import forEach from 'lodash.foreach'
 import cloneDeep from 'lodash.clonedeep'
-import { Checkbox, Input, Notification, Loading, Dialog, Select, Breadcrumb, BreadcrumbItem } from 'element-ui'
+import { Checkbox, Input, Notification, Loading, Select, Breadcrumb, BreadcrumbItem } from 'element-ui'
 import ShippingBillingForm from '@/components/checkout/ShippingBillingForm'
 import CartItems from '@/components/cart/CartItems'
 import CartTotalsTable from '@/components/cart/CartTotalsTable'
@@ -21,9 +21,11 @@ import shopping_cart_mixin from '@/mixins/shopping_cart_mixin'
 import app_mixin from '@/mixins/app_mixin'
 import payment_mixin from '@/mixins/payment_mixin'
 
+//test
+import PaymentForm from '@/components/checkout/PaymentForm'
+
 Vue.use(Checkbox)
 Vue.use(Input)
-Vue.use(Dialog)
 Vue.use(Select)
 Vue.use(Breadcrumb)
 Vue.use(BreadcrumbItem)
@@ -46,7 +48,8 @@ export default {
         StatusWrapper,
         IconCreditCard,
         IconPaypal,
-        IconPackage
+        IconPackage,
+        PaymentForm
     },
 
     mixins: [
@@ -61,20 +64,6 @@ export default {
             billingAttributes: 'shoppingcart/billingAttributes',
             braintreeClientToken: 'shoppingcart/braintreeClientToken'
         }),
-
-        paymentMethodButtonEnabled: function() {
-            if(this.paymentMethod === 'PAYPAL' ||
-                (this.paymentMethod === 'CREDIT_CARD' &&
-                this.inputStatus['card-number'] === 'success' &&
-                this.inputStatus['expiration-year'] === 'success' &&
-                this.inputStatus['expiration-month'] === 'success' &&
-                this.inputStatus['cvv'] === 'success' &&
-                (this.billingSameAsShipping || (!this.billingSameAsShipping && this.separateBillingFormValid)))) {
-                return true;
-            }
-
-            return false;
-        },
 
         checkoutButtonEnabled: function() {
             return true;
@@ -96,23 +85,13 @@ export default {
 
     data: function() {
         return {
-            //test
             STEP_SHIPPING_ADDRESS: 0,
             STEP_SHIPPING_METHOD: 1,
             STEP_PLACE_ORDER: 2,
             shippingRates: null,
             paymentMethod: 'CREDIT_CARD',
-            cardType: null,
-            securityCodeModalShow: false,
-            securityCodeHint: `3 ${this.$tc('digits_text', 3)}`,
             placeOrderButtonLoading: false,
             separateBillingFormValid: false,
-            inputStatus: {
-                'card-number': null,
-                'expiration-year': null,
-                'expiration-month': null,
-                'cvv': null
-            },
             braintree: {
                 clientInstance: null,
                 tokenizePayload: '',
@@ -123,7 +102,8 @@ export default {
                     nonce: null,
                     payPalPayload: null
                 }
-            }
+            },
+            paymentMethodButtonEnabled: false
         }
     },
 
@@ -154,6 +134,18 @@ export default {
         },
 
 
+        handlePaymentFormSuccess: function() {
+            console.log("HANDLING FORM SUCCESS")
+            this.paymentMethodButtonEnabled = true;
+        },
+
+
+        handlePaymentFormFailed: function() {
+            console.log("HANDLING FORM FAILURE")
+            this.paymentMethodButtonEnabled = false;
+        },
+
+
         submitPaymentForm: async function() {
             await this.setBillingData();
             this.placeOrderButtonLoading = true;
@@ -162,7 +154,7 @@ export default {
                 this.tokenizePaypal();
             }
             else {
-                this.tokenizeHostedFields();
+                // this.tokenizeHostedFields();
             }
         },
 
@@ -203,27 +195,27 @@ export default {
         },
 
 
-        tokenizeHostedFields() {
-            this.placeOrderButtonLoading = true;
+        // tokenizeHostedFields() {
+        //     this.placeOrderButtonLoading = true;
 
-            this.braintree.hostedFieldsInstance
-                .tokenize()
-                .then((payload) => {
-                    this.doCheckout(payload.nonce).finally(() => {
-                        this.placeOrderButtonLoading = false;
-                    });
-                })
-                .catch((tokenizeErr) => {
-                    currentNotification = this.$notify({
-                        type: 'error',
-                        title: this.$t('Payment method error') + ':',
-                        message: this.getBraintreeErrorMessage(tokenizeErr),
-                        duration: 0
-                    });
+        //     this.braintree.hostedFieldsInstance
+        //         .tokenize()
+        //         .then((payload) => {
+        //             this.doCheckout(payload.nonce).finally(() => {
+        //                 this.placeOrderButtonLoading = false;
+        //             });
+        //         })
+        //         .catch((tokenizeErr) => {
+        //             currentNotification = this.$notify({
+        //                 type: 'error',
+        //                 title: this.$t('Payment method error') + ':',
+        //                 message: this.getBraintreeErrorMessage(tokenizeErr),
+        //                 duration: 0
+        //             });
 
-                    this.placeOrderButtonLoading = false;
-                });
-        },
+        //             this.placeOrderButtonLoading = false;
+        //         });
+        // },
 
 
         tokenizePaypal() {
@@ -257,111 +249,6 @@ export default {
                 });
         },
 
-
-        setHostedFieldsEventHandlers: function(hostedFieldsInstance) {
-            function getElementId(field) {
-                if(isObject(field) && isObject(field.container)) {
-                    return field.container.id;
-                }
-                return null;
-            }
-
-            hostedFieldsInstance.on('validityChange', (event) => {
-                let field = event.fields[event.emittedBy];
-                let id = getElementId(field);
-
-                if(id) {
-                    if (field.isValid === false && !field.isPotentiallyValid) {
-                        this.inputStatus[id] = 'failed'
-                    }
-                    else if (field.isValid === true) {
-                        this.inputStatus[id] = 'success'
-                    }
-                    else {
-                        this.inputStatus[id] = null
-                    }
-                }
-            });
-
-            hostedFieldsInstance.on('cardTypeChange', (event) => {
-                let isPotentiallyValid = (isObject(event.fields) && isObject(event.fields.number) && !event.fields.number.isPotentiallyValid);
-
-                if(isPotentiallyValid) {
-                    this.cardType = null;
-                }
-
-                // Change card bg depending on card type
-                if (event.cards.length === 1) {
-                    // Change the CVV length for AmericanExpress cards
-                    if (event.cards[0].code.size === 4) {
-                        // hostedFieldsInstance.setPlaceholder('cvv', '••••');
-                        this.securityCodeHint = `4 ${this.$tc('digits_text', 4)}`;
-                    }
-
-                    if(!isPotentiallyValid) {
-                        this.cardType = event.cards[0].type;
-                    }
-                }
-                else {
-                    // hostedFieldsInstance.setPlaceholder('cvv', '•••');
-                    this.securityCodeHint = `3 ${this.$tc('digits_text', 3)}`;
-
-                    if(!isPotentiallyValid) {
-                        this.cardType = null;
-                    }
-                }
-            });
-        },
-
-        createHostedFields: function(clientInstance) {
-            let hostedFields = require('braintree-web/hosted-fields');
-            hostedFields.create({
-                client: clientInstance,
-                styles: {
-                    'input': {
-                    'font-size': '18px'
-                    },
-                    'input.invalid': {
-                    'color': 'red'
-                    },
-                    'input.valid': {
-                    'color': 'green'
-                    }
-                },
-                fields: {
-                    number: {
-                        selector: '#card-number'
-                        // placeholder: '•••• •••• •••• ••••'
-                    },
-                    cvv: {
-                        selector: '#cvv'
-                        // placeholder: '•••'
-                    },
-                    expirationMonth: {
-                        selector: '#expiration-month',
-                        placeholder: this.$t('card_expiration_month_hint')
-                    },
-                    expirationYear: {
-                        selector: '#expiration-year',
-                        placeholder: this.$t('card_expiration_year_hint')
-                    }
-                }
-            }, (hostedFieldsErr, hostedFieldsInstance) => {
-                if (hostedFieldsErr) {
-                    currentNotification = this.$notify({
-                        type: 'error',
-                        title: this.$t('Payment method error') + ':',
-                        message: this.getBraintreeErrorMessage(hostedFieldsErr),
-                        duration: 0
-                    });
-                    return;
-                }
-                else {
-                    this.braintree.hostedFieldsInstance = hostedFieldsInstance;
-                    this.setHostedFieldsEventHandlers(hostedFieldsInstance);
-                }
-            });
-        },
 
         createPaypal: function(clientInstance) {
             let paypal = require('braintree-web/paypal');
@@ -401,7 +288,6 @@ export default {
                 try {
                     const clientInstance = await client.create({ authorization: token });
 
-                    this.createHostedFields(clientInstance);
                     this.createPaypal(clientInstance);
                 }
                 catch(clientErr) {
@@ -498,6 +384,10 @@ export default {
 
         <div class="pageContainerMax pageContainerMaxSkinny">
             <div>
+                <payment-form
+                    @success="handlePaymentFormSuccess"
+                    @failed="handlePaymentFormFailed" />
+
                 <div class="displayTable widthAll">
                     <!-- Payment Method -->
                     <div class="displayTableRow">
@@ -526,58 +416,6 @@ export default {
                         </div>
                     </div>
 
-                    <!-- Card Number -->
-                    <div class="displayTableRow" v-show="paymentMethod === 'CREDIT_CARD'">
-                        <label class="checkout_form_label fwb">{{ $t('CARD NUMBER') }}:</label>
-                        <div class="checkout_form_value">
-                            <status-wrapper
-                                :success="inputStatus['card-number'] === 'success'"
-                                :failed="inputStatus['card-number'] === 'failed'">
-                                <div id="card-number" class="el-input__inner"></div>
-                                <span class="card-icon">
-                                    <credit-card-icon :card-type="cardType"></credit-card-icon>
-                                </span>
-                            </status-wrapper>
-                        </div>
-                    </div>
-
-                    <!-- Expiration -->
-                    <div class="displayTableRow" v-show="paymentMethod === 'CREDIT_CARD'">
-                        <label class="checkout_form_label fwb">{{ $t('EXPIRES') }}:</label>
-                        <div class="checkout_form_value">
-                            <status-wrapper
-                                class-name="inline"
-                                :success="inputStatus['expiration-month'] === 'success' && inputStatus['expiration-year'] === 'success'"
-                                :failed="inputStatus['expiration-month'] === 'failed' || inputStatus['expiration-year'] === 'failed'">
-                                <div class="displayTable">
-                                    <div id="expiration-month" class="el-input__inner hostedField70 displayTableCell"></div>
-                                    <div class="displayTableCell colorGrayLighter phs vat" style="font-size:22px">/</div>
-                                    <div id="expiration-year" class="el-input__inner hostedField70 displayTableCell"></div>
-                                </div>
-                            </status-wrapper>
-                        </div>
-                    </div>
-
-                    <!-- CVV -->
-                    <div class="displayTableRow" v-show="paymentMethod === 'CREDIT_CARD'">
-                        <label class="checkout_form_label">
-                            <span class="fwb">{{ $t('SECURITY CODE') }}</span>:
-                            <!-- <span class="colorGrayLighter">({{ securityCodeHint }})</span>: -->
-                        </label>
-                        <div class="checkout_form_value">
-                            <div class="displayTableCell">
-                                <status-wrapper
-                                    class-name="inline"
-                                    :success="inputStatus['cvv'] === 'success'"
-                                    :failed="inputStatus['cvv'] === 'failed'">
-                                    <div id="cvv" class="el-input__inner hostedField80 displayTableCell"></div>
-                                </status-wrapper>
-                            </div>
-                            <div class="displayTableCell plm vam">
-                                <span class="underlineDotted cursorPointer" @click="securityCodeModalShow = true">{{ $t("what's a security code?") }}</span>
-                            </div>
-                        </div>
-                    </div>
 
                     <!-- Billing address -->
                     <div class="displayTableRow" v-show="paymentMethod === 'CREDIT_CARD'">
@@ -639,31 +477,6 @@ export default {
                     :shopping-cart="shoppingCart"
                     :allow-edit="false"></cart-items>
             </div>
-
-            <!-- CVV Modal -->
-            <el-dialog :title="$t('Finding your security code')"
-                    :modal-append-to-body="false"
-                    :visible.sync="securityCodeModalShow">
-                <div class="cvvCard">
-                    <div class="cvvCardPic">
-                        <img src="/images/creditcards/card_back_cvv_4.png">
-                    </div>
-                    <div class="cvvCardContent">
-                        <div class="fwb">{{ $t('American Express') }}</div>
-                        <div>{{ $t('cvv_help_4_digit') }}</div>
-                    </div>
-                </div>
-
-                <div class="cvvCard">
-                    <div class="cvvCardPic">
-                        <img src="/images/creditcards/card_back_cvv_3.png">
-                    </div>
-                    <div class="cvvCardContent">
-                        <div class="fwb">{{ $t('All other cards') }}</div>
-                        <div>{{ $t('cvv_help_3_digit') }}</div>
-                    </div>
-                </div>
-            </el-dialog>
 
         </div>
     </div>

@@ -1,9 +1,8 @@
 <script>
-export default{
+export default {
     props: {
-        label: {
-            type: String,
-            default: ''
+        valueClass: {
+            type: Object,
         }
     }
 }
@@ -12,16 +11,14 @@ export default{
 
 <template>
     <div class="formRow">
-        <label>{{ label }}</label>
-        <span>
-            <slot></slot>
-        </span>
+        <label><slot name="label"></slot></label>
+        <span :class="valueClass"><slot name="value"></slot></span>
     </div>
 </template>
 
 
 <style lang="scss">
-    @import "../assets/css/components/_variables.scss"; 
+    @import "../assets/css/components/_variables.scss";
 
     .formRow {
         display: table-row;
@@ -35,8 +32,6 @@ export default{
     }
 
     .formRow > label {
-        font-size: 14px;
-        font-weight: bold;
         padding-right: 10px;
     }
 

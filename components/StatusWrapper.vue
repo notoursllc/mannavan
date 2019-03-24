@@ -1,6 +1,7 @@
 <script>
 import IconCheckSquare from '@/components/icons/IconCheckSquare'
 import IconTimesSquare from '@/components/icons/IconTimesSquare'
+import isObject from 'lodash.isobject'
 
 export default {
     props: {
@@ -13,7 +14,7 @@ export default {
             default: false
         },
         className: {
-            type: String,
+            // type: String,
             default: 'widthAll'
         }
     },
@@ -29,33 +30,48 @@ export default {
         },
         showFailureIcon() {
             return !this.success && this.failed;
+        },
+        cssClass() {
+            let obj = {};
+            let self = this;
+
+            if(isObject(self.className)) {
+                obj = Object.assign({}, this.className);
+            }
+            else {
+                obj[self.className] = true;
+            }
+
+            obj['el-input__failed'] = this.showFailureIcon;
+
+            return Object.assign({}, obj);
         }
     }
 }
 </script>
 
 <template>
-    <div class="inlineBlock relative" :class="className">
+    <div class="inlineBlock relative" :class="cssClass">
         <slot></slot>
         <icon-check-square
             v-show="showSuccessIcon"
             icon-name="checkmark"
             class-name="fillGreen"
-            width="20px"
+            width="14px"
             class="status-icon" />
         <icon-times-square
             v-show="showFailureIcon"
             icon-name="times"
             class-name="fillRed"
-            width="20px"
+            width="14px"
             class="status-icon" />
     </div>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
     .status-icon {
         position: absolute;
-        top: -7px;
-        right: -16px;
+        top: 0;
+        right: 0;
     }
 </style>

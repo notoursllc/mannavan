@@ -86,6 +86,12 @@
     fill: #409EFF !important;
 }
 
+.el-input__failed {
+    .el-input__inner {
+        border: 1px solid #e5361e !important;
+    }
+}
+
 .el-button.is-huge {
     border-radius: 35px;
     padding:25px 45px;

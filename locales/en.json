@@ -25,7 +25,7 @@
     "card_expiration_hint": "MM/YY",
     "card_expiration_year_hint": "YY",
     "card_expiration_month_hint": "MM",
-    "CARD NUMBER": "CARD NUMBER",
+    "Card number": "Card number",
     "Cart updated!": "Cart updated!",
     "CITY": "CITY",
     "City": "City",
@@ -55,6 +55,7 @@
     "CREDIT CARD": "CREDIT CARD",
     "cvv_help_3_digit": "The code is printed on the back of your card. It is the last 3 digits AFTER the credit card number in the signature area of the card.",
     "cvv_help_4_digit": "The 4 digit code is printed on the front of your card, above the credit card number, on either the right or left side.",
+    "CVV": "CVV",
 
     "day_days": "day | days",
     "Delete": "Delete",
@@ -65,7 +66,7 @@
     "Error": "Error",
     "Error placing order": "Error placing order",
     "Estimated tax": "Estimated tax",
-    "EXPIRES": "EXPIRES",
+    "Expiration date": "Expiration date",
 
     "fill_out_form_warning": "Please fill out the form completely before continuing. Thanks!",
     "Finding your security code": "Finding your security code",
@@ -133,7 +134,6 @@
     "Please enter a valid email address.": "Please enter a valid email address.",
     "Please select a Country first": "Please select a Country first",
     "Please select a shipping method": "Please select a shipping method",
-    "POSTAL CODE": "POSTAL CODE",
     "Postal code": "Postal code",
     "Price": "Price",
     "Privacy": "Privacy",
@@ -158,7 +158,6 @@
     "returns_help": "For help with Exchanging or Returning an item, please contact us at",
 
     "SAME AS SHIPPING ADDRESS": "SAME AS SHIPPING ADDRESS",
-    "SECURITY CODE": "SECURITY CODE",
     "Ship to": "Ship to",
     "SHIPPING": "SHIPPING",
     "Shipping": "Shipping",
@@ -219,7 +218,7 @@
     "We want to hear from you!": "We want to hear from you!",
     "We want to make sure it fits!": "We want to make sure it fits!",
     "We'll get back to you within 1 business day.": "We'll get back to you within 1 business day.",
-    "what's a security code?": "what's a security code?",
+    "what's this?": "what's this?",
 
     "Your billing info": "Your billing info",
     "Your order": "Your order",

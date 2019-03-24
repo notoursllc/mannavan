@@ -333,54 +333,99 @@ export default {
                    :visible.sync="sizeModal.isActive"
                    :modal-append-to-body="false">
 
-            <form-row label="Size:">
-                <div v-if="sizeModal.size.size">{{ $t(sizeModal.size.size) }}</div>
-                <el-select
-                    v-else
-                    v-model="sizeModal.size.size"
-                    placeholder="Choose">
-                    <el-option
-                        v-for="key in sizeOptions"
-                        :key="key"
-                        :label="$tc(key, 2)"
-                        :value="key">
-                    </el-option>
-                </el-select>
+            <form-row>
+                <template slot="label">Size:</template>
+                <template slot="value">
+                    <div v-if="sizeModal.size.size">{{ $t(sizeModal.size.size) }}</div>
+                    <el-select
+                        v-else
+                        v-model="sizeModal.size.size"
+                        placeholder="Choose">
+                        <el-option
+                            v-for="key in sizeOptions"
+                            :key="key"
+                            :label="$tc(key, 2)"
+                            :value="key">
+                        </el-option>
+                    </el-select>
+                </template>
             </form-row>
 
-            <form-row label="Is visible:">
-                <el-checkbox v-model="sizeModal.size.is_visible"></el-checkbox>
+            <form-row>
+                <template slot="label">Is visible:</template>
+                <template slot="value">
+                    <el-checkbox v-model="sizeModal.size.is_visible" />
+                </template>
             </form-row>
 
-            <form-row label="Cost:">
-                <el-input-number v-model="sizeModal.size.cost" controls-position="right" :step=".01"></el-input-number>
+            <form-row>
+                <template slot="label">Cost:</template>
+                <template slot="value">
+                    <el-input-number
+                        v-model="sizeModal.size.cost"
+                        controls-position="right"
+                        :step=".01" />
+                </template>
             </form-row>
 
-            <form-row label="Base price:">
-                <el-input-number v-model="sizeModal.size.base_price" controls-position="right" :step=".01"></el-input-number>
+            <form-row>
+                <template slot="label">Base price:</template>
+                <template slot="value">
+                    <el-input-number
+                        v-model="sizeModal.size.base_price"
+                        controls-position="right"
+                        :step=".01" />
+                </template>
             </form-row>
 
-            <form-row label="Sale price:">
-                <el-input-number v-model="sizeModal.size.sale_price" controls-position="right" :step=".01"></el-input-number>
+            <form-row>
+                <template slot="label">Sale price:</template>
+                <template slot="value">
+                    <el-input-number
+                        v-model="sizeModal.size.sale_price"
+                        controls-position="right"
+                        :step=".01" />
+                </template>
             </form-row>
 
-            <form-row label="Is on sale:">
-                <el-checkbox v-model="sizeModal.size.is_on_sale"></el-checkbox>
+            <form-row>
+                <template slot="label">Is on sale:</template>
+                <template slot="value">
+                    <el-checkbox v-model="sizeModal.size.is_on_sale" />
+                </template>
             </form-row>
 
-            <form-row label="Inventory count:">
-                <el-input-number v-model="sizeModal.size.inventory_count" controls-position="right" :step="1"></el-input-number>
+            <form-row>
+                <template slot="label">Inventory count:</template>
+                <template slot="value">
+                    <el-input-number
+                        v-model="sizeModal.size.inventory_count"
+                        controls-position="right"
+                        :step="1" />
+                </template>
             </form-row>
 
-            <form-row label="Weight (oz):">
-                <el-input-number v-model="sizeModal.size.weight_oz" controls-position="right" :step=".1"></el-input-number>
+            <form-row>
+                <template slot="label">Weight (oz):</template>
+                <template slot="value">
+                    <el-input-number
+                        v-model="sizeModal.size.weight_oz"
+                        controls-position="right"
+                        :step=".1" />
+                </template>
             </form-row>
 
-            <form-row label="">
-                <div class="ptl">
-                    <el-button type="primary" class="mrm" @click="saveSize(sizeModal.size)">SAVE</el-button>
-                    <el-button @click="resetSizeModalData()">CANCEL</el-button>
-                </div>
+            <form-row>
+                <template slot="value">
+                    <div class="ptl">
+                        <el-button
+                            type="primary"
+                            class="mrm"
+                            @click="saveSize(sizeModal.size)">SAVE</el-button>
+
+                        <el-button @click="resetSizeModalData()">CANCEL</el-button>
+                    </div>
+                </template>
             </form-row>
         </el-dialog>
     </div>

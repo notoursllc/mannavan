@@ -4,11 +4,12 @@
     import { Input } from 'element-ui'
     import isObject from 'lodash.isobject'
     import forEach from 'lodash.foreach'
-    import CountrySelect from '@/components/CountrySelect.vue'
-    import SelectStateProvince from '@/components/SelectStateProvince'
     import Validations from 'vuelidate'
     import { email, required } from 'vuelidate/lib/validators'
+    import CountrySelect from '@/components/CountrySelect.vue'
+    import SelectStateProvince from '@/components/SelectStateProvince'
     import StatusWrapper from '@/components/StatusWrapper'
+    import FormRow from '@/components/FormRow'
 
     Vue.use(Input)
     Vue.use(Validations)
@@ -50,17 +51,18 @@
 
 
     export default {
-        components: {
-            CountrySelect,
-            SelectStateProvince,
-            StatusWrapper
-        },
-
         props: {
             type: {
                 type: String,
                 default: 'shipping' // shipping, billing
             }
+        },
+
+        components: {
+            CountrySelect,
+            SelectStateProvince,
+            StatusWrapper,
+            FormRow
         },
 
         data: function() {
@@ -89,7 +91,8 @@
                     postalCode: false,
                     company: false,
                     email: false,
-                }
+                },
+                formValueClass: {'widthAll': true}
             }
         },
 
@@ -206,131 +209,138 @@
 
 
 <template>
-    <div>
+    <div class="displayTable widthAll">
         <!-- Email -->
-        <div v-if="type === 'shipping'">
-            <div>{{ $t('Email address') }}</div>
-            <div class="checkout_form_value">
+        <form-row v-if="type === 'shipping'" :value-class="formValueClass">
+            <template slot="label">{{ $t('Email address') }}:</template>
+            <template slot="value">
                 <status-wrapper :success="canShowGreenCheck('email')" :failed="canShowValidationMsg('email')">
-                    <el-input v-model="email"
-                            :class="{ 'inputError': $v.form.email.$error }"></el-input>
+                    <el-input
+                        v-model="email"
+                        :class="{ 'inputError': $v.form.email.$error }" />
                     <div role="alert" v-show="canShowValidationMsg('email')">
                         <p v-if="!$v.form.email.required">{{ $t('Required') }}</p>
                         <p v-if="!$v.form.email.email">{{ $t('Please enter a valid email address.') }}</p>
                     </div>
                 </status-wrapper>
-            </div>
-        </div>
+            </template>
+        </form-row>
 
         <!-- Country -->
-        <div>
-            <div>{{ $t('Country') }}</div>
-            <div class="checkout_form_value">
+        <form-row :value-class="formValueClass">
+            <template slot="label">{{ $t('Country') }}:</template>
+            <template slot="value">
                 <status-wrapper :success="canShowGreenCheck('countryCodeAlpha2')" :failed="canShowValidationMsg('countryCodeAlpha2')">
-                    <country-select v-model="countryCodeAlpha2"
-                                    :init-value="countryCodeAlpha2"
-                                    @change="newVal => countryCodeAlpha2 = newVal"></country-select>
+                    <country-select
+                        v-model="countryCodeAlpha2"
+                        :init-value="countryCodeAlpha2"
+                        @change="newVal => countryCodeAlpha2 = newVal" />
                     <p role="alert" v-show="canShowValidationMsg('countryCodeAlpha2')">{{ $t('Required') }}</p>
                 </status-wrapper>
-            </div>
-        </div>
+            </template>
+        </form-row>
 
         <!-- First Name -->
-        <div>
-            <div>{{ $t('First name') }}</div>
-            <div class="checkout_form_value">
+        <form-row :value-class="formValueClass">
+            <template slot="label">{{ $t('First name') }}:</template>
+            <template slot="value">
                 <status-wrapper :success="canShowGreenCheck('firstName')" :failed="canShowValidationMsg('firstName')">
-                    <el-input v-model="firstName"
-                            :class="{ 'inputError': $v.form.firstName.$error }"></el-input>
+                    <el-input
+                        v-model="firstName"
+                        :class="{ 'inputError': $v.form.firstName.$error }" />
                     <p role="alert" v-show="canShowValidationMsg('firstName')">{{ $t('Required') }}</p>
                 </status-wrapper>
-            </div>
-        </div>
+            </template>
+        </form-row>
 
         <!-- Last Name -->
-        <div>
-            <div>{{ $t('Last name') }}</div>
-            <div class="checkout_form_value">
+        <form-row :value-class="formValueClass">
+            <template slot="label">{{ $t('Last name') }}:</template>
+            <template slot="value">
                 <status-wrapper :success="canShowGreenCheck('lastName')" :failed="canShowValidationMsg('lastName')">
-                    <el-input v-model="lastName"
-                            :class="{ 'inputError': $v.form.lastName.$error }"></el-input>
+                    <el-input
+                        v-model="lastName"
+                        :class="{ 'inputError': $v.form.lastName.$error }" />
                     <p role="alert" v-show="canShowValidationMsg('lastName')">{{ $t('Required') }}</p>
                 </status-wrapper>
-            </div>
-        </div>
+            </template>
+        </form-row>
 
         <!-- Street Address -->
-        <div>
-            <div>{{ $t('Address line 1') }}</div>
-            <div class="checkout_form_value">
+        <form-row :value-class="formValueClass">
+            <template slot="label">{{ $t('Address line 1') }}:</template>
+            <template slot="value">
                 <status-wrapper :success="canShowGreenCheck('streetAddress')" :failed="canShowValidationMsg('streetAddress')">
-                    <el-input v-model="streetAddress"
-                            :class="{ 'inputError': $v.form.streetAddress.$error }"></el-input>
+                    <el-input
+                        v-model="streetAddress"
+                        :class="{ 'inputError': $v.form.streetAddress.$error }" />
                     <p role="alert" v-show="canShowValidationMsg('streetAddress')">{{ $t('Required') }}</p>
                 </status-wrapper>
-            </div>
-        </div>
+            </template>
+        </form-row>
 
         <!-- Extended Address -->
         <!-- This value may be returned by the paypal response, so only displaying it if it does -->
-        <div v-if="form.extendedAddress">
-            <div>{{ $t('Address line 2') }}:</div>
-            <div class="checkout_form_value">
-                <el-input v-model="extendedAddress"></el-input>
-            </div>
-        </div>
+        <form-row v-if="form.extendedAddress" :value-class="formValueClass">
+            <template slot="label">{{ $t('Address line 2') }}:</template>
+            <template slot="value">
+                <el-input v-model="extendedAddress" />
+            </template>
+        </form-row>
 
         <!-- City -->
-        <div>
-            <div>{{ $t('City') }}</div>
-            <div class="checkout_form_value">
+        <form-row :value-class="formValueClass">
+            <template slot="label">{{ $t('City') }}:</template>
+            <template slot="value">
                 <status-wrapper :success="canShowGreenCheck('city')" :failed="canShowValidationMsg('city')">
                     <el-input
                         v-model="city"
-                        :class="{ 'inputError': $v.form.city.$error }"></el-input>
+                        :class="{ 'inputError': $v.form.city.$error }" />
                     <p role="alert" v-show="canShowValidationMsg('city')">{{ $t('Required') }}</p>
                 </status-wrapper>
-            </div>
-        </div>
+            </template>
+        </form-row>
 
         <!-- State -->
-        <div>
-            <div>{{ $t('State/Province/Region') }}</div>
-            <div class="checkout_form_value">
+        <form-row :value-class="formValueClass">
+            <template slot="label">{{ $t('State/Province/Region') }}:</template>
+            <template slot="value">
                 <status-wrapper :success="canShowGreenCheck('state')" :failed="canShowValidationMsg('state')">
                     <select-state-province
                         v-model="state"
                         :country="countryCodeAlpha2"
                         :disabled="!stateSelectEnabled"
-                        :class="{ 'inputError': $v.form.state.$error }"></select-state-province>
+                        :class="{ 'inputError': $v.form.state.$error }" />
                     <p role="alert" v-show="canShowValidationMsg('state')">{{ $t('Required') }}</p>
                     <p v-show="!stateSelectEnabled" class="colorGray fs12">{{ $t('Please select a Country first') }}</p>
                 </status-wrapper>
-            </div>
-        </div>
+            </template>
+        </form-row>
 
         <!-- Postal Code -->
-        <div>
-            <div>{{ $t('Postal code') }}</div>
-            <div class="checkout_form_value">
+        <form-row :value-class="formValueClass">
+            <template slot="label">{{ $t('Postal code') }}:</template>
+            <template slot="value">
                 <status-wrapper :success="canShowGreenCheck('postalCode')" :failed="canShowValidationMsg('postalCode')">
-                    <el-input v-model="postalCode"
-                            :class="{ 'inputError': $v.form.postalCode.$error }"></el-input>
+                    <el-input
+                        v-model="postalCode"
+                        :class="{ 'inputError': $v.form.postalCode.$error }" />
                     <p role="alert" v-show="canShowValidationMsg('postalCode')">{{ $t('Required') }}</p>
                 </status-wrapper>
-            </div>
-        </div>
+            </template>
+        </form-row>
 
         <!-- Company Name -->
-        <div>
-            <div>{{ $t('Company name') }}</div>
-            <div class="checkout_form_value">
+        <form-row :value-class="formValueClass">
+            <template slot="label">{{ $t('Company name') }}</template>
+            <template slot="value">
                 <status-wrapper :success="canShowGreenCheck('company')">
-                    <el-input v-model="company"
-                            :placeholder="'(' + $t('optional') + ')'"></el-input>
+                    <el-input
+                        v-model="company"
+                        :placeholder="'(' + $t('optional') + ')'" />
                 </status-wrapper>
-            </div>
-        </div>
+            </template>
+        </form-row>
     </div>
 </template>
 
@@ -341,5 +351,9 @@
     .inputError input,
     .inputError select {
         border-color: $colorRed !important
+    }
+
+    .formRow {
+        display: table-row;
     }
 </style>

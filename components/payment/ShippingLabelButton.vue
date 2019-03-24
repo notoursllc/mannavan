@@ -278,53 +278,86 @@ export default{
                 <div class="g-spec-label">To Address</div>
                 <div class="g-spec-content">
                     <!-- Name -->
-                    <form-row label="Name:">
-                        <el-input v-model="labelForm.shipment.address_to.name"></el-input>
+                    <form-row>
+                        <template slot="label">Name:</template>
+                        <template slot="value">
+                            <el-input v-model="labelForm.shipment.address_to.name" />
+                        </template>
                     </form-row>
 
                     <!-- Company -->
-                    <form-row label="Company:">
-                        <el-input v-model="labelForm.shipment.address_to.company"></el-input>
+                    <form-row>
+                        <template slot="label">Company:</template>
+                        <template slot="value">
+                            <el-input v-model="labelForm.shipment.address_to.company" />
+                        </template>
                     </form-row>
 
                     <!-- Street 1 -->
-                    <form-row label="Street 1:">
-                        <el-input v-model="labelForm.shipment.address_to.street1"></el-input>
+                    <form-row>
+                        <template slot="label">Street 1:</template>
+                        <template slot="value">
+                            <el-input v-model="labelForm.shipment.address_to.street1" />
+                        </template>
                     </form-row>
 
                     <!-- Street 2 -->
-                    <form-row label="Street 2:">
-                        <el-input v-model="labelForm.shipment.address_to.street2"></el-input>
+                    <form-row>
+                        <template slot="label">Street 2:</template>
+                        <template slot="value">
+                            <el-input v-model="labelForm.shipment.address_to.street2" />
+                        </template>
                     </form-row>
 
                     <!-- City -->
-                    <form-row label="City:">
-                        <el-input v-model="labelForm.shipment.address_to.city"></el-input>
+                    <form-row>
+                        <template slot="label">City:</template>
+                        <template slot="value">
+                            <el-input v-model="labelForm.shipment.address_to.city" />
+                        </template>
                     </form-row>
 
                     <!-- State -->
-                    <form-row label="State:">
-                        <el-input v-model="labelForm.shipment.address_to.state"></el-input>
+                    <form-row>
+                        <template slot="label">State:</template>
+                        <template slot="value">
+                            <el-input v-model="labelForm.shipment.address_to.state" />
+                        </template>
                     </form-row>
 
                     <!-- Zip -->
-                    <form-row label="Zip:">
-                        <el-input v-model="labelForm.shipment.address_to.zip"></el-input>
+                    <form-row>
+                        <template slot="label">Zip:</template>
+                        <template slot="value">
+                            <el-input v-model="labelForm.shipment.address_to.zip" />
+                        </template>
                     </form-row>
 
                     <!-- Country -->
-                    <form-row label="Country:">
-                        <el-input v-model="labelForm.shipment.address_to.country"></el-input>
+                    <form-row>
+                        <template slot="label">Country:</template>
+                        <template slot="value">
+                            <el-input v-model="labelForm.shipment.address_to.country" />
+                        </template>
                     </form-row>
 
                     <!-- Email -->
-                    <form-row label="Email:">
-                        <el-input v-model="labelForm.shipment.address_to.email"></el-input>
+                    <form-row>
+                        <template slot="label">Email:</template>
+                        <template slot="value">
+                            <el-input v-model="labelForm.shipment.address_to.email" />
+                        </template>
                     </form-row>
 
                     <!-- Meta Data -->
-                    <form-row label="Meta Data:">
-                        <el-input type="textarea" :rows="1" v-model="labelForm.shipment.address_to.metadata"></el-input>
+                    <form-row>
+                        <template slot="label">Meta Data:</template>
+                        <template slot="value">
+                            <el-input
+                                type="textarea"
+                                :rows="1"
+                                v-model="labelForm.shipment.address_to.metadata" />
+                        </template>
                     </form-row>
                 </div>
             </div>
@@ -333,48 +366,75 @@ export default{
                 <div class="g-spec-label">From Address</div>
                 <div class="g-spec-content">
                     <!-- Company -->
-                    <form-row label="Company:">
-                        <el-input v-model="labelForm.shipment.address_from.company"></el-input>
+                    <form-row>
+                        <template slot="label">Company:</template>
+                        <template slot="value">
+                            <el-input v-model="labelForm.shipment.address_from.company" />
+                        </template>
                     </form-row>
 
                     <!-- Name -->
-                    <form-row label="Name:">
-                        <el-input v-model="labelForm.shipment.address_from.name"></el-input>
+                    <form-row>
+                        <template slot="label">Name:</template>
+                        <template slot="value">
+                            <el-input v-model="labelForm.shipment.address_from.name" />
+                        </template>
                     </form-row>
 
                    <!-- Street 1 -->
-                    <form-row label="Street 1:">
-                        <el-input v-model="labelForm.shipment.address_from.street1"></el-input>
+                    <form-row>
+                        <template slot="label">Street 1:</template>
+                        <template slot="value">
+                            <el-input v-model="labelForm.shipment.address_from.street1" />
+                        </template>
                     </form-row>
 
                     <!-- City -->
-                    <form-row label="City:">
-                        <el-input v-model="labelForm.shipment.address_from.city"></el-input>
+                    <form-row>
+                        <template slot="label">City:</template>
+                        <template slot="value">
+                            <el-input v-model="labelForm.shipment.address_from.city" />
+                        </template>
                     </form-row>
 
                     <!-- State -->
-                    <form-row label="State:">
-                        <el-input v-model="labelForm.shipment.address_from.state"></el-input>
+                    <form-row>
+                        <template slot="label">State:</template>
+                        <template slot="value">
+                            <el-input v-model="labelForm.shipment.address_from.state" />
+                        </template>
                     </form-row>
 
                     <!-- Zip -->
-                    <form-row label="Zip:">
-                        <el-input v-model="labelForm.shipment.address_from.zip"></el-input>
+                    <form-row>
+                        <template slot="label">Zip:</template>
+                        <template slot="value">
+                            <el-input v-model="labelForm.shipment.address_from.zip" />
+                        </template>
                     </form-row>
 
                     <!-- Country -->
-                    <form-row label="Country:">
-                        <el-input v-model="labelForm.shipment.address_from.country"></el-input>
+                    <form-row>
+                        <template slot="label">Country:</template>
+                        <template slot="value">
+                            <el-input v-model="labelForm.shipment.address_from.country" />
+                        </template>
                     </form-row>
 
                     <!-- Phone -->
-                    <form-row label="Phone:">
-                        <el-input v-model="labelForm.shipment.address_from.phone"></el-input>
+                    <form-row>
+                        <template slot="label">Phone:</template>
+                        <template slot="value">
+                            <el-input v-model="labelForm.shipment.address_from.phone" />
+                        </template>
                     </form-row>
 
                     <!-- Email -->
-                    <form-row label="Email:">
-                        <el-input v-model="labelForm.shipment.address_from.email"></el-input>
+                    <form-row>
+                        <template slot="label">Email:</template>
+                        <template slot="value">
+                            <el-input v-model="labelForm.shipment.address_from.email" />
+                        </template>
                     </form-row>
                 </div>
             </div>
@@ -395,29 +455,51 @@ export default{
                         </div>
                         <div class="pam">
                             <!-- Length -->
-                            <form-row label="Length:">
-                                <el-input-number v-model="obj.length" controls-position="right"></el-input-number>
+                            <form-row>
+                                <template slot="label">Length:</template>
+                                <template slot="value">
+                                    <el-input-number
+                                        v-model="obj.length"
+                                        controls-position="right" />
+                                </template>
                             </form-row>
 
                             <!-- Width -->
-                            <form-row label="Width:">
-                                <el-input-number v-model="obj.width" controls-position="right"></el-input-number>
+                            <form-row>
+                                <template slot="label">Width:</template>
+                                <template slot="value">
+                                    <el-input-number
+                                        v-model="obj.width"
+                                        controls-position="right" />
+                                </template>
                             </form-row>
 
                             <!-- Height -->
-                            <form-row label="Height (inches):">
-                                <el-input-number v-model="obj.height" controls-position="right"></el-input-number>
+                            <form-row>
+                                <template slot="label">Height (inches):</template>
+                                <template slot="value">
+                                    <el-input-number
+                                        v-model="obj.height"
+                                        controls-position="right" />
+                                </template>
                             </form-row>
 
                             <!-- Weight -->
-                            <form-row label="Weight (oz):">
-                                <el-input-number v-model="obj.weight" controls-position="right"></el-input-number>
+                            <form-row>
+                                <template slot="label">Weight (oz):</template>
+                                <template slot="value">
+                                    <el-input-number
+                                        v-model="obj.weight"
+                                        controls-position="right" />
+                                </template>
                             </form-row>
                         </div>
                     </div>
 
                     <div v-if="showParcelCartItems" class="pam">
-                        <tree-view :data="payment.shoppingCart.cart_items" :options="{maxDepth: 2}"></tree-view>
+                        <tree-view
+                            :data="payment.shoppingCart.cart_items"
+                            :options="{maxDepth: 2}" />
                     </div>
                 </div>
             </div>
@@ -426,13 +508,19 @@ export default{
                 <div class="g-spec-label">Carrier</div>
                 <div class="g-spec-content">
                     <!-- Carrier account -->
-                    <form-row label="Carrier account:">
-                        <el-input v-model="labelForm.carrier_account"></el-input>
+                    <form-row>
+                        <template slot="label">Carrier account:</template>
+                        <template slot="value">
+                            <el-input v-model="labelForm.carrier_account" />
+                        </template>
                     </form-row>
 
                     <!-- Service level -->
-                    <form-row label="Service level:">
-                        <el-input v-model="labelForm.servicelevel_token"></el-input>
+                    <form-row>
+                        <template slot="label">Service level:</template>
+                        <template slot="value">
+                            <el-input v-model="labelForm.servicelevel_token" />
+                        </template>
                     </form-row>
                 </div>
             </div>

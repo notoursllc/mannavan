@@ -41,10 +41,20 @@
 <template>
     <div class="inlineBlock">
         <div v-if="salePrice && basePrice">
-            <div class="colorGrayLighter strikethrough mrs">{{ basePrice }}</div>
+            <div class="colorGrayLighter strikethrough mrs basePrice">{{ basePrice }}</div>
             <div>{{ salePrice }}</div>
         </div>
         <div v-else-if="salePrice" class="inlineBlock">{{ salePrice }}</div>
         <div v-else class="inlineBlock">{{ basePrice }}</div>
     </div>
 </template>
+
+<style lang="scss" scoped>
+    @import "~assets/css/components/_variables.scss";
+
+    @media #{$small-and-down} {
+        .basePrice {
+            display: none;
+        }
+    }
+</style>

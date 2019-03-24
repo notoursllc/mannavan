@@ -137,17 +137,21 @@ export default {
                 <div class="g-spec">
                     <div class="g-spec-label">General Info</div>
                     <div class="g-spec-content">
-
                         <!-- type ID -->
-                        <form-row label="Type ID:">
-                            <el-input v-model="packageType.type"></el-input>
+                        <form-row>
+                            <template slot="label">Type ID:</template>
+                            <template slot="value">
+                                <el-input v-model="packageType.type" />
+                            </template>
                         </form-row>
 
                         <!-- label -->
-                        <form-row label="Label:">
-                            <el-input v-model="packageType.label"></el-input>
+                        <form-row>
+                            <template slot="label">Label:</template>
+                            <template slot="value">
+                                <el-input v-model="packageType.label" />
+                            </template>
                         </form-row>
-
                     </div>
                 </div>
 
@@ -156,73 +160,88 @@ export default {
                     <div class="g-spec-content">
 
                         <!-- length -->
-                        <form-row label="Length:">
-                            <el-input-number
-                                v-model="packageType.length"
-                                :precision="2"
-                                :step="0.01"
-                                :min="0.01"></el-input-number>
+                        <form-row>
+                            <template slot="label">Length:</template>
+                            <template slot="value">
+                                <el-input-number
+                                    v-model="packageType.length"
+                                    :precision="2"
+                                    :step="0.01"
+                                    :min="0.01" />
+                            </template>
                         </form-row>
 
                         <!-- width -->
-                        <form-row label="Width:">
-                            <el-input-number
-                                v-model="packageType.width"
-                                :precision="2"
-                                :step="0.01"
-                                :min="0.01"></el-input-number>
+                        <form-row>
+                            <template slot="label">Width:</template>
+                            <template slot="value">
+                                <el-input-number
+                                    v-model="packageType.width"
+                                    :precision="2"
+                                    :step="0.01"
+                                    :min="0.01" />
+                            </template>
                         </form-row>
 
                         <!-- height -->
-                        <form-row label="Height:">
-                            <el-input-number
-                                v-model="packageType.height"
-                                :precision="2"
-                                :step="0.01"
-                                :min="0.01"></el-input-number>
+                        <form-row>
+                            <template slot="label">Height:</template>
+                            <template slot="value">
+                                <el-input-number
+                                    v-model="packageType.height"
+                                    :precision="2"
+                                    :step="0.01"
+                                    :min="0.01" />
+                            </template>
                         </form-row>
 
                         <!-- distance unit -->
-                        <form-row label="Distance Unit:">
-                            <el-select v-model="packageType.distance_unit">
-                                <el-option
-                                    v-for="val in getShippingParcelDistanceUnits()"
-                                    :key="val"
-                                    :label="val"
-                                    :value="val">
-                                </el-option>
-                            </el-select>
+                        <form-row>
+                            <template slot="label">Distance Unit:</template>
+                            <template slot="value">
+                                <el-select v-model="packageType.distance_unit">
+                                    <el-option
+                                        v-for="val in getShippingParcelDistanceUnits()"
+                                        :key="val"
+                                        :label="val"
+                                        :value="val">
+                                    </el-option>
+                                </el-select>
+                            </template>
                         </form-row>
-
                     </div>
                 </div>
 
                 <div class="g-spec">
                     <div class="g-spec-label">Package weight</div>
                     <div class="g-spec-content">
-
                         <!-- weight - note the back end requires this to be ounces -->
-                        <form-row label="Weight (oz):">
-                            <el-input-number v-model="packageType.weight" :precision="2" :step="0.01"></el-input-number>
+                        <form-row>
+                            <template slot="label">Weight (oz):</template>
+                            <template slot="value">
+                                <el-input-number
+                                    v-model="packageType.weight"
+                                    :precision="2"
+                                    :step="0.01" />
+                            </template>
                         </form-row>
-
                     </div>
                 </div>
 
                 <div class="g-spec">
                     <div class="g-spec-label"></div>
                     <div class="g-spec-content">
+                        <form-row>
+                            <template slot="value">
+                                <div class="ptl">
+                                    <el-button
+                                        type="primary"
+                                        @click="submit(packageType)">SUBMIT</el-button>
 
-                        <form-row label="">
-                            <div class="ptl">
-                                <el-button
-                                    type="primary"
-                                    @click="submit(packageType)">SUBMIT</el-button>
-
-                                <el-button @click="goToPackageTypeList">CANCEL</el-button>
-                            </div>
+                                    <el-button @click="goToPackageTypeList">CANCEL</el-button>
+                                </div>
+                            </template>
                         </form-row>
-
                     </div>
                 </div>
             </div>

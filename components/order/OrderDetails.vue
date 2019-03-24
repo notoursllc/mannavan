@@ -42,12 +42,14 @@ export default {
 <template>
     <div>
         <div class="mbl">
-            <form-row :label="$t('Ordered on') + ':'">
-                {{ order.created_at | format8601 }}
+            <form-row>
+                <template slot="label">{{ $t('Ordered on') }}:</template>
+                <template slot="value">{{ order.created_at | format8601 }}</template>
             </form-row>
 
-            <form-row :label="$t('Order') + ':'">
-                {{ order.id }}
+            <form-row>
+                <template slot="label">{{ $t('Order') }}:</template>
+                <template slot="value">{{ order.id }}</template>
             </form-row>
         </div>
 

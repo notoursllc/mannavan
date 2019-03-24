@@ -260,62 +260,103 @@ export default {
                     <div class="formContainer">
 
                         <!-- is_available -->
-                        <form-row label="Available:">
-                            <el-checkbox v-model="product.is_available"></el-checkbox>
+                        <form-row>
+                            <template slot="label">Available:</template>
+                            <template slot="value">
+                                <el-checkbox v-model="product.is_available" />
+                            </template>
                         </form-row>
 
                         <!-- title -->
-                        <form-row label="Title:">
-                            <el-input v-model="product.title"></el-input>
+                        <form-row>
+                            <template slot="label">Title:</template>
+                            <template slot="value">
+                                <el-input v-model="product.title" />
+                            </template>
                         </form-row>
 
                         <!-- description_short -->
-                        <form-row label="Short Description:">
-                            <el-input type="textarea" :rows="2" v-model="product.description_short"></el-input>
+                        <form-row>
+                            <template slot="label">Short Description:</template>
+                            <template slot="value">
+                                <el-input
+                                    type="textarea"
+                                    :rows="2"
+                                    v-model="product.description_short" />
+                            </template>
                         </form-row>
 
                         <!-- description_long -->
-                        <form-row label="Long Description:">
-                            <el-input type="textarea" :rows="3" v-model="product.description_long"></el-input>
+                        <form-row>
+                            <template slot="label">Long Description:</template>
+                            <template slot="value">
+                                <el-input
+                                    type="textarea"
+                                    :rows="3"
+                                    v-model="product.description_long" />
+                            </template>
                         </form-row>
 
                         <!-- seo_uri -->
-                        <form-row label="SEO URI:">
-                            <el-input v-model="product.seo_uri"></el-input>
+                        <form-row>
+                            <template slot="label">SEO URI:</template>
+                            <template slot="value">
+                                <el-input v-model="product.seo_uri" />
+                            </template>
                         </form-row>
 
                         <!-- weight_oz -->
-                        <form-row label="Weight (oz):">
-                            <el-input-number v-model="product.weight_oz" controls-position="right" :step=".1"></el-input-number>
+                        <form-row>
+                            <template slot="label">Weight (oz):</template>
+                            <template slot="value">
+                                <el-input-number
+                                    v-model="product.weight_oz"
+                                    controls-position="right"
+                                    :step=".1" />
+                            </template>
                         </form-row>
 
                         <!-- tax_code -->
-                        <form-row label="Tax code:">
-                            <el-input-number v-model="product.tax_code" controls-position="right" :step="1"></el-input-number>
+                        <form-row>
+                            <template slot="label">Tax code:</template>
+                            <template slot="value">
+                                <el-input-number
+                                    v-model="product.tax_code"
+                                    controls-position="right"
+                                    :step="1" />
+                            </template>
                         </form-row>
 
                         <!-- sku -->
-                        <form-row label="SKU:">
-                            <el-input v-model="product.sku"></el-input>
+                        <form-row>
+                            <template slot="label">SKU:</template>
+                            <template slot="value">
+                                <el-input v-model="product.sku" />
+                            </template>
                         </form-row>
 
                         <!-- material type -->
-                        <form-row label="Material type:">
-                            <el-select v-model="product.material_type">
-                                <el-option
-                                    v-for="(val, key) in globalTypes.product.material_types"
-                                    :key="val"
-                                    :label="$t(key)"
-                                    :value="val">
-                                </el-option>
-                            </el-select>
+                        <form-row>
+                            <template slot="label">Material type:</template>
+                            <template slot="value">
+                                <el-select v-model="product.material_type">
+                                    <el-option
+                                        v-for="(val, key) in globalTypes.product.material_types"
+                                        :key="val"
+                                        :label="$t(key)"
+                                        :value="val">
+                                    </el-option>
+                                </el-select>
+                            </template>
                         </form-row>
 
                         <!-- artist -->
-                        <form-row label="Artist:">
-                            <product-artist-select v-model="product.product_artist_id" />
+                        <form-row>
+                            <template slot="label">Artist:</template>
+                            <template slot="value">
+                                <product-artist-select v-model="product.product_artist_id" />
+                            </template>
                         </form-row>
-
                     </div>
                 </div>
             </div>
@@ -326,25 +367,45 @@ export default {
                     <div class="formContainer">
 
                         <!-- cost -->
-                        <form-row label="Cost:">
-                            <el-input-number v-model="product.cost" controls-position="right" :step=".01"></el-input-number>
+                        <form-row>
+                            <template slot="label">Cost:</template>
+                            <template slot="value">
+                                <el-input-number
+                                    v-model="product.cost"
+                                    controls-position="right"
+                                    :step=".01" />
+                            </template>
                         </form-row>
 
                         <!-- base_price -->
-                        <form-row label="Base price:">
-                            <el-input-number v-model="product.base_price" controls-position="right" :step=".01"></el-input-number>
+                        <form-row>
+                            <template slot="label">Base price:</template>
+                            <template slot="value">
+                                <el-input-number
+                                    v-model="product.base_price"
+                                    controls-position="right"
+                                    :step=".01" />
+                            </template>
                         </form-row>
 
                         <!-- sale_price -->
-                        <form-row label="Sale price:">
-                            <el-input-number v-model="product.sale_price" controls-position="right" :step=".01"></el-input-number>
+                        <form-row>
+                            <template slot="label">Sale price:</template>
+                            <template slot="value">
+                                <el-input-number
+                                    v-model="product.sale_price"
+                                    controls-position="right"
+                                    :step=".01" />
+                            </template>
                         </form-row>
 
                         <!-- sale_price -->
-                        <form-row label="On sale:">
-                            <el-checkbox v-model="product.is_on_sale"></el-checkbox>
+                        <form-row>
+                            <template slot="label">On sale:</template>
+                            <template slot="value">
+                                <el-checkbox v-model="product.is_on_sale" />
+                            </template>
                         </form-row>
-
                     </div>
                 </div>
             </div>
@@ -352,7 +413,7 @@ export default {
             <div class="g-spec">
                 <div class="g-spec-label">Sizes</div>
                 <div class="g-spec-content">
-                    <product-size-admin :product-id="product.id"></product-size-admin>
+                    <product-size-admin :product-id="product.id" />
                 </div>
             </div>
 
@@ -360,15 +421,18 @@ export default {
                 <div class="g-spec-label">Media</div>
                 <div class="g-spec-content">
                     <!-- video_url -->
-                    <form-row label="Video URL:">
-                        <el-input v-model="product.video_url" style="width:600px">
-                            <el-button
-                                slot="append"
-                                v-if="product.video_url"
-                                @click="playVideo(product.video_url)">
-                                <icon-play-video icon-name="play" width="20px" />
-                            </el-button>
-                        </el-input>
+                    <form-row>
+                        <template slot="label">Video URL:</template>
+                        <template slot="value">
+                            <el-input v-model="product.video_url" style="width:600px">
+                                <el-button
+                                    slot="append"
+                                    v-if="product.video_url"
+                                    @click="playVideo(product.video_url)">
+                                    <icon-play-video icon-name="play" width="20px" />
+                                </el-button>
+                            </el-input>
+                        </template>
                     </form-row>
 
                     <!-- pictures -->
@@ -382,12 +446,13 @@ export default {
                 <div class="g-spec-label">Inventory</div>
                 <div class="g-spec-content">
                     <div class="formContainer">
-
                         <!-- hide_if_out_of_stock -->
-                        <form-row label="Hide if out of stock:">
-                            <el-checkbox v-model="product.hide_if_out_of_stock"></el-checkbox>
+                        <form-row>
+                            <template slot="label">Hide if out of stock:</template>
+                            <template slot="value">
+                                <el-checkbox v-model="product.hide_if_out_of_stock" />
+                            </template>
                         </form-row>
-
                     </div>
                 </div>
             </div>
@@ -396,28 +461,35 @@ export default {
                 <div class="g-spec-label">Categories</div>
                 <div class="g-spec-content">
                     <div class="formContainer">
-
                         <!-- type -->
-                        <form-row label="Product type:">
-                            <bitwise-multi-select
-                                v-model="product.type"
-                                :options="typeSelectOptions"></bitwise-multi-select>
+                        <form-row>
+                            <template slot="label">Product type:</template>
+                            <template slot="value">
+                                <bitwise-multi-select
+                                    v-model="product.type"
+                                    :options="typeSelectOptions" />
+                            </template>
                         </form-row>
 
                         <!-- sub_type -->
-                        <form-row label="Product sub-type:">
-                            <bitwise-multi-select
-                                v-model="product.sub_type"
-                                :options="subTypeSelectOptions"></bitwise-multi-select>
+                        <form-row>
+                            <template slot="label">Product sub-type:</template>
+                            <template slot="value">
+                                <bitwise-multi-select
+                                    v-model="product.sub_type"
+                                    :options="subTypeSelectOptions" />
+                            </template>
                         </form-row>
 
                         <!-- fits -->
-                        <form-row label="Fit type:">
-                            <bitwise-multi-select
-                                v-model="product.fit"
-                                :options="fitSelectOptions"></bitwise-multi-select>
+                        <form-row>
+                            <template slot="label">Fit type:</template>
+                            <template slot="value">
+                                <bitwise-multi-select
+                                    v-model="product.fit"
+                                    :options="fitSelectOptions" />
+                            </template>
                         </form-row>
-
                     </div>
                 </div>
             </div>
@@ -427,22 +499,23 @@ export default {
                 <div class="g-spec-label">Shipping</div>
                 <div class="g-spec-content">
                     <div class="formContainer">
-
                         <!-- package type -->
-                        <form-row label="Shipping package type:">
-                            <!-- <bitwise-multi-select
+                        <form-row>
+                            <template slot="label">Shipping package type:</template>
+                            <template slot="value">
+                                <!-- <bitwise-multi-select
                                 v-model="product.shipping_package_type"
                                 :options="packageTypeSelectOptions"></bitwise-multi-select> -->
-                            <el-select v-model="product.shipping_package_type">
-                                <el-option
-                                    v-for="(val, key) in packageTypeSelectOptions"
-                                    :key="val"
-                                    :label="key"
-                                    :value="val">
-                                </el-option>
-                            </el-select>
+                                <el-select v-model="product.shipping_package_type">
+                                    <el-option
+                                        v-for="(val, key) in packageTypeSelectOptions"
+                                        :key="val"
+                                        :label="key"
+                                        :value="val">
+                                    </el-option>
+                                </el-select>
+                            </template>
                         </form-row>
-
                     </div>
                 </div>
             </div>

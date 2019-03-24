@@ -141,33 +141,42 @@ export default {
                 <div class="g-spec">
                     <div class="g-spec-label">Personal</div>
                     <div class="g-spec-content">
-
                         <!-- name -->
-                        <form-row label="Name:">
-                            <el-input v-model="artist.name"></el-input>
+                        <form-row>
+                            <template slot="label">Name:</template>
+                            <template slot="value">
+                                <el-input v-model="artist.name" />
+                            </template>
                         </form-row>
 
                         <!-- email -->
-                        <form-row label="Email:">
-                            <el-input v-model="artist.email"></el-input>
+                        <form-row>
+                            <template slot="label">Email:</template>
+                            <template slot="value">
+                                <el-input v-model="artist.email" />
+                            </template>
                         </form-row>
 
                         <!-- short description -->
-                        <form-row label="Short description:">
-                            <el-input
-                                v-model="artist.description_short"
-                                type="textarea"
-                                :rows="2"></el-input>
+                        <form-row>
+                            <template slot="label">Short description:</template>
+                            <template slot="value">
+                                <el-input
+                                    v-model="artist.description_short"
+                                    type="textarea" />
+                            </template>
                         </form-row>
 
                         <!-- long description -->
-                        <form-row label="Long description:">
-                            <el-input
-                                v-model="artist.description_long"
-                                type="textarea"
-                                :rows="2"></el-input>
+                          <form-row>
+                            <template slot="label">Long description:</template>
+                            <template slot="value">
+                                <el-input
+                                    v-model="artist.description_long"
+                                    type="textarea"
+                                    :rows="2" />
+                            </template>
                         </form-row>
-
                     </div>
                 </div>
 
@@ -175,22 +184,31 @@ export default {
                     <div class="g-spec-label">Address</div>
                     <div class="g-spec-content">
                         <!-- city -->
-                        <form-row label="City:">
-                            <el-input v-model="artist.city"></el-input>
+                        <form-row>
+                            <template slot="label">City:</template>
+                            <template slot="value">
+                                <el-input v-model="artist.city" />
+                            </template>
                         </form-row>
 
                         <!-- state / province -->
-                        <form-row label="State / Province:">
-                            <select-state-province
-                                v-model.trim="artist.prov_state"
-                                :country="artist.country" />
+                        <form-row>
+                            <template slot="label">State / Province:</template>
+                            <template slot="value">
+                                <select-state-province
+                                    v-model.trim="artist.prov_state"
+                                    :country="artist.country" />
+                            </template>
                         </form-row>
 
                         <!-- country -->
-                        <form-row label="Country:">
-                            <country-select
-                                :init-value="artist.country"
-                                @change="(val) => { artist.country = val }" />
+                        <form-row>
+                            <template slot="label">Country:</template>
+                            <template slot="value">
+                                <country-select
+                                    :init-value="artist.country"
+                                    @change="(val) => { artist.country = val }" />
+                            </template>
                         </form-row>
                     </div>
                 </div>
@@ -199,27 +217,37 @@ export default {
                     <div class="g-spec-label">General</div>
                     <div class="g-spec-content">
                         <!-- created -->
-                        <form-row label="Created:">{{ artist.created_at | format8601 }}</form-row>
+                        <form-row>
+                            <template slot="label">Created:</template>
+                            <template slot="value">
+                                {{ artist.created_at | format8601 }}
+                            </template>
+                        </form-row>
 
                         <!-- updated -->
-                        <form-row label="Updated:">{{ artist.updated_at | format8601}}</form-row>
+                        <form-row>
+                            <template slot="label">Updated:</template>
+                            <template slot="value">
+                                {{ artist.updated_at | format8601 }}
+                            </template>
+                        </form-row>
                     </div>
                 </div>
 
                 <div class="g-spec">
                     <div class="g-spec-label"></div>
                     <div class="g-spec-content">
+                        <form-row>
+                            <template slot="value">
+                                <div class="ptl">
+                                    <el-button
+                                        type="primary"
+                                        @click="submit(artist)">SUBMIT</el-button>
 
-                        <form-row label="">
-                            <div class="ptl">
-                                <el-button
-                                    type="primary"
-                                    @click="submit(artist)">SUBMIT</el-button>
-
-                                <el-button @click="goToProductArtistList">CANCEL</el-button>
-                            </div>
+                                    <el-button @click="goToProductArtistList">CANCEL</el-button>
+                                </div>
+                            </template>
                         </form-row>
-
                     </div>
                 </div>
 
