@@ -1,0 +1,15 @@
+<script>
+import svg_icon_mixin from '@/mixins/svg_icon_mixin';
+
+export default {
+    mixins: [
+        svg_icon_mixin
+    ]
+}
+</script>
+
+<template>
+    <icon-base :width="width" :height="height" :class-name="className" :icon-name="iconName">
+        <path d="M9.25 7h-0.25v-3c0-1.654-1.346-3-3-3h-2c-1.654 0-3 1.346-3 3v3h-0.25c-0.412 0-0.75 0.338-0.75 0.75v7.5c0 0.412 0.338 0.75 0.75 0.75h8.5c0.412 0 0.75-0.338 0.75-0.75v-7.5c0-0.412-0.338-0.75-0.75-0.75zM3 4c0-0.551 0.449-1 1-1h2c0.551 0 1 0.449 1 1v3h-4v-3z"></path>
+    </icon-base>
+</template>

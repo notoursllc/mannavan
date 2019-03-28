@@ -26,12 +26,12 @@ export default {
         }
 
         this.$store.dispatch('ui/IN_CHECKOUT_FLOW', true);
-        this.$store.dispatch('ui/pageTitle', this.$t('Checkout'));
+        this.$store.dispatch('ui/pageTitle', this.$t('Secure Checkout'));
     },
 
     head() {
         return {
-            title: this.$t('Checkout'),
+            title: this.$t('Secure Checkout'),
             meta: [
                 { vmid: 'description', name: 'description', content: `Your Shopping Cart at ${this.getSiteName()}` }
             ]

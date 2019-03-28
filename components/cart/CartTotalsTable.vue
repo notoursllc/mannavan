@@ -26,7 +26,7 @@
 
 
 <template>
-    <div v-if="cart.num_items">
+    <div v-if="cart.num_items" class="displayTable widthAll">
         <!-- subtotal -->
         <div class="displayTableRow">
             <div class="displayTableCell prl" :class="labelClass">

@@ -8,7 +8,6 @@
                 required: true
             },
 
-            // TODO: still needs implementation in template
             showStrikethrough: {
                 type: Boolean,
                 default: true
@@ -40,7 +39,7 @@
 
 <template>
     <div class="inlineBlock">
-        <div v-if="salePrice && basePrice">
+        <div v-if="salePrice && basePrice && showStrikethrough">
             <div class="colorGrayLighter strikethrough mrs basePrice">{{ basePrice }}</div>
             <div>{{ salePrice }}</div>
         </div>

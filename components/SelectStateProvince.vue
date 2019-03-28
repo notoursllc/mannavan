@@ -10,8 +10,7 @@
     export default{
         props: {
             value: {
-                type: String,
-                default: ''
+                type: String
             },
 
             placeholder: {
@@ -47,46 +46,54 @@
 
         methods: {
             emitChange(val) {
+                this.selectedState = val;
                 this.$emit('input', val)
             }
         },
 
-        watch: {
-            'value' (to, from) {
-                this.selectedState = to;
-            },
+        created: function() {
+            this.$watch(
+                'value',
+                function(newVal, oldVal) {
+                    this.selectedState = newVal;
+                },
+                { immediate: true }
+            )
 
-            /**
-             * Clear the previously selected state when the country changes
-             */
-            'country' (to, from) {
-                this.selectedState = null;
-                this.emitChange(null);
-            }
+            this.$watch(
+                'country',
+                function(newVal, oldVal) {
+                    this.selectedState = null;
+                    this.emitChange(null);
+                }
+            )
         }
     }
 </script>
 
 
 <template>
-    <el-select v-if="stateOptions"
-               filterable
-               v-model="selectedState"
-               :placeholder="placeholder"
-               :no-match-text="$t('No matching values')"
-               @change="emitChange"
-               :disabled="disabled"
-               class="widthAll">
-        <el-option
+    <div class="inlineBlock widthAll">
+        <el-select
+            v-if="stateOptions"
+            filterable
+            v-model="selectedState"
+            :placeholder="placeholder"
+            :no-match-text="$t('No matching values')"
+            @change="emitChange"
+            :disabled="disabled"
+            class="widthAll">
+            <el-option
                 v-for="(label, abbr) in stateOptions"
                 :key="abbr"
                 :label="$t(label)"
                 :value="abbr">
-        </el-option>
-    </el-select>
+            </el-option>
+        </el-select>
 
-    <el-input v-else
-            v-model="selectedState"
-            @change="emitChange"
-            :disabled="disabled"></el-input>
+        <el-input v-else
+                v-model="selectedState"
+                @change="emitChange"
+                :disabled="disabled"></el-input>
+    </div>
 </template>

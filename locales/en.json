@@ -4,6 +4,7 @@
     "About": "About",
     "About Billing and Shipping Addresses": "About Billing and Shipping Addresses",
     "accept_privacy_and_tos": "By placing your order, you agree to {siteName} {linkPrivacy} and {linkTos}.",
+    "Address_or_PO_Box": "Address (or PO Box)",
     "ADD TO CART": "ADD TO CART",
     "Added to Cart": "Added to Cart",
     "ADDRESS LINE 1": "ADDRESS LINE 1",
@@ -18,7 +19,6 @@
     "Are you sure you want to return to your Shopping Cart?": "Are you sure you want to return to your Shopping Cart?",
     "Artist": "Artist",
 
-    "BILLING ADDRESS": "BILLING ADDRESS",
     "Billing address": "Billing address",
 
     "cancel": "cancel",
@@ -45,7 +45,6 @@
     "CONFIRM": "CONFIRM",
     "Contact Us!": "Contact Us!",
     "CONTINUE": "CONTINUE",
-    "CONTINUE TO PAYMENT": "CONTINUE TO PAYMENT",
     "CONTINUE TO SHIPPING METHOD": "CONTINUE TO SHIPPING METHOD",
     "CONTINUE SHOPPING": "CONTINUE SHOPPING",
     "correct_address_statement": "If the address contains typos or other errors, your package may be undeliverable.",
@@ -72,7 +71,6 @@
     "Finding your security code": "Finding your security code",
     "FIRST NAME": "FIRST NAME",
     "First name": "First name",
-
     "FIT_TYPE_BOYS": "Boys",
     "FIT_TYPE_GIRLS": "Girls",
     "FIT_TYPE_MENS": "Mens",
@@ -82,6 +80,7 @@
     "Hip": "Hip",
     "Hip measurement": "Hip measurement",
     "hip_measurement_description": "The hip is measured around the circumference of the body, at the bottom of the shirt.",
+    "Home Delivery": "Home Delivery",
 
     "In inches": "In inches",
     "Introducing Breadvan": "Introducing Breadvan",
@@ -118,7 +117,6 @@
     "Pay with PAYPAL": "Pay with PAYPAL",
     "PAYMENT": "PAYMENT",
     "Payment method": "Payment method",
-    "PAYMENT METHOD": "PAYMENT METHOD",
     "Payment method error": "Payment method error",
     "Payment not found": "Payment not found",
     "PAYPAL": "PAYPAL",
@@ -147,6 +145,7 @@
     "Product not found": "Product not found",
     "Products": "Products",
 
+    "quantity": "quantity",
     "Quantity": "Quantity",
 
     "RECEIPT": "RECEIPT",
@@ -158,9 +157,13 @@
     "returns_help": "For help with Exchanging or Returning an item, please contact us at",
 
     "SAME AS SHIPPING ADDRESS": "SAME AS SHIPPING ADDRESS",
+    "SAVE": "SAVE",
+    "Secure Checkout": "Secure Checkout",
+    "Secure Payment": "Secure Payment",
     "Ship to": "Ship to",
     "SHIPPING": "SHIPPING",
     "Shipping": "Shipping",
+    "Shipping & Handling": "Shipping & Handling",
     "SHIPPING ADDRESS": "SHIPPING ADDRESS",
     "Shipping address": "Shipping address",
     "SHIPPING METHOD": "SHIPPING METHOD",
@@ -190,6 +193,7 @@
     "Sleeve measurement": "Sleeve measurement",
     "sleeve_measurement_description": "The sleeve length is measured from the shoulder seam to the end of the sleeve.",
     "Sorry this item does not have any sizes available": "Sorry this item does not have any sizes available",
+    "Standard": "Standard",
     "STATE/PROVINCE/REGION": "STATE/PROVINCE/REGION",
     "State/Province/Region": "State/Province/Region",
     "Stay in checkout": "Stay in checkout",

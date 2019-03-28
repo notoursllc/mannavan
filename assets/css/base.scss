@@ -109,7 +109,7 @@ ul.disc {
 
 
 .pageContainerMax {
-    padding: 40px;
+    padding: 20px;
     width: 100%;
 }
 @media #{$only-screen-and-min-width-m}  {
@@ -164,9 +164,9 @@ ul.disc {
     color: $colorRed;
 }
 
-.g-spec {
+.g-spec,
+.g-spec-locked {
     display: block;
-    margin-top: 20px;
 
     &.no-zebra {
         background-color: inherit !important;
@@ -195,7 +195,7 @@ ul.disc {
     }
 }
 
-@media all and (min-width: 63em) {
+@media #{$medium-and-up} {
     .g-spec {
         display: table-row;
 
