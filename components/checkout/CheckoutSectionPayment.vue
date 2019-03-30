@@ -88,11 +88,13 @@ export default {
                 this.inputStatus['sq-cvv'] === 'success' &&
                 this.inputStatus['sq-postal-code'] === 'success')) {
 
-                this.$emit('success', true);
+                // this.$emit('success', true);
+                this.$nuxt.$emit('CHECKOUT_PAYMENT_FORM_VALID', true);
                 return;
             }
 
-            this.$emit('failed', true);
+            // this.$emit('failed', true);
+            this.$nuxt.$emit('CHECKOUT_PAYMENT_FORM_VALID', false);
         },
 
         handlePaymentFormSuccess: function() {
@@ -100,7 +102,6 @@ export default {
             // this.$nuxt.$emit('CHECKOUT_PAYMENT_FORM_SUCCESS', this.count);
             this.paymentMethodButtonEnabled = true;
         },
-
 
         handlePaymentFormFailed: function() {
             console.log("HANDLING FORM FAILURE")
@@ -110,13 +111,6 @@ export default {
         onPaymentMethodChange(val) {
             this.$nuxt.$emit('CHECKOUT_PAYMENT_METHOD', val);
         }
-    },
-
-
-    created() {
-        // this.$nuxt.$on('INC_COUNT', data => {
-        //     this.numberOfClicks = data;
-        // });
     },
 
 

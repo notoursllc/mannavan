@@ -32,6 +32,14 @@ export default {
         shopping_cart_mixin
     ],
 
+    data: function() {
+        return {
+            showDetails: false,
+            loading: false,
+            shippingFormIsValid: false
+        }
+    },
+
     computed: {
         ...mapGetters({
             shoppingCart: 'shoppingcart/cart',
@@ -39,15 +47,12 @@ export default {
         }),
     },
 
-    data: function() {
-        return {
-            shippingButtonEnabled: false,
-            showDetails: false,
-            loading: false
-        }
-    },
-
     methods: {
+        emit: function(isValid) {
+            // console.log("EMIT: CHECKOUT_SHIPPING_FORM_VALID", isValid)
+            this.$nuxt.$emit('CHECKOUT_SHIPPING_FORM_VALID', isValid);
+        },
+
         updateShippingStateFromValidation: function(obj) {
             // Just updating the shipping attributes:
             let updates = {};
@@ -91,11 +96,11 @@ export default {
                     }
                 }
 
-                this.$nuxt.$emit('CHECKOUT_SHIPPING_FORM_SUCCESS', true);
+                this.emit(true);
                 this.showDetails = true;
             }
             catch(err) {
-                this.$nuxt.$emit('CHECKOUT_SHIPPING_FORM_FAILED');
+                this.emit(false);
                 this.showDetails = false;
 
                 currentNotification = this.$notify({
@@ -208,7 +213,14 @@ export default {
 
         onChangeClick: function() {
             this.showDetails = false;
-            this.$nuxt.$emit('CHECKOUT_SHIPPING_FORM_SUCCESS', false);
+            this.emit(false);
+        },
+
+        onShippingFormValid(isValid) {
+            // console.log("ON SHIPPING FORM VALID", isValid)
+            this.shippingFormIsValid = isValid;
+            this.showDetails = isValid;
+            this.emit(isValid);
         }
     }
 }
@@ -227,7 +239,7 @@ export default {
             <div v-show="!showDetails">
                 <shipping-billing-form
                     type="shipping"
-                    @valid="val => { shippingButtonEnabled = val }" />
+                    @valid="onShippingFormValid" />
 
                 <div class="ptm displayTable fs14">
                     <shipping-billing-help></shipping-billing-help>
@@ -237,12 +249,12 @@ export default {
                     <el-button
                         type="success"
                         @click="submitShippingForm"
-                        :disabled="!shippingButtonEnabled"
+                        :disabled="!shippingFormIsValid"
                         round>{{ $t('SAVE') }}</el-button>
 
                     <bottom-popover
                         width="225px"
-                        v-show="!shippingButtonEnabled">{{ $t('fill_out_form_warning') }}</bottom-popover>
+                        v-show="!shippingFormIsValid">{{ $t('fill_out_form_warning') }}</bottom-popover>
                 </div>
             </div>
             <div v-show="showDetails" class="fs14">

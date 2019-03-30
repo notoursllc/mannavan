@@ -1,16 +1,23 @@
 <script>
 import Vue from 'vue'
 import { mapGetters } from 'vuex'
+import { Notification, Button, Loading } from 'element-ui'
 import CheckoutSectionShipping from '@/components/checkout/CheckoutSectionShipping'
 import CheckoutSectionPostage from '@/components/checkout/CheckoutSectionPostage'
 import CheckoutSectionPayment from '@/components/checkout/CheckoutSectionPayment'
 import CheckoutSectionBilling from '@/components/checkout/CheckoutSectionBilling'
-import CheckoutSectionButton from '@/components/checkout/CheckoutSectionButton'
-// import CartItems from '@/components/cart/CartItems'
 import CartItemsMini from '@/components/cart/CartItemsMini'
 import CartTotalsTable from '@/components/cart/CartTotalsTable'
+import SiteName from '@/components/SiteName'
+import BottomPopover from '@/components/BottomPopover'
 import shopping_cart_mixin from '@/mixins/shopping_cart_mixin'
 import app_mixin from '@/mixins/app_mixin'
+
+Vue.use(Button);
+Vue.prototype.$notify = Notification;
+
+let currentNotification = null;
+
 
 export default {
     components: {
@@ -18,10 +25,10 @@ export default {
         CheckoutSectionPostage,
         CheckoutSectionPayment,
         CheckoutSectionBilling,
-        CheckoutSectionButton,
-        // CartItems,
         CartItemsMini,
-        CartTotalsTable
+        CartTotalsTable,
+        SiteName,
+        BottomPopover
     },
 
     mixins: [
@@ -31,8 +38,13 @@ export default {
 
     data: function() {
         return {
-            paymentMethod: null,
-            shippingFormDone: false,
+            paymentMethod: 'CREDIT_CARD',
+            placeOrderButtonLoading: false,
+            validations: {
+                shippingForm: false,
+                billingForm: false,
+                paymentForm: false,
+            }
         }
     },
 
@@ -40,32 +52,118 @@ export default {
         ...mapGetters({
             shoppingCart: 'shoppingcart/cart'
         }),
+
+        placeOrderButtonEnabled() {
+            return this.validations.shippingForm && this.validations.billingForm && this.validations.paymentForm;
+        }
+    },
+
+    methods: {
+        setBillingData: async function() {
+            if(this.shoppingCart.billingSameAsShipping) {
+                let shippingKeys = [
+                    'firstName',
+                    'lastName',
+                    'streetAddress',
+                    'extendedAddress',
+                    'company',
+                    'city',
+                    'state',
+                    'postalCode',
+                    'countryCodeAlpha2'
+                ];
+
+                let cart = cloneDeep(this.shoppingCart);
+
+                shippingKeys.forEach((item) => {
+                    cart[`billing_${item}`] = cart[`shipping_${item}`]
+                });
+
+                await this.$store.dispatch('shoppingcart/CART_SET', cart);
+            }
+            return;
+        },
+
+        submitPaymentForm: async function() {
+            await this.setBillingData();
+            this.placeOrderButtonLoading = true;
+
+            if(this.paymentMethod === 'PAYPAL') {
+                this.tokenizePaypal();
+            }
+            else {
+                // TODO: tokenize aquare fields
+                // this.tokenizeHostedFields();
+                // this.$nuxt.$emit('CHECKOUT_SUBMIT_PAYMENT_FORM', true);
+            }
+        },
+
+        doCheckout: async function(nonce) {
+            try {
+                let self = this;
+
+                const result = await this.checkout({
+                    nonce: nonce,
+                    ...this.billingAttributes
+                });
+
+                this.$store.dispatch('shoppingcart/CHECKOUT_CLEANUP');
+
+                // Not going to display any error to the user if braintree fails
+                // to tear down.
+                this.braintree.hostedFieldsInstance.teardown((teardownErr) => {
+                    if (teardownErr) {
+                        console.log('There was an error tearing it down!', teardownErr.message);
+                        this.getBraintreeErrorMessage(teardownErr);
+                    }
+                });
+
+                return this.$router.push({
+                    name: 'order-id',
+                    params: { id: result.transactionId }
+                });
+            }
+            catch(error) {
+                currentNotification = this.$notify({
+                    type: 'error',
+                    title: `${ this.$t('Error placing order') }:`,
+                    message: self.getApiErrorMessage(error),
+                    duration: 0
+                });
+            }
+        },
     },
 
     created() {
-        this.$store.dispatch('ui/IN_CHECKOUT_FLOW', true);
-        this.$store.dispatch('ui/pageTitle', this.$t('Checkout'));
-
         if(this.cartEmptyRedirect(this.shoppingCart)) {
             return;
         }
+
+        this.$store.dispatch('ui/IN_CHECKOUT_FLOW', true);
+        this.$store.dispatch('ui/pageTitle', this.$t('Checkout'));
 
         this.$nuxt.$on('CHECKOUT_PAYMENT_METHOD', (paymentMethod) => {
             this.paymentMethod = paymentMethod;
         });
 
-        this.$nuxt.$on('CHECKOUT_SHIPPING_FORM_SUCCESS', (isSuccess) => {
-            this.shippingFormDone = isSuccess;
+        this.$nuxt.$on('CHECKOUT_SHIPPING_FORM_VALID', (isValid) => {
+            this.validations.shippingForm = isValid;
         });
 
-        this.$nuxt.$on('CHECKOUT_SHIPPING_FORM_FAILED', () => {
-            this.shippingFormDone = false;
+        this.$nuxt.$on('CHECKOUT_BILLING_FORM_VALID', (isValid) => {
+            this.validations.billingForm = isValid;
+        });
+
+        this.$nuxt.$on('CHECKOUT_PAYMENT_FORM_VALID', (isValid) => {
+            this.validations.paymentForm = isValid;
         });
     },
 
     beforeDestroy() {
         this.$nuxt.$off('CHECKOUT_PAYMENT_METHOD');
-        this.$nuxt.$off('CHECKOUT_SHIPPING_FORM_SUCCESS');
+        this.$nuxt.$off('CHECKOUT_SHIPPING_FORM_VALID');
+        this.$nuxt.$off('CHECKOUT_BILLING_FORM_VALID');
+        this.$nuxt.$off('CHECKOUT_PAYMENT_FORM_VALID');
     },
 
     head() {
@@ -86,20 +184,40 @@ export default {
             <div class="order-wrapper">
                 <checkout-section-shipping />
 
-                <div v-show="shippingFormDone">
+                <div v-show="validations.shippingForm">
                     <checkout-section-postage />
                     <checkout-section-payment />
                     <checkout-section-billing v-show="paymentMethod === 'CREDIT_CARD'" />
-                    <checkout-section-button />
+
+                    <div class="tac">
+                        <el-button type="success"
+                                    class="is-huge"
+                                    @click="submitPaymentForm"
+                                    :loading="placeOrderButtonLoading"
+                                    :disabled="!placeOrderButtonEnabled"
+                                    round>
+                            <span v-show="paymentMethod === 'PAYPAL'">{{ $t('Pay with PAYPAL') }}</span>
+                            <span v-show="paymentMethod !== 'PAYPAL'">{{ $t('PLACE YOUR ORDER') }}</span>
+                        </el-button>
+
+                        <bottom-popover width="200px"
+                                        v-show="!placeOrderButtonEnabled" >{{ $t('fill_out_form_warning') }}</bottom-popover>
+                    </div>
+
+                    <div class="fs12 mtl tac">
+                        <i18n path="accept_privacy_and_tos" tag="div">
+                            <span place="siteName"><site-name></site-name>'s</span>
+                            <span place="linkPrivacy"><nuxt-link :to="{name: 'privacy'}">{{ $t('Privacy Notice') }}</nuxt-link></span>
+                            <span place="linkTos"><nuxt-link :to="{name: 'conditions-of-use'}">{{ $t('Conditions of Use') }}</nuxt-link></span>
+                        </i18n>
+                    </div>
+
                 </div>
             </div>
         </div>
 
 
         <div class="cart-container">
-            <!-- <cart-items
-                :shopping-cart="shoppingCart"
-                :allow-edit="false" /> -->
             <cart-items-mini :shopping-cart="shoppingCart" />
 
             <div class="ptl">
