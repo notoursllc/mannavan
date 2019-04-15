@@ -7,7 +7,6 @@ import IconCreditCard from '@/components/icons/IconCreditCard'
 import IconPaypal from '@/components/icons/IconPaypal'
 import IconLock from '@/components/icons/IconLock'
 import CreditCardIcon from '@/components/CreditCardIcon'
-import PaymentForm from '@/components/checkout/PaymentForm'
 import FormRow from '@/components/FormRow'
 import shopping_cart_mixin from '@/mixins/shopping_cart_mixin'
 import app_mixin from '@/mixins/app_mixin'
@@ -33,7 +32,6 @@ export default {
         IconCreditCard,
         IconPaypal,
         IconLock,
-        PaymentForm,
         CreditCardIcon,
         FormRow
     },
@@ -473,47 +471,32 @@ export default {
 
 
 <style lang="scss">
-    @import "@/assets/css/components/_mixins.scss";
+@import "@/assets/css/components/_mixins.scss";
 
-    .card-icon {
-        position: absolute;
-        top: 1px;
-        right: 0px;
+.card-icon {
+    position: absolute;
+    top: 1px;
+    right: 0px;
 
-        img {
-            width: 65px;
-        }
+    img {
+        width: 65px;
     }
-
-    .el-input-error .el-input__inner {
-        border: 1px solid red !important;
-    }
-
-    .cc-info-container {
-        @include flexbox();
-        @include flex-direction(row);
-        @include flex-wrap(nowrap);
-        @include justify-content(space-between);
-
-        .cc-info-item {
-            width: 30%;
-            position: relative;
-        }
-    }
-
-
-.errorbox {
-  line-height: 14px;
-  text-align: left;
-}
-.error {
-  font-size: 10px;
-  color: rgb(164, 0, 30);
-  width: 45%;
-  display: inline-block;
-  margin-top: -10px;
-  font-weight: 400;
 }
 
+.el-input-error .el-input__inner {
+    border: 1px solid red !important;
+}
+
+.cc-info-container {
+    @include flexbox();
+    @include flex-direction(row);
+    @include flex-wrap(nowrap);
+    @include justify-content(space-between);
+
+    .cc-info-item {
+        width: 30%;
+        position: relative;
+    }
+}
 </style>
 
