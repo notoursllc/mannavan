@@ -1,7 +1,8 @@
 <script>
 import Vue from 'vue'
 import { mapGetters } from 'vuex'
-import { Notification, Button, Loading } from 'element-ui'
+import { Button, Loading } from 'element-ui'
+import cloneDeep from 'lodash.clonedeep'
 import CheckoutSectionShipping from '@/components/checkout/CheckoutSectionShipping'
 import CheckoutSectionPostage from '@/components/checkout/CheckoutSectionPostage'
 import CheckoutSectionPayment from '@/components/checkout/CheckoutSectionPayment'
@@ -14,7 +15,7 @@ import shopping_cart_mixin from '@/mixins/shopping_cart_mixin'
 import app_mixin from '@/mixins/app_mixin'
 
 Vue.use(Button);
-Vue.prototype.$notify = Notification;
+Vue.use(Loading.directive);
 
 let currentNotification = null;
 
@@ -38,8 +39,8 @@ export default {
 
     data: function() {
         return {
+            loading: false,
             paymentMethod: 'CREDIT_CARD',
-            placeOrderButtonLoading: false,
             validations: {
                 shippingForm: false,
                 billingForm: false,
@@ -85,8 +86,8 @@ export default {
         },
 
         submitPaymentForm: async function() {
+            this.loading = true;
             await this.setBillingData();
-            this.placeOrderButtonLoading = true;
 
             if(this.paymentMethod === 'PAYPAL') {
                 this.tokenizePaypal();
@@ -94,44 +95,9 @@ export default {
             else {
                 // TODO: tokenize aquare fields
                 // this.tokenizeHostedFields();
-                // this.$nuxt.$emit('CHECKOUT_SUBMIT_PAYMENT_FORM', true);
+                this.$nuxt.$emit('CHECKOUT_SUBMIT_PAYMENT_FORM', true);
             }
-        },
-
-        doCheckout: async function(nonce) {
-            try {
-                let self = this;
-
-                const result = await this.checkout({
-                    nonce: nonce,
-                    ...this.billingAttributes
-                });
-
-                this.$store.dispatch('shoppingcart/CHECKOUT_CLEANUP');
-
-                // Not going to display any error to the user if braintree fails
-                // to tear down.
-                this.braintree.hostedFieldsInstance.teardown((teardownErr) => {
-                    if (teardownErr) {
-                        console.log('There was an error tearing it down!', teardownErr.message);
-                        this.getBraintreeErrorMessage(teardownErr);
-                    }
-                });
-
-                return this.$router.push({
-                    name: 'order-id',
-                    params: { id: result.transactionId }
-                });
-            }
-            catch(error) {
-                currentNotification = this.$notify({
-                    type: 'error',
-                    title: `${ this.$t('Error placing order') }:`,
-                    message: self.getApiErrorMessage(error),
-                    duration: 0
-                });
-            }
-        },
+        }
     },
 
     created() {
@@ -156,6 +122,14 @@ export default {
 
         this.$nuxt.$on('CHECKOUT_PAYMENT_FORM_VALID', (isValid) => {
             this.validations.paymentForm = isValid;
+
+            if(!isValid) {
+                this.loading = false;
+            }
+        });
+
+        this.$nuxt.$on('CHECKOUT_PAYMENT_FORM_LOADING', (isLoading) => {
+            this.loading = isLoading;
         });
     },
 
@@ -164,6 +138,7 @@ export default {
         this.$nuxt.$off('CHECKOUT_SHIPPING_FORM_VALID');
         this.$nuxt.$off('CHECKOUT_BILLING_FORM_VALID');
         this.$nuxt.$off('CHECKOUT_PAYMENT_FORM_VALID');
+        this.$nuxt.$off('CHECKOUT_PAYMENT_FORM_LOADING');
     },
 
     head() {
@@ -180,7 +155,7 @@ export default {
 <template>
     <div class="checkout-container">
 
-        <div class="order-container">
+        <div class="order-container" v-loading="loading">
             <div class="order-wrapper">
                 <checkout-section-shipping />
 
@@ -193,7 +168,6 @@ export default {
                         <el-button type="success"
                                     class="is-huge"
                                     @click="submitPaymentForm"
-                                    :loading="placeOrderButtonLoading"
                                     :disabled="!placeOrderButtonEnabled"
                                     round>
                             <span v-show="paymentMethod === 'PAYPAL'">{{ $t('Pay with PAYPAL') }}</span>

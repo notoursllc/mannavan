@@ -245,9 +245,10 @@ export default {
                     <shipping-billing-help></shipping-billing-help>
                 </div>
 
-                <div class="ptm">
+                <div class="ptm tac">
                     <el-button
                         type="success"
+                        class="is-huge"
                         @click="submitShippingForm"
                         :disabled="!shippingFormIsValid"
                         round>{{ $t('SAVE') }}</el-button>

@@ -1,6 +1,7 @@
 <script>
 import Vue from 'vue'
-import { Select, Option, Dialog } from 'element-ui'
+import { mapGetters } from 'vuex'
+import { Select, Option, Dialog, Notification } from 'element-ui'
 import StatusWrapper from '@/components/StatusWrapper'
 import IconCreditCard from '@/components/icons/IconCreditCard'
 import IconPaypal from '@/components/icons/IconPaypal'
@@ -8,10 +9,15 @@ import IconLock from '@/components/icons/IconLock'
 import CreditCardIcon from '@/components/CreditCardIcon'
 import PaymentForm from '@/components/checkout/PaymentForm'
 import FormRow from '@/components/FormRow'
+import shopping_cart_mixin from '@/mixins/shopping_cart_mixin'
+import app_mixin from '@/mixins/app_mixin'
 
 Vue.use(Select)
 Vue.use(Option)
 Vue.use(Dialog)
+Vue.prototype.$notify = Notification;
+
+let currentNotification = null;
 
 export default {
     props: {
@@ -20,6 +26,7 @@ export default {
             default: false
         }
     },
+
 
     components: {
         StatusWrapper,
@@ -31,13 +38,19 @@ export default {
         FormRow
     },
 
+
+    mixins: [
+        shopping_cart_mixin,
+        app_mixin
+    ],
+
+
     data: function() {
         return {
             paymentForm: null,
             paymentFormIsReady: false,
             paymentMethod: 'CREDIT_CARD',
             paymentMethodButtonEnabled: false,
-            errors: [],
             showCvvDialog: false,
             masterpass: false,
             applePay: false,
@@ -53,33 +66,20 @@ export default {
         }
     },
 
-    watch: {
-        showPaymentForm: function() {
-            if (!this.showPaymentForm) {
-                return 1;
-            }
-            this.paymentForm.build();
-        }
-    },
 
     computed: {
+        ...mapGetters({
+            billingAttributes: 'shoppingcart/billingAttributes',
+        }),
+
         showSquareInputFields() {
             // Can't hide the square payment form DOM placeholders until paymentFormIsReady === true
             return !this.paymentFormIsReady || this.paymentMethod === 'CREDIT_CARD';
         }
     },
 
+
     methods: {
-        requestCardNonce: function(event) {
-            // Don't submit the form until SqPaymentForm returns with a nonce
-            event.preventDefault();
-            // Request a nonce from the SqPaymentForm object
-            // this.paymentForm.requestCardNonce();
-
-            // the nonce will be returned in the 'cardNonceResponseReceived' callback function
-            this.paymentForm.requestCardNonce();
-        },
-
         emitFormStatus: function() {
             if(this.paymentMethod === 'PAYPAL' ||
                 (this.paymentMethod === 'CREDIT_CARD' &&
@@ -110,7 +110,67 @@ export default {
 
         onPaymentMethodChange(val) {
             this.$nuxt.$emit('CHECKOUT_PAYMENT_METHOD', val);
+        },
+
+        doCheckout: async function(nonce) {
+            try {
+                let self = this;
+
+                const result = await this.checkout({
+                    nonce: nonce,
+                    ...this.billingAttributes
+                });
+
+                console.log("CHECKOUT RESPONSE", result);
+
+                this.$store.dispatch('shoppingcart/CHECKOUT_CLEANUP');
+
+                // https://docs.connect.squareup.com/api/paymentform#destroy
+                try {
+                    this.paymentForm.destroy();
+                }
+                catch(err) {
+                    // no nothing
+                }
+
+                // TODO: IS A TRANSACTION ID RETURNED FROM SQUARE?
+                return this.$router.push({
+                    name: 'order-id',
+                    params: { id: result.transactionId }
+                });
+            }
+            catch(error) {
+                console.log("CHECKOUT SEC PAYMENT CATCH", error)
+                this.closeCurrentNotification();
+
+                currentNotification = this.$notify({
+                    type: 'error',
+                    title: `${ this.$t('Error placing order') }:`,
+                    message: this.getApiErrorMessage(error),
+                    duration: 0
+                });
+
+                this.$nuxt.$emit('CHECKOUT_PAYMENT_FORM_VALID', false);
+            }
+        },
+
+        closeCurrentNotification() {
+            if(currentNotification) {
+                currentNotification.close();
+            }
         }
+    },
+
+
+    created() {
+        this.$nuxt.$on('CHECKOUT_SUBMIT_PAYMENT_FORM', () => {
+           this.paymentForm.requestCardNonce();
+        });
+    },
+
+
+    beforeDestroy() {
+        this.$nuxt.$off('CHECKOUT_SUBMIT_PAYMENT_FORM');
     },
 
 
@@ -127,20 +187,20 @@ export default {
             // Customize the CSS for SqPaymentForm iframe elements
             inputStyles: [
                 {
-                    fontSize: '18px',
+                    fontSize: '14px',
                     lineHeight: '36px'
                 }
             ],
 
             // Initialize Apple Pay placeholder ID
-            applePay: {
-                elementId: "sq-apple-pay"
-            },
+            // applePay: {
+            //     elementId: "sq-apple-pay"
+            // },
 
             // Initialize Masterpass placeholder ID
-            masterpass: {
-                elementId: "sq-masterpass"
-            },
+            // masterpass: {
+            //     elementId: "sq-masterpass"
+            // },
 
             // Initialize the credit card placeholders
             cardNumber: {
@@ -196,7 +256,6 @@ export default {
                             break;
 
                         case 'postalCodeChanged':
-                            console.log('postalCodeChanged', inputEvent);
                             self.inputStatus['sq-postal-code'] = inputStatus;
                             break;
                     }
@@ -234,18 +293,25 @@ export default {
                 */
                 cardNonceResponseReceived: function(errors, nonce, cardData) {
                     if (errors) {
+                        this.closeCurrentNotification();
+
+                        let errorMsg = [];
                         errors.forEach(function(error) {
-                            self.errors.push(error.message);
+                            errorMsg.push(error.message);
                         });
+
+                        currentNotification = self.$notify({
+                            type: 'error',
+                            title: `${ self.$t('Error placing order') }:`,
+                            message: errorMsg.join('\n'),
+                            duration: 0
+                        });
+
+                        self.$nuxt.$emit('CHECKOUT_PAYMENT_FORM_VALID', false);
                         return;
                     }
-                    // Assign the nonce value to the hidden form field
-                    document.getElementById("card-nonce").value = nonce;
-                    console.log("NONCE", nonce)
-                    self.nonce = nonce;
 
-                    // POST the nonce form to the payment processing page
-                    // document.getElementById("nonce-form").submit();
+                    self.doCheckout(nonce);
                 },
 
                 /*
@@ -253,14 +319,22 @@ export default {
                 */
                 paymentFormLoaded: function() {
                     self.paymentFormIsReady = true;
-                    console.log("paymentFormLoaded", self.paymentFormIsReady);
-                    /* HANDLE AS DESIRED */
                 }
             }
         });
 
         this.paymentForm.build();
-    }
+    },
+
+
+    watch: {
+        showPaymentForm: function() {
+            if (!this.showPaymentForm) {
+                return 1;
+            }
+            this.paymentForm.build();
+        }
+    },
 }
 </script>
 
@@ -277,121 +351,97 @@ export default {
 
         <div class="g-spec-content">
             <div>
-                <!--
-                    You should replace the action attribute of the form with the path of
-                    the URL you want to POST the nonce to (for example, "/process-card")
-                -->
-                <!-- <form id="nonce-form" novalidate action="path/to/payment/processing/page" method="post"> -->
-                    <div class="errorbox">
-                        <div class="error" v-for="error in errors" :key="error.message">{{error}}</div>
-                    </div>
+                <div class="displayTable widthAll">
+                    <!-- Payment method -->
+                    <form-row :value-class="formValueClass">
+                        <span slot="label" class="nowrap lineHeight40">{{ $t('Payment method') }}:</span>
+                        <template slot="value">
+                            <status-wrapper :success="true">
+                                <el-select
+                                    v-model="paymentMethod"
+                                    @change="onPaymentMethodChange"
+                                    placeholder="Select"
+                                    class="widthAll">
+                                    <el-option :label="$t('CREDIT CARD')" value="CREDIT_CARD">
+                                        <span class="floatLeft">{{ $t('CREDIT CARD') }}</span>
+                                        <icon-credit-card
+                                            icon-name="credit_card"
+                                            width="20px"
+                                            class="floatRight mts" />
+                                    </el-option>
+                                    <el-option :label="$t('PAYPAL')" value="PAYPAL">
+                                        <span class="floatLeft">{{ $t('PAYPAL') }}</span>
+                                        <icon-paypal
+                                            icon-name="credit_card"
+                                            width="20px"
+                                            class="floatRight mts" />
+                                    </el-option>
+                                </el-select>
+                            </status-wrapper>
+                        </template>
+                    </form-row>
 
-                    <div class="displayTable widthAll">
-                        <!-- Payment method -->
-                        <form-row :value-class="formValueClass">
-                            <span slot="label" class="nowrap lineHeight40">{{ $t('Payment method') }}:</span>
-                            <template slot="value">
-                                <status-wrapper :success="true">
-                                    <el-select
-                                        v-model="paymentMethod"
-                                        @change="onPaymentMethodChange"
-                                        placeholder="Select"
-                                        class="widthAll">
-                                        <el-option :label="$t('CREDIT CARD')" value="CREDIT_CARD">
-                                            <span class="floatLeft">{{ $t('CREDIT CARD') }}</span>
-                                            <icon-credit-card
-                                                icon-name="credit_card"
-                                                width="20px"
-                                                class="floatRight mts" />
-                                        </el-option>
-                                        <el-option :label="$t('PAYPAL')" value="PAYPAL">
-                                            <span class="floatLeft">{{ $t('PAYPAL') }}</span>
-                                            <icon-paypal
-                                                icon-name="credit_card"
-                                                width="20px"
-                                                class="floatRight mts" />
-                                        </el-option>
-                                    </el-select>
-                                </status-wrapper>
-                            </template>
-                        </form-row>
-
-                        <!-- card number -->
-                        <form-row :value-class="formValueClass" v-show="showSquareInputFields">
-                            <span slot="label" class="nowrap lineHeight40">{{ $t('Card number') }}:</span>
-                            <template slot="value">
-                                <status-wrapper
-                                    :success="inputStatus['sq-card-number'] === 'success'"
-                                    :failed="inputStatus['sq-card-number'] === 'failed'"
-                                    :className="{'widthAll': true, 'el-input-error': inputStatus['sq-card-number'] === 'failed'}">
-                                    <div id="sq-card-number"></div>
-                                    <span class="card-icon">
-                                        <credit-card-icon :card-type="cardType"></credit-card-icon>
-                                    </span>
-                                </status-wrapper>
-                            </template>
-                        </form-row>
-
-                        <!-- expiration date -->
-                        <form-row :value-class="formValueClass" v-show="showSquareInputFields">
-                            <span slot="label" class="nowrap lineHeight40">{{ $t('Expiration date') }}:</span>
-                            <template slot="value">
-                                <status-wrapper
-                                    :success="inputStatus['sq-expiration-date'] === 'success'"
-                                    :failed="inputStatus['sq-expiration-date'] === 'failed'"
-                                    :className="{'widthAll': true}">
-                                    <div id="sq-expiration-date"></div>
-                                </status-wrapper>
-                            </template>
-                        </form-row>
-
-                        <!-- cvv -->
-                        <form-row :value-class="formValueClass" v-show="showSquareInputFields">
-                            <span slot="label" class="nowrap lineHeight40">
-                                {{ $t('CVV') }}:
-                                <span class="underlineDotted fs12 cursorPointer mls" @click="showCvvDialog = true">
-                                    {{ $t("what's this?") }}
+                    <!-- card number -->
+                    <form-row :value-class="formValueClass" v-show="showSquareInputFields">
+                        <span slot="label" class="nowrap lineHeight40">{{ $t('Card number') }}:</span>
+                        <template slot="value">
+                            <status-wrapper
+                                :success="inputStatus['sq-card-number'] === 'success'"
+                                :failed="inputStatus['sq-card-number'] === 'failed'"
+                                :className="{'widthAll': true, 'el-input-error': inputStatus['sq-card-number'] === 'failed'}">
+                                <div id="sq-card-number"></div>
+                                <span class="card-icon">
+                                    <credit-card-icon :card-type="cardType"></credit-card-icon>
                                 </span>
+                            </status-wrapper>
+                        </template>
+                    </form-row>
+
+                    <!-- expiration date -->
+                    <form-row :value-class="formValueClass" v-show="showSquareInputFields">
+                        <span slot="label" class="nowrap lineHeight40">{{ $t('Expiration date') }}:</span>
+                        <template slot="value">
+                            <status-wrapper
+                                :success="inputStatus['sq-expiration-date'] === 'success'"
+                                :failed="inputStatus['sq-expiration-date'] === 'failed'"
+                                :className="{'widthAll': true}">
+                                <div id="sq-expiration-date"></div>
+                            </status-wrapper>
+                        </template>
+                    </form-row>
+
+                    <!-- cvv -->
+                    <form-row :value-class="formValueClass" v-show="showSquareInputFields">
+                        <span slot="label" class="nowrap lineHeight40">
+                            {{ $t('CVV') }}:
+                            <span class="underlineDotted fs12 cursorPointer mls" @click="showCvvDialog = true">
+                                {{ $t("what's this?") }}
                             </span>
-                            <template slot="value">
-                                <status-wrapper
-                                    :className="{'widthAll': true, 'el-input-error': inputStatus['sq-cvv'] === 'failed'}"
-                                    :success="inputStatus['sq-cvv'] === 'success'"
-                                    :failed="inputStatus['sq-cvv'] === 'failed'">
-                                    <div id="sq-cvv"></div>
-                                </status-wrapper>
-                            </template>
-                        </form-row>
+                        </span>
+                        <template slot="value">
+                            <status-wrapper
+                                :className="{'widthAll': true, 'el-input-error': inputStatus['sq-cvv'] === 'failed'}"
+                                :success="inputStatus['sq-cvv'] === 'success'"
+                                :failed="inputStatus['sq-cvv'] === 'failed'">
+                                <div id="sq-cvv"></div>
+                            </status-wrapper>
+                        </template>
+                    </form-row>
 
-                        <!-- postal code -->
-                        <form-row :value-class="formValueClass" v-show="showSquareInputFields">
-                            <span slot="label" class="nowrap lineHeight40">{{ $t('Postal code') }}:</span>
-                            <template slot="value">
-                                <status-wrapper
-                                    :className="{'widthAll': true, 'el-input-error': inputStatus['sq-postal-code'] === 'failed'}"
-                                    :success="inputStatus['sq-postal-code'] === 'success'"
-                                    :failed="inputStatus['sq-postal-code'] === 'failed'">
-                                    <div id="sq-postal-code"></div>
-                                </status-wrapper>
-                            </template>
-                        </form-row>
-                    </div>
-
-                    <input type="hidden" id="card-nonce" name="nonce">
-
-                    <div id="sq-walletbox">
-                        <div v-show="!applePay" class="wallet-not-enabled">Apple Pay for Web not enabled</div>
-                        <!-- Placeholder for Apple Pay for Web button -->
-                        <button v-show="applePay" id="sq-apple-pay" class="button-apple-pay"></button>
-
-                        <div v-show="!masterpass" class="wallet-not-enabled">Masterpass not enabled</div>
-                        <!-- Placeholder for Masterpass button -->
-                        <button v-show="masterpass" id="sq-masterpass" class="button-masterpass"></button>
-                    </div>
-                <!-- </form> -->
+                    <!-- postal code -->
+                    <form-row :value-class="formValueClass" v-show="showSquareInputFields">
+                        <span slot="label" class="nowrap lineHeight40">{{ $t('Postal code') }}:</span>
+                        <template slot="value">
+                            <status-wrapper
+                                :className="{'widthAll': true, 'el-input-error': inputStatus['sq-postal-code'] === 'failed'}"
+                                :success="inputStatus['sq-postal-code'] === 'success'"
+                                :failed="inputStatus['sq-postal-code'] === 'failed'">
+                                <div id="sq-postal-code"></div>
+                            </status-wrapper>
+                        </template>
+                    </form-row>
+                </div>
             </div>
-
-            <button @click="requestCardNonce($event)" class="productPurchase payButton">Pay</button>
 
             <!-- CVV Modal -->
             <el-dialog :title="$t('Finding your security code')"
@@ -464,77 +514,6 @@ export default {
   margin-top: -10px;
   font-weight: 400;
 }
-/* Customize the "Pay with Credit Card" button */
-.button-credit-card {
-  min-width: 200px;
-  min-height: 20px;
-  padding: 0;
-  margin: 5px;
-  line-height: 20px;
-  box-shadow: 2px 2px 1px rgb(200, 200, 200);
-  background: rgb(255, 255, 255);
-  border-radius: 5px;
-  border: 1px solid rgb(200, 200, 200);
-  font-weight: bold;
-  cursor: pointer;
-}
-.modal .payButton {
-  margin-left: 0px;
-  position: absolute;
-  bottom: 0px;
-  width: 400px;
-}
-/* Customize the "{{Wallet}} not enabled" message */
-.wallet-not-enabled {
-  min-width: 200px;
-  min-height: 40px;
-  max-height: 64px;
-  padding: 0;
-  margin: 10px;
-  line-height: 40px;
-  background: #eee;
-  border-radius: 5px;
-  font-weight: lighter;
-  font-style: italic;
-  font-family: inherit;
-  display: block;
-}
-/* Customize the Apple Pay on the Web button */
-.button-apple-pay {
-  min-width: 200px;
-  min-height: 40px;
-  max-height: 64px;
-  padding: 0;
-  margin: 10px;
-  background-image: -webkit-named-image(apple-pay-logo-white);
-  background-color: black;
-  background-size: 100% 60%;
-  background-repeat: no-repeat;
-  background-position: 50% 50%;
-  border-radius: 5px;
-  cursor: pointer;
-  display: none;
-}
-/* Customize the Masterpass button */
-.button-masterpass {
-  min-width: 200px;
-  min-height: 40px;
-  max-height: 40px;
-  padding: 0;
-  margin: 10px;
-  background-image: url(https://static.masterpass.com/dyn/img/btn/global/mp_chk_btn_147x034px.svg);
-  background-color: black;
-  background-size: 100% 100%;
-  background-repeat: no-repeat;
-  background-position: 50% 50%;
-  border-radius: 5px;
-  border-color: rgb(255, 255, 255);
-  cursor: pointer;
-}
-#sq-walletbox {
-  text-align: center;
-  vertical-align: top;
-  font-weight: bold;
-}
+
 </style>
 

@@ -40,7 +40,7 @@ module.exports = {
         SHIPPING_ADDRESS_FROM_PHONE: process.env.SHIPPING_ADDRESS_FROM_PHONE,
         SQUARE_APP_ID: process.env.NODE_ENV === 'development' ? process.env.SQUARE_SANDBOX_APP_ID : process.env.SQUARE_PRODUCTION_APP_ID,
         SQUARE_ACCESS_TOKEN: process.env.NODE_ENV === 'development' ? process.env.SQUARE_SANDBOX_ACCESS_TOKEN : process.env.SQUARE_PRODUCTION_ACCESS_TOKEN,
-        SQUARE_LOCATION_ID: process.env.SQUARE_LOCATION_ID
+        SQUARE_LOCATION_ID: process.env.NODE_ENV === 'development' ? process.env.SQUARE_SANDBOX_LOCATION_ID : process.env.SQUARE_PRODUCTION_LOCATION_ID,
     },
 
     /*

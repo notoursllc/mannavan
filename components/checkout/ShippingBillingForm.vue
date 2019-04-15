@@ -212,6 +212,32 @@
 
 <template>
     <div class="displayTable widthAll">
+        <!-- First Name -->
+        <form-row :value-class="formValueClass">
+            <span slot="label" class="lineHeight40">{{ $t('First name') }}:</span>
+            <template slot="value">
+                <status-wrapper :success="canShowGreenCheck('firstName')" :failed="canShowValidationMsg('firstName')">
+                    <el-input
+                        v-model="firstName"
+                        :class="{ 'inputError': $v.form.firstName.$error }" />
+                    <p role="alert" v-show="canShowValidationMsg('firstName')">{{ $t('Required') }}</p>
+                </status-wrapper>
+            </template>
+        </form-row>
+
+        <!-- Last Name -->
+        <form-row :value-class="formValueClass">
+            <span slot="label" class="lineHeight40">{{ $t('Last name') }}:</span>
+            <template slot="value">
+                <status-wrapper :success="canShowGreenCheck('lastName')" :failed="canShowValidationMsg('lastName')">
+                    <el-input
+                        v-model="lastName"
+                        :class="{ 'inputError': $v.form.lastName.$error }" />
+                    <p role="alert" v-show="canShowValidationMsg('lastName')">{{ $t('Required') }}</p>
+                </status-wrapper>
+            </template>
+        </form-row>
+
         <!-- Email -->
         <form-row v-if="type === 'shipping'" :value-class="formValueClass">
             <span slot="label" class="lineHeight40">{{ $t('Email address') }}:</span>
@@ -238,32 +264,6 @@
                         :init-value="countryCodeAlpha2"
                         @change="newVal => countryCodeAlpha2 = newVal" />
                     <p role="alert" v-show="canShowValidationMsg('countryCodeAlpha2')">{{ $t('Required') }}</p>
-                </status-wrapper>
-            </template>
-        </form-row>
-
-        <!-- First Name -->
-        <form-row :value-class="formValueClass">
-            <span slot="label" class="lineHeight40">{{ $t('First name') }}:</span>
-            <template slot="value">
-                <status-wrapper :success="canShowGreenCheck('firstName')" :failed="canShowValidationMsg('firstName')">
-                    <el-input
-                        v-model="firstName"
-                        :class="{ 'inputError': $v.form.firstName.$error }" />
-                    <p role="alert" v-show="canShowValidationMsg('firstName')">{{ $t('Required') }}</p>
-                </status-wrapper>
-            </template>
-        </form-row>
-
-        <!-- Last Name -->
-        <form-row :value-class="formValueClass">
-            <span slot="label" class="lineHeight40">{{ $t('Last name') }}:</span>
-            <template slot="value">
-                <status-wrapper :success="canShowGreenCheck('lastName')" :failed="canShowValidationMsg('lastName')">
-                    <el-input
-                        v-model="lastName"
-                        :class="{ 'inputError': $v.form.lastName.$error }" />
-                    <p role="alert" v-show="canShowValidationMsg('lastName')">{{ $t('Required') }}</p>
                 </status-wrapper>
             </template>
         </form-row>
@@ -305,7 +305,7 @@
 
         <!-- State -->
         <form-row :value-class="formValueClass">
-            <span slot="label" class="lineHeight40">{{ $t('State/Province/Region') }}:</span>
+            <span slot="label" class="lineHeight40 nowrap">{{ $t('State/Province/Region') }}:</span>
             <template slot="value">
                 <status-wrapper :success="canShowGreenCheck('state')" :failed="canShowValidationMsg('state')">
                     <select-state-province
@@ -321,7 +321,7 @@
 
         <!-- Postal Code -->
         <form-row :value-class="formValueClass">
-            <span slot="label" class="lineHeight40">{{ $t('Postal code') }}:</span>
+            <span slot="label" class="lineHeight40 nowrap">{{ $t('Postal code') }}:</span>
             <template slot="value">
                 <status-wrapper :success="canShowGreenCheck('postalCode')" :failed="canShowValidationMsg('postalCode')">
                     <el-input
@@ -334,7 +334,7 @@
 
         <!-- Company Name -->
         <form-row :value-class="formValueClass">
-            <span slot="label" class="lineHeight40">{{ $t('Company name') }}</span>
+            <span slot="label" class="lineHeight40 nowrap">{{ $t('Company name') }}:</span>
             <template slot="value">
                 <status-wrapper :success="canShowGreenCheck('company')">
                     <el-input
