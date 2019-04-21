@@ -23,20 +23,49 @@
                 shoppingCart: 'shoppingcart/cart'
             }),
 
-            formattedName() {
-                return this.getFormattedShippingName(this.shoppingCart.shipping_firstName, this.shoppingCart.shipping_lastName);
-            },
+            formattedOneLine() {
+                const parts = [];
 
-            formattedCityStateZip: function() {
-                return this.getFormattedCityStateZip(
-                    this.shoppingCart.shipping_city,
-                    this.shoppingCart.shipping_state,
-                    this.shoppingCart.shipping_postalCode
+                // first & last name
+                parts.push(
+                    this.getFormattedShippingName(
+                        this.shoppingCart.shipping_firstName,
+                        this.shoppingCart.shipping_lastName
+                    )
                 );
-            },
 
-            companyDisplay: function() {
-                return this.getFormattedCompanyName(this.shoppingCart.shipping_company);
+                // company
+                if(this.shoppingCart.shipping_company) {
+                    parts.push(
+                        this.getFormattedCompanyName(this.shoppingCart.shipping_company)
+                    )
+                }
+
+                // street address
+                parts.push(
+                    this.shoppingCart.shipping_streetAddress
+                )
+
+                // extended address
+                if(this.shoppingCart.shipping_extendedAddress) {
+                    parts.push(
+                        this.shoppingCart.shipping_extendedAddress
+                    )
+                }
+
+                parts.push(
+                    // city, state, zip
+                    this.getFormattedCityStateZip(
+                        this.shoppingCart.shipping_city,
+                        this.shoppingCart.shipping_state,
+                        this.shoppingCart.shipping_postalCode
+                    ),
+
+                    // country
+                    this.shoppingCart.shipping_countryCodeAlpha2
+                )
+
+                return parts.join(', ');
             }
         }
     }
@@ -45,12 +74,7 @@
 
 <template>
     <div>
-        <div>{{ formattedName }}</div>
-        <div v-if="shoppingCart.shipping_company">{{ companyDisplay }}</div>
-        <div>{{ shoppingCart.shipping_streetAddress }}</div>
-        <div v-if="shoppingCart.shipping_extendedAddress">{{ shoppingCart.shipping_extendedAddress }}</div>
-        <div>{{ formattedCityStateZip }}</div>
-        <div>{{ shoppingCart.shipping_countryCodeAlpha2 }}</div>
+        <div>{{ formattedOneLine }}</div>
         <div class="pts" v-if="showEmail">{{ shoppingCart.shipping_email }}</div>
     </div>
 </template>

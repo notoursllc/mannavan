@@ -6,7 +6,6 @@ import forEach from 'lodash.foreach'
 import cloneDeep from 'lodash.clonedeep'
 import { Notification, Loading, Button } from 'element-ui'
 import ShippingBillingForm from '@/components/checkout/ShippingBillingForm'
-import ShippingBillingHelp from '@/components/checkout/ShippingBillingHelp'
 import ShippingView from '@/components/checkout/ShippingView'
 import BottomPopover from '@/components/BottomPopover'
 import shopping_cart_mixin from '@/mixins/shopping_cart_mixin'
@@ -22,7 +21,6 @@ let currentNotification = null;
 export default {
     components: {
         ShippingBillingForm,
-        ShippingBillingHelp,
         ShippingView,
         BottomPopover
     },
@@ -217,10 +215,9 @@ export default {
         },
 
         onShippingFormValid(isValid) {
-            // console.log("ON SHIPPING FORM VALID", isValid)
             this.shippingFormIsValid = isValid;
             this.showDetails = isValid;
-            this.emit(isValid);
+            // this.emit(isValid);
         }
     }
 }
@@ -240,10 +237,6 @@ export default {
                 <shipping-billing-form
                     type="shipping"
                     @valid="onShippingFormValid" />
-
-                <div class="ptm displayTable fs14">
-                    <shipping-billing-help></shipping-billing-help>
-                </div>
 
                 <div class="ptm tac">
                     <el-button

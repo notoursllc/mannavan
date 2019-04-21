@@ -10,6 +10,7 @@
     import SelectStateProvince from '@/components/SelectStateProvince'
     import StatusWrapper from '@/components/StatusWrapper'
     import FormRow from '@/components/FormRow'
+    import ShippingBillingHelp from '@/components/checkout/ShippingBillingHelp'
 
     Vue.use(Input)
     Vue.use(Validations)
@@ -62,7 +63,8 @@
             CountrySelect,
             SelectStateProvince,
             StatusWrapper,
-            FormRow
+            FormRow,
+            ShippingBillingHelp
         },
 
         data: function() {
@@ -342,6 +344,12 @@
                         :placeholder="'(' + $t('optional') + ')'" />
                 </status-wrapper>
             </template>
+        </form-row>
+
+        <form-row :value-class="formValueClass">
+            <div slot="value" class="ptm fs14">
+                <shipping-billing-help></shipping-billing-help>
+            </div>
         </form-row>
     </div>
 </template>

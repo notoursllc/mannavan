@@ -52,8 +52,7 @@
     "Country": "Country",
     "Create": "Create",
     "CREDIT CARD": "CREDIT CARD",
-    "cvv_help_3_digit": "The code is printed on the back of your card. It is the last 3 digits AFTER the credit card number in the signature area of the card.",
-    "cvv_help_4_digit": "The 4 digit code is printed on the front of your card, above the credit card number, on either the right or left side.",
+    "cvv_info": "3-digit security code usually found on the back of your card. American Express cards have a 4-digit code located on the front.",
     "CVV": "CVV",
 
     "day_days": "day | days",
@@ -156,7 +155,7 @@
     "Returns / Exchanges": "Returns / Exchanges",
     "returns_help": "For help with Exchanging or Returning an item, please contact us at",
 
-    "SAME AS SHIPPING ADDRESS": "SAME AS SHIPPING ADDRESS",
+    "Same as shipping address": "Same as shipping address",
     "SAVE": "SAVE",
     "Secure Checkout": "Secure Checkout",
     "Secure Payment": "Secure Payment",
@@ -211,7 +210,7 @@
     "Total before tax": "Total before tax",
 
     "Unable to initialize PayPal flow. Are your options correct?": "Unable to initialize PayPal flow. Are your options correct?",
-    "USE A DIFFERENT BILLING ADDRESS": "USE A DIFFERENT BILLING ADDRESS",
+    "Use a different billing address": "Use a different billing address",
 
     "Victory!": "Victory!",
     "View": "View",
@@ -222,7 +221,6 @@
     "We want to hear from you!": "We want to hear from you!",
     "We want to make sure it fits!": "We want to make sure it fits!",
     "We'll get back to you within 1 business day.": "We'll get back to you within 1 business day.",
-    "what's this?": "what's this?",
 
     "Your billing info": "Your billing info",
     "Your order": "Your order",

@@ -1,10 +1,11 @@
 <script>
 import Vue from 'vue'
 import { mapGetters } from 'vuex'
-import { Checkbox } from 'element-ui'
+import { Radio, RadioGroup } from 'element-ui'
 import ShippingBillingForm from '@/components/checkout/ShippingBillingForm'
 
-Vue.use(Checkbox)
+Vue.use(Radio)
+Vue.use(RadioGroup)
 
 export default {
     components: {
@@ -13,7 +14,8 @@ export default {
 
     data: function() {
         return {
-            billingFormValid: false
+            billingFormValid: false,
+            isSame: true
         }
     },
 
@@ -38,7 +40,6 @@ export default {
 
     methods: {
         emit(isValid) {
-            // console.log("EMITTING: CHECKOUT_BILLING_FORM_VALID", isValid)
             this.$nuxt.$emit('CHECKOUT_BILLING_FORM_VALID', isValid);
         },
 
@@ -47,10 +48,12 @@ export default {
             this.emit(this.billingFormValid);
         },
 
-        onCheckboxChange() {
-            // If the checkbox is checked, then we consider this form as valid,
+        onRadioChange() {
+            this.billingSameAsShipping = this.isSame;
+
+            // If the same, then we consider this form as valid,
             // otherwise the form is valid if the form component emits a valid response
-            if(this.billingSameAsShipping) {
+            if(this.isSame) {
                 this.emit(true);
             }
             else {
@@ -60,8 +63,7 @@ export default {
     },
 
     created() {
-        this.onCheckboxChange();
-        // this.emit(this.billingFormValid);
+        this.onRadioChange();
     }
 }
 </script>
@@ -70,9 +72,23 @@ export default {
     <div class="g-spec-locked">
         <div class="g-spec-label colorGreen fs20">{{ $t('Billing address') }}</div>
         <div class="g-spec-content">
-            <el-checkbox
-                v-model="billingSameAsShipping"
-                @change="onCheckboxChange">{{ $t('SAME AS SHIPPING ADDRESS') }}</el-checkbox>
+            <el-radio-group
+                v-model="isSame"
+                @change="onRadioChange">
+                <div class="inlineBlock mrl mbm">
+                    <el-radio
+                        :label="true"
+                        border
+                        size="medium">{{ $t('Same as shipping address') }}</el-radio>
+                </div>
+
+                <div class="inlineBlock">
+                    <el-radio
+                        :label="false"
+                        border
+                        size="medium">{{ $t('Use a different billing address') }}</el-radio>
+                </div>
+            </el-radio-group>
 
             <shipping-billing-form
                 type="billing"

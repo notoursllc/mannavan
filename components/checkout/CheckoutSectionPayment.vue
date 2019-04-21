@@ -1,11 +1,12 @@
 <script>
 import Vue from 'vue'
 import { mapGetters } from 'vuex'
-import { Select, Option, Dialog, Notification } from 'element-ui'
+import { Select, Option, Notification, Tooltip } from 'element-ui'
 import StatusWrapper from '@/components/StatusWrapper'
 import IconCreditCard from '@/components/icons/IconCreditCard'
 import IconPaypal from '@/components/icons/IconPaypal'
 import IconLock from '@/components/icons/IconLock'
+import IconInfo from '@/components/icons/IconInfo'
 import CreditCardIcon from '@/components/CreditCardIcon'
 import FormRow from '@/components/FormRow'
 import shopping_cart_mixin from '@/mixins/shopping_cart_mixin'
@@ -13,7 +14,7 @@ import app_mixin from '@/mixins/app_mixin'
 
 Vue.use(Select)
 Vue.use(Option)
-Vue.use(Dialog)
+Vue.use(Tooltip)
 Vue.prototype.$notify = Notification;
 
 let currentNotification = null;
@@ -32,6 +33,7 @@ export default {
         IconCreditCard,
         IconPaypal,
         IconLock,
+        IconInfo,
         CreditCardIcon,
         FormRow
     },
@@ -49,7 +51,6 @@ export default {
             paymentFormIsReady: false,
             paymentMethod: 'CREDIT_CARD',
             paymentMethodButtonEnabled: false,
-            showCvvDialog: false,
             masterpass: false,
             applePay: false,
             cardType: null,
@@ -410,18 +411,24 @@ export default {
 
                     <!-- cvv -->
                     <form-row :value-class="formValueClass" v-show="showSquareInputFields">
-                        <span slot="label" class="nowrap lineHeight40">
-                            {{ $t('CVV') }}:
-                            <span class="underlineDotted fs12 cursorPointer mls" @click="showCvvDialog = true">
-                                {{ $t("what's this?") }}
-                            </span>
-                        </span>
+                        <span slot="label" class="nowrap lineHeight40">{{ $t('CVV') }}:</span>
                         <template slot="value">
                             <status-wrapper
                                 :className="{'widthAll': true, 'el-input-error': inputStatus['sq-cvv'] === 'failed'}"
                                 :success="inputStatus['sq-cvv'] === 'success'"
                                 :failed="inputStatus['sq-cvv'] === 'failed'">
                                 <div id="sq-cvv"></div>
+                                <el-tooltip
+                                    class="input-icon"
+                                    popper-class="width200 tac"
+                                    effect="dark"
+                                    :content="$t('cvv_info')"
+                                    placement="bottom-end">
+                                    <icon-info
+                                        icon-name="info"
+                                        class-name="fillGray"
+                                        width="18px" />
+                                </el-tooltip>
                             </status-wrapper>
                         </template>
                     </form-row>
@@ -440,31 +447,6 @@ export default {
                     </form-row>
                 </div>
             </div>
-
-            <!-- CVV Modal -->
-            <el-dialog :title="$t('Finding your security code')"
-                    :modal-append-to-body="false"
-                    :visible.sync="showCvvDialog">
-                <div class="cvvCard">
-                    <div class="cvvCardPic">
-                        <img src="/images/creditcards/card_back_cvv_4.png">
-                    </div>
-                    <div class="cvvCardContent">
-                        <div class="fwb">{{ $t('American Express') }}</div>
-                        <div>{{ $t('cvv_help_4_digit') }}</div>
-                    </div>
-                </div>
-
-                <div class="cvvCard">
-                    <div class="cvvCardPic">
-                        <img src="/images/creditcards/card_back_cvv_3.png">
-                    </div>
-                    <div class="cvvCardContent">
-                        <div class="fwb">{{ $t('All other cards') }}</div>
-                        <div>{{ $t('cvv_help_3_digit') }}</div>
-                    </div>
-                </div>
-            </el-dialog>
         </div>
     </div>
 </template>
@@ -481,6 +463,12 @@ export default {
     img {
         width: 65px;
     }
+}
+
+.input-icon {
+    position: absolute;
+    top: 9px;
+    right: 8px;
 }
 
 .el-input-error .el-input__inner {
