@@ -60,7 +60,7 @@ export default {
             text-color="#fff">
             <el-menu-item
                 :route="{ name: 'cart-id' }"
-                :index="cart-id"
+                index="cart-id"
                 @click="onMenuItemClick">
                 <icon-cart icon-name="shopping_cart" class-name="fillWhite" width="25px" height="25px" />
                 {{ $t('Cart') }}
