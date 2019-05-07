@@ -211,3 +211,7 @@
 @mixin align-self($align) {
     @include css3-prefix('align-self', $align);
 }
+
+@mixin rotate($deg) {
+    @include css3-prefix('transform', rotate($deg));
+}

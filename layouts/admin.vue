@@ -125,7 +125,7 @@ export default {
             <div class="header-container">
                 <i class="colorGrayLighter fs20 cursorPointer"
                     aria-hidden="true"
-                    @click="$store.dispatch('ui/toggleSidebar')"></i>
+                    @click="$store.dispatch('ui/toggleSidebar')">toggle sidebar</i>
 
                 <nav class="navigation">
                     <ul class="navigation-list">
@@ -147,27 +147,17 @@ export default {
 
 
 <style lang="scss" scoped>
-@import "~assets/css/components/_variables.scss";
-@import "~assets/css/components/_mixins.scss";
-
-$sidenav-width-admin: 200px;
+$sidenav-width: 200px;
 $header-height: 50px;
 
-.layoutContainer {
+@import "~assets/css/components/_variables.scss";
+@import "~assets/css/components/_mixins.scss";
+@import "~assets/css/components/_sidenav.scss";
 
+
+.layoutContainer {
     header, main {
         transition: .5s;
-    }
-
-    @media #{$medium-and-up} {
-        .sidenav-opened {
-            padding-left: $sidenav-width-admin;
-            transition: .5s;
-        }
-    }
-
-    .fa-bars {
-        line-height: $header-height;
     }
 
     .header {
@@ -184,19 +174,6 @@ $header-height: 50px;
         padding: 0 20px;
     }
 
-    .header-image {
-        display: inline-block;
-        width: 120px;
-        vertical-align: middle;
-    }
-
-    .header-image {
-        @include grow()
-    }
-    .header-image:hover {
-        @include growHover()
-    }
-
     .navigation {
         background-color: white;
         padding: 0;
@@ -207,99 +184,6 @@ $header-height: 50px;
         @include align-items(center);
         @include justify-content(flex-end);
         @include flexbox();
-    }
-
-    .navigation-list {
-        @include flexbox();
-        @include justify-content(space-around);
-        @include align-self(center);
-        margin: 0 20px 0 0;
-        margin: 0;
-
-        li {
-            list-style: none;
-            padding: 0;
-            text-transform: uppercase;
-            color: #7a7a7a;
-            font-size: 14px;
-            text-decoration: none;
-            cursor: pointer;
-            padding: 0 10px;
-            height: $header-height;
-            line-height: $header-height;
-
-            &:hover,
-            &:focus {
-                color: #363636;
-            }
-
-            &.active {
-                border-bottom: 3px solid #41b883;
-                color: #000;
-            }
-        }
-    }
-
-    .sidenav-container,
-    .sidenav {
-        height: 100%;
-        height: calc(100% + 60px);
-        height: -moz-calc(100%); //Temporary Firefox Fix
-    }
-    .sidenav {
-        position: fixed;
-        width: $sidenav-width-admin;
-        left: 0;
-        top: 0;
-        margin: 0;
-        padding-bottom: 60px;
-        background-color: #304156;
-        overflow-y: auto;
-        transform: translateX(-105%);
-        transition: .5s;
-        z-index: 1;
-
-        .sidenav-header {
-            height: $header-height;
-            text-align: center;
-            background-color: rgba(0,0,0,.1);
-        }
-    }
-
-    .sidenav.sidenav-fixed {
-        transform: translateX(0);
-        transition: .5s;
-    }
-
-    .sidenav-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        opacity: 0;
-        height: 120vh;
-        background-color: rgba(0,0,0,.5);
-        z-index: 997;
-        display: none;
-    }
-
-    .el-menu {
-        border: 0;
-    }
-
-    // Fixed Sidenav hide on smaller
-    @media #{$medium-and-down} {
-        .sidenav {
-            &.sidenav-fixed {
-                // transform: translateX(-105%);
-                z-index: 999;
-            }
-        }
-
-        .sidenav-overlay {
-            opacity: 1;
-            display: block;
-        }
     }
 }
 </style>

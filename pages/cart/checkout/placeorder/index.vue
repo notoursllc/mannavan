@@ -4,11 +4,10 @@ import { mapGetters } from 'vuex'
 import isObject from 'lodash.isobject'
 import forEach from 'lodash.foreach'
 import cloneDeep from 'lodash.clonedeep'
-import { Checkbox, Input, Notification, Loading, Select, Breadcrumb, BreadcrumbItem } from 'element-ui'
-import ShippingBillingForm from '@/components/checkout/ShippingBillingForm'
-import CartItems from '@/components/cart/CartItems'
-import CartTotalsTable from '@/components/cart/CartTotalsTable'
+import { Checkbox, Input, Notification, Loading, Select, Radio } from 'element-ui'
+
 import ShippingView from '@/components/checkout/ShippingView'
+import ShippingBillingForm from '@/components/checkout/ShippingBillingForm'
 import ShippingBillingHelp from '@/components/checkout/ShippingBillingHelp'
 import BottomPopover from '@/components/BottomPopover'
 import CreditCardIcon from '@/components/CreditCardIcon'
@@ -17,18 +16,17 @@ import StatusWrapper from '@/components/StatusWrapper'
 import IconCreditCard from '@/components/icons/IconCreditCard'
 import IconPaypal from '@/components/icons/IconPaypal'
 import IconPackage from '@/components/icons/IconPackage'
+import IconAddress from '@/components/icons/IconAddress'
+import IconLock from '@/components/icons/IconLock'
+import IconVan from '@/components/icons/IconVan'
 import shopping_cart_mixin from '@/mixins/shopping_cart_mixin'
 import app_mixin from '@/mixins/app_mixin'
 import payment_mixin from '@/mixins/payment_mixin'
 
-//test
-import PaymentForm from '@/components/checkout/PaymentForm'
-
 Vue.use(Checkbox)
 Vue.use(Input)
 Vue.use(Select)
-Vue.use(Breadcrumb)
-Vue.use(BreadcrumbItem)
+Vue.use(Radio)
 
 Vue.prototype.$notify = Notification;
 
@@ -40,16 +38,18 @@ export default {
         ShippingBillingHelp,
         ShippingBillingForm,
         Checkbox,
-        CartItems,
+
         BottomPopover,
         CreditCardIcon,
-        CartTotalsTable,
+
         SiteName,
         StatusWrapper,
         IconCreditCard,
         IconPaypal,
         IconPackage,
-        PaymentForm
+        IconAddress,
+        IconLock,
+        IconVan
     },
 
     mixins: [
@@ -359,12 +359,12 @@ export default {
 
         await this.hostedFieldsInit();
         this.$store.dispatch('ui/IN_CHECKOUT_FLOW', true);
-        this.$store.dispatch('ui/pageTitle', this.$t('Checkout'));
+        this.$store.dispatch('ui/pageTitle', this.$t('Secure Checkout'));
     },
 
     head() {
         return {
-            title: this.$t('Checkout'),
+            title: this.$t('Secure Checkout'),
             meta: [
                 { vmid: 'description', name: 'description', content: `Your Shopping Cart at ${this.getSiteName()}` }
             ]
@@ -374,111 +374,133 @@ export default {
 </script>
 
 <template>
-    <div class="widthAll">
-        <div class="pal">
+    <div class="checkout-container">
+        <!-- <div class="pal">
             <el-breadcrumb separator-class="el-icon-arrow-right">
                 <el-breadcrumb-item :to="{ name: 'cart-checkout' }">{{ $t('SHIPPING ADDRESS') }}</el-breadcrumb-item>
                 <el-breadcrumb-item>{{ $t('PLACE YOUR ORDER') }}</el-breadcrumb-item>
             </el-breadcrumb>
-        </div>
+        </div> -->
 
-        <div class="pageContainerMax pageContainerMaxSkinny">
-            <div>
-                <payment-form
-                    @success="handlePaymentFormSuccess"
-                    @failed="handlePaymentFormFailed" />
 
-                <div class="displayTable widthAll">
-                    <!-- Payment Method -->
-                    <div class="displayTableRow">
-                        <label class="checkout_form_label fwb">{{ $t('PAYMENT METHOD') }}:</label>
-                        <div class="checkout_form_value">
-                            <div class="inlineBlock relative widthAll">
-                                <status-wrapper :success="true">
-                                    <el-select v-model="paymentMethod" placeholder="Select" class="widthAll">
-                                        <el-option :label="$t('CREDIT CARD')" value="CREDIT_CARD">
-                                            <span class="floatLeft">{{ $t('CREDIT CARD') }}</span>
-                                            <icon-credit-card
-                                                icon-name="credit_card"
-                                                width="20px"
-                                                class="floatRight mts" />
-                                        </el-option>
-                                        <el-option :label="$t('PAYPAL')" value="PAYPAL">
-                                            <span class="floatLeft">{{ $t('PAYPAL') }}</span>
-                                            <icon-paypal
-                                                icon-name="credit_card"
-                                                width="20px"
-                                                class="floatRight mts" />
-                                        </el-option>
-                                    </el-select>
-                                </status-wrapper>
+            <div class="order-container">
+
+                <div class="order-wrapper">
+
+                    <!-- Delivery -->
+                    <div class="g-spec-locked">
+                        <div class="g-spec-label nowrap">
+                            <span class="colorGreen fs20 mls">{{ $t('Home Delivery') }}</span>
+                        </div>
+                        <div class="g-spec-content">
+                            <shipping-billing-form type="shipping" @valid="val => { shippingButtonEnabled = val }"></shipping-billing-form>
+
+                            <div class="ptl displayTable fs14" style="margin:0 auto">
+                                <shipping-billing-help></shipping-billing-help>
                             </div>
                         </div>
                     </div>
 
 
-                    <!-- Billing address -->
-                    <div class="displayTableRow" v-show="paymentMethod === 'CREDIT_CARD'">
-                        <div class="checkout_form_label fwb">{{ $t('BILLING ADDRESS') }}:</div>
-                        <div class="checkout_form_value">
-                            <el-checkbox v-model="billingSameAsShipping">{{ $t('SAME AS SHIPPING ADDRESS') }}:</el-checkbox>
 
-                            <div class="pll mts" v-show="billingSameAsShipping">
-                                <shipping-view :show-details="true" :show-email="false"></shipping-view>
+
+
+                    <!-- Secure Payment -->
+                    <div class="g-spec-locked">
+                        <div class="g-spec-label nowrap">
+                            <span class="colorGreen fs20 mls">{{ $t('Secure Payment') }}</span>
+                            <icon-lock
+                                icon-name="lock"
+                                class-name="fillGreen"
+                                class="mls"
+                                width="18px" />
+                        </div>
+                        <div class="g-spec-content">
+                            <div class="displayTableRow">
+                                <label class="checkout_form_label fwb">{{ $t('PAYMENT METHOD') }}:</label>
+                                <div class="checkout_form_value">
+                                    <div class="inlineBlock relative widthAll">
+                                        <status-wrapper :success="true">
+                                            <el-select v-model="paymentMethod" placeholder="Select" class="widthAll">
+                                                <el-option :label="$t('CREDIT CARD')" value="CREDIT_CARD">
+                                                    <span class="floatLeft">{{ $t('CREDIT CARD') }}</span>
+                                                    <icon-credit-card
+                                                        icon-name="credit_card"
+                                                        width="20px"
+                                                        class="floatRight mts" />
+                                                </el-option>
+                                                <el-option :label="$t('PAYPAL')" value="PAYPAL">
+                                                    <span class="floatLeft">{{ $t('PAYPAL') }}</span>
+                                                    <icon-paypal
+                                                        icon-name="credit_card"
+                                                        width="20px"
+                                                        class="floatRight mts" />
+                                                </el-option>
+                                            </el-select>
+                                        </status-wrapper>
+                                    </div>
+                                </div>
                             </div>
+
+                            <!-- <payment-form
+                                @success="handlePaymentFormSuccess"
+                                @failed="handlePaymentFormFailed" /> -->
+                        </div>
+                    </div>
+
+
+                    <!-- Billing Address -->
+                    <div class="g-spec-locked" v-show="paymentMethod === 'CREDIT_CARD'">
+                        <div class="g-spec-label nowrap">
+                            <span class="colorGreen fs20 mls">{{ $t('Billing address') }}</span>
+                        </div>
+                        <div class="g-spec-content">
+                            <el-checkbox v-model="billingSameAsShipping">{{ $t('SAME AS SHIPPING ADDRESS') }}</el-checkbox>
+
+                            <!-- <div class="pll mts" v-show="billingSameAsShipping">
+                                <shipping-view :show-details="true" :show-email="false"></shipping-view>
+                            </div> -->
                             <shipping-billing-form type="billing"
                                                 v-if="!billingSameAsShipping"
                                                 @valid="val => { separateBillingFormValid = val }"
                                                 class="mtl"></shipping-billing-form>
                         </div>
                     </div>
-                </div>
 
-                <div class="shippingHelp" v-show="paymentMethod === 'CREDIT_CARD'">
-                    <shipping-billing-help></shipping-billing-help>
-                </div>
-            </div>
+                    <div class="tac">
+                        <el-button type="success"
+                                    class="is-huge"
+                                    @click="submitPaymentForm"
+                                    :loading="placeOrderButtonLoading"
+                                    :disabled="!paymentMethodButtonEnabled"
+                                    round>
+                            <span v-show="paymentMethod === 'PAYPAL'">{{ $t('Pay with PAYPAL') }}</span>
+                            <span v-show="paymentMethod !== 'PAYPAL'">{{ $t('PLACE YOUR ORDER') }}</span>
+                        </el-button>
 
-            <div class="ptl tac">
-                <div class="inlineBlock">
-                    <cart-totals-table :cart="shoppingCart"
-                                        :show-shipping-cost="true"
-                                        :show-sales-tax="true"></cart-totals-table>
-                </div>
-            </div>
+                        <bottom-popover width="200px"
+                                        v-show="!paymentMethodButtonEnabled" >{{ $t('fill_out_form_warning') }}</bottom-popover>
+                    </div>
 
-            <div class="ptl tac">
-                <div class="inlineBlock">
-                    <el-button type="success"
-                                class="is-huge"
-                                @click="submitPaymentForm"
-                                :loading="placeOrderButtonLoading"
-                                :disabled="!paymentMethodButtonEnabled"
-                                round>
-                        <span v-show="paymentMethod === 'PAYPAL'">{{ $t('Pay with PAYPAL') }}</span>
-                        <span v-show="paymentMethod !== 'PAYPAL'">{{ $t('PLACE YOUR ORDER') }}</span>
-                    </el-button>
-
-                    <bottom-popover width="200px"
-                                    v-show="!paymentMethodButtonEnabled" >{{ $t('fill_out_form_warning') }}</bottom-popover>
+                    <div class="fs12 mtl tac">
+                        <i18n path="accept_privacy_and_tos" tag="div">
+                            <span place="siteName"><site-name></site-name>'s</span>
+                            <span place="linkPrivacy"><nuxt-link :to="{name: 'privacy'}">{{ $t('Privacy Notice') }}</nuxt-link></span>
+                            <span place="linkTos"><nuxt-link :to="{name: 'conditions-of-use'}">{{ $t('Conditions of Use') }}</nuxt-link></span>
+                        </i18n>
+                    </div>
                 </div>
             </div>
 
-            <div class="fs12 mtl tac">
-                <i18n path="accept_privacy_and_tos" tag="div">
-                    <span place="siteName"><site-name></site-name>'s</span>
-                    <span place="linkPrivacy"><nuxt-link :to="{name: 'privacy'}">{{ $t('Privacy Notice') }}</nuxt-link></span>
-                    <span place="linkTos"><nuxt-link :to="{name: 'conditions-of-use'}">{{ $t('Conditions of Use') }}</nuxt-link></span>
-                </i18n>
-            </div>
 
-            <div class="ptl">
-                <cart-items
-                    :shopping-cart="shoppingCart"
-                    :allow-edit="false"></cart-items>
-            </div>
 
-        </div>
+
+
+
+
+
+
+
     </div>
 </template>
 
@@ -486,15 +508,55 @@ export default {
     @import "@/assets/css/components/_variables.scss";
     @import "@/assets/css/components/_mixins.scss";
 
+    .checkout-container {
+        @include flexbox();
+        @include flex-direction(row);
+        // @include align-items(stretch);
+        width: 100%;
+
+        .order-container {
+            @include flex-grow(1);
+            padding: 30px;
+
+            .g-spec-locked {
+                margin-bottom: 50px;
+            }
+
+            section {
+                display: block;
+                margin-bottom: 50px;
+
+                .section-header {
+                    background: rgb(241, 241, 241);
+                    padding: 15px 20px;
+                    margin-bottom: 15px;
+                    font-weight: bold;
+                }
+            }
+        }
+
+        .order-wrapper {
+            margin-left: auto;
+            margin-right: auto;
+            width: 662px;
+        }
+
+        .cart-container {
+            background: rgb(241, 241, 241);
+            width: 35%;
+            padding: 30px;
+        }
+    }
+
     .shippingHelp {
         padding: 10px;
-        margin: 20px auto 0 auto;
-        display: table;
+        margin-top: 20px;
+        // display: table;
         font-size: 14px;
-        @include rounded();
-        background-color: $bgGrayZebra;
+        // @include rounded();
+        // background-color: $bgGrayZebra;
         width: 100%;
-        text-align: center;
+        // text-align: center;
     }
 
     .cvvHelpCell {

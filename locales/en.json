@@ -25,6 +25,8 @@
     "card_expiration_hint": "MM/YY",
     "card_expiration_year_hint": "YY",
     "card_expiration_month_hint": "MM",
+    "CART": "CART",
+    "Cart": "Cart",
     "Card number": "Card number",
     "Cart updated!": "Cart updated!",
     "CITY": "CITY",
