@@ -47,7 +47,6 @@ export default {
 
     methods: {
         emit: function(isValid) {
-            // console.log("EMIT: CHECKOUT_SHIPPING_FORM_VALID", isValid)
             this.$nuxt.$emit('CHECKOUT_SHIPPING_FORM_VALID', isValid);
         },
 
@@ -216,8 +215,6 @@ export default {
 
         onShippingFormValid(isValid) {
             this.shippingFormIsValid = isValid;
-            this.showDetails = isValid;
-            // this.emit(isValid);
         }
     }
 }
@@ -226,7 +223,7 @@ export default {
 <template>
     <div class="g-spec-locked">
         <div class="g-spec-label">
-            <span class="colorGreen fs20">{{ $t('Home Delivery') }}</span>
+            <span class="colorGreen fs20">{{ $t('Shipping') }}</span>
 
             <a v-show="showDetails"
                 class="fs14 mlm"
