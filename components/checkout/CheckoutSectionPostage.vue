@@ -22,7 +22,7 @@ export default {
 
 <template>
     <div class="g-spec-locked">
-        <div class="g-spec-label colorGreen fs20">{{ $t('Shipping & Handling') }}</div>
+        <div class="g-spec-label colorGreen fs20">{{ $t('Postage') }}</div>
         <div class="g-spec-content">
             <table class="widthAll">
                 <tr>
