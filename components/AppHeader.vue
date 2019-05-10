@@ -32,7 +32,7 @@ export default {
                     :to="{ name: 'index' }"
                     tag="span"
                     class="cursorPointer header-logo">
-                    <icon-victory icon-name="logo" class-name="fillWhite" class="vam" />
+                    <icon-victory icon-name="logo" class-name="fillGray" class="vam" />
                 </nuxt-link>
             </div>
 
@@ -54,7 +54,7 @@ export default {
                     tag="div"
                     class="inlineBlock cursorPointer"
                     active-class="active">
-                    <div class="header-label prs">{{ $t('CART') }}</div>
+                    <div class="header-label dot-label">{{ $t('CART') }}</div>
                     <div class="dot">{{ numCartItems }}</div>
                 </nuxt-link>
             </div>
@@ -67,14 +67,17 @@ export default {
 @import "~assets/css/components/_variables.scss";
 @import "~assets/css/components/_mixins.scss";
 
-$header-height: 57px;
+// $header-height: 57px;
+$header-height: 70px;
 $header-height-small: 46px;
 
 header {
     transition: .5s;
-    background: #424345;;
+    // background: #424345;
+    background: #fff;
+    border-bottom: 1px solid #ece8e8;
     position: relative;
-    color: #fff;
+    color: $colorGray;
     height: $header-height-small;
     padding: 0;
     z-index: 10;
@@ -101,7 +104,6 @@ header:after {
     font-weight: 600;
     margin: 0 auto;
     max-width: 1568px;
-    color: #fff;
 
     .header-hamburger {
         font-size: 25px;
@@ -146,6 +148,10 @@ header:after {
         display: inline-block;
         position: relative;
 
+        .dot-label {
+            padding-right: 6px;
+        }
+
         .dot {
             display: inline-block;
             height: 34px;
@@ -159,6 +165,7 @@ header:after {
             @include rotate(25deg);
             position: relative;
             top: 2px;
+            @include box-shadow(0, 0, 2px, #555);
         }
     }
 }
