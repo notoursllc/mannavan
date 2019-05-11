@@ -18,16 +18,6 @@ export default {
         },
 
 
-        async getPaymentSummary(id) {
-            const response = await this.$axios.$get('/payment/summary', {
-                params: {
-                    id
-                }
-            });
-            return response.data;
-        },
-
-
         async getPayments(params) {
             let paramString = queryString.stringify(params, {arrayFormat: 'bracket'});
 

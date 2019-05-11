@@ -1,7 +1,7 @@
 <script>
 import PaymentTypeDisplay from '@/components/PaymentTypeDisplay'
 import CartTotalsTable from '@/components/cart/CartTotalsTable'
-import AddressDisplay from '@/components/AddressDisplay'
+import CartShippingAddressDisplay from '@/components/cart/CartShippingAddressDisplay'
 import CartItems from '@/components/cart/CartItems'
 import FormRow from '@/components/FormRow'
 import payment_mixin from '@/mixins/payment_mixin';
@@ -18,7 +18,7 @@ export default {
     components: {
         PaymentTypeDisplay,
         CartTotalsTable,
-        AddressDisplay,
+        CartShippingAddressDisplay,
         FormRow,
         CartItems
     },
@@ -56,16 +56,8 @@ export default {
         <div>
             <div class="mbl mrxl inlineBlock vat">
                 <div class="fwb">{{ $t('Shipping to') }}:</div>
-                <address-display
-                    :first-name="order.shoppingCart.shipping_firstName"
-                    :last-name="order.shoppingCart.shipping_lastName"
-                    :street-address="order.shoppingCart.shipping_streetAddress"
-                    :extended-address="order.shoppingCart.shipping_extendedAddress"
-                    :company="order.shoppingCart.shipping_company"
-                    :country-code="order.shoppingCart.shipping_countryCodeAlpha2"
-                    :city="order.shoppingCart.shipping_city"
-                    :state="order.shoppingCart.shipping_state"
-                    :zip="order.shoppingCart.shipping_postalCode" />
+                <cart-shipping-address-display
+                            :shopping-cart="order.shoppingCart" />
             </div>
 
             <div class="mbl mrxl inlineBlock vat">

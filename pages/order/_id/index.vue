@@ -6,7 +6,7 @@ import payment_mixin from '@/mixins/payment_mixin'
 import app_mixin from '@/mixins/app_mixin'
 import IconVictoryPeace from '@/components/icons/IconVictoryPeace'
 import IconEnvelope from '@/components/icons/IconEnvelope'
-import AddressDisplay from '@/components/AddressDisplay'
+import CartShippingAddressDisplay from '@/components/cart/CartShippingAddressDisplay'
 
 Vue.use(Loading.directive)
 
@@ -15,7 +15,7 @@ export default {
         PaymentTypeDisplay,
         IconVictoryPeace,
         IconEnvelope,
-        AddressDisplay
+        CartShippingAddressDisplay
     },
 
     mixins: [
@@ -50,7 +50,7 @@ export default {
     async created() {
         try {
             this.$store.dispatch('ui/pageTitle', null);
-            this.order = await this.getPaymentSummary(this.$route.params.id);
+            this.order = await this.getPayment(this.$route.params.id);
             this.orderExists = true;
         }
         catch(e) {
@@ -120,16 +120,8 @@ export default {
                 <div class="displayTable mha">
                     <div class="mtl">
                         <div class="fwb">{{ $t('Shipping to') }}:</div>
-                        <address-display
-                            :first-name="order.shipping.firstName"
-                            :last-name="order.shipping.lastName"
-                            :street-address="order.shipping.streetAddress"
-                            :extended-address="order.shipping.extendedAddress"
-                            :company="order.shipping.company"
-                            :country-code="order.shipping.countryCodeAlpha2"
-                            :city="order.shipping.locality"
-                            :state="order.shipping.region"
-                            :zip="order.shipping.postalCode" />
+                        <cart-shipping-address-display
+                            :shopping-cart="order.shoppingCart" />
                     </div>
 
                     <div class="mtl">

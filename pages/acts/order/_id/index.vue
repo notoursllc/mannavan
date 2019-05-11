@@ -5,7 +5,7 @@ import forEach from 'lodash.foreach';
 import TreeView from 'vue-json-tree-view'
 import payment_mixin from '@/mixins/payment_mixin'
 import FormRow from '@/components/FormRow'
-import AddressDisplay from '@/components/AddressDisplay'
+import CartShippingAddressDisplay from '@/components/cart/CartShippingAddressDisplay'
 import CartItems from '@/components/cart/CartItems'
 import ShippingLabelButton from '@/components/payment/ShippingLabelButton'
 
@@ -34,7 +34,7 @@ export default{
 
     components: {
         FormRow,
-        AddressDisplay,
+        CartShippingAddressDisplay,
         ShippingLabelButton,
         CartItems
     },
@@ -251,16 +251,8 @@ export default{
         <div class="g-spec">
             <div class="g-spec-label">{{ $t('Shipping address') }}:</div>
             <div class="g-spec-content">
-                <address-display
-                    :first-name="payment.transaction.shipping.firstName"
-                    :last-name="payment.transaction.shipping.lastName"
-                    :street-address="payment.transaction.shipping.streetAddress"
-                    :extended-address="payment.transaction.shipping.extendedAddress"
-                    :company="payment.transaction.shipping.company"
-                    :country-code="payment.transaction.shipping.countryCodeAlpha2"
-                    :city="payment.transaction.shipping.locality"
-                    :state="payment.transaction.shipping.region"
-                    :zip="payment.transaction.shipping.postalCode" />
+                <cart-shipping-address-display
+                            :shopping-cart="payment.shoppingCart" />
             </div>
         </div>
 
