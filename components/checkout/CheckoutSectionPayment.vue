@@ -47,8 +47,6 @@ export default {
         return {
             paymentForm: null,
             paymentFormIsReady: false,
-            paymentMethod: 'CREDIT_CARD',
-            paymentMethodButtonEnabled: false,
             masterpass: false,
             applePay: false,
             cardType: null,
@@ -72,6 +70,15 @@ export default {
         showSquareInputFields() {
             // Can't hide the square payment form DOM placeholders until paymentFormIsReady === true
             return !this.paymentFormIsReady || this.paymentMethod === 'CREDIT_CARD';
+        },
+
+        paymentMethod: {
+            get: function() {
+                return this.$store.state.checkout.paymentMethod;
+            },
+            set: function(newVal) {
+                this.dispatchPaymentMethod(newVal);
+            }
         }
     },
 
@@ -98,17 +105,6 @@ export default {
             }
 
             this.dispatchFormStatus(false);
-        },
-
-        handlePaymentFormSuccess: function() {
-            console.log("HANDLING FORM SUCCESS")
-            // this.$nuxt.$emit('CHECKOUT_PAYMENT_FORM_SUCCESS', this.count);
-            this.paymentMethodButtonEnabled = true;
-        },
-
-        handlePaymentFormFailed: function() {
-            console.log("HANDLING FORM FAILURE")
-            this.paymentMethodButtonEnabled = false;
         },
 
         onPaymentMethodChange(val) {
