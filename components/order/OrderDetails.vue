@@ -1,5 +1,5 @@
 <script>
-import PaymentTypeDisplay from '@/components/PaymentTypeDisplay'
+import PaymentTypeDisplay from '@/components/payment/PaymentTypeDisplay'
 import CartTotalsTable from '@/components/cart/CartTotalsTable'
 import CartShippingAddressDisplay from '@/components/cart/CartShippingAddressDisplay'
 import CartItems from '@/components/cart/CartItems'
@@ -63,19 +63,19 @@ export default {
             <div class="mbl mrxl inlineBlock vat">
                 <div class="fwb">{{ $t('Payment method') }}:</div>
                 <div>
-                    <payment-type-display :card-type="creditCardType"
-                                        :last-four="order.transaction.creditCard.last4"
-                                        :payer-email="order.transaction.customer.email"></payment-type-display>
+                    <payment-type-display
+                        :transaction="order.transaction" />
                 </div>
             </div>
 
             <div class="mbl inlineBlock vat">
                 <div class="fwb">{{ $t('Order summary') }}:</div>
                 <div>
-                    <cart-totals-table :cart="order.shoppingCart"
-                                    :show-shipping-cost="true"
-                                    :show-sales-tax="true"
-                                    label-class="tal"></cart-totals-table>
+                    <cart-totals-table
+                        :cart="order.shoppingCart"
+                        :show-shipping-cost="true"
+                        :show-sales-tax="true"
+                        label-class="tal" />
                 </div>
             </div>
         </div>

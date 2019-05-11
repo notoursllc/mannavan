@@ -17,11 +17,18 @@ export default {
 
     computed: {
         formattedName() {
-            return shopping_cart_mixin.methods.getFormattedShippingName(this.shoppingCart.shipping_firstName, this.shoppingCart.shipping_lastName);
+            return shopping_cart_mixin.methods.getFormattedShippingName(
+                this.shoppingCart.shipping_firstName,
+                this.shoppingCart.shipping_lastName
+            );
         },
 
-        formattedCityStateZip: function() {
-            return shopping_cart_mixin.methods.getFormattedCityStateZip(this.shoppingCart.locality, this.shoppingCart.region, this.shoppingCart.postalCode);
+        formattedCityStateZip() {
+            return shopping_cart_mixin.methods.getFormattedCityStateZip(
+                this.shoppingCart.shipping_city,
+                this.shoppingCart.shipping_state,
+                this.shoppingCart.shipping_postalCode
+            );
         },
     }
 }

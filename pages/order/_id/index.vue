@@ -1,7 +1,7 @@
 <script>
 import Vue from 'vue'
 import { Loading } from 'element-ui'
-import PaymentTypeDisplay from '@/components/PaymentTypeDisplay'
+import PaymentTypeDisplay from '@/components/payment/PaymentTypeDisplay'
 import payment_mixin from '@/mixins/payment_mixin'
 import app_mixin from '@/mixins/app_mixin'
 import IconVictoryPeace from '@/components/icons/IconVictoryPeace'
@@ -132,15 +132,14 @@ export default {
 
                         <div class="displayTableRow">
                             <div class="displayTableCell prm pbs">{{ $t('Total') }}:</div>
-                            <div class="displayTableCell fwb pbs">{{ $n(order.transaction.amount, 'currency') }}</div>
+                            <div class="displayTableCell fwb pbs">{{ $n(order.shoppingCart.grand_total, 'currency') }}</div>
                         </div>
 
                         <div class="displayTableRow">
                             <div class="displayTableCell prm pbs">{{ $t('Payment method') }}:</div>
                             <div class="displayTableCell fwb pbs">
-                                <payment-type-display :card-type="cardType"
-                                                    :last-four="order.transaction.payment.last4"
-                                                    :payer-email="order.transaction.payment.payerEmail"></payment-type-display>
+                                <payment-type-display
+                                    :transaction="order.transaction" />
                             </div>
                         </div>
 
