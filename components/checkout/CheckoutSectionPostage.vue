@@ -1,22 +1,32 @@
 <script>
 import Vue from 'vue'
 import { mapGetters } from 'vuex'
-import { Radio } from 'element-ui'
+import { Radio, RadioGroup } from 'element-ui'
 
 Vue.use(Radio);
+Vue.use(RadioGroup);
 
 export default {
-    data: function() {
-        return {
-            shipping_type: "1" //TODO
-        }
-    },
-
     computed: {
         ...mapGetters({
             shoppingCart: 'shoppingcart/cart'
         }),
+
+        shippingMethod: {
+            get: function() {
+                return this.$store.state.checkout.shippingMethod;
+            },
+            set: function(newVal) {
+                this.onShippingMethodChange(newVal);
+            }
+        }
     },
+
+    methods: {
+        onShippingMethodChange(val) {
+            this.$store.dispatch('checkout/SHIPPING_METHOD', val);
+        }
+    }
 }
 </script>
 
@@ -24,14 +34,21 @@ export default {
     <div class="g-spec-locked">
         <div class="g-spec-label colorGreen fs20">{{ $t('Postage') }}</div>
         <div class="g-spec-content">
-            <table class="widthAll">
-                <tr>
-                    <td><el-radio v-model="shipping_type" label="1">{{ $t('Standard') }}</el-radio></td>
-                    <td class="tar">
+
+            <el-radio-group
+                v-model="shippingMethod"
+                @change="onShippingMethodChange">
+                <el-radio
+                    label="1"
+                    border
+                    size="medium">
+                    {{ $t('Standard') }}:
+                    <div class="inlineBlock mls">
                         {{ $n(shoppingCart.shipping_total, 'currency') }}
-                    </td>
-                </tr>
-            </table>
+                    </div>
+                </el-radio>
+            </el-radio-group>
+
         </div>
     </div>
 </template>

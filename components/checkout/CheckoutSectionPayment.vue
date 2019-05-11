@@ -1,10 +1,8 @@
 <script>
 import Vue from 'vue'
 import { mapGetters } from 'vuex'
-import { Select, Option, Notification, Tooltip } from 'element-ui'
+import { Select, Option, Notification, Tooltip, Radio, RadioGroup } from 'element-ui'
 import StatusWrapper from '@/components/StatusWrapper'
-import IconCreditCard from '@/components/icons/IconCreditCard'
-import IconPaypal from '@/components/icons/IconPaypal'
 import IconLock from '@/components/icons/IconLock'
 import IconInfo from '@/components/icons/IconInfo'
 import CreditCardIcon from '@/components/CreditCardIcon'
@@ -15,6 +13,8 @@ import app_mixin from '@/mixins/app_mixin'
 Vue.use(Select)
 Vue.use(Option)
 Vue.use(Tooltip)
+Vue.use(Radio)
+Vue.use(RadioGroup)
 Vue.prototype.$notify = Notification;
 
 let currentNotification = null;
@@ -30,8 +30,6 @@ export default {
 
     components: {
         StatusWrapper,
-        IconCreditCard,
-        IconPaypal,
         IconLock,
         IconInfo,
         CreditCardIcon,
@@ -79,7 +77,15 @@ export default {
 
 
     methods: {
-        emitFormStatus: function() {
+        dispatchFormStatus(isValid) {
+            this.$store.dispatch('checkout/PAYMENT_FORM_VALID', isValid);
+        },
+
+        dispatchPaymentMethod(val) {
+            this.$store.dispatch('checkout/PAYMENT_METHOD', val);
+        },
+
+        setFormStatus: function() {
             if(this.paymentMethod === 'PAYPAL' ||
                 (this.paymentMethod === 'CREDIT_CARD' &&
                 this.inputStatus['sq-card-number'] === 'success' &&
@@ -87,13 +93,11 @@ export default {
                 this.inputStatus['sq-cvv'] === 'success' &&
                 this.inputStatus['sq-postal-code'] === 'success')) {
 
-                // this.$emit('success', true);
-                this.$nuxt.$emit('CHECKOUT_PAYMENT_FORM_VALID', true);
+                this.dispatchFormStatus(true);
                 return;
             }
 
-            // this.$emit('failed', true);
-            this.$nuxt.$emit('CHECKOUT_PAYMENT_FORM_VALID', false);
+            this.dispatchFormStatus(false);
         },
 
         handlePaymentFormSuccess: function() {
@@ -108,7 +112,8 @@ export default {
         },
 
         onPaymentMethodChange(val) {
-            this.$nuxt.$emit('CHECKOUT_PAYMENT_METHOD', val);
+            this.dispatchPaymentMethod(val);
+            this.setFormStatus();
         },
 
         doCheckout: async function(nonce) {
@@ -149,7 +154,7 @@ export default {
                     duration: 0
                 });
 
-                this.$nuxt.$emit('CHECKOUT_PAYMENT_FORM_VALID', false);
+                this.dispatchFormStatus(false);
             }
         },
 
@@ -259,7 +264,7 @@ export default {
                             break;
                     }
 
-                    self.emitFormStatus();
+                    self.setFormStatus();
                 },
 
                 /*
@@ -306,7 +311,7 @@ export default {
                             duration: 0
                         });
 
-                        self.$nuxt.$emit('CHECKOUT_PAYMENT_FORM_VALID', false);
+                        this.dispatchFormStatus(false);
                         return;
                     }
 
@@ -355,28 +360,27 @@ export default {
                     <form-row :value-class="formValueClass">
                         <span slot="label" class="nowrap lineHeight40">{{ $t('Payment method') }}:</span>
                         <template slot="value">
-                            <status-wrapper :success="true">
-                                <el-select
-                                    v-model="paymentMethod"
-                                    @change="onPaymentMethodChange"
-                                    placeholder="Select"
-                                    class="widthAll">
-                                    <el-option :label="$t('CREDIT CARD')" value="CREDIT_CARD">
-                                        <span class="floatLeft">{{ $t('CREDIT CARD') }}</span>
-                                        <icon-credit-card
-                                            icon-name="credit_card"
-                                            width="20px"
-                                            class="floatRight mts" />
-                                    </el-option>
-                                    <el-option :label="$t('PAYPAL')" value="PAYPAL">
-                                        <span class="floatLeft">{{ $t('PAYPAL') }}</span>
-                                        <icon-paypal
-                                            icon-name="credit_card"
-                                            width="20px"
-                                            class="floatRight mts" />
-                                    </el-option>
-                                </el-select>
-                            </status-wrapper>
+                            <el-radio-group
+                                v-model="paymentMethod"
+                                @change="onPaymentMethodChange">
+                                <div class="inlineBlock mrl">
+                                    <el-radio
+                                        label="CREDIT_CARD"
+                                        border
+                                        size="medium">
+                                        {{ $t('CREDIT CARD') }}
+                                    </el-radio>
+                                </div>
+
+                                <div class="inlineBlock">
+                                    <el-radio
+                                        label="PAYPAL"
+                                        border
+                                        size="medium">
+                                        {{ $t('PAYPAL') }}
+                                    </el-radio>
+                                </div>
+                            </el-radio-group>
                         </template>
                     </form-row>
 

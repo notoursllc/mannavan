@@ -32,7 +32,6 @@ export default {
 
     data: function() {
         return {
-            showDetails: false,
             loading: false,
             shippingFormIsValid: false
         }
@@ -43,11 +42,15 @@ export default {
             shoppingCart: 'shoppingcart/cart',
             shippingAttributes: 'shoppingcart/shippingAttributes'
         }),
+
+        showDetails() {
+            return this.$store.state.checkout.validations.shippingForm;
+        }
     },
 
     methods: {
-        emit: function(isValid) {
-            this.$nuxt.$emit('CHECKOUT_SHIPPING_FORM_VALID', isValid);
+        dispatchFormStatus(isValid) {
+            this.$store.dispatch('checkout/SHIPPING_FORM_VALID', isValid);
         },
 
         updateShippingStateFromValidation: function(obj) {
@@ -93,12 +96,10 @@ export default {
                     }
                 }
 
-                this.emit(true);
-                this.showDetails = true;
+                this.dispatchFormStatus(true);
             }
             catch(err) {
-                this.emit(false);
-                this.showDetails = false;
+                this.dispatchFormStatus(false);
 
                 currentNotification = this.$notify({
                     title: this.$t('An error occurred'),
@@ -209,8 +210,7 @@ export default {
         },
 
         onChangeClick: function() {
-            this.showDetails = false;
-            this.emit(false);
+            this.dispatchFormStatus(false);
         },
 
         onShippingFormValid(isValid) {

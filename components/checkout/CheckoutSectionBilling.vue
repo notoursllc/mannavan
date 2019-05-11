@@ -21,8 +21,7 @@ export default {
 
     computed: {
         ...mapGetters({
-            shoppingCart: 'shoppingcart/cart',
-            billingAttributes: 'shoppingcart/billingAttributes'
+            shoppingCart: 'shoppingcart/cart'
         }),
 
         billingSameAsShipping: {
@@ -39,25 +38,25 @@ export default {
     },
 
     methods: {
-        emit(isValid) {
-            this.$nuxt.$emit('CHECKOUT_BILLING_FORM_VALID', isValid);
+        dispatchFormStatus(isValid) {
+            this.$store.dispatch('checkout/BILLING_FORM_VALID', isValid);
         },
 
         onBillingValid(val) {
             this.billingFormValid = val;
-            this.emit(this.billingFormValid);
+            this.dispatchFormStatus(this.billingFormValid);
         },
 
         onRadioChange() {
             this.billingSameAsShipping = this.isSame;
 
             // If the same, then we consider this form as valid,
-            // otherwise the form is valid if the form component emits a valid response
+            // otherwise the form is valid if the form component dispatchs a valid response
             if(this.isSame) {
-                this.emit(true);
+                this.dispatchFormStatus(true);
             }
             else {
-                this.emit(this.billingFormValid);
+                this.dispatchFormStatus(this.billingFormValid);
             }
         }
     },
