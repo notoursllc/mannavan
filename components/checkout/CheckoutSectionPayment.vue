@@ -351,37 +351,33 @@ export default {
 
         <div class="g-spec-content">
             <div>
-                <div class="displayTable widthAll">
-                    <!-- Payment method -->
-                    <form-row :value-class="formValueClass">
-                        <span slot="label" class="nowrap lineHeight40">{{ $t('Payment method') }}:</span>
-                        <template slot="value">
-                            <el-radio-group
-                                v-model="paymentMethod"
-                                @change="onPaymentMethodChange">
-                                <div class="inlineBlock mrl">
-                                    <el-radio
-                                        label="CREDIT_CARD"
-                                        border
-                                        size="medium">
-                                        {{ $t('CREDIT CARD') }}
-                                    </el-radio>
-                                </div>
+                <div class="mbl">
+                    <el-radio-group
+                        v-model="paymentMethod"
+                        @change="onPaymentMethodChange">
+                        <div class="inlineBlock mrl">
+                            <el-radio
+                                label="CREDIT_CARD"
+                                border
+                                size="medium">
+                                {{ $t('CREDIT CARD') }}
+                            </el-radio>
+                        </div>
 
-                                <div class="inlineBlock">
-                                    <el-radio
-                                        label="PAYPAL"
-                                        border
-                                        size="medium">
-                                        {{ $t('PAYPAL') }}
-                                    </el-radio>
-                                </div>
-                            </el-radio-group>
-                        </template>
-                    </form-row>
+                        <div class="inlineBlock">
+                            <el-radio
+                                label="PAYPAL"
+                                border
+                                size="medium">
+                                {{ $t('PAYPAL') }}
+                            </el-radio>
+                        </div>
+                    </el-radio-group>
+                </div>
 
+                <div class="displayTable widthAll" v-show="showSquareInputFields">
                     <!-- card number -->
-                    <form-row :value-class="formValueClass" v-show="showSquareInputFields">
+                    <form-row :value-class="formValueClass">
                         <span slot="label" class="nowrap lineHeight40">{{ $t('Card number') }}:</span>
                         <template slot="value">
                             <status-wrapper
@@ -397,7 +393,7 @@ export default {
                     </form-row>
 
                     <!-- expiration date -->
-                    <form-row :value-class="formValueClass" v-show="showSquareInputFields">
+                    <form-row :value-class="formValueClass">
                         <span slot="label" class="nowrap lineHeight40">{{ $t('Expiration date') }}:</span>
                         <template slot="value">
                             <status-wrapper
@@ -410,7 +406,7 @@ export default {
                     </form-row>
 
                     <!-- cvv -->
-                    <form-row :value-class="formValueClass" v-show="showSquareInputFields">
+                    <form-row :value-class="formValueClass">
                         <span slot="label" class="nowrap lineHeight40">{{ $t('CVV') }}:</span>
                         <template slot="value">
                             <status-wrapper
@@ -434,7 +430,7 @@ export default {
                     </form-row>
 
                     <!-- postal code -->
-                    <form-row :value-class="formValueClass" v-show="showSquareInputFields">
+                    <form-row :value-class="formValueClass">
                         <span slot="label" class="nowrap lineHeight40">{{ $t('Postal code') }}:</span>
                         <template slot="value">
                             <status-wrapper
