@@ -5,6 +5,8 @@ import { Button } from 'element-ui'
 import cloneDeep from 'lodash.clonedeep'
 import SiteName from '@/components/SiteName'
 import BottomPopover from '@/components/BottomPopover'
+import PrivacyDisplay from '@/components/PrivacyDisplay'
+import ConditionsOfUseDisplay from '@/components/ConditionsOfUseDisplay'
 
 Vue.use(Button);
 
@@ -14,7 +16,16 @@ let currentNotification = null;
 export default {
     components: {
         SiteName,
-        BottomPopover
+        BottomPopover,
+        PrivacyDisplay,
+        ConditionsOfUseDisplay
+    },
+
+    data: function() {
+        return {
+            privacyNoticeVisible: false,
+            conditionsOfUseVisible: false
+        }
     },
 
     computed: {
@@ -98,10 +109,30 @@ export default {
         <div class="fs12 mtl">
             <i18n path="accept_privacy_and_tos" tag="div">
                 <span place="siteName"><site-name></site-name>'s</span>
-                <span place="linkPrivacy"><nuxt-link :to="{name: 'privacy'}">{{ $t('Privacy Notice') }}</nuxt-link></span>
-                <span place="linkTos"><nuxt-link :to="{name: 'conditions-of-use'}">{{ $t('Conditions of Use') }}</nuxt-link></span>
+                <a place="linkPrivacy" @click="privacyNoticeVisible = true">{{ $t('Privacy Notice') }}</a>
+                <a place="linkTos" @click="conditionsOfUseVisible = true">{{ $t('Conditions of Use') }}</a>
             </i18n>
         </div>
+
+        <!-- privacy dialog -->
+        <el-dialog
+            :title="this.$t('Privacy Notice')"
+            :visible.sync="privacyNoticeVisible"
+            width="90%">
+            <div class="tal">
+                <privacy-display />
+            </div>
+        </el-dialog>
+
+        <!-- conditions of use dialog -->
+        <el-dialog
+            :title="this.$t('Conditions of Use')"
+            :visible.sync="conditionsOfUseVisible"
+            width="90%">
+            <div class="tal">
+                <conditions-of-use-display />
+            </div>
+        </el-dialog>
     </div>
 </template>
 
