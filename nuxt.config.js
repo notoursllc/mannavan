@@ -71,7 +71,8 @@ module.exports = {
         '@/plugins/format8601',
         '@/plugins/prettyJson',
         { src: '@/plugins/youtube', ssr: false },
-        { src: '@/plugins/bugsnag', ssr: false }
+        { src: '@/plugins/bugsnag', ssr: false },
+        { src: '@/plugins/paypal-button/paypal-button.js', ssr: false }
     ],
 
     router: {

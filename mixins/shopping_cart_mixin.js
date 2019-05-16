@@ -67,6 +67,20 @@ export default {
         },
 
 
+        async paypalCreatePayment() {
+            const response = await this.$axios.post('/cart/paypal/create-payment');
+            return response.data.data;
+        },
+
+
+        async paypalExecutePayment(paymentToken) {
+            const response = await this.$axios.post('/cart/paypal/execute-payment', {
+                paymentToken
+            });
+            return response.data.data;
+        },
+
+
         getPaymentMonthYearClass(monthClasses, yearClasses) {
             if(Array.isArray(monthClasses) && Array.isArray(yearClasses)) {
                 if(monthClasses[1] === yearClasses[1]) {

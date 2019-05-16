@@ -55,7 +55,7 @@ export default {
     mixins: [
         shopping_cart_mixin,
         app_mixin,
-        payment_mixin
+        // payment_mixin
     ],
 
     computed: {
@@ -92,17 +92,6 @@ export default {
             paymentMethod: 'CREDIT_CARD',
             placeOrderButtonLoading: false,
             separateBillingFormValid: false,
-            braintree: {
-                clientInstance: null,
-                tokenizePayload: '',
-                hostedFieldsInstance: null,
-                paypalInstance: null,
-                paymentMethodNonce: null,
-                transaction: {
-                    nonce: null,
-                    payPalPayload: null
-                }
-            },
             paymentMethodButtonEnabled: false
         }
     },
@@ -218,96 +207,96 @@ export default {
         // },
 
 
-        tokenizePaypal() {
-            let loadingInstance = Loading.service({
-                lock: true,
-                fullscreen: true,
-                text: this.$t('PAYPAL_WINDOW_IS_OPEN'),
-                background: 'rgba(0, 0, 0, 0.7)'
-            });
+        // tokenizePaypal() {
+        //     let loadingInstance = Loading.service({
+        //         lock: true,
+        //         fullscreen: true,
+        //         text: this.$t('PAYPAL_WINDOW_IS_OPEN'),
+        //         background: 'rgba(0, 0, 0, 0.7)'
+        //     });
 
-            this.braintree.paypalInstance
-                .tokenize({flow: 'vault'})
-                .then((payload) => {
-                    loadingInstance.setText(`${this.$t('Processing')}...`);
-                    this.doCheckout(payload.nonce).finally(() => {
-                        loadingInstance.close();
-                    });
-                })
-                .catch((tokenizeErr) => {
-                    loadingInstance.close();
+        //     this.braintree.paypalInstance
+        //         .tokenize({flow: 'vault'})
+        //         .then((payload) => {
+        //             loadingInstance.setText(`${this.$t('Processing')}...`);
+        //             this.doCheckout(payload.nonce).finally(() => {
+        //                 loadingInstance.close();
+        //             });
+        //         })
+        //         .catch((tokenizeErr) => {
+        //             loadingInstance.close();
 
-                    // Not all error codes warrant a notification popup
-                    if (tokenizeErr.code !== 'PAYPAL_POPUP_CLOSED') {
-                        currentNotification = this.$notify({
-                            type: 'error',
-                            title: this.$t('Payment method error') + ':',
-                            message: this.getBraintreeErrorMessage(tokenizeErr) || $t('There was an error tokenizing PayPal!'),
-                            duration: 0
-                        });
-                    }
-                });
-        },
+        //             // Not all error codes warrant a notification popup
+        //             if (tokenizeErr.code !== 'PAYPAL_POPUP_CLOSED') {
+        //                 currentNotification = this.$notify({
+        //                     type: 'error',
+        //                     title: this.$t('Payment method error') + ':',
+        //                     message: this.getBraintreeErrorMessage(tokenizeErr) || $t('There was an error tokenizing PayPal!'),
+        //                     duration: 0
+        //                 });
+        //             }
+        //         });
+        // },
 
 
-        createPaypal: function(clientInstance) {
-            let paypal = require('braintree-web/paypal');
-            paypal.create(
-                { client: clientInstance },
-                (createPaypalErr, paypalInstance) => {
-                    if (createPaypalErr) {
-                        currentNotification = this.$notify({
-                            type: 'error',
-                            title: this.$t('There was an error setting up the payment input fields!'),
-                            message: this.getBraintreeErrorMessage(createPaypalErr),
-                            duration: 0
-                        });
-                        return;
-                    }
+        // createPaypal: function(clientInstance) {
+        //     let paypal = require('braintree-web/paypal');
+        //     paypal.create(
+        //         { client: clientInstance },
+        //         (createPaypalErr, paypalInstance) => {
+        //             if (createPaypalErr) {
+        //                 currentNotification = this.$notify({
+        //                     type: 'error',
+        //                     title: this.$t('There was an error setting up the payment input fields!'),
+        //                     message: this.getBraintreeErrorMessage(createPaypalErr),
+        //                     duration: 0
+        //                 });
+        //                 return;
+        //             }
 
-                    this.braintree.paypalInstance = paypalInstance;
-                }
-            );
-        },
+        //             this.braintree.paypalInstance = paypalInstance;
+        //         }
+        //     );
+        // },
 
-        getClientToken: async function() {
-            if(this.braintreeClientToken) {
-                return this.braintreeClientToken;
-            }
+        // getClientToken: async function() {
+        //     if(this.braintreeClientToken) {
+        //         return this.braintreeClientToken;
+        //     }
 
-            const token = await this.getBraintreeClientToken();
-            this.$store.dispatch('shoppingcart/BRAINTREE_CLIENT_TOKEN', token);
-            return token;
-        },
+        //     const token = await this.getBraintreeClientToken();
+        //     this.$store.dispatch('shoppingcart/BRAINTREE_CLIENT_TOKEN', token);
+        //     return token;
+        // },
 
-        hostedFieldsInit: async function() {
-            try {
-                const token = await this.getClientToken();
-                const client = require('braintree-web/client');
+        // hostedFieldsInit: async function() {
+        //     try {
+        //         const token = await this.getClientToken();
+        //         const client = require('braintree-web/client');
 
-                try {
-                    const clientInstance = await client.create({ authorization: token });
+        //         try {
+        //             const clientInstance = await client.create({ authorization: token });
 
-                    this.createPaypal(clientInstance);
-                }
-                catch(clientErr) {
-                    currentNotification = this.$notify({
-                        type: 'error',
-                        title: this.$t('There was an error setting up the payment client!'),
-                        message: this.getBraintreeErrorMessage(clientErr),
-                        duration: 0
-                    });
-                }
-            }
-            catch(err) {
-                currentNotification = this.$notify({
-                    type: 'error',
-                    title: this.$t('Error'),
-                    message: err.response.data.message,
-                    duration: 0
-                });
-            }
-        },
+        //             this.createPaypal(clientInstance);
+        //         }
+        //         catch(clientErr) {
+        //             currentNotification = this.$notify({
+        //                 type: 'error',
+        //                 title: this.$t('There was an error setting up the payment client!'),
+        //                 message: this.getBraintreeErrorMessage(clientErr),
+        //                 duration: 0
+        //             });
+        //         }
+        //     }
+        //     catch(err) {
+        //         currentNotification = this.$notify({
+        //             type: 'error',
+        //             title: this.$t('Error'),
+        //             message: err.response.data.message,
+        //             duration: 0
+        //         });
+        //     }
+        // },
 
         getBraintreeErrorMessage: function(clientErr) {
             let errorMessage = clientErr;
