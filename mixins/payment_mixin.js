@@ -4,12 +4,6 @@ import queryString from 'query-string';
 
 export default {
     methods: {
-        async getBraintreeClientToken() {
-           const response = await this.$axios.$get('/payment/token');
-           return response.data;
-        },
-
-
         async getPayment(id) {
             const response = await this.$axios.$get('/payment', {
                 params: { id }

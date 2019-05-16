@@ -1,8 +1,5 @@
 'use strict';
 
-import isObject from 'lodash.isobject'
-
-
 export default {
     methods: {
         setCartAndTokenStateFromResponse(response) {

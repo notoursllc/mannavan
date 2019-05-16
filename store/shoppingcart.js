@@ -45,7 +45,6 @@ export const state = () => ({
     // that need to have immediate UI reactivity solves the issue
     cart: getCartDefaults(),
     token: null,
-    braintreeClientToken: null,
     shippingRatesCache: {
         updated: null,
         cache: null
@@ -58,10 +57,6 @@ export const state = () => ({
 });
 
 export const mutations = {
-    BRAINTREE_CLIENT_TOKEN: (state, token) => {
-        state.braintreeClientToken = token
-    },
-
     CART_TOKEN_SET: (state, token) => {
         state.token = token;
         Cookies.set(
@@ -113,10 +108,6 @@ export const mutations = {
 }
 
 export const actions = {
-    BRAINTREE_CLIENT_TOKEN: ({ commit }, token) => {
-        commit('BRAINTREE_CLIENT_TOKEN', token)
-    },
-
     CART_TOKEN_SET: ({ commit }, token) => {
         commit('CART_TOKEN_SET', token)
     },
@@ -160,10 +151,6 @@ export const actions = {
 }
 
 export const getters = {
-    braintreeClientToken: (state) => {
-        return state.braintreeClientToken;
-    },
-
     cart: (state) => {
         return state.cart;
     },

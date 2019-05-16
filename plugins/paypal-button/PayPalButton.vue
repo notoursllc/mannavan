@@ -3,12 +3,6 @@ import paypal from 'paypal-checkout';
 import shopping_cart_mixin from '@/mixins/shopping_cart_mixin'
 
 export default {
-    data: function() {
-        return {
-            commit: true,
-        }
-    },
-
     mixins: [
         shopping_cart_mixin
     ],
@@ -43,12 +37,10 @@ export default {
         },
 
         onCancel(data) {
-            console.log('onCancel', data)
             this.$emit('payment-cancelled', data);
         },
 
         onError(data) {
-            console.log('onError', data)
             this.$emit('payment-error', data);
         },
     },

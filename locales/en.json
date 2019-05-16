@@ -229,11 +229,6 @@
     "Your PayPal transaction will be completed on the next page": "Your PayPal transaction will be completed on the next page",
     "Your shopping cart does not contain any items.": "Your shopping cart does not contain any items.",
 
-    "braintree": {
-        "HOSTED_FIELDS_FIELDS_EMPTY": "Please fill out the entire 'Your billing info' section.",
-        "HOSTED_FIELDS_ATTRIBUTE_VALUE_NOT_ALLOWED": "Your credit card info contains an invalid value"
-    },
-
     "shipping": {
         "fedex_express_saver": {
             "name": "FedEx Express Saver",
