@@ -463,8 +463,8 @@ export default {
 
 .input-icon {
     position: absolute;
-    top: 9px;
-    right: 8px;
+    top: 11px;
+    right: 15px;
 }
 
 .el-input-error .el-input__inner {

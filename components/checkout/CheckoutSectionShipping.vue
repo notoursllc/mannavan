@@ -237,7 +237,7 @@ export default {
 
                 <div class="ptm tac">
                     <el-button
-                        type="success"
+                        type="primary"
                         class="is-huge"
                         @click="submitShippingForm"
                         :disabled="!shippingFormIsValid"

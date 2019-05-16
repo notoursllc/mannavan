@@ -111,7 +111,7 @@ export default {
         <div>
             <el-button
                 v-show="paymentMethod !== 'PAYPAL'"
-                type="success"
+                type="primary"
                 class="is-huge"
                 @click="submitPaymentForm"
                 :disabled="!placeOrderButtonEnabled"

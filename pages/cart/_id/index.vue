@@ -88,10 +88,11 @@
         </div>
 
         <div class="tac mtl" v-if="shoppingCart.num_items">
-            <el-button type="success"
-                        size="large"
-                        @click="goToCheckout"
-                        round>{{ $t('PROCEED TO CHECKOUT') }}</el-button>
+            <el-button
+                type="primary"
+                size="large"
+                @click="goToCheckout"
+                round>{{ $t('PROCEED TO CHECKOUT') }}</el-button>
 
             <div class="mvl colorGray">{{ $t('OR') }}</div>
         </div>

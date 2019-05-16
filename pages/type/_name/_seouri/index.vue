@@ -249,10 +249,11 @@ export default {
 
             <!-- add to cart button -->
             <div slot="button" class="ptl">
-                <el-button type="success"
-                        @click="addToCart"
-                        :loading="isLoading"
-                        round>{{ $t('ADD TO CART') }}</el-button>
+                <el-button
+                    type="primary"
+                    @click="addToCart"
+                    :loading="isLoading"
+                    round>{{ $t('ADD TO CART') }}</el-button>
             </div>
 
             <!-- size chart -->
