@@ -70,10 +70,11 @@
 <template>
     <div class="pageContainerMax">
         <div class="tac ptl" v-if="shoppingCart.cart_items && shoppingCart.cart_items.length > 2">
-            <el-button type="success"
-                        size="large"
-                        @click="goToCheckout"
-                        round>{{ $t('PROCEED TO CHECKOUT') }}</el-button>
+            <el-button
+                type="primary"
+                size="large"
+                @click="goToCheckout"
+                round>{{ $t('PROCEED TO CHECKOUT') }}</el-button>
         </div>
 
         <cart-items
