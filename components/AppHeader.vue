@@ -32,7 +32,7 @@ export default {
                     :to="{ name: 'index' }"
                     tag="span"
                     class="cursorPointer header-logo">
-                    <icon-victory icon-name="logo" class-name="fillBlue" class="vam" />
+                    <icon-victory icon-name="logo" class-name="fillGray" class="vam" />
                 </nuxt-link>
             </div>
 
@@ -77,7 +77,7 @@ header {
     background: #fff;
     border-bottom: 1px solid #ece8e8;
     position: relative;
-    color: $colorBlue;
+    color: $colorGray;
     height: $header-height-small;
     padding: 0;
     z-index: 10;
