@@ -9,10 +9,9 @@ import BottomPopover from '@/components/BottomPopover'
 import PrivacyDisplay from '@/components/PrivacyDisplay'
 import ConditionsOfUseDisplay from '@/components/ConditionsOfUseDisplay'
 import payment_mixin from '@/mixins/payment_mixin'
+import app_mixin from '@/mixins/app_mixin'
 
 Vue.use(Button);
-
-let currentNotification = null;
 
 
 export default {
@@ -26,7 +25,8 @@ export default {
     },
 
     mixins: [
-        payment_mixin
+        payment_mixin,
+        app_mixin
     ],
 
     data: function() {
@@ -99,8 +99,15 @@ export default {
         paymentCancelled(data) {
           console.log("paymentCancelled", data);
         },
+
         paymentError(data) {
-          console.log("paymentError", data);
+            this.singletonNotification(
+                this.$notify({
+                    type: 'error',
+                    title: this.$t('An error occurred while processing the PayPal transaction'),
+                    duration: 0
+                })
+            );
         }
     }
 }

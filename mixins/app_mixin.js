@@ -2,6 +2,8 @@
 
 const domainName = 'goBreadVan.com';
 
+let currentNotification = null;
+
 export default {
 
     methods: {
@@ -48,6 +50,15 @@ export default {
                 });
             }
         },
+
+        singletonNotification(Notification) {
+            if(currentNotification) {
+                currentNotification.close();
+            }
+
+            currentNotification = Notification
+        }
+
     }
 
 }
