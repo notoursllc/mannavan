@@ -46,7 +46,7 @@
     "cross-env": "^5.2.0",
     "crypto": "^1.0.1",
     "dotenv": "^6.2.0",
-    "element-ui": "^2.7.2",
+    "element-ui": "^2.9.1",
     "glue": "^5.0.0",
     "hoek": "^6.0.4",
     "js-cookie": "^2.2.0",
