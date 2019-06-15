@@ -293,7 +293,7 @@ export default {
                 */
                 cardNonceResponseReceived: function(errors, nonce, cardData) {
                     if (errors) {
-                        this.closeCurrentNotification();
+                        self.closeCurrentNotification();
 
                         let errorMsg = [];
                         errors.forEach(function(error) {
@@ -307,7 +307,7 @@ export default {
                             duration: 0
                         });
 
-                        this.dispatchFormStatus(false);
+                        self.dispatchFormStatus(false);
                         return;
                     }
 
