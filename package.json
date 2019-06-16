@@ -4,7 +4,7 @@
   "description": "Vintage. Racing. An apparel company",
   "author": "goBreadVan.com",
   "engines": {
-    "node": "10.4.1"
+    "node": "10.15.1"
   },
   "repository": {
     "type": "git",
@@ -26,8 +26,7 @@
     "generate": "nuxt generate",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
     "hash": "node ./hash.js",
-    "precommit": "npm run lint",
-    // "postinstall": "npm --prefix shopBac/ install"
+    "precommit": "npm run lint"
   },
   "dependencies": {
     "@bugsnag/js": "^5.2.0",
