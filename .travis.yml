@@ -5,7 +5,7 @@ dist: trusty
 sudo: required
 
 node_js:
-- '10.4'
+- '10.15.1'
 
 cache:
   directories:
@@ -28,7 +28,7 @@ addons:
 install:
   - npm i -g npm@6.4.1
   - npm install
-  - npm run postinstall
+#   - npm run postinstall
   - npm run build
 
 before_script:
