@@ -9,6 +9,7 @@ import CreditCardIcon from '@/components/CreditCardIcon'
 import FormRow from '@/components/FormRow'
 import shopping_cart_mixin from '@/mixins/shopping_cart_mixin'
 import app_mixin from '@/mixins/app_mixin'
+import payment_mixin from '@/mixins/payment_mixin'
 
 Vue.use(Select)
 Vue.use(Option)
@@ -39,7 +40,8 @@ export default {
 
     mixins: [
         shopping_cart_mixin,
-        app_mixin
+        app_mixin,
+        payment_mixin
     ],
 
 
@@ -133,11 +135,8 @@ export default {
                     // no nothing
                 }
 
-                // TODO: IS A TRANSACTION ID RETURNED FROM SQUARE?
-                return this.$router.push({
-                    name: 'order-id',
-                    params: { id: result.transactionId }
-                });
+                this.onPaymentSuccess(result.transactionId);
+                return;
             }
             catch(error) {
                 console.log("CHECKOUT SEC PAYMENT CATCH", error)
@@ -154,6 +153,10 @@ export default {
             }
         },
 
+        onPaymentSuccess(transactionId) {
+            this.goToPaymentSuccess(transactionId);
+        },
+
         closeCurrentNotification() {
             if(currentNotification) {
                 currentNotification.close();
@@ -166,11 +169,16 @@ export default {
         this.$nuxt.$on('CHECKOUT_SUBMIT_PAYMENT_FORM', () => {
            this.paymentForm.requestCardNonce();
         });
+
+        this.$nuxt.$on('CHECKOUT_PAYMENT_SUCCESS', (transactionId) => {
+           this.onPaymentSuccess(transactionId);
+        });
     },
 
 
     beforeDestroy() {
         this.$nuxt.$off('CHECKOUT_SUBMIT_PAYMENT_FORM');
+        this.$nuxt.$off('CHECKOUT_PAYMENT_SUCCESS');
     },
 
 

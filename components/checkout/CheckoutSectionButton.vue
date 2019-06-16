@@ -89,15 +89,17 @@ export default {
             this.$nuxt.$emit('CHECKOUT_SUBMIT_PAYMENT_FORM', true);
         },
 
-        ///test
         paymentAuthorized(data) {
-          console.log("paymentAuthorized", data);
+            // console.log("paymentAuthorized", data);
         },
+
         paymentCompleted(data) {
-          console.log("paymentCompleted", data);
+            // console.log("paymentCompleted", data);
+            this.$nuxt.$emit('CHECKOUT_PAYMENT_SUCCESS', data.transactionId);
         },
+
         paymentCancelled(data) {
-          console.log("paymentCancelled", data);
+            // console.log("paymentCancelled", data);
         },
 
         paymentError(data) {

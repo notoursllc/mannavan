@@ -138,8 +138,7 @@ export default {
                         <div class="displayTableRow">
                             <div class="displayTableCell prm pbs">{{ $t('Payment method') }}:</div>
                             <div class="displayTableCell fwb pbs">
-                                <payment-type-display
-                                    :transaction="order.transaction" />
+                                <payment-type-display :payment="order" />
                             </div>
                         </div>
 

@@ -43,13 +43,20 @@ export default {
     <div>
         <div class="mbl">
             <form-row>
-                <template slot="label">{{ $t('Ordered on') }}:</template>
+                <template slot="label"><span class="fwb">{{ $t('Ordered on') }}:</span></template>
                 <template slot="value">{{ order.created_at | format8601 }}</template>
             </form-row>
 
             <form-row>
-                <template slot="label">{{ $t('Order') }}:</template>
+                <template slot="label"><span class="fwb">{{ $t('Order') }}:</span></template>
                 <template slot="value">{{ order.id }}</template>
+            </form-row>
+
+            <form-row>
+                <template slot="label"><span class="fwb">{{ $t('Payment method') }}:</span></template>
+                <template slot="value">
+                    <payment-type-display :payment="order" />
+                </template>
             </form-row>
         </div>
 
@@ -58,14 +65,6 @@ export default {
                 <div class="fwb">{{ $t('Shipping to') }}:</div>
                 <cart-shipping-address-display
                             :shopping-cart="order.shoppingCart" />
-            </div>
-
-            <div class="mbl mrxl inlineBlock vat">
-                <div class="fwb">{{ $t('Payment method') }}:</div>
-                <div>
-                    <payment-type-display
-                        :transaction="order.transaction" />
-                </div>
             </div>
 
             <div class="mbl inlineBlock vat">

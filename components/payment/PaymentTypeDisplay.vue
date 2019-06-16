@@ -3,7 +3,7 @@
 
     export default{
         props: {
-            transaction: {
+            payment: {
                 type: Object
             }
         },
@@ -14,8 +14,7 @@
 
         methods: {
             isPaypalTransaction() {
-                //TODO: needs paypal check update - this logic probably isnt right
-                return this.transaction.payment && this.transaction.payment.type === 'paypal_account';
+                return parseInt(this.payment.payment_type, 10) === 2;
             }
         },
 
@@ -24,11 +23,11 @@
                 let type = null;
 
                 if(this.isPaypalTransaction()) {
-                    type = 'paypal_account';
+                    type = 'paypal';
                 }
                 else {
-                    if(Array.isArray(this.transaction.tenders)) {
-                        this.transaction.tenders.forEach((obj) => {
+                    if(Array.isArray(this.payment.transaction.tenders)) {
+                        this.payment.transaction.tenders.forEach((obj) => {
                             type = obj.card_details.card.card_brand;
                         });
                     }
@@ -40,8 +39,8 @@
             lastFour: function() {
                 let last_four = null;
 
-                if(Array.isArray(this.transaction.tenders)) {
-                    this.transaction.tenders.forEach((obj) => {
+                if(!this.isPaypalTransaction() && Array.isArray(this.payment.transaction.tenders)) {
+                    this.payment.transaction.tenders.forEach((obj) => {
                         last_four = obj.card_details.card.last_4;
                     });
                 }
@@ -49,9 +48,9 @@
                 return last_four;
             },
 
-            payerEmail: function() {
+            paypalPayerEmail: function() {
                 if(this.isPaypalTransaction()) {
-                    return this.transaction.payment.payerEmail;
+                    return this.payment.transaction.result.payer.email_address;
                 }
                 return null;
             }
@@ -64,6 +63,6 @@
     <span>
         <credit-card-icon :card-type="cardType" />&nbsp;
         <span v-show="lastFour">**** {{ lastFour }}</span>
-        <span v-show="payerEmail">{{ payerEmail }}</span>
+        <span v-show="paypalPayerEmail" class="pls">{{ paypalPayerEmail }}</span>
     </span>
 </template>

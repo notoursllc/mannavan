@@ -48,11 +48,12 @@ export default {
     mounted() {
         paypal.Button.render(
             {
-                env: 'sandbox',
+                env: process.env.NODE_ENV === 'development' ? 'sandbox' : 'production',
                 payment: this.payment,
                 onAuthorize: this.onAuthorize,
                 onCancel: this.onCancel,
                 onError: this.onError,
+                debug: process.env.NODE_ENV === 'development',
 
                 // https://developer.paypal.com/docs/archive/checkout/how-to/customize-button/#button-styles
                 style: {
