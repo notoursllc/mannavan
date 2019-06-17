@@ -64,7 +64,7 @@ export default {
             let paramString = queryString.stringify(params, {arrayFormat: 'bracket'});
 
             // const response = await this.$axios.$get(`/products?${paramString}`); // TODO: is there a XSS issue here?
-            const response = await this.$axios.$get(`/api/products?${paramString}`); // TODO: is there a XSS issue here?
+            const response = await this.$axios.$get(`/products?${paramString}`); // TODO: is there a XSS issue here?
             return response.data;
         },
 

@@ -1,7 +1,6 @@
 import { Selector } from 'testcafe';
 
 function getBaseUrl(path) {
-    console.log("GET BASE", process.env.NODE_ENV)
     // let base = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://www.gobreadvan.com';
     let base = 'http://localhost:3000';
 
