@@ -95,8 +95,6 @@ module.exports = {
     */
     axios: {
         proxy: true,
-        // baseURL: process.env.NODE_ENV !== "production" ? `http://${host}:${port}` : "http://dataserver:com:4444"
-
         // baseURL: process.env.NODE_ENV === 'production' ? 'https://www.gobreadvan.com:3000' : 'http://localhost:3000',
         prefix: '/api/v1',
         debug: process.env.API_DEBUG || false,
@@ -107,7 +105,7 @@ module.exports = {
 
     proxy: {
         '/api/': { target: process.env.API_URL, pathRewrite: {'^/api/': ''} }
-    }
+    },
 
     /**
      *  Build configuration
