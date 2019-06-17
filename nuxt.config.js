@@ -96,9 +96,9 @@ module.exports = {
     axios: {
         proxy: true,
         // baseURL: process.env.NODE_ENV === 'production' ? 'https://www.gobreadvan.com:3000' : 'http://localhost:3000',
-        prefix: '/api/v1',
+        // prefix: '/api/v1',
         debug: process.env.API_DEBUG || false,
-        https: process.env.API_USE_HTTPS || true,
+        // https: process.env.API_USE_HTTPS || true,
         retry: { retries: 3 },
         progress: true
     },
