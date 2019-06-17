@@ -94,7 +94,7 @@ module.exports = {
     *  See https://github.com/nuxt-community/axios-module#options
     */
     axios: {
-        // baseURL: '/api/v1',
+        // baseURL: process.env.NODE_ENV === 'production' ? 'https://www.gobreadvan.com:3000' : 'http://localhost:3000',
         prefix: '/api/v1',
         debug: process.env.API_DEBUG || false,
         https: process.env.API_USE_HTTPS || true,
@@ -125,7 +125,7 @@ module.exports = {
         // }
     },
 
-    transition: {
+    pageTransition: {
         name: 'fade',
         mode: 'out-in'
     }
