@@ -3,6 +3,9 @@ import Vue from 'vue'
 import { Button } from 'element-ui'
 import product_mixin from '@/mixins/product_mixin';
 
+const globalTypes = process.env.GLOBAL_TYPES;
+
+
 Vue.use(Button);
 
 export default {
@@ -24,12 +27,12 @@ export default {
                 :exact="true">{{ $t('All') }}</nuxt-link>
 
             <nuxt-link
-                v-for="(obj, key) in getProductSubTypeData()"
-                :key="key"
-                :to="{ name: 'type-name', params: { name: obj.label } }"
+                v-for="(index, type) in getProductSubTypes()"
+                :key="index"
+                :to="{ name: 'type-name', params: { name: getUrlPathForProductSubType(type) } }"
                 tag="el-button"
                 class="is-round"
-                active-class="el-button--success">{{ $tc(key, 2) }}</nuxt-link>
+                active-class="el-button--success">{{ $tc(type, 2) }}</nuxt-link>
         </div>
     </div>
 </template>

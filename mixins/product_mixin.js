@@ -160,6 +160,7 @@ export default {
             });
         },
 
+
         goToProductArtistUpsert(id) {
             this.$router.push({
                 name: 'acts-product-artist-upsert-id',
@@ -168,27 +169,33 @@ export default {
         },
 
 
-        getProductSubTypeData(key) {
-            const data = {
-                // commenting out until we offer hats:
-                // PRODUCT_SUBTYPE_HAT: {
-                //     id: 1,
-                //     label: 'hats'
-                // },
-                PRODUCT_SUBTYPE_TOP: {
-                    id: 2,
-                    label: 'tops'
-                },
-                PRODUCT_SUBTYPE_SOCK: {
-                    id: 3,
-                    label: 'socks'
-                }
-            };
+        getProductSubTypes() {
+            const globalTypes = process.env.GLOBAL_TYPES;
 
-            if(key && data.hasOwnProperty(key)) {
-                return data[key];
+            if(isObject(globalTypes)) {
+                return globalTypes.product.subtypes
             }
-            return data;
+        },
+
+
+        /**
+         * The URL path is created by removing the last part
+         * of the 'PRODUCT_SUBTYPE_FOO' string ('FOO') and
+         * converting that to lower case ('foo')
+         *
+         * So 'PRODUCT_SUBTYPE_HATS' will return 'hats'
+         *
+         * @param String subtype  'PRODUCT_SUBTYPE_FOO'
+         */
+        getUrlPathForProductSubType(subtype) {
+            const subtypes = this.getProductSubTypes();
+
+            if(isObject(subtypes) && subtypes.hasOwnProperty(subtype)) {
+                let type = subtype.substring('PRODUCT_SUBTYPE_'.length);
+                if(type) {
+                    return type.toLowerCase();
+                }
+            }
         },
 
 
@@ -281,27 +288,26 @@ export default {
         /**
          * Get the product subtype id for a given label (english string)
          *
-         * @param {*} type  hats | tops
+         * @param {*} type  hats | tops | socks
          */
         getIdByProductType(type) {
-            let id = 0;
-            let subtype = null;
+            let response = {
+                productTypeId: 0,
+                productSubType: null
+            }
 
             // TODO: is using 'this' going to work if this method
             // is not called when this mixin is not used as a component mixin?
-            let data = this.getProductSubTypeData();
+            let data = this.getProductSubTypes();
 
-            _forEach(data, (obj, key) => {
-                if (obj.label === type) {
-                    id = obj.id;
-                    subtype = key;
+            _forEach(data, (index, subtype) => {
+                if(subtype.indexOf(`PRODUCT_SUBTYPE_${type.toUpperCase()}`) === 0) {
+                    response.productTypeId = index;
+                    response.productSubType = subtype;
                 }
             });
 
-            return {
-                productTypeId: id,
-                productSubType: subtype
-            };
+            return response;
         },
 
 

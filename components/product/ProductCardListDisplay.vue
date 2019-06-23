@@ -22,7 +22,7 @@ export default {
 
 
 <template>
-    <div>
+    <div class="prod-card-container">
         <div class="flex-container" style="margin:0">
             <div class="flex-container-column"
                 style="padding:0"
@@ -30,8 +30,7 @@ export default {
                 :key="product.id">
                 <nuxt-link
                     :to="{ name: 'type-name-seouri', params: { name: type, seouri: product.seo_uri } }"
-                    tag="span"
-                    class="card-wrapper">
+                    tag="span">
                     <product-card :product="product"></product-card>
                 </nuxt-link>
             </div>
@@ -43,6 +42,11 @@ export default {
 <style lang="scss" scoped>
 @import '~assets/css/components/_variables.scss';
 @import "~assets/css/components/_mixins.scss";
+
+.prod-card-container {
+    background-color: #f4f4f4;
+    padding: 30px;
+}
 
 .flex-container {
     @include flexbox();
@@ -57,26 +61,29 @@ export default {
     width: 33.33333%;
 }
 
-
-
-.card-wrapper {
+.pic-card {
+    margin: 5px;
+    @include grow();
+}
+.pic-card:hover {
     cursor: pointer;
-
-    .pic-card {
-        margin: .5px;
-        @include grow();
-    }
-    .pic-card:hover {
-        @include growHover(1.01)
-    }
+    @include growHover(1.01)
 }
 
 @media #{$medium-and-down} {
+    .prod-card-container {
+        padding: 20px;
+    }
+
     .flex-container-column {
         width: 50%;
     }
 }
 @media #{$small-and-down} {
+    .prod-card-container {
+        padding: 5px;
+    }
+
     .flex-container {
         display: block;
     }

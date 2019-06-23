@@ -7,7 +7,8 @@ import IconSizeChartChestMeasurement from '@/components/icons/IconSizeChartChest
 import IconSizeChartHipMeasurement from '@/components/icons/IconSizeChartHipMeasurement';
 import IconSizeChartLengthMeasurement from '@/components/icons/IconSizeChartLengthMeasurement';
 import IconSizeChartSleeveMeasurement from '@/components/icons/IconSizeChartSleeveMeasurement';
-import globalTypes from '@/global_types.js';
+
+const globalTypes = process.env.GLOBAL_TYPES;
 
 
 let reverseMaterialTypes = {};

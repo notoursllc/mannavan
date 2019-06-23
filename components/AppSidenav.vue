@@ -47,11 +47,11 @@ export default {
             text-color="#fff"
             class="sidenav-menu-main">
             <el-menu-item
-                v-for="(obj, key) in getProductSubTypeData()"
-                :key="key"
-                :route="{ name: 'type-name', params: { name: obj.label } }"
-                :index="key"
-                @click="onMenuItemClick">{{ $tc(key, 2) }}</el-menu-item>
+                v-for="(index, type) in getProductSubTypes()"
+                :key="type"
+                :route="{ name: 'type-name', params: { name: getUrlPathForProductSubType(type) } }"
+                :index="type"
+                @click="onMenuItemClick">{{ $tc(type, 2) }}</el-menu-item>
         </el-menu>
 
         <el-menu

@@ -5,6 +5,8 @@ import HeroMain from '@/components/HeroMain'
 import HeroProductTypeNav from '@/components/HeroProductTypeNav'
 import ProductCardListDisplay from '@/components/product/ProductCardListDisplay'
 
+console.log("GLOBAL_TYPES", process.env.GLOBAL_TYPES)
+
 let bgImages = [
     'bg_silver_car.jpg',
     'bg_black_5.jpg',

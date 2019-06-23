@@ -1,5 +1,6 @@
 // require('dotenv').config();  // TODO: not sure if this works here
 const pkg = require('./package');
+const globalTypes = require('./shopBac/server/global_types');
 
 module.exports = {
     mode: 'universal',
@@ -30,6 +31,7 @@ module.exports = {
         BUG_SNAG_API_KEY: process.env.BUG_SNAG_API_KEY,
         DOMAIN_NAME: process.env.DOMAIN_NAME,
         EMAIL_INFO: process.env.EMAIL_INFO,
+        GLOBAL_TYPES: globalTypes,
         NODE_ENV: process.env.NODE_ENV,
         SHIPPING_ADDRESS_FROM_COMPANY: process.env.SHIPPING_ADDRESS_FROM_COMPANY,
         SHIPPING_ADDRESS_FROM_ADDRESS1: process.env.SHIPPING_ADDRESS_FROM_ADDRESS1,

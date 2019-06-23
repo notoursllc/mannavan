@@ -23,11 +23,11 @@
            <div class="fs14 tac">
                <div>{{ $t('Shop for') }}:</div>
                <div class="tac pts keepShoppingLinks">
-                   <nuxt-link
-                       v-for="(obj, key) in getProductSubTypeData()"
-                       :key="key"
-                       :to="{ name: 'type-name', params: { name: obj.label } }"
-                       tag="a">{{ $tc(key, 2) }}</nuxt-link>
+                    <nuxt-link
+                        v-for="(index, type) in getProductSubTypes()"
+                        :key="index"
+                        :to="{ name: 'type-name', params: { name: getUrlPathForProductSubType(type) } }"
+                        tag="a">{{ $tc(type, 2) }}</nuxt-link>
                </div>
            </div>
         </el-popover>

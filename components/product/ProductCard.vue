@@ -31,6 +31,7 @@
 
     .pic-card {
         background-color: #fff;
+        border: 8px solid #fff;
         color: #000;
         transition: .3s;
         overflow: hidden;

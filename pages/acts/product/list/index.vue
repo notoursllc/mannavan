@@ -67,7 +67,7 @@ export default {
             let values = [];
             let self = this;
 
-            forEach(this.getProductSubTypeData(), function(obj, key) {
+            forEach(this.getProductSubTypes(), function(val, key) {
                 if(subType & key) {
                     values.push(
                         self.$tc(key, 2)

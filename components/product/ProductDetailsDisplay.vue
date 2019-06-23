@@ -22,7 +22,7 @@ export default {
     <div>
         <div class="prod-container">
             <div class="is-half">
-                <div class="image phm">
+                <div class="prod-image">
                     <slot name="pics"></slot>
                 </div>
             </div>
@@ -96,6 +96,9 @@ export default {
 @import '~assets/css/components/_variables.scss';
 @import "~assets/css/components/_mixins.scss";
 
+.prod-image {
+    position: relative;
+}
 
 .prod-container {
     @include flexbox();

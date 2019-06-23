@@ -11,7 +11,8 @@ import IconPlayVideo from '@/components/icons/IconPlayVideo'
 import ProductArtistSelect from '@/components/product/admin/ProductArtistSelect'
 import product_mixin from '@/mixins/product_mixin'
 import shipping_mixin from '@/mixins/shipping_mixin'
-import globalTypes from '@/global_types.js';
+
+const globalTypes = process.env.GLOBAL_TYPES;
 
 Vue.prototype.$notify = Notification;
 Vue.prototype.$confirm = MessageBox.confirm;
@@ -150,7 +151,7 @@ export default {
             });
 
             if(productTypeName) {
-                label = this.getProductSubTypeData(productTypeName).label;
+                label = this.getUrlPathForProductSubType(productTypeName);
             }
 
             let routeData = this.$router.resolve({

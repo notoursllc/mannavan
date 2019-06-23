@@ -6,6 +6,8 @@ import app_mixin from '@/mixins/app_mixin';
 import product_mixin from '@/mixins/product_mixin';
 
 export default {
+    layout: 'home',
+
     components: {
         HeroMain,
         HeroProductTypeNav,
@@ -25,11 +27,9 @@ export default {
     },
 
     async asyncData({ params, store, app }) {
-        console.log("IN ASYNC DATA 3", store.state.product)
         // console.log("IN ASYNC DATA store", store.state.product)
         // console.log("IN ASYNC DATA", context.app.store)
         // this.init(context.app.$route.params.id)
-
         try {
             let subTypeData = {};
 
