@@ -93,7 +93,7 @@ header:after {
     font-size: 14px;
     font-weight: 600;
     margin: 0 auto;
-    max-width: 1568px;
+    max-width: $header-max-width;
 
     .header-hamburger {
         font-size: 25px;

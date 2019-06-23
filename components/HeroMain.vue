@@ -7,7 +7,7 @@ export default {
     },
 
     computed: {
-        heroContentStyle() {
+        heroMainStyle() {
             if(this.bgImage) {
                 return {
                     'background-image': `linear-gradient(rgba(0, 0, 0, 0.5),rgba(0, 0, 0, 0.5)), url('${this.bgImage}')`
@@ -20,8 +20,8 @@ export default {
 
 
 <template>
-    <div class="hero-main">
-        <div class="hero-content" :style="heroContentStyle">
+    <div class="hero-main" :style="heroMainStyle">
+        <div class="hero-content">
             <slot></slot>
         </div>
     </div>
@@ -30,6 +30,7 @@ export default {
 
 <style lang="scss">
     @import "~assets/css/components/_mixins.scss";
+    @import "~assets/css/components/_variables.scss";
 
     .hero-main {
         @include flexbox();
@@ -38,6 +39,11 @@ export default {
         @include align-items(stretch);
         @include align-content(stretch);
         background:#FFFFFF;
+        background-position: center center;
+        // background-image: linear-gradient(rgba(0, 0, 0, 0.5),rgba(0, 0, 0, 0.5));
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
         color:#FF0077;
         text-align: left;
         position: relative;
@@ -45,24 +51,18 @@ export default {
         overflow: hidden;
 
         .hero-content {
-            background-position: center center;
-            background-image: linear-gradient(rgba(0, 0, 0, 0.5),rgba(0, 0, 0, 0.5));
-            background-size: cover;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
             @include flex-basis(100%);
             width: 100%;
             margin: 0 auto;
-            z-index: 2;
             @include flexbox();
             @include align-items(center);
             @include justify-content(flex-start);
             box-sizing: border-box;
             position: relative;
             // padding: 2vh 2rem;
-            padding: 50px 50px;
-            // max-width: 70rem;
-            // border: 1px solid blue;
+            padding: 50px;
+            max-width: $header-max-width;
+            z-index: 2;
         }
 
         .home-copy-55 {
@@ -81,6 +81,24 @@ export default {
         .sub-heading {
             margin-top: 10px;
             color: #fff;
+        }
+    }
+
+    @media #{$medium-and-down} {
+        .hero-main {
+            .hero-content {
+                padding: 20px;
+            }
+
+            .home-copy-55 {
+                @include flex-basis(100%);
+                width: 100%;
+            }
+
+            .heading {
+                font-size: 30px;
+                font-weight: 550;
+            }
         }
     }
 </style>
