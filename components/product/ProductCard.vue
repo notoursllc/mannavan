@@ -47,5 +47,6 @@
         overflow: hidden;
         font-size: 14px;
         font-weight: bold;
+        width: 100%;
     }
 </style>

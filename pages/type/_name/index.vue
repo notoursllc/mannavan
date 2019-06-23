@@ -1,56 +1,58 @@
 <script>
-import { mapGetters } from 'vuex';
-import queryString from 'query-string';
-import ProductCard from '@/components/product/ProductCard';
+import HeroMain from '@/components/HeroMain';
+import HeroProductTypeNav from '@/components/HeroProductTypeNav';
+import ProductCardListDisplay from '@/components/product/ProductCardListDisplay';
+import app_mixin from '@/mixins/app_mixin';
 import product_mixin from '@/mixins/product_mixin';
-import app_mixin from '@/mixins/app_mixin'
-
-
-
-function getProductSearchConfig(productTypeId) {
-    return {
-        where: ['is_available', '=', true],
-        whereRaw: ['sub_type & ? > 0', [productTypeId]],
-        // andWhere: [
-        //     ['total_inventory_count', '>', 0]  // doesn't work because 'total_inventory_count' is a virtual attribute
-        // ],
-        orderBy: 'updated_at',
-        orderDir: 'DESC'
-    }
-}
-
 
 export default {
-    props: ['id'],
-
     components: {
-        ProductCard
+        HeroMain,
+        HeroProductTypeNav,
+        ProductCardListDisplay
     },
 
     mixins: [
-        product_mixin,
-        app_mixin
+        app_mixin,
+        product_mixin
     ],
 
     data() {
         return {
-            products: {},
+            products: [],
             productSubType: null
         }
     },
 
     async asyncData({ params, store, app }) {
-        // console.log("IN ASYNC DATA store", store.state.product)
+        console.log("IN ASYNC DATA 3", store.state.product)
         // console.log("IN ASYNC DATA store", store.state.product)
         // console.log("IN ASYNC DATA", context.app.store)
         // this.init(context.app.$route.params.id)
 
         try {
-            const subTypeData = product_mixin.methods.getIdByProductType(params.name);
+            let subTypeData = {};
+
+            if(params.name) {
+                subTypeData = product_mixin.methods.getIdByProductType(params.name);
+            }
+
+            let searchConfig = {
+                where: ['is_available', '=', true],
+                // andWhere: [
+                //     ['total_inventory_count', '>', 0]  // doesn't work because 'total_inventory_count' is a virtual attribute
+                // ],
+                orderBy: 'updated_at',
+                orderDir: 'DESC'
+            };
+
+            if(subTypeData.productTypeId) {
+                searchConfig.whereRaw = ['sub_type & ? > 0', [subTypeData.productTypeId]];
+            }
 
             const products = await product_mixin.methods.getProducts.call(
                 app,
-                getProductSearchConfig(subTypeData.productTypeId)
+                searchConfig
             );
 
             return {
@@ -85,52 +87,22 @@ export default {
 }
 </script>
 
+
 <template>
-    <div class="flex-container" style="margin:0">
-        <div class="flex-container-column"
-            style="padding:0"
-            v-for="product in products"
-            :key="product.id">
-            <nuxt-link
-                :to="{ name: 'type-name-seouri', params: { name: $route.params.name, seouri: product.seo_uri } }"
-                tag="span"
-                class="cursorPointer">
-                <product-card :product="product"></product-card>
-            </nuxt-link>
-        </div>
+    <div>
+        <hero-main>
+            <div class="home-copy-55">
+                <h1 class="heading">Welcome to Breadvan</h1>
+                <div class="sub-heading">
+                    It's what drivers wear away from the track.
+                </div>
+            </div>
+        </hero-main>
+
+        <hero-product-type-nav />
+
+        <product-card-list-display
+            :products="products"
+            :type="productSubType" />
     </div>
 </template>
-
-<style lang="scss" scoped>
-@import '~assets/css/components/_variables.scss';
-@import "~assets/css/components/_mixins.scss";
-
-.flex-container {
-    @include flexbox();
-    @include flex-wrap(wrap);
-}
-.is-third {
-    @include flex(none);
-    width: 33.33333%;
-}
-.flex-container-column {
-    @include flex(none);
-    width: 33.33333%;
-}
-
-@media #{$medium-and-down} {
-    .flex-container-column {
-        width: 50%;
-    }
-}
-@media #{$small-and-down} {
-    .flex-container {
-        display: block;
-    }
-    .flex-container-column {
-        @include flex(1 0 auto);
-        width: 100%;
-    }
-}
-
-</style>

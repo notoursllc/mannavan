@@ -1,10 +1,9 @@
 <script>
 import Vue from 'vue'
-import { Button } from 'element-ui'
-import IconVictory from '@/components/icons/IconVictory'
-import IconLogo from '@/components/icons/IconLogo'
-
-Vue.use(Button);
+import product_mixin from '@/mixins/product_mixin';
+import HeroMain from '@/components/HeroMain'
+import HeroProductTypeNav from '@/components/HeroProductTypeNav'
+import ProductCardListDisplay from '@/components/product/ProductCardListDisplay'
 
 let bgImages = [
     'bg_silver_car.jpg',
@@ -21,27 +20,50 @@ function randomIntFromInterval(min, max) {
 const randomInt = randomIntFromInterval(0, (bgImages.length - 1));
 const randomImage = `/images/backgrounds/${ bgImages[randomInt] }`;
 
-
 export default {
     components: {
-        IconVictory,
-        IconLogo
+        HeroMain,
+        HeroProductTypeNav,
+        ProductCardListDisplay
     },
 
-    data: function() {
+    data() {
         return {
-            bgImage: randomImage,
+            products: {},
+            bgImage: null
         }
     },
 
-    methods: {
-        heroRedirect() {
-            this.$router.push({
-                name: 'type-name',
-                params: {
-                    name: 'tops'
-                }
-            });
+    async asyncData({ params, store, app }) {
+        // console.log("IN ASYNC DATA store", store.state.product)
+        // console.log("IN ASYNC DATA", context.app.store)
+        // this.init(context.app.$route.params.id)
+
+        const randomInt = randomIntFromInterval(0, (bgImages.length - 1));
+        const randomImage = `/images/backgrounds/${ bgImages[randomInt] }`;
+
+        try {
+            let searchConfig = {
+                where: ['is_available', '=', true],
+                // andWhere: [
+                //     ['total_inventory_count', '>', 0]  // doesn't work because 'total_inventory_count' is a virtual attribute
+                // ],
+                orderBy: 'updated_at',
+                orderDir: 'DESC'
+            };
+
+            const products = await product_mixin.methods.getProducts.call(
+                app,
+                searchConfig
+            );
+
+            return {
+                products: products,
+                bgImage: randomImage
+            }
+        }
+        catch(err) {
+            console.error("Error getting products", err)
         }
     },
 
@@ -62,94 +84,63 @@ export default {
 
 
 <template>
-    <div class="hero"
-        :style="{ 'background-image': 'linear-gradient(rgba(0, 0, 0, 0.5),rgba(0, 0, 0, 0.5)), url(\'' + bgImage + '\')' }">
-
-        <div class="intro">
-            <div class="animated fadeInDown animation-delay-3">
-                <icon-logo icon-name="breadvan" class-name="fillWhite" width="200px" />
+    <div>
+        <hero-main :bg-image="bgImage">
+            <div class="home-copy-55 pal">
+                <h1 class="heading">This is what drivers wear<br/>off the track</h1>
+                <!-- <div class="sub-heading">
+                    This is what drivers wear off the track.
+                </div> -->
             </div>
 
-            <div class="animated fadeInDown">
-                <div class="headline">{{ $t("Vintage. Racing.")}}</div>
-                <div class="subheadline">{{ $t('An apparel company') }}</div>
-
-                <div class="btn">
-                    <el-button
-                        round
-                        @click="heroRedirect">{{ $t('Check out our first product') }}</el-button>
-                </div>
-            </div>
-        </div>
-
+            <!-- <img class="home-image"
+                src="https://cdn.dribbble.com/assets/art-banners/theindcrediblerobot_dribbble-e8a008135694d58c776605ca232eacb9c448b48e8da09d53ed21316cb5fee05c.gif"
+                width="200"
+                height="200"> -->
+        </hero-main>
+        <hero-product-type-nav />
+        <product-card-list-display :products="products" />
     </div>
 </template>
 
-
 <style lang="scss" scoped>
-    @import "~assets/css/components/_variables.scss";
     @import "~assets/css/components/_mixins.scss";
 
-    .hero {
-        width: 100vw;
-        height: 100vh;
+    .home-content {
         background-position: center center;
-        text-align: center;
         background-image: linear-gradient(rgba(0, 0, 0, 0.5),rgba(0, 0, 0, 0.5));
         background-size: cover;
-        background-position: center center;
         background-repeat: no-repeat;
         background-attachment: fixed;
+        @include flex-basis(100%);
+        width: 100%;
+        margin: 0 auto;
+        z-index: 2;
         @include flexbox();
-        @include justify-content(center);
         @include align-items(center);
-    }
-
-    .intro {
+        @include justify-content(flex-start);
+        box-sizing: border-box;
         position: relative;
-        padding: 20px 0 20px;
-        overflow: hidden;
-        color: #fff;
-        font-family: Verdana, Geneva, sans-serif;
-
-        svg {
-            width: 200px !important;
-        }
-
-        .headline {
-            font-size: 2em;
-            margin-top: 20px;
-        }
-
-        .subheadline {
-            font-size: 20px;
-        }
-
-        .btn {
-            margin-top: 40px;
-        }
+        padding: 50px 50px;
+        // max-width: 70rem;
     }
 
-    @media #{$small-and-down} {
-        .intro {
-            padding: 10px;
+    .home-image {
+        opacity: 1;
+        animation: image-loaded ease-in-out 1.5s forwards;
+        height: auto;
+        width: auto;
+        padding: 0;
+        flex-basis: 35%;
+        width: 35%;
+    }
 
-            svg {
-                width: 120px !important;
-            }
-
-            .headline {
-                font-size: 1.2em;
-                margin-top: 10px;
-            }
-            .subheadline {
-                font-size: .9em;
-                margin-top: 0;
-            }
-
-            .btn {
-                margin-top: 20px;
-            }
+    @keyframes image-loaded {
+        0% {
+            opacity:0
+        }
+        100% {
+            opacity:1
         }
     }
 </style>

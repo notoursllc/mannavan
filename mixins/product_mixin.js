@@ -178,6 +178,10 @@ export default {
                 PRODUCT_SUBTYPE_TOP: {
                     id: 2,
                     label: 'tops'
+                },
+                PRODUCT_SUBTYPE_SOCK: {
+                    id: 3,
+                    label: 'socks'
                 }
             };
 

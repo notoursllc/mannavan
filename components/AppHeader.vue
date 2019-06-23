@@ -2,6 +2,7 @@
 import { mapGetters } from 'vuex';
 import product_mixin from '@/mixins/product_mixin';
 import IconVictory from '@/components/icons/IconVictory';
+import IconCart from '@/components/icons/IconCart';
 
 export default {
     mixins: [
@@ -9,7 +10,8 @@ export default {
     ],
 
     components: {
-        IconVictory
+        IconVictory,
+        IconCart
     },
 
     computed: {
@@ -32,32 +34,22 @@ export default {
                     :to="{ name: 'index' }"
                     tag="span"
                     class="cursorPointer header-logo">
-                    <icon-victory icon-name="logo" class-name="fillGray" class="vam" />
+                    <icon-victory icon-name="logo" class-name="fillWhite" class="vam" />
                 </nuxt-link>
             </div>
 
-            <ul class="header-nav">
+            <ul class="header-nav tar">
                 <nuxt-link
-                    v-for="(obj, key) in getProductSubTypeData()"
-                    :key="key"
-                    :to="{ name: 'type-name', params: { name: obj.label } }"
+                    :to="{ name: 'cart-id' }"
                     tag="li"
-                    class="header-label"
-                    active-class="active">
-                    <span>{{ $tc(key, 2) }}</span>
+                    class="header-label">
+                    <div class="cart-button" :class="{'bounce': numCartItems}">
+                        <icon-cart icon-name="shopping_cart" class-name="fillWhite" width="35px" height="35px" />
+                        <span class="badge" :class="{'badge-green': numCartItems}">{{ numCartItems }}</span>
+                    </div>
                 </nuxt-link>
             </ul>
 
-            <div class="header-cart-dot">
-                <nuxt-link
-                    :to="{ name: 'cart-id' }"
-                    tag="div"
-                    class="inlineBlock cursorPointer"
-                    active-class="active">
-                    <div class="header-label dot-label">{{ $t('CART') }}</div>
-                    <div class="dot">{{ numCartItems }}</div>
-                </nuxt-link>
-            </div>
         </div>
     </header>
 </template>
@@ -67,17 +59,15 @@ export default {
 @import "~assets/css/components/_variables.scss";
 @import "~assets/css/components/_mixins.scss";
 
-// $header-height: 57px;
-$header-height: 70px;
+$header-height: 55px;
 $header-height-small: 46px;
 
 header {
     transition: .5s;
     // background: #424345;
-    background: #fff;
-    border-bottom: 1px solid #ece8e8;
+    background: #5a5a5a;
     position: relative;
-    color: $colorGray;
+    color: #fff;
     height: $header-height-small;
     padding: 0;
     z-index: 10;
@@ -117,7 +107,7 @@ header:after {
 
         .header-logo {
             svg {
-                width: 68px;
+                width: 50px;
             }
         }
     }
@@ -143,30 +133,37 @@ header:after {
             height: $header-height;
         }
     }
+}
 
-    .header-cart-dot {
+.cart-button {
+    position: relative;
+    padding-top: 12px;
+
+    svg {
+        width: 32px;
+    }
+
+    .badge {
+        background-color: #a4a5a3;
+        border-radius: 10px;
+        color: #000;
         display: inline-block;
-        position: relative;
+        font-size: 14px;
+        height: 20px;
+        min-width: 20px;
+        line-height: 20px;
+        padding: 0 5px 0 5px;
+        text-align: center;
+        white-space: nowrap;
+        position: absolute;
+        top: 8px;
+        right: -12px;
+        letter-spacing: normal;
+    }
 
-        .dot-label {
-            padding-right: 6px;
-        }
-
-        .dot {
-            display: inline-block;
-            height: 34px;
-            width: 34px;
-            background-color: #fff;
-            border-radius: 50%;
-            text-align: center;
-            color: #2c4656;
-            font-size: 22px;
-            font-weight: 600;
-            @include rotate(25deg);
-            position: relative;
-            top: 2px;
-            @include box-shadow(0, 0, 2px, #555);
-        }
+    .badge-green {
+        background-color: #55c120;
+        color: #fff;
     }
 }
 
@@ -187,7 +184,7 @@ header:after {
 
                 .header-logo {
                     svg {
-                        width: 78px;
+                        width: 65px;
                     }
                 }
             }
