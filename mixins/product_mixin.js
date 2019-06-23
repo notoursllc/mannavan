@@ -171,9 +171,17 @@ export default {
 
         getProductSubTypes() {
             const globalTypes = process.env.GLOBAL_TYPES;
+            const whiteList = process.env.PRODUCT_SUBTYPE_WHITELIST ? process.env.PRODUCT_SUBTYPE_WHITELIST.split(',') : [];
+            const cleanSubtypes = {};
 
             if(isObject(globalTypes)) {
-                return globalTypes.product.subtypes
+                _forEach(globalTypes.product.subtypes, (val, subtype) => {
+                    if(whiteList.indexOf(subtype) > -1) {
+                        cleanSubtypes[subtype] = val;
+                    }
+                });
+
+                return cleanSubtypes;
             }
         },
 
