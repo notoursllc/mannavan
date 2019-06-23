@@ -21,6 +21,8 @@ const randomInt = randomIntFromInterval(0, (bgImages.length - 1));
 const randomImage = `/images/backgrounds/${ bgImages[randomInt] }`;
 
 export default {
+    layout: 'home',
+
     components: {
         HeroMain,
         HeroProductTypeNav,
