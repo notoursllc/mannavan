@@ -6,7 +6,7 @@
     import cloneDeep from 'lodash.clonedeep'
     import CartItems from '@/components/cart/CartItems'
     import CartTotalsTable from '@/components/cart/CartTotalsTable'
-    import KeepShoppingButton from '@/components/cart/KeepShoppingButton'
+    import GoToCheckoutButtons from '@/components/cart/GoToCheckoutButtons'
     import app_mixin from '@/mixins/app_mixin'
 
     Vue.use(Button);
@@ -15,7 +15,7 @@
         components: {
             CartItems,
             CartTotalsTable,
-            KeepShoppingButton
+            GoToCheckoutButtons
         },
 
         mixins: [
@@ -30,10 +30,6 @@
         },
 
         methods: {
-            goToCheckout() {
-                this.$router.push({ name: 'cart-checkout' });
-            },
-
             cloneCartFromState() {
                 this.shoppingCart = cloneDeep(this.$store.state.shoppingcart.cart);
             }
@@ -69,12 +65,8 @@
 
 <template>
     <div class="pageContainerMax">
-        <div class="tac ptl" v-if="shoppingCart.cart_items && shoppingCart.cart_items.length > 2">
-            <el-button
-                type="primary"
-                size="large"
-                @click="goToCheckout"
-                round>{{ $t('PROCEED TO CHECKOUT') }}</el-button>
+        <div class="checkout-buttons" v-if="shoppingCart.cart_items && shoppingCart.cart_items.length > 2">
+            <go-to-checkout-buttons />
         </div>
 
         <cart-items
@@ -88,18 +80,15 @@
             </div>
         </div>
 
-        <div class="tac mtl" v-if="shoppingCart.num_items">
-            <el-button
-                type="primary"
-                size="large"
-                @click="goToCheckout"
-                round>{{ $t('PROCEED TO CHECKOUT') }}</el-button>
-
-            <div class="mvl colorGray">{{ $t('OR') }}</div>
-        </div>
-
-        <div class="tac">
-            <keep-shopping-button></keep-shopping-button>
+        <div class="checkout-buttons" v-if="shoppingCart.num_items">
+            <go-to-checkout-buttons />
         </div>
     </div>
 </template>
+
+<style lang="scss">
+    .checkout-buttons {
+        text-align: center;
+        margin: 20px 0;
+    }
+</style>

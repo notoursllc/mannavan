@@ -121,8 +121,6 @@ export default {
                     font-weight: 550;
                 }
             }
-
-
         }
     }
 </style>
