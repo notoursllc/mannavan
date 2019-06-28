@@ -51,12 +51,13 @@ export default {
         overflow: hidden;
 
         .hero-content {
-            @include flex-basis(100%);
+            // @include flex-basis(100%);
             width: 100%;
             margin: 0 auto;
             @include flexbox();
+            @include flex-direction(row);
             @include align-items(center);
-            @include justify-content(flex-start);
+            // @include justify-content(flex-start);
             box-sizing: border-box;
             position: relative;
             // padding: 2vh 2rem;
@@ -65,23 +66,38 @@ export default {
             z-index: 2;
         }
 
+
         .home-copy-55 {
             @include flex-basis(55%);
             width: 55%;
         }
 
-        .heading {
-            line-height: 1;
-            font-size: 40px;
-            font-weight: 650;
-            margin-bottom: 10px;
-            color: #fff;
+        .heading-icon {
+            display: inline-block;
+            margin-right: 30px;
+
+            svg g {
+                fill: rgba(255, 255, 255, .4)
+            }
         }
 
-        .sub-heading {
-            margin-top: 10px;
-            color: #fff;
+        .heading-text {
+            display: inline-block;
+
+            .heading {
+                line-height: 1;
+                font-size: 40px;
+                font-weight: 650;
+                color: #f1eded;
+            }
+
+            .sub-heading {
+                margin-top: 10px;
+                color: #fff;
+            }
         }
+
+
     }
 
     @media #{$medium-and-down} {
@@ -95,10 +111,18 @@ export default {
                 width: 100%;
             }
 
-            .heading {
-                font-size: 30px;
-                font-weight: 550;
+            .heading-icon {
+                display: none;
             }
+
+            .heading-text {
+                .heading {
+                    font-size: 30px;
+                    font-weight: 550;
+                }
+            }
+
+
         }
     }
 </style>

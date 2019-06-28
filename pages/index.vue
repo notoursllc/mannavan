@@ -4,6 +4,7 @@ import product_mixin from '@/mixins/product_mixin';
 import HeroMain from '@/components/HeroMain'
 import HeroProductTypeNav from '@/components/HeroProductTypeNav'
 import ProductCardListDisplay from '@/components/product/ProductCardListDisplay'
+import IconLogo from '@/components/icons/IconLogo';
 
 console.log("GLOBAL_TYPES", process.env.GLOBAL_TYPES)
 
@@ -28,7 +29,8 @@ export default {
     components: {
         HeroMain,
         HeroProductTypeNav,
-        ProductCardListDisplay
+        ProductCardListDisplay,
+        IconLogo
     },
 
     data() {
@@ -90,20 +92,19 @@ export default {
 <template>
     <div>
         <hero-main :bg-image="bgImage">
-            <div class="home-copy-55 pal">
+            <div class="heading-icon">
+                <icon-logo icon-name="logo" class="vam" width="125px" />
+            </div>
+            <div class="heading-text">
                 <h1 class="heading">This is what drivers wear<br/>off the track</h1>
                 <!-- <div class="sub-heading">
                     This is what drivers wear off the track.
                 </div> -->
             </div>
-
-            <!-- <img class="home-image"
-                src="https://cdn.dribbble.com/assets/art-banners/theindcrediblerobot_dribbble-e8a008135694d58c776605ca232eacb9c448b48e8da09d53ed21316cb5fee05c.gif"
-                width="200"
-                height="200"> -->
         </hero-main>
         <hero-product-type-nav />
-        <product-card-list-display :products="products" />
+        <product-card-list-display
+            :products="products" />
     </div>
 </template>
 
