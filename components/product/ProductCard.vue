@@ -1,26 +1,32 @@
 <script>
-    import Vue from 'vue'
-    import product_mixin from '@/mixins/product_mixin'
+import Vue from 'vue'
+import { Image } from 'element-ui';
+import product_mixin from '@/mixins/product_mixin'
 
-    export default {
-        props: ['product'],
+Vue.use(Image);
 
-        mixins: [
-            product_mixin
-        ],
+export default {
+    props: ['product'],
 
-        computed: {
-            productPic: function() {
-                return this.featuredProductPic(this.product);
-            }
+    mixins: [
+        product_mixin
+    ],
+
+    computed: {
+        productPic: function() {
+            return this.featuredProductPic(this.product);
         }
     }
+}
 </script>
 
 
 <template>
     <div class="pic-card">
-        <img :src="productPic" alt="Image" class="image widthAll">
+        <el-image
+            :src="productPic"
+            lazy
+            class="image widthAll" />
         <div class="pic-card-content">{{ product.title }}</div>
     </div>
 </template>
