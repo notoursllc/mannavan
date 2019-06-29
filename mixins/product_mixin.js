@@ -22,10 +22,10 @@ function stripRelations(productJson) {
 
 export default {
     methods: {
-        goToProductDetails(seo_uri, productTypeName) {
+        goToProductDetails(seo_uri) {
             this.$router.push({
-                name: 'type-name-seouri',
-                params: { name: productTypeName, seouri: seo_uri }
+                name: 'seouri',
+                params: { seouri: seo_uri }
             });
         },
 

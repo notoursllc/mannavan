@@ -49,7 +49,7 @@ export default {
             <el-menu-item
                 v-for="(index, type) in getProductSubTypes()"
                 :key="type"
-                :route="{ name: 'type-name', params: { name: getUrlPathForProductSubType(type) } }"
+                :route="{ name: 'productSubType', params: { productSubType: getUrlPathForProductSubType(type) } }"
                 :index="type"
                 @click="onMenuItemClick">{{ $tc(type, 2) }}</el-menu-item>
         </el-menu>

@@ -29,13 +29,14 @@ export default {
     async asyncData({ params, store, app }) {
         // console.log("IN ASYNC DATA store", store.state.product)
         // console.log("IN ASYNC DATA", context.app.store)
-        // this.init(context.app.$route.params.id)
         try {
             let subTypeData = {};
 
-            if(params.name) {
-                subTypeData = product_mixin.methods.getIdByProductType(params.name);
+            if(params.productSubType) {
+                subTypeData = product_mixin.methods.getIdByProductType(params.productSubType);
             }
+
+            // console.log('subTypeData', subTypeData)
 
             let searchConfig = {
                 where: ['is_available', '=', true],

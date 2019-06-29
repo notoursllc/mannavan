@@ -29,7 +29,7 @@ export default {
             <nuxt-link
                 v-for="(index, type) in getProductSubTypes()"
                 :key="index"
-                :to="{ name: 'type-name', params: { name: getUrlPathForProductSubType(type) } }"
+                :to="{ name: 'productSubType', params: { productSubType: getUrlPathForProductSubType(type) } }"
                 tag="el-button"
                 class="is-round"
                 active-class="el-button--success">{{ $tc(type, 2) }}</nuxt-link>

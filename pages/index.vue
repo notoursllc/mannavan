@@ -43,8 +43,6 @@ export default {
     async asyncData({ params, store, app }) {
         // console.log("IN ASYNC DATA store", store.state.product)
         // console.log("IN ASYNC DATA", context.app.store)
-        // this.init(context.app.$route.params.id)
-
         const randomInt = randomIntFromInterval(0, (bgImages.length - 1));
         const randomImage = `/images/backgrounds/${ bgImages[randomInt] }`;
 

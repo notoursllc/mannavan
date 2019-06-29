@@ -1,5 +1,6 @@
 <script>
 import ProductCard from '@/components/product/ProductCard';
+import product_mixin from '@/mixins/product_mixin';
 
 export default {
     name: 'ProductCardListDisplay',
@@ -13,6 +14,10 @@ export default {
             type: String
         }
     },
+
+    mixins: [
+        product_mixin
+    ],
 
     components: {
         ProductCard
@@ -29,7 +34,7 @@ export default {
                 v-for="product in products"
                 :key="product.id">
                 <nuxt-link
-                    :to="{ name: 'type-name-seouri', params: { name: type, seouri: product.seo_uri } }"
+                    :to="{ name: 'seouri', params: { seouri: product.seo_uri } }"
                     tag="span">
                     <product-card :product="product"></product-card>
                 </nuxt-link>
