@@ -70,13 +70,10 @@ export default {
 @import "~assets/css/components/_variables.scss";
 @import "~assets/css/components/_mixins.scss";
 
-$bottom-bar-height: 56px;
-
 footer {
     background-color: #267fad;
     color: #fff;
     font-size: 14px;
-    margin-bottom: $bottom-bar-height;
 
     .content {
         color: #fff;

@@ -70,7 +70,8 @@ header {
     color: #fff;
     height: $header-height-small;
     padding: 0;
-    z-index: 10;
+    // z-index: 10;
+    @include flex-basis(auto);
 }
 
 header:after {
@@ -99,6 +100,7 @@ header:after {
         font-size: 25px;
         font-weight: 600;
         margin: 0 5px;
+        line-height: $header-height-small;
     }
 
     .header-logo-container {
@@ -118,9 +120,14 @@ header:after {
         display: inline-block;
     }
 
+
     .header-nav {
-        display: none;
-        margin: 0;
+        // display: none;
+        // margin: 0;
+
+        display: inline-block;
+        @include flex-grow(3);
+        margin-left: 30px;
 
         li {
             display: inline-block;
@@ -137,7 +144,7 @@ header:after {
 
 .cart-button {
     position: relative;
-    padding-top: 12px;
+    margin-top: 24px;
 
     svg {
         width: 32px;
@@ -151,12 +158,12 @@ header:after {
         font-size: 14px;
         height: 20px;
         min-width: 20px;
-        line-height: 20px;
+        line-height: 19px;
         padding: 0 5px 0 5px;
         text-align: center;
         white-space: nowrap;
         position: absolute;
-        top: 8px;
+        top: -5px;
         right: -12px;
         letter-spacing: normal;
     }
@@ -170,6 +177,7 @@ header:after {
 @media #{$medium-and-up} {
     header {
         height: $header-height;
+        line-height: $header-height;
 
         .header-inner {
             padding: 0 20px;

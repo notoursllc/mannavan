@@ -49,21 +49,17 @@ export default {
     // use height instead of min-height because of an IE10-11 flex bug:
     // https://github.com/philipwalton/flexbugs#flexbug-3
     height: 100vh;
-}
 
-.layoutContainer {
     main {
         @include flex-grow(1);
-        @include flex-basis(auto);
     }
 }
+
 
 @media #{$medium-and-up} {
     .layoutContainer {
         main {
-            @include flex-grow(1);
-            @include flex-basis(auto);
-            margin-bottom: 50px;
+            padding-bottom: 50px;
         }
     }
 }
