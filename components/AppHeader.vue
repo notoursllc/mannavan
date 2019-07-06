@@ -63,15 +63,14 @@ $header-height: 55px;
 $header-height-small: 46px;
 
 header {
+    @include flex-basis(auto);
     transition: .5s;
-    // background: #424345;
     background: #5a5a5a;
     position: relative;
     color: #fff;
-    height: $header-height-small;
+    height: $header-height;
+    line-height: $header-height;
     padding: 0;
-    // z-index: 10;
-    @include flex-basis(auto);
 }
 
 header:after {
@@ -89,44 +88,36 @@ header:after {
     @include flex-wrap(nowrap);
     @include flex-direction(row);
     @include align-items(center);
-    padding: 0 10px;
+    padding: 0 20px;
+    font-size: 15px;
     height: 100%;
-    font-size: 14px;
     font-weight: 600;
     margin: 0 auto;
     max-width: $header-max-width;
 
     .header-hamburger {
-        font-size: 25px;
-        font-weight: 600;
-        margin: 0 5px;
-        line-height: $header-height-small;
+        display: none;
     }
 
     .header-logo-container {
-        @include flex-grow(3);
-        text-align: center;
+        @include flex-grow(0);
 
         .header-logo {
             svg {
-                width: 50px;
+                width: 65px;
             }
         }
     }
 
     .header-label {
-        line-height: $header-height-small;
+        line-height: $header-height;
         letter-spacing: 1.1px;
         display: inline-block;
     }
 
-
     .header-nav {
-        // display: none;
-        // margin: 0;
-
-        display: inline-block;
         @include flex-grow(3);
+        display: inline-block;
         margin-left: 30px;
 
         li {
@@ -136,75 +127,92 @@ header:after {
             text-transform: uppercase;
             text-decoration: none;
             cursor: pointer;
-            padding: 0 10px;
+            padding-right: 10px;
             height: $header-height;
+        }
+    }
+
+    .cart-button {
+        position: relative;
+        top: 12px;
+
+        svg {
+            width: 40px !important;
+        }
+
+        .badge {
+            background-color: #a4a5a3;
+            border-radius: 10px;
+            color: #000;
+            display: inline-block;
+            font-size: 14px;
+            height: 20px;
+            min-width: 20px;
+            line-height: 19px;
+            padding: 0 5px 0 5px;
+            text-align: center;
+            white-space: nowrap;
+            position: absolute;
+            top: -4px;
+            right: -10px;
+            letter-spacing: normal;
+        }
+
+        .badge-green {
+            background-color: #55c120;
+            color: #fff;
         }
     }
 }
 
-.cart-button {
-    position: relative;
-    margin-top: 24px;
 
-    svg {
-        width: 32px;
-    }
 
-    .badge {
-        background-color: #a4a5a3;
-        border-radius: 10px;
-        color: #000;
-        display: inline-block;
-        font-size: 14px;
-        height: 20px;
-        min-width: 20px;
-        line-height: 19px;
-        padding: 0 5px 0 5px;
-        text-align: center;
-        white-space: nowrap;
-        position: absolute;
-        top: -5px;
-        right: -12px;
-        letter-spacing: normal;
-    }
-
-    .badge-green {
-        background-color: #55c120;
-        color: #fff;
-    }
-}
-
-@media #{$medium-and-up} {
+@media #{$medium-and-down} {
     header {
-        height: $header-height;
-        line-height: $header-height;
+        height: $header-height-small;
 
         .header-inner {
-            padding: 0 20px;
-            font-size: 15px;
+            padding: 0 10px;
+            font-size: 14px;
 
             .header-hamburger {
-                display: none;
+                font-size: 25px;
+                font-weight: 600;
+                margin: 0 5px;
+                display: inline-block;
             }
 
             .header-logo-container {
-                @include flex-grow(0);
+                @include flex-grow(3);
+                text-align: center;
 
                 .header-logo {
                     svg {
-                        width: 65px;
+                        width: 50px;
                     }
                 }
             }
 
             .header-nav {
-                display: inline-block;
-                @include flex-grow(3);
-                margin-left: 30px;
+                // display: inline-block;
+                @include flex-grow(0);
+                margin-left: 0;
             }
 
             .header-label {
-                line-height: $header-height;
+                line-height: $header-height-small;
+            }
+
+            .cart-button {
+                top: 12px;
+
+                svg {
+                    width: 30px !important;
+                }
+
+                .badge {
+                    top: -2px;
+                }
             }
         }
     }
