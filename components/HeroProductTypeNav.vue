@@ -1,10 +1,9 @@
 <script>
-import Vue from 'vue'
-import { Button } from 'element-ui'
+import Vue from 'vue';
+import { Button } from 'element-ui';
 import product_mixin from '@/mixins/product_mixin';
 
 const globalTypes = process.env.GLOBAL_TYPES;
-
 
 Vue.use(Button);
 
@@ -20,19 +19,19 @@ export default {
     <div>
         <div class="hero-prod-types">
             <nuxt-link
-                :to="{ name: 'index' }"
-                tag="el-button"
-                class="is-round"
-                active-class="el-button--success"
-                :exact="true">{{ $t('All') }}</nuxt-link>
-
-            <nuxt-link
                 v-for="(index, type) in getProductSubTypes()"
                 :key="index"
                 :to="{ name: 'productSubType', params: { productSubType: getUrlPathForProductSubType(type) } }"
                 tag="el-button"
                 class="is-round"
                 active-class="el-button--success">{{ $tc(type, 2) }}</nuxt-link>
+
+            <nuxt-link
+                :to="{ name: 'index' }"
+                tag="el-button"
+                class="is-round"
+                active-class="el-button--success"
+                :exact="true">{{ $t('All') }}</nuxt-link>
         </div>
     </div>
 </template>

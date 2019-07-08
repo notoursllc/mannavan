@@ -46,27 +46,35 @@ export default {
             background-color="#304156"
             text-color="#fff"
             class="sidenav-menu-main">
+
             <el-menu-item
                 v-for="(index, type) in getProductSubTypes()"
                 :key="type"
                 :route="{ name: 'productSubType', params: { productSubType: getUrlPathForProductSubType(type) } }"
                 :index="type"
                 @click="onMenuItemClick">{{ $tc(type, 2) }}</el-menu-item>
-        </el-menu>
 
-        <el-menu
-            :router="true"
-            background-color="#304156"
-            text-color="#fff">
+            <!-- all products -->
+            <el-menu-item
+                :route="{ name: 'index' }"
+                index="index"
+                @click="onMenuItemClick">
+                {{ $t('All products') }}
+            </el-menu-item>
+
+            <!-- shopping cart -->
             <el-menu-item
                 :route="{ name: 'cart-id' }"
                 index="cart-id"
                 @click="onMenuItemClick">
+                &nbsp;&nbsp;&nbsp;&nbsp;{{ $t('Cart') }}
                 <icon-cart icon-name="shopping_cart" class-name="fillWhite" width="25px" height="25px" />
-                {{ $t('Cart') }}
-                <span v-if="numCartItems">({{ numCartItems }})</span>
+                <span v-if="numCartItems"
+                    :class="{'badge-green': numCartItems}"
+                    class="badge">{{ numCartItems }}</span>
             </el-menu-item>
         </el-menu>
+
     </aside>
 </template>
 
@@ -102,6 +110,29 @@ export default {
             margin-bottom: -5px;
             margin-right: 5px;
         }
+
+        .badge {
+            background-color: #a4a5a3;
+            border-radius: 20px;
+            color: #000;
+            display: inline-block;
+            font-size: 16px;
+            height: 22px;
+            min-width: 22px;
+            line-height: 22px;
+            padding: 0 5px 0 5px;
+            text-align: center;
+            white-space: nowrap;
+            position: relative;
+            top: -8px;
+            right: 20px;
+            letter-spacing: normal;
+        }
+
+        .badge-green {
+            background-color: #55c120;
+            color: #fff;
+        }
     }
 
     .sidenav-menu-main .el-menu-item {
@@ -120,23 +151,6 @@ export default {
 
 .el-menu {
     border: 0;
-}
-
-.badge {
-    background-color: #3ca707;
-    border-radius: 10px;
-    box-shadow: 0 0 1px 1px rgba(255, 255, 12550, 0.5);
-    color: #fff;
-    display: inline-block;
-    font-size: 14px;
-    height: 18px;
-    line-height: 18px;
-    padding: 0 6px 0 5px;
-    text-align: center;
-    white-space: nowrap;
-    position: absolute;
-    top: -2px;
-    right: -14px;
 }
 
 // Fixed Sidenav hide on smaller
