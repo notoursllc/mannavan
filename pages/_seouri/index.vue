@@ -1,9 +1,7 @@
 <script>
-import Vue from 'vue'
 import Promise from 'bluebird';
 import isObject from 'lodash.isobject'
 import _forEach from 'lodash.foreach'
-import { Select, Option, InputNumber, Notification, Button, Loading, Dialog } from 'element-ui'
 import ProductPrice from '@/components/product/ProductPrice'
 import ProductDetailsDisplay from '@/components/product/ProductDetailsDisplay'
 import ProductImageCarousel from '@/components/product/ProductImageCarousel'
@@ -14,15 +12,6 @@ import app_mixin from '@/mixins/app_mixin'
 import shopping_cart_mixin from '@/mixins/shopping_cart_mixin'
 
 
-Vue.use(Select);
-Vue.use(Option);
-Vue.use(InputNumber);
-Vue.use(Button);
-Vue.use(Dialog);
-Vue.use(Loading.directive)
-
-
-Vue.prototype.$notify = Notification;
 let currentNotification = null;
 
 

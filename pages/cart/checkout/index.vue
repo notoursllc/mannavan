@@ -1,7 +1,5 @@
 <script>
-import Vue from 'vue'
 import { mapGetters } from 'vuex'
-import { Loading } from 'element-ui'
 import CheckoutSectionShipping from '@/components/checkout/CheckoutSectionShipping'
 import CheckoutSectionPostage from '@/components/checkout/CheckoutSectionPostage'
 import CheckoutSectionPayment from '@/components/checkout/CheckoutSectionPayment'
@@ -11,8 +9,6 @@ import CartItemsMini from '@/components/cart/CartItemsMini'
 import CartTotalsTable from '@/components/cart/CartTotalsTable'
 import shopping_cart_mixin from '@/mixins/shopping_cart_mixin'
 import app_mixin from '@/mixins/app_mixin'
-
-Vue.use(Loading.directive);
 
 let currentNotification = null;
 

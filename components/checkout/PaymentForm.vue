@@ -1,12 +1,9 @@
 <script>
-import Vue from 'vue';
-import { Dialog } from 'element-ui'
 import StatusWrapper from '@/components/StatusWrapper';
 import IconCreditCard from '@/components/icons/IconCreditCard';
 import CreditCardIcon from '@/components/CreditCardIcon';
 import FormRow from '@/components/FormRow'
 
-Vue.use(Dialog);
 
 export default {
     name: "PaymentForm",

@@ -1,22 +1,16 @@
 <script>
-import Vue from 'vue'
 import { mapGetters } from 'vuex'
 import isObject from 'lodash.isobject'
 import forEach from 'lodash.foreach'
 import cloneDeep from 'lodash.clonedeep'
-import { Notification, Loading, Button } from 'element-ui'
 import ShippingBillingForm from '@/components/checkout/ShippingBillingForm'
 import ShippingView from '@/components/checkout/ShippingView'
 import BottomPopover from '@/components/BottomPopover'
 import shopping_cart_mixin from '@/mixins/shopping_cart_mixin'
 import app_mixin from '@/mixins/app_mixin'
 
-
-Vue.prototype.$notify = Notification;
-Vue.use(Button)
-Vue.use(Loading.directive)
-
 let currentNotification = null;
+
 
 export default {
     components: {

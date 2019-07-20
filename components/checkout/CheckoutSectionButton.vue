@@ -1,7 +1,5 @@
 <script>
-import Vue from 'vue'
 import { mapGetters } from 'vuex'
-import { Button, Loading, Notification } from 'element-ui'
 import cloneDeep from 'lodash.clonedeep'
 import isObject from 'lodash.isobject'
 import SiteName from '@/components/SiteName'
@@ -10,8 +8,6 @@ import PrivacyDisplay from '@/components/PrivacyDisplay'
 import ConditionsOfUseDisplay from '@/components/ConditionsOfUseDisplay'
 import payment_mixin from '@/mixins/payment_mixin'
 import app_mixin from '@/mixins/app_mixin'
-
-Vue.use(Button);
 
 
 export default {

@@ -1,14 +1,7 @@
 <script>
-import Vue from 'vue'
 import { mapState } from 'vuex'
-import { Button, Menu, MenuItem, Submenu } from 'element-ui'
 import IconVictory from '@/components/icons/IconVictory'
 
-
-Vue.use(Menu);
-Vue.use(Submenu);
-Vue.use(MenuItem);
-Vue.use(Button);
 
 export default {
     components: {

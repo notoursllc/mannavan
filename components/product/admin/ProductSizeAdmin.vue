@@ -1,26 +1,13 @@
 <script>
-import Vue from 'vue'
-import { Notification, MessageBox, Dialog, Button, Input, InputNumber, Checkbox, Select, Option, Table, TableColumn } from 'element-ui'
 import FormRow from '@/components/FormRow'
 import IconPencil from '@/components/icons/IconPencil'
 import IconTrash from '@/components/icons/IconTrash'
 import IconCheckSquare from '@/components/icons/IconCheckSquare'
 import product_mixin from '@/mixins/product_mixin'
 
-Vue.prototype.$notify = Notification;
-Vue.prototype.$confirm = MessageBox.confirm;
-
-Vue.use(Button);
-Vue.use(Dialog);
-Vue.use(Input);
-Vue.use(InputNumber);
-Vue.use(Checkbox);
-Vue.use(Select);
-Vue.use(Option);
-Vue.use(Table);
-Vue.use(TableColumn);
 
 let currentNotification = null;
+
 const sizeModalFormDefaults = {
     is_visible: true
 };

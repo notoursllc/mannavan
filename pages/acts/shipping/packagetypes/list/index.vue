@@ -1,17 +1,7 @@
 <script>
-import Vue from 'vue'
-import { Notification, MessageBox, Button, Table, TableColumn } from 'element-ui'
 import shipping_mixin from '@/mixins/shipping_mixin'
 import IconTrash from '@/components/icons/IconTrash'
 import IconPencil from '@/components/icons/IconPencil'
-
-
-Vue.use(Button)
-Vue.use(Table)
-Vue.use(TableColumn)
-
-Vue.prototype.$notify = Notification;
-Vue.prototype.$confirm = MessageBox.confirm;
 
 let currentNotification = null;
 

@@ -1,14 +1,9 @@
 <script>
-import Vue from 'vue'
-import { Button, Table, TableColumn } from 'element-ui'
 import forEach from 'lodash.foreach'
 import ProductDetailsJsonView from '@/components/product/admin/ProductDetailsJsonView'
 import product_mixin from '@/mixins/product_mixin'
 import IconPencil from '@/components/icons/IconPencil'
 
-Vue.use(Button)
-Vue.use(Table)
-Vue.use(TableColumn)
 
 export default {
     middleware: [

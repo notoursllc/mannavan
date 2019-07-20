@@ -1,7 +1,5 @@
 <script>
-import Vue from 'vue'
 import { mapGetters } from 'vuex'
-import { Select, Option, Notification, Tooltip, Radio, RadioGroup } from 'element-ui'
 import StatusWrapper from '@/components/StatusWrapper'
 import IconLock from '@/components/icons/IconLock'
 import IconInfo from '@/components/icons/IconInfo'
@@ -10,13 +8,6 @@ import FormRow from '@/components/FormRow'
 import shopping_cart_mixin from '@/mixins/shopping_cart_mixin'
 import app_mixin from '@/mixins/app_mixin'
 import payment_mixin from '@/mixins/payment_mixin'
-
-Vue.use(Select)
-Vue.use(Option)
-Vue.use(Tooltip)
-Vue.use(Radio)
-Vue.use(RadioGroup)
-Vue.prototype.$notify = Notification;
 
 let currentNotification = null;
 

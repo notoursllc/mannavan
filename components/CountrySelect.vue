@@ -1,9 +1,4 @@
 <script>
-    import Vue from 'vue'
-    import { Select } from 'element-ui'
-
-    Vue.use(Select)
-
     // NOTE: this object can not be formatted as { US: "United States of America (USA)" }
     // because there are some duplicate 'alpha2' values, like Puerto Rico
     // Also, in order the avoid duplicate <option value> values in the select element,

@@ -71,6 +71,7 @@ module.exports = {
         '@/plugins/axios.js',
         '@/plugins/i18n.js',
         '@/plugins/element-ui',
+        '@/plugins/vuelidate',
         '@/plugins/format8601',
         '@/plugins/prettyJson',
         { src: '@/plugins/youtube', ssr: false },

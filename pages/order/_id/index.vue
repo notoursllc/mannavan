@@ -1,6 +1,4 @@
 <script>
-import Vue from 'vue'
-import { Loading } from 'element-ui'
 import PaymentTypeDisplay from '@/components/payment/PaymentTypeDisplay'
 import payment_mixin from '@/mixins/payment_mixin'
 import app_mixin from '@/mixins/app_mixin'
@@ -8,7 +6,6 @@ import IconVictoryPeace from '@/components/icons/IconVictoryPeace'
 import IconEnvelope from '@/components/icons/IconEnvelope'
 import CartShippingAddressDisplay from '@/components/cart/CartShippingAddressDisplay'
 
-Vue.use(Loading.directive)
 
 export default {
     components: {

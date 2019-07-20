@@ -1,14 +1,10 @@
 <script>
 import Vue from 'vue'
-import { Notification, Button } from 'element-ui'
 import ProductDetailsJsonView from '@/components/product/admin/ProductDetailsJsonView'
 import product_mixin from '@/mixins/product_mixin'
 
 
 let currentNotification = null;
-
-Vue.prototype.$notify = Notification;
-Vue.use(Button);
 
 
 function showNotification(Notification) {

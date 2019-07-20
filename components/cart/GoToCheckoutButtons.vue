@@ -1,9 +1,5 @@
 <script>
-import Vue from 'vue'
-import { Button } from 'element-ui'
 import KeepShoppingButton from '@/components/cart/KeepShoppingButton'
-
-Vue.use(Button);
 
 export default {
     name: 'GoToCheckoutButtons',

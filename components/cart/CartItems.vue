@@ -1,27 +1,10 @@
 <script>
 import accounting from 'accounting'
-import Vue from 'vue'
 import { mapGetters } from 'vuex'
 import isObject from 'lodash.isobject'
-import { Select, Option, InputNumber, Loading, Button, Popover, Notification, Dialog, Tooltip } from 'element-ui'
-import ProductPrice from '@/components/product/ProductPrice'
-import ProductQuantityInput from '@/components/product/ProductQuantityInput'
-import CartItemDisplay from '@/components/cart/CartItemDisplay'
-import ProductDetailsDisplay from '@/components/product/ProductDetailsDisplay'
-import ProductImageCarousel from '@/components/product/ProductImageCarousel'
 import product_mixin from '@/mixins/product_mixin'
 import shopping_cart_mixin from '@/mixins/shopping_cart_mixin'
 
-Vue.use(Select);
-Vue.use(Option);
-Vue.use(InputNumber);
-Vue.use(Button);
-Vue.use(Popover);
-Vue.use(Dialog);
-Vue.use(Tooltip);
-Vue.use(Loading.directive);
-
-Vue.prototype.$notify = Notification;
 let currentNotification = null;
 
 
@@ -52,11 +35,11 @@ export default {
     },
 
     components: {
-        ProductPrice,
-        ProductQuantityInput,
-        CartItemDisplay,
-        ProductDetailsDisplay,
-        ProductImageCarousel
+        ProductPrice: () => import('@/components/product/ProductPrice'),
+        ProductQuantityInput: () => import('@/components/product/ProductQuantityInput'),
+        CartItemDisplay: () => import('@/components/cart/CartItemDisplay'),
+        ProductDetailsDisplay: () => import('@/components/product/ProductDetailsDisplay'),
+        ProductImageCarousel: () => import('@/components/product/ProductImageCarousel')
     },
 
     mixins: [

@@ -1,19 +1,13 @@
 <script>
-    import Vue from 'vue'
     import { mapGetters } from 'vuex'
-    import { Input } from 'element-ui'
     import isObject from 'lodash.isobject'
     import forEach from 'lodash.foreach'
-    import Validations from 'vuelidate'
     import { email, required } from 'vuelidate/lib/validators'
     import CountrySelect from '@/components/CountrySelect.vue'
     import SelectStateProvince from '@/components/SelectStateProvince'
     import StatusWrapper from '@/components/StatusWrapper'
     import FormRow from '@/components/FormRow'
     import ShippingBillingHelp from '@/components/checkout/ShippingBillingHelp'
-
-    Vue.use(Input)
-    Vue.use(Validations)
 
     const touchMap = new WeakMap();
 

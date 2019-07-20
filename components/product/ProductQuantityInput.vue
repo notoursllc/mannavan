@@ -6,12 +6,7 @@
  * inventory count for the given size
  */
 
-import Vue from 'vue'
 import isObject from 'lodash.isobject';
-import { Button, ButtonGroup } from 'element-ui'
-
-Vue.use(Button);
-Vue.use(ButtonGroup);
 
 
 export default {

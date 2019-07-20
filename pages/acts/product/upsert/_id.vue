@@ -1,6 +1,4 @@
 <script>
-import Vue from 'vue'
-import { Notification, MessageBox, Dialog, Button, Input, InputNumber, Checkbox, Select, Option } from 'element-ui'
 import forEach from 'lodash.foreach'
 import FormRow from '@/components/FormRow'
 import ProductSizeAdmin from '@/components/product/admin/ProductSizeAdmin'
@@ -13,17 +11,6 @@ import product_mixin from '@/mixins/product_mixin'
 import shipping_mixin from '@/mixins/shipping_mixin'
 
 const globalTypes = process.env.GLOBAL_TYPES;
-
-Vue.prototype.$notify = Notification;
-Vue.prototype.$confirm = MessageBox.confirm;
-
-Vue.use(Button);
-Vue.use(Dialog);
-Vue.use(Input);
-Vue.use(InputNumber);
-Vue.use(Checkbox);
-Vue.use(Select);
-Vue.use(Option);
 
 let currentNotification = null;
 

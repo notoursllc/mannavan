@@ -1,14 +1,9 @@
 <script>
-import Vue from 'vue';
 import { mapGetters } from 'vuex'
-import { Menu, MenuItem } from 'element-ui';
 import product_mixin from '@/mixins/product_mixin';
 import IconCap from '@/components/icons/IconCap'
 import IconTshirt from '@/components/icons/IconTshirt'
 import IconCart from '@/components/icons/IconCart'
-
-Vue.use(Menu);
-Vue.use(MenuItem);
 
 export default {
     components: {

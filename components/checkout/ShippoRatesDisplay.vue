@@ -1,11 +1,4 @@
 <script>
-import Vue from 'vue'
-import { Radio, Table, TableColumn } from 'element-ui'
-
-Vue.use(Radio);
-Vue.use(Table);
-Vue.use(TableColumn);
-
 export default {
     props: {
         value: {},

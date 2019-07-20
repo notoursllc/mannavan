@@ -1,10 +1,5 @@
 <script>
-    import Vue from 'vue'
-    import { Popover, Button } from 'element-ui'
     import product_mixin from '@/mixins/product_mixin'
-
-    Vue.use(Popover);
-    Vue.use(Button);
 
     export default {
         mixins: [

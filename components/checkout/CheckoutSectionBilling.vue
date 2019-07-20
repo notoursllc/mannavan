@@ -1,11 +1,7 @@
 <script>
-import Vue from 'vue'
 import { mapGetters } from 'vuex'
-import { Radio, RadioGroup } from 'element-ui'
 import ShippingBillingForm from '@/components/checkout/ShippingBillingForm'
 
-Vue.use(Radio)
-Vue.use(RadioGroup)
 
 export default {
     components: {

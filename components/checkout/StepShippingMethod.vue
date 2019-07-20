@@ -1,18 +1,11 @@
 <script>
-    import Vue from 'vue'
     import { mapGetters } from 'vuex'
-    import { Button, Notification, Loading, Radio } from 'element-ui'
     import forEach from 'lodash.foreach'
     import isObject from 'lodash.isobject'
     import cloneDeep from 'lodash.clonedeep'
     import Promise from 'bluebird';
     import shopping_cart_mixin from '@/mixins/shopping_cart_mixin'
     import ShippoRatesDisplay from '@/components/checkout/ShippoRatesDisplay.vue'
-
-    Vue.use(Button)
-    Vue.use(Radio)
-    Vue.use(Loading.directive)
-    Vue.prototype.$notify = Notification;
 
     let currentNotification = null;
 

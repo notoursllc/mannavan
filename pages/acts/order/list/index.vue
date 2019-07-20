@@ -1,17 +1,9 @@
 <script>
-import Vue from 'vue'
-import { Button, Table, TableColumn, Dropdown, DropdownItem, DropdownMenu } from 'element-ui'
 import forEach from 'lodash.foreach'
 import payment_mixin from '@/mixins/payment_mixin'
 import shipping_mixin from '@/mixins/shipping_mixin'
 import IconPencil from '@/components/icons/IconPencil'
 
-Vue.use(Button)
-Vue.use(Table)
-Vue.use(TableColumn)
-Vue.use(Dropdown)
-Vue.use(DropdownItem)
-Vue.use(DropdownMenu)
 
 export default {
     middleware: [

@@ -1,11 +1,8 @@
 <script>
-import Vue from 'vue'
-import { Loading } from 'element-ui'
 import OrderDetails from '@/components/order/OrderDetails'
 import app_mixin from '@/mixins/app_mixin'
 import payment_mixin from '@/mixins/payment_mixin'
 
-Vue.use(Loading.directive)
 
 export default {
     components: {

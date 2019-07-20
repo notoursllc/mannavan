@@ -1,6 +1,5 @@
 <script>
 import Vue from 'vue'
-import { Notification, MessageBox, Button, Alert, Dialog } from 'element-ui'
 import forEach from 'lodash.foreach';
 import TreeView from 'vue-json-tree-view'
 import payment_mixin from '@/mixins/payment_mixin'
@@ -11,11 +10,6 @@ import ShippingLabelButton from '@/components/payment/ShippingLabelButton'
 
 let currentNotification = null;
 
-Vue.prototype.$confirm = MessageBox.confirm;
-Vue.prototype.$notify = Notification;
-Vue.use(Button);
-Vue.use(Alert);
-Vue.use(Dialog);
 Vue.use(TreeView);
 
 

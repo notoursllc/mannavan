@@ -1,6 +1,4 @@
 <script>
-import Vue from 'vue';
-import { Dialog } from 'element-ui';
 import forEach from 'lodash.foreach';
 import IconEye from '@/components/icons/IconEye';
 import IconSizeChartChestMeasurement from '@/components/icons/IconSizeChartChestMeasurement';
@@ -10,14 +8,12 @@ import IconSizeChartSleeveMeasurement from '@/components/icons/IconSizeChartSlee
 
 const globalTypes = process.env.GLOBAL_TYPES;
 
-
 let reverseMaterialTypes = {};
+
 forEach(globalTypes.product.material_types, (val, key) => {
     reverseMaterialTypes[val] = key;
 });
 
-
-Vue.use(Dialog);
 
 export default {
     props: {

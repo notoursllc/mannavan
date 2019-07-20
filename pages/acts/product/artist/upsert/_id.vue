@@ -1,20 +1,9 @@
 <script>
-import Vue from 'vue'
-import { Notification, Button, Input, InputNumber, Select, Option, Breadcrumb, BreadcrumbItem } from 'element-ui'
 import FormRow from '@/components/FormRow'
 import CountrySelect from '@/components/CountrySelect'
 import SelectStateProvince from '@/components/SelectStateProvince'
 import product_mixin from '@/mixins/product_mixin'
 
-Vue.prototype.$notify = Notification;
-
-Vue.use(Button);
-Vue.use(Input);
-Vue.use(InputNumber);
-Vue.use(Select);
-Vue.use(Option);
-Vue.use(Breadcrumb);
-Vue.use(BreadcrumbItem);
 
 let currentNotification = null;
 

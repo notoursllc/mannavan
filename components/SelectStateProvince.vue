@@ -1,11 +1,5 @@
 <script>
-    import Vue from 'vue'
-    import { Select, Option, Input } from 'element-ui'
     import states from '@/utils/countryStates.js'
-
-    Vue.use(Select);
-    Vue.use(Option);
-    Vue.use(Input);
 
     export default{
         props: {

@@ -1,11 +1,8 @@
 <script>
-import Vue from 'vue';
-import { Button } from 'element-ui';
 import product_mixin from '@/mixins/product_mixin';
 
 const globalTypes = process.env.GLOBAL_TYPES;
 
-Vue.use(Button);
 
 export default {
     mixins: [

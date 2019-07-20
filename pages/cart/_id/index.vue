@@ -1,15 +1,12 @@
 <script>
-    import Vue from 'vue'
     import { mapGetters } from 'vuex'
     import isObject from 'lodash.isobject'
-    import { Button } from 'element-ui'
     import cloneDeep from 'lodash.clonedeep'
     import CartItems from '@/components/cart/CartItems'
     import CartTotalsTable from '@/components/cart/CartTotalsTable'
     import GoToCheckoutButtons from '@/components/cart/GoToCheckoutButtons'
     import app_mixin from '@/mixins/app_mixin'
 
-    Vue.use(Button);
 
     export default {
         components: {

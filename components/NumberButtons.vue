@@ -1,10 +1,4 @@
 <script>
-import Vue from 'vue'
-import { Button, ButtonGroup } from 'element-ui'
-
-Vue.use(Button);
-Vue.use(ButtonGroup);
-
 export default {
     props: {
         value: {

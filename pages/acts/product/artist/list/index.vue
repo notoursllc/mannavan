@@ -1,19 +1,9 @@
 <script>
-import Vue from 'vue'
-import { Notification, MessageBox, Button, Table, TableColumn, Breadcrumb, BreadcrumbItem } from 'element-ui'
 import forEach from 'lodash.foreach'
 import product_mixin from '@/mixins/product_mixin'
 import IconTrash from '@/components/icons/IconTrash'
 import IconPencil from '@/components/icons/IconPencil'
 
-Vue.use(Button);
-Vue.use(Table);
-Vue.use(TableColumn);
-Vue.use(Breadcrumb);
-Vue.use(BreadcrumbItem);
-
-Vue.prototype.$notify = Notification;
-Vue.prototype.$confirm = MessageBox.confirm;
 
 let currentNotification = null;
 
