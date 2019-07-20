@@ -1,9 +1,6 @@
 <script>
-import accounting from 'accounting'
-import { mapGetters } from 'vuex'
-import isObject from 'lodash.isobject'
-import product_mixin from '@/mixins/product_mixin'
-import shopping_cart_mixin from '@/mixins/shopping_cart_mixin'
+import product_mixin from '@/mixins/product_mixin';
+import shopping_cart_mixin from '@/mixins/shopping_cart_mixin';
 
 let currentNotification = null;
 

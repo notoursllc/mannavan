@@ -1,6 +1,4 @@
 <script>
-import IconCheckSquare from '@/components/icons/IconCheckSquare'
-import IconTimesSquare from '@/components/icons/IconTimesSquare'
 import isObject from 'lodash.isobject'
 
 export default {
@@ -20,8 +18,8 @@ export default {
     },
 
     components: {
-        IconCheckSquare,
-        IconTimesSquare
+        IconCheckSquare: () => import('@/components/icons/IconCheckSquare'),
+        IconTimesSquare: () => import('@/components/icons/IconTimesSquare')
     },
 
     computed: {

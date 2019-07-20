@@ -1,8 +1,6 @@
 <script>
 import forEach from 'lodash.foreach'
-import ProductDetailsJsonView from '@/components/product/admin/ProductDetailsJsonView'
 import product_mixin from '@/mixins/product_mixin'
-import IconPencil from '@/components/icons/IconPencil'
 
 
 export default {
@@ -13,8 +11,8 @@ export default {
     layout: 'admin',
 
     components: {
-        ProductDetailsJsonView,
-        IconPencil
+        ProductDetailsJsonView: () => import('@/components/product/admin/ProductDetailsJsonView'),
+        IconPencil: () => import('@/components/icons/IconPencil')
     },
 
     mixins: [

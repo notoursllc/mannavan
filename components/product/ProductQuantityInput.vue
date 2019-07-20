@@ -5,10 +5,6 @@
  * This component prevents the user from purchasing more than the
  * inventory count for the given size
  */
-
-import isObject from 'lodash.isobject';
-
-
 export default {
     name: 'ProductQuantityInput',
 

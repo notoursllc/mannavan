@@ -1,13 +1,8 @@
 <script>
-import { mapGetters } from 'vuex'
-import StatusWrapper from '@/components/StatusWrapper'
-import IconLock from '@/components/icons/IconLock'
-import IconInfo from '@/components/icons/IconInfo'
-import CreditCardIcon from '@/components/CreditCardIcon'
-import FormRow from '@/components/FormRow'
-import shopping_cart_mixin from '@/mixins/shopping_cart_mixin'
-import app_mixin from '@/mixins/app_mixin'
-import payment_mixin from '@/mixins/payment_mixin'
+import { mapGetters } from 'vuex';
+import shopping_cart_mixin from '@/mixins/shopping_cart_mixin';
+import app_mixin from '@/mixins/app_mixin';
+import payment_mixin from '@/mixins/payment_mixin';
 
 let currentNotification = null;
 
@@ -19,22 +14,19 @@ export default {
         }
     },
 
-
     components: {
-        StatusWrapper,
-        IconLock,
-        IconInfo,
-        CreditCardIcon,
-        FormRow
+        StatusWrapper: () => import('@/components/StatusWrapper'),
+        IconLock: () => import('@/components/icons/IconLock'),
+        IconInfo: () => import('@/components/icons/IconInfo'),
+        CreditCardIcon: () => import('@/components/CreditCardIcon'),
+        FormRow: () => import('@/components/FormRow')
     },
-
 
     mixins: [
         shopping_cart_mixin,
         app_mixin,
         payment_mixin
     ],
-
 
     data: function() {
         return {

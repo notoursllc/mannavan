@@ -1,11 +1,10 @@
 <script>
 import { mapGetters } from 'vuex'
-import ShippingBillingForm from '@/components/checkout/ShippingBillingForm'
 
 
 export default {
     components: {
-        ShippingBillingForm
+        ShippingBillingForm: () => import('@/components/checkout/ShippingBillingForm')
     },
 
     data: function() {

@@ -1,10 +1,9 @@
 <script>
 import app_mixin from '@/mixins/app_mixin'
-import IconLogo from '@/components/icons/IconLogo'
 
 export default {
     components: {
-        IconLogo
+        IconLogo: () => import('@/components/icons/IconLogo')
     },
 
     data: function() {

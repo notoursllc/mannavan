@@ -1,9 +1,5 @@
 <script>
-import FormRow from '@/components/FormRow'
-import CountrySelect from '@/components/CountrySelect'
-import SelectStateProvince from '@/components/SelectStateProvince'
 import product_mixin from '@/mixins/product_mixin'
-
 
 let currentNotification = null;
 
@@ -22,9 +18,9 @@ export default {
     layout: 'admin',
 
     components: {
-        FormRow,
-        CountrySelect,
-        SelectStateProvince
+        FormRow: () => import('@/components/FormRow'),
+        CountrySelect: () => import('@/components/CountrySelect'),
+        SelectStateProvince: () => import('@/components/SelectStateProvince')
     },
 
     mixins: [

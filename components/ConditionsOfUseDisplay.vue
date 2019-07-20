@@ -1,5 +1,4 @@
 <script>
-import BrandName from '@/components/BrandName'
 import app_mixin from '@/mixins/app_mixin';
 
 
@@ -7,7 +6,7 @@ export default {
     name: 'ConditionsOfUseDisplay',
 
     components: {
-        BrandName
+        BrandName: () => import('@/components/BrandName')
     },
 
     mixins: [

@@ -1,18 +1,14 @@
 <script>
-    import { mapGetters } from 'vuex'
     import isObject from 'lodash.isobject'
     import cloneDeep from 'lodash.clonedeep'
-    import CartItems from '@/components/cart/CartItems'
-    import CartTotalsTable from '@/components/cart/CartTotalsTable'
-    import GoToCheckoutButtons from '@/components/cart/GoToCheckoutButtons'
     import app_mixin from '@/mixins/app_mixin'
 
 
     export default {
         components: {
-            CartItems,
-            CartTotalsTable,
-            GoToCheckoutButtons
+            CartItems: () => import('@/components/cart/CartItems'),
+            CartTotalsTable: () => import('@/components/cart/CartTotalsTable'),
+            GoToCheckoutButtons: () => import('@/components/cart/GoToCheckoutButtons')
         },
 
         mixins: [

@@ -1,15 +1,12 @@
 <script>
 import { mapGetters } from 'vuex'
 import product_mixin from '@/mixins/product_mixin';
-import IconCap from '@/components/icons/IconCap'
-import IconTshirt from '@/components/icons/IconTshirt'
-import IconCart from '@/components/icons/IconCart'
 
 export default {
     components: {
-        IconCap,
-        IconTshirt,
-        IconCart
+        IconCap: () => import('@/components/icons/IconCap'),
+        IconTshirt: () => import('@/components/icons/IconTshirt'),
+        IconCart: () => import('@/components/icons/IconCart')
     },
 
     mixins: [

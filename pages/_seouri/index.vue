@@ -1,12 +1,6 @@
 <script>
-import Promise from 'bluebird';
 import isObject from 'lodash.isobject'
 import _forEach from 'lodash.foreach'
-import ProductPrice from '@/components/product/ProductPrice'
-import ProductDetailsDisplay from '@/components/product/ProductDetailsDisplay'
-import ProductImageCarousel from '@/components/product/ProductImageCarousel'
-import TshirtSizeChart from '@/components/product/TshirtSizeChart'
-import ProductQuantityInput from '@/components/product/ProductQuantityInput'
 import product_mixin from '@/mixins/product_mixin'
 import app_mixin from '@/mixins/app_mixin'
 import shopping_cart_mixin from '@/mixins/shopping_cart_mixin'
@@ -26,11 +20,11 @@ function showNotification(Notification) {
 
 export default {
     components: {
-        ProductPrice,
-        ProductQuantityInput,
-        ProductDetailsDisplay,
-        ProductImageCarousel,
-        TshirtSizeChart
+        ProductPrice: () => import('@/components/product/ProductPrice'),
+        ProductQuantityInput: () => import('@/components/product/ProductQuantityInput'),
+        ProductDetailsDisplay: () => import('@/components/product/ProductDetailsDisplay'),
+        ProductImageCarousel: () => import('@/components/product/ProductImageCarousel'),
+        TshirtSizeChart: () => import('@/components/product/TshirtSizeChart')
     },
 
     data() {

@@ -4,7 +4,6 @@ import forEach from 'lodash.foreach';
 import TreeView from 'vue-json-tree-view'
 import payment_mixin from '@/mixins/payment_mixin'
 import shipping_mixin from '@/mixins/shipping_mixin'
-import FormRow from '@/components/FormRow'
 
 let currentNotification = null;
 
@@ -28,7 +27,7 @@ export default{
     },
 
     components: {
-        FormRow
+        FormRow: () => import('@/components/FormRow')
     },
 
     mixins: [

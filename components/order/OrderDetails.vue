@@ -1,9 +1,4 @@
 <script>
-import PaymentTypeDisplay from '@/components/payment/PaymentTypeDisplay'
-import CartTotalsTable from '@/components/cart/CartTotalsTable'
-import CartShippingAddressDisplay from '@/components/cart/CartShippingAddressDisplay'
-import CartItems from '@/components/cart/CartItems'
-import FormRow from '@/components/FormRow'
 import payment_mixin from '@/mixins/payment_mixin';
 
 
@@ -16,11 +11,11 @@ export default {
     },
 
     components: {
-        PaymentTypeDisplay,
-        CartTotalsTable,
-        CartShippingAddressDisplay,
-        FormRow,
-        CartItems
+        PaymentTypeDisplay: () => import('@/components/payment/PaymentTypeDisplay'),
+        CartTotalsTable: () => import('@/components/cart/CartTotalsTable'),
+        CartShippingAddressDisplay: () => import('@/components/cart/CartShippingAddressDisplay'),
+        FormRow: () => import('@/components/FormRow'),
+        CartItems: () => import('@/components/cart/CartItems')
     },
 
     mixins:[

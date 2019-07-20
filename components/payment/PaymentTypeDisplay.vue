@@ -1,6 +1,4 @@
 <script>
-    import CreditCardIcon from '@/components/CreditCardIcon'
-
     export default{
         props: {
             payment: {
@@ -9,7 +7,7 @@
         },
 
         components: {
-            CreditCardIcon
+            CreditCardIcon: () => import('@/components/CreditCardIcon')
         },
 
         methods: {

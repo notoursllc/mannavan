@@ -1,12 +1,10 @@
 <script>
-import Vue from 'vue'
 import { mapGetters } from 'vuex'
-import KeepShoppingButton from '@/components/cart/KeepShoppingButton'
 import app_mixin from '@/mixins/app_mixin'
 
 export default {
     components: {
-        KeepShoppingButton
+        KeepShoppingButton: () => import('@/components/cart/KeepShoppingButton')
     },
 
     mixins: [

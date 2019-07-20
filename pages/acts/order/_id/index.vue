@@ -3,10 +3,6 @@ import Vue from 'vue'
 import forEach from 'lodash.foreach';
 import TreeView from 'vue-json-tree-view'
 import payment_mixin from '@/mixins/payment_mixin'
-import FormRow from '@/components/FormRow'
-import CartShippingAddressDisplay from '@/components/cart/CartShippingAddressDisplay'
-import CartItems from '@/components/cart/CartItems'
-import ShippingLabelButton from '@/components/payment/ShippingLabelButton'
 
 let currentNotification = null;
 
@@ -27,10 +23,10 @@ export default{
     layout: 'admin',
 
     components: {
-        FormRow,
-        CartShippingAddressDisplay,
-        ShippingLabelButton,
-        CartItems
+        FormRow: () => import('@/components/FormRow'),
+        CartShippingAddressDisplay: () => import('@/components/cart/CartShippingAddressDisplay'),
+        ShippingLabelButton: () => import('@/components/payment/ShippingLabelButton'),
+        CartItems: () => import('@/components/cart/CartItems')
     },
 
     mixins: [

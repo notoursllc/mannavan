@@ -1,12 +1,11 @@
 <script>
-import SiteName from '@/components/SiteName'
-import app_mixin from '@/mixins/app_mixin'
+import app_mixin from '@/mixins/app_mixin';
 
 export default {
     name: 'PrivacyDisplay',
 
     components: {
-        SiteName
+        SiteName: () => import('@/components/SiteName')
     },
 
     mixins: [

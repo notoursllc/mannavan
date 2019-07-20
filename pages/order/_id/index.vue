@@ -1,18 +1,14 @@
 <script>
-import PaymentTypeDisplay from '@/components/payment/PaymentTypeDisplay'
 import payment_mixin from '@/mixins/payment_mixin'
 import app_mixin from '@/mixins/app_mixin'
-import IconVictoryPeace from '@/components/icons/IconVictoryPeace'
-import IconEnvelope from '@/components/icons/IconEnvelope'
-import CartShippingAddressDisplay from '@/components/cart/CartShippingAddressDisplay'
 
 
 export default {
     components: {
-        PaymentTypeDisplay,
-        IconVictoryPeace,
-        IconEnvelope,
-        CartShippingAddressDisplay
+        PaymentTypeDisplay: () => import('@/components/payment/PaymentTypeDisplay'),
+        IconVictoryPeace: () => import('@/components/icons/IconVictoryPeace'),
+        IconEnvelope: () => import('@/components/icons/IconEnvelope'),
+        CartShippingAddressDisplay: () => import('@/components/cart/CartShippingAddressDisplay')
     },
 
     mixins: [

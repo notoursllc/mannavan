@@ -3,11 +3,6 @@
     import isObject from 'lodash.isobject'
     import forEach from 'lodash.foreach'
     import { email, required } from 'vuelidate/lib/validators'
-    import CountrySelect from '@/components/CountrySelect.vue'
-    import SelectStateProvince from '@/components/SelectStateProvince'
-    import StatusWrapper from '@/components/StatusWrapper'
-    import FormRow from '@/components/FormRow'
-    import ShippingBillingHelp from '@/components/checkout/ShippingBillingHelp'
 
     const touchMap = new WeakMap();
 
@@ -54,11 +49,11 @@
         },
 
         components: {
-            CountrySelect,
-            SelectStateProvince,
-            StatusWrapper,
-            FormRow,
-            ShippingBillingHelp
+            CountrySelect: () => import('@/components/CountrySelect'),
+            SelectStateProvince: () => import('@/components/SelectStateProvince'),
+            StatusWrapper: () => import('@/components/StatusWrapper'),
+            FormRow: () => import('@/components/FormRow'),
+            ShippingBillingHelp: () => import('@/components/checkout/ShippingBillingHelp')
         },
 
         data: function() {

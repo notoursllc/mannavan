@@ -3,9 +3,6 @@ import { mapGetters } from 'vuex'
 import isObject from 'lodash.isobject'
 import forEach from 'lodash.foreach'
 import cloneDeep from 'lodash.clonedeep'
-import ShippingBillingForm from '@/components/checkout/ShippingBillingForm'
-import ShippingView from '@/components/checkout/ShippingView'
-import BottomPopover from '@/components/BottomPopover'
 import shopping_cart_mixin from '@/mixins/shopping_cart_mixin'
 import app_mixin from '@/mixins/app_mixin'
 
@@ -14,9 +11,9 @@ let currentNotification = null;
 
 export default {
     components: {
-        ShippingBillingForm,
-        ShippingView,
-        BottomPopover
+        ShippingBillingForm: () => import('@/components/checkout/ShippingBillingForm'),
+        ShippingView: () => import('@/components/checkout/ShippingView'),
+        BottomPopover: () => import('@/components/BottomPopover')
     },
 
     mixins: [

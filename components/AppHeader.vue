@@ -1,8 +1,6 @@
 <script>
 import { mapGetters } from 'vuex';
 import product_mixin from '@/mixins/product_mixin';
-import IconVictory from '@/components/icons/IconVictory';
-import IconCart from '@/components/icons/IconCart';
 
 export default {
     mixins: [
@@ -10,8 +8,8 @@ export default {
     ],
 
     components: {
-        IconVictory,
-        IconCart
+        IconVictory: () => import('@/components/icons/IconVictory'),
+        IconCart: () => import('@/components/icons/IconCart')
     },
 
     computed: {

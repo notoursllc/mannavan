@@ -1,12 +1,5 @@
 <script>
 import { mapGetters } from 'vuex'
-import CheckoutSectionShipping from '@/components/checkout/CheckoutSectionShipping'
-import CheckoutSectionPostage from '@/components/checkout/CheckoutSectionPostage'
-import CheckoutSectionPayment from '@/components/checkout/CheckoutSectionPayment'
-import CheckoutSectionBilling from '@/components/checkout/CheckoutSectionBilling'
-import CheckoutSectionButton from '@/components/checkout/CheckoutSectionButton'
-import CartItemsMini from '@/components/cart/CartItemsMini'
-import CartTotalsTable from '@/components/cart/CartTotalsTable'
 import shopping_cart_mixin from '@/mixins/shopping_cart_mixin'
 import app_mixin from '@/mixins/app_mixin'
 
@@ -15,13 +8,13 @@ let currentNotification = null;
 
 export default {
     components: {
-        CheckoutSectionShipping,
-        CheckoutSectionPostage,
-        CheckoutSectionPayment,
-        CheckoutSectionBilling,
-        CheckoutSectionButton,
-        CartItemsMini,
-        CartTotalsTable
+        CheckoutSectionShipping: () => import('@/components/checkout/CheckoutSectionShipping'),
+        CheckoutSectionPostage: () => import('@/components/checkout/CheckoutSectionPostage'),
+        CheckoutSectionPayment: () => import('@/components/checkout/CheckoutSectionPayment'),
+        CheckoutSectionBilling: () => import('@/components/checkout/CheckoutSectionBilling'),
+        CheckoutSectionButton: () => import('@/components/checkout/CheckoutSectionButton'),
+        CartItemsMini: () => import('@/components/cart/CartItemsMini'),
+        CartTotalsTable: () => import('@/components/cart/CartTotalsTable')
     },
 
     mixins: [

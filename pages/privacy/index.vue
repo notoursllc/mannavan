@@ -1,10 +1,9 @@
 <script>
-import PrivacyDisplay from '@/components/PrivacyDisplay'
 import app_mixin from '@/mixins/app_mixin'
 
 export default {
     components: {
-        PrivacyDisplay
+        PrivacyDisplay: () => import('@/components/PrivacyDisplay')
     },
 
     mixins: [

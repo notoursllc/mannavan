@@ -1,5 +1,4 @@
 <script>
-import FormRow from '@/components/FormRow'
 import shipping_mixin from '@/mixins/shipping_mixin'
 
 let currentNotification = null;
@@ -19,7 +18,7 @@ export default {
     layout: 'admin',
 
     components: {
-        FormRow
+        FormRow: () => import('@/components/FormRow')
     },
 
     mixins: [

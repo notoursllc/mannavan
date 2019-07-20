@@ -2,10 +2,6 @@
 import { mapGetters } from 'vuex'
 import cloneDeep from 'lodash.clonedeep'
 import isObject from 'lodash.isobject'
-import SiteName from '@/components/SiteName'
-import BottomPopover from '@/components/BottomPopover'
-import PrivacyDisplay from '@/components/PrivacyDisplay'
-import ConditionsOfUseDisplay from '@/components/ConditionsOfUseDisplay'
 import payment_mixin from '@/mixins/payment_mixin'
 import app_mixin from '@/mixins/app_mixin'
 
@@ -14,10 +10,10 @@ export default {
     name: 'CheckoutSectionButton',
 
     components: {
-        SiteName,
-        BottomPopover,
-        PrivacyDisplay,
-        ConditionsOfUseDisplay
+        SiteName: () => import('@/components/SiteName'),
+        BottomPopover: () => import('@/components/BottomPopover'),
+        PrivacyDisplay: () => import('@/components/PrivacyDisplay'),
+        ConditionsOfUseDisplay: () => import('@/components/ConditionsOfUseDisplay')
     },
 
     mixins: [

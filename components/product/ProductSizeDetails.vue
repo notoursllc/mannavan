@@ -1,18 +1,16 @@
 <script>
-    import FormRow from '@/components/FormRow'
-
-    export default {
-        props: {
-            size: {
-                type: Object,
-                required: true
-            }
-        },
-
-        components: {
-            FormRow
+export default {
+    props: {
+        size: {
+            type: Object,
+            required: true
         }
+    },
+
+    components: {
+        FormRow: () => import('@/components/FormRow')
     }
+}
 </script>
 
 <template>

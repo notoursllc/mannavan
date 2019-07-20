@@ -1,10 +1,9 @@
 <script>
 import app_mixin from '@/mixins/app_mixin'
-import IconEnvelope from '@/components/icons/IconEnvelope'
 
 export default {
     components: {
-        IconEnvelope
+        IconEnvelope: () => import('@/components/icons/IconEnvelope')
     },
 
     mixins: [

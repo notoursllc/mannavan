@@ -1,8 +1,6 @@
 <script>
-import forEach from 'lodash.foreach'
 import payment_mixin from '@/mixins/payment_mixin'
 import shipping_mixin from '@/mixins/shipping_mixin'
-import IconPencil from '@/components/icons/IconPencil'
 
 
 export default {
@@ -13,7 +11,7 @@ export default {
     layout: 'admin',
 
     components: {
-        IconPencil
+        IconPencil: () => import('@/components/icons/IconPencil')
     },
 
     mixins: [

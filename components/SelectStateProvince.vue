@@ -1,68 +1,68 @@
 <script>
-    import states from '@/utils/countryStates.js'
+import states from '@/utils/countryStates.js'
 
-    export default{
-        props: {
-            value: {
-                type: String
-            },
-
-            placeholder: {
-                type: String,
-                default: ''
-            },
-
-            country: {
-                type: String
-            },
-
-            disabled: {
-                type: Boolean,
-                default: false,
-            }
+export default{
+    props: {
+        value: {
+            type: String
         },
 
-        computed: {
-            stateOptions: function() {
-                return (this.country && states.hasOwnProperty(this.country)) ? states[this.country] : null;
-            }
+        placeholder: {
+            type: String,
+            default: ''
         },
 
-        data() {
-            return {
-                selectedState: null
-            }
+        country: {
+            type: String
         },
 
-        created() {
-            this.selectedState = this.initValue;
-        },
-
-        methods: {
-            emitChange(val) {
-                this.selectedState = val;
-                this.$emit('input', val)
-            }
-        },
-
-        created: function() {
-            this.$watch(
-                'value',
-                function(newVal, oldVal) {
-                    this.selectedState = newVal;
-                },
-                { immediate: true }
-            )
-
-            this.$watch(
-                'country',
-                function(newVal, oldVal) {
-                    this.selectedState = null;
-                    this.emitChange(null);
-                }
-            )
+        disabled: {
+            type: Boolean,
+            default: false,
         }
+    },
+
+    computed: {
+        stateOptions: function() {
+            return (this.country && states.hasOwnProperty(this.country)) ? states[this.country] : null;
+        }
+    },
+
+    data() {
+        return {
+            selectedState: null
+        }
+    },
+
+    created() {
+        this.selectedState = this.initValue;
+    },
+
+    methods: {
+        emitChange(val) {
+            this.selectedState = val;
+            this.$emit('input', val)
+        }
+    },
+
+    created: function() {
+        this.$watch(
+            'value',
+            function(newVal, oldVal) {
+                this.selectedState = newVal;
+            },
+            { immediate: true }
+        )
+
+        this.$watch(
+            'country',
+            function(newVal, oldVal) {
+                this.selectedState = null;
+                this.emitChange(null);
+            }
+        )
     }
+}
 </script>
 
 

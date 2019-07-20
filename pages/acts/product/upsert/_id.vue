@@ -1,12 +1,5 @@
 <script>
 import forEach from 'lodash.foreach'
-import FormRow from '@/components/FormRow'
-import ProductSizeAdmin from '@/components/product/admin/ProductSizeAdmin'
-import ProductPicturesAdmin from '@/components/product/admin/ProductPicturesAdmin'
-import BitwiseMultiSelect from '@/components/BitwiseMultiSelect'
-import IconNewWindow from '@/components/icons/IconNewWindow'
-import IconPlayVideo from '@/components/icons/IconPlayVideo'
-import ProductArtistSelect from '@/components/product/admin/ProductArtistSelect'
 import product_mixin from '@/mixins/product_mixin'
 import shipping_mixin from '@/mixins/shipping_mixin'
 
@@ -29,13 +22,13 @@ export default {
     layout: 'admin',
 
     components: {
-        FormRow,
-        ProductSizeAdmin,
-        ProductPicturesAdmin,
-        BitwiseMultiSelect,
-        IconNewWindow,
-        IconPlayVideo,
-        ProductArtistSelect
+        FormRow: () => import('@/components/FormRow'),
+        ProductSizeAdmin: () => import('@/components/product/admin/ProductSizeAdmin'),
+        ProductPicturesAdmin: () => import('@/components/product/admin/ProductPicturesAdmin'),
+        BitwiseMultiSelect: () => import('@/components/BitwiseMultiSelect'),
+        IconNewWindow: () => import('@/components/icons/IconNewWindow'),
+        IconPlayVideo: () => import('@/components/icons/IconPlayVideo'),
+        ProductArtistSelect: () => import('@/components/product/admin/ProductArtistSelect')
     },
 
     mixins: [

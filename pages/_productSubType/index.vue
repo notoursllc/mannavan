@@ -1,7 +1,4 @@
 <script>
-import HeroMain from '@/components/HeroMain';
-import HeroProductTypeNav from '@/components/HeroProductTypeNav';
-import ProductCardListDisplay from '@/components/product/ProductCardListDisplay';
 import app_mixin from '@/mixins/app_mixin';
 import product_mixin from '@/mixins/product_mixin';
 
@@ -9,9 +6,9 @@ export default {
     layout: 'home',
 
     components: {
-        HeroMain,
-        HeroProductTypeNav,
-        ProductCardListDisplay
+        HeroMain: () => import('@/components/HeroMain'),
+        HeroProductTypeNav: () => import('@/components/HeroProductTypeNav'),
+        ProductCardListDisplay: () => import('@/components/product/ProductCardListDisplay')
     },
 
     mixins: [

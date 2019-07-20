@@ -1,9 +1,5 @@
 <script>
-import Vue from 'vue'
-import { mapGetters } from 'vuex'
-import ProductPrice from '@/components/product/ProductPrice'
-import product_mixin from '@/mixins/product_mixin'
-import shopping_cart_mixin from '@/mixins/shopping_cart_mixin'
+import product_mixin from '@/mixins/product_mixin';
 
 export default {
     props: {
@@ -14,7 +10,7 @@ export default {
     },
 
     components: {
-        ProductPrice
+        ProductPrice: () => import('@/components/product/ProductPrice')
     },
 
     mixins: [

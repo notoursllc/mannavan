@@ -1,7 +1,4 @@
 <script>
-import IconArrowUp from '@/components/icons/IconArrowUp';
-import IconArrowDown from '@/components/icons/IconArrowDown';
-
 export default{
     props: {
         attribute: {
@@ -15,8 +12,8 @@ export default{
     },
 
     components: {
-        IconArrowUp,
-        IconArrowDown
+        IconArrowUp: () => import('@/components/icons/IconArrowUp'),
+        IconArrowDown: () => import('@/components/icons/IconArrowDown')
     },
 
     data: function() {

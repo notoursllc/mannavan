@@ -1,8 +1,5 @@
 <script>
-import Vue from 'vue'
-import ProductDetailsJsonView from '@/components/product/admin/ProductDetailsJsonView'
 import product_mixin from '@/mixins/product_mixin'
-
 
 let currentNotification = null;
 
@@ -21,7 +18,7 @@ export default{
     layout: 'admin',
 
     components: {
-        ProductDetailsJsonView
+        ProductDetailsJsonView: () => import('@/components/product/admin/ProductDetailsJsonView')
     },
 
     mixins: [

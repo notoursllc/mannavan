@@ -67,7 +67,7 @@ export default {
 }
 
 .pic-card {
-    margin: 5px;
+    margin: 2px;
     @include grow();
 }
 .pic-card:hover {

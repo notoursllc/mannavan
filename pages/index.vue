@@ -1,12 +1,5 @@
 <script>
-import Vue from 'vue'
 import product_mixin from '@/mixins/product_mixin';
-import HeroMain from '@/components/HeroMain'
-import HeroProductTypeNav from '@/components/HeroProductTypeNav'
-import ProductCardListDisplay from '@/components/product/ProductCardListDisplay'
-import IconLogo from '@/components/icons/IconLogo';
-
-console.log("GLOBAL_TYPES", process.env.GLOBAL_TYPES)
 
 let bgImages = [
     'bg_silver_car.jpg',
@@ -23,14 +16,15 @@ function randomIntFromInterval(min, max) {
 const randomInt = randomIntFromInterval(0, (bgImages.length - 1));
 const randomImage = `/images/backgrounds/${ bgImages[randomInt] }`;
 
+
 export default {
     layout: 'home',
 
     components: {
-        HeroMain,
-        HeroProductTypeNav,
-        ProductCardListDisplay,
-        IconLogo
+        HeroMain: () => import('@/components/HeroMain'),
+        HeroProductTypeNav: () => import('@/components/HeroProductTypeNav'),
+        ProductCardListDisplay: () => import('@/components/product/ProductCardListDisplay'),
+        IconLogo: () => import('@/components/icons/IconLogo')
     },
 
     data() {

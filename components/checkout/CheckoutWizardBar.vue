@@ -1,9 +1,4 @@
 <script>
-import IconAddress from '@/components/icons/IconAddress'
-import IconPackage from '@/components/icons/IconPackage'
-import IconVan from '@/components/icons/IconVan'
-import IconCheckSquare from '@/components/icons/IconCheckSquare'
-
 export default {
     props: {
         step: {
@@ -13,10 +8,10 @@ export default {
     },
 
     components: {
-        IconAddress,
-        IconPackage,
-        IconVan,
-        IconCheckSquare
+        IconAddress: () => import('@/components/icons/IconAddress'),
+        IconPackage: () => import('@/components/icons/IconPackage'),
+        IconVan: () => import('@/components/icons/IconVan'),
+        IconCheckSquare: () => import('@/components/icons/IconCheckSquare')
     },
 
     data: function() {

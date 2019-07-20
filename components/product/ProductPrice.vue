@@ -1,39 +1,39 @@
 <script>
-    import isObject from 'lodash.isobject'
+import isObject from 'lodash.isobject'
 
-    export default {
-        props: {
-            product: {
-                type: Object,
-                required: true
-            },
-
-            showStrikethrough: {
-                type: Boolean,
-                default: true
-            }
+export default {
+    props: {
+        product: {
+            type: Object,
+            required: true
         },
 
-        computed: {
-            basePrice: function() {
-                if (isObject(this.product) && this.product.base_price) {
-                    return this.$n(this.product.base_price, 'currency');
-                }
+        showStrikethrough: {
+            type: Boolean,
+            default: true
+        }
+    },
 
-                return 0;
-            },
-
-            salePrice: function() {
-                if (isObject(this.product)
-                    && this.product.is_on_sale
-                    && this.product.sale_price) {
-                        return this.$n(this.product.sale_price, 'currency');
-                }
-
-                return 0;
+    computed: {
+        basePrice: function() {
+            if (isObject(this.product) && this.product.base_price) {
+                return this.$n(this.product.base_price, 'currency');
             }
+
+            return 0;
+        },
+
+        salePrice: function() {
+            if (isObject(this.product)
+                && this.product.is_on_sale
+                && this.product.sale_price) {
+                    return this.$n(this.product.sale_price, 'currency');
+            }
+
+            return 0;
         }
     }
+}
 </script>
 
 

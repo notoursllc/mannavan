@@ -1,11 +1,10 @@
 <script>
-import ConditionsOfUseDisplay from '@/components/ConditionsOfUseDisplay'
 import app_mixin from '@/mixins/app_mixin';
 
 
 export default {
     components: {
-        ConditionsOfUseDisplay
+        ConditionsOfUseDisplay: () => import('@/components/ConditionsOfUseDisplay')
     },
 
     mixins: [

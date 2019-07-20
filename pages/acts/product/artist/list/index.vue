@@ -1,9 +1,5 @@
 <script>
-import forEach from 'lodash.foreach'
 import product_mixin from '@/mixins/product_mixin'
-import IconTrash from '@/components/icons/IconTrash'
-import IconPencil from '@/components/icons/IconPencil'
-
 
 let currentNotification = null;
 
@@ -24,8 +20,8 @@ export default {
     layout: 'admin',
 
     components: {
-        IconPencil,
-        IconTrash
+        IconPencil: () => import('@/components/icons/IconPencil'),
+        IconTrash: () => import('@/components/icons/IconTrash')
     },
 
     mixins: [

@@ -1,11 +1,9 @@
 <script>
-import KeepShoppingButton from '@/components/cart/KeepShoppingButton'
-
 export default {
     name: 'GoToCheckoutButtons',
 
     components: {
-        KeepShoppingButton
+        KeepShoppingButton: () => import('@/components/cart/KeepShoppingButton')
     },
 
     methods: {

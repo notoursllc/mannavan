@@ -1,10 +1,4 @@
 <script>
-import StatusWrapper from '@/components/StatusWrapper';
-import IconCreditCard from '@/components/icons/IconCreditCard';
-import CreditCardIcon from '@/components/CreditCardIcon';
-import FormRow from '@/components/FormRow'
-
-
 export default {
     name: "PaymentForm",
 
@@ -16,10 +10,10 @@ export default {
     },
 
     components: {
-        StatusWrapper,
-        IconCreditCard,
-        CreditCardIcon,
-        FormRow
+        StatusWrapper: () => import('@/components/StatusWrapper'),
+        IconCreditCard: () => import('@/components/icons/IconCreditCard'),
+        CreditCardIcon: () => import('@/components/CreditCardIcon'),
+        FormRow: () => import('@/components/FormRow')
     },
 
     data: function() {

@@ -1,17 +1,14 @@
 <script>
     import { mapGetters } from 'vuex'
     import forEach from 'lodash.foreach'
-    import isObject from 'lodash.isobject'
     import cloneDeep from 'lodash.clonedeep'
-    import Promise from 'bluebird';
     import shopping_cart_mixin from '@/mixins/shopping_cart_mixin'
-    import ShippoRatesDisplay from '@/components/checkout/ShippoRatesDisplay.vue'
 
     let currentNotification = null;
 
     export default {
         components: {
-            ShippoRatesDisplay
+            ShippoRatesDisplay: () => import('@/components/checkout/ShippoRatesDisplay')
         },
 
         mixins: [

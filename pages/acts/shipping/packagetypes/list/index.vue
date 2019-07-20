@@ -1,7 +1,5 @@
 <script>
 import shipping_mixin from '@/mixins/shipping_mixin'
-import IconTrash from '@/components/icons/IconTrash'
-import IconPencil from '@/components/icons/IconPencil'
 
 let currentNotification = null;
 
@@ -21,8 +19,8 @@ export default {
     layout: 'admin',
 
     components: {
-        IconTrash,
-        IconPencil
+        IconTrash: () => import('@/components/icons/IconTrash'),
+        IconPencil: () => import('@/components/icons/IconPencil')
     },
 
     mixins: [

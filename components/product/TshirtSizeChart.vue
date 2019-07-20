@@ -1,10 +1,5 @@
 <script>
 import forEach from 'lodash.foreach';
-import IconEye from '@/components/icons/IconEye';
-import IconSizeChartChestMeasurement from '@/components/icons/IconSizeChartChestMeasurement';
-import IconSizeChartHipMeasurement from '@/components/icons/IconSizeChartHipMeasurement';
-import IconSizeChartLengthMeasurement from '@/components/icons/IconSizeChartLengthMeasurement';
-import IconSizeChartSleeveMeasurement from '@/components/icons/IconSizeChartSleeveMeasurement';
 
 const globalTypes = process.env.GLOBAL_TYPES;
 
@@ -32,11 +27,11 @@ export default {
     },
 
     components: {
-        IconEye,
-        IconSizeChartChestMeasurement,
-        IconSizeChartHipMeasurement,
-        IconSizeChartLengthMeasurement,
-        IconSizeChartSleeveMeasurement
+        IconEye: () => import('@/components/icons/IconEye'),
+        IconSizeChartChestMeasurement: () => import('@/components/icons/IconSizeChartChestMeasurement'),
+        IconSizeChartHipMeasurement: () => import('@/components/icons/IconSizeChartHipMeasurement'),
+        IconSizeChartLengthMeasurement: () => import('@/components/icons/IconSizeChartLengthMeasurement'),
+        IconSizeChartSleeveMeasurement: () => import('@/components/icons/IconSizeChartSleeveMeasurement')
     },
 
     data: function() {

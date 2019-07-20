@@ -1,12 +1,11 @@
 <script>
-import OrderDetails from '@/components/order/OrderDetails'
 import app_mixin from '@/mixins/app_mixin'
 import payment_mixin from '@/mixins/payment_mixin'
 
 
 export default {
     components: {
-        OrderDetails
+        OrderDetails: () => import('@/components/order/OrderDetails')
     },
 
     mixins: [
@@ -31,7 +30,7 @@ export default {
     async created() {
         try {
             this.$store.dispatch('ui/pageTitle', this.$t('Order Details'));
-            this.order = await this.getPayment(this.$route.params.id)
+            this.order = await this.getPayment(this.$route.params.id);
             this.orderExists = true;
             this.loading = false;
         }
