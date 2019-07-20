@@ -52,6 +52,9 @@ export default {
     head() {
         return {
             title: this.$t('Checkout'),
+            script: [
+                { src: 'https://js.squareup.com/v2/paymentform', body: true }
+            ],
             meta: [
                 { vmid: 'description', name: 'description', content: `Your Shopping Cart at ${this.getSiteName()}` }
             ]

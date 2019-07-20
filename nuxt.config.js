@@ -12,9 +12,6 @@ module.exports = {
     head: {
         link: [
             { rel: 'icon', type: 'image/x-icon', href: '/images/favicon.ico' }
-        ],
-        script: [
-            { src: 'https://js.squareup.com/v2/paymentform', async: true, body: true }
         ]
     },
 

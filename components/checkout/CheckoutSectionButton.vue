@@ -1,7 +1,6 @@
 <script>
 import { mapGetters } from 'vuex'
 import cloneDeep from 'lodash.clonedeep'
-import isObject from 'lodash.isobject'
 import payment_mixin from '@/mixins/payment_mixin'
 import app_mixin from '@/mixins/app_mixin'
 
