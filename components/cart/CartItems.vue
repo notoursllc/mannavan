@@ -63,7 +63,7 @@ export default {
     methods: {
         async updateCartItemQuantity(item) {
             try {
-                const loadingInstance = Loading.service({ target: `#cartItem${item.id}` });
+                const loadingInstance = this.$loadingService({ target: `#cartItem${item.id}` });
 
                 const response = await this.updateItemQty({
                     id: item.id,
@@ -86,7 +86,7 @@ export default {
 
         async removeItem(id) {
             try {
-                const loadingInstance = Loading.service({ target: `#cartItem${id}` });
+                const loadingInstance = this.$loadingService({ target: `#cartItem${id}` });
 
                 const response = await this.deleteItem({ id });
                 this.setCartAndTokenStateFromResponse(response);

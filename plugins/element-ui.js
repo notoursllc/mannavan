@@ -66,4 +66,5 @@ export default () => {
 
     Vue.prototype.$confirm = MessageBox.confirm;
     Vue.prototype.$notify = Notification;
+    Vue.prototype.$loadingService = Loading.service;
 }
