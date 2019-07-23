@@ -1,7 +1,6 @@
 <script>
 import { mapGetters } from 'vuex'
 import shopping_cart_mixin from '@/mixins/shopping_cart_mixin'
-import app_mixin from '@/mixins/app_mixin'
 
 let currentNotification = null;
 
@@ -18,7 +17,6 @@ export default {
     },
 
     mixins: [
-        app_mixin,
         shopping_cart_mixin
     ],
 
@@ -56,7 +54,7 @@ export default {
                 { src: 'https://js.squareup.com/v2/paymentform', body: true }
             ],
             meta: [
-                { vmid: 'description', name: 'description', content: `Your Shopping Cart at ${this.getSiteName()}` }
+                { vmid: 'description', name: 'description', content: `Your Shopping Cart at ${this.$store.state.ui.siteName}` }
             ]
         }
     }

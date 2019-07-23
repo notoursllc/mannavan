@@ -1,14 +1,8 @@
 <script>
-import app_mixin from '@/mixins/app_mixin'
-
 export default {
     components: {
         PrivacyDisplay: () => import('@/components/PrivacyDisplay')
     },
-
-    mixins: [
-        app_mixin
-    ],
 
     created() {
         this.$store.dispatch('ui/pageTitle', this.$t('Privacy Notice'));
@@ -18,7 +12,7 @@ export default {
         return {
             title: this.$t('Privacy Notice'),
             meta: [
-                { vmid: 'description', name: 'description', content: `Privacy Notice for ${this.getSiteName()}` }
+                { vmid: 'description', name: 'description', content: `Privacy Notice for ${this.$store.state.ui.siteName}` }
             ]
         }
     }

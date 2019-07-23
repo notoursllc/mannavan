@@ -1,15 +1,8 @@
 <script>
-import app_mixin from '@/mixins/app_mixin';
-
-
 export default {
     components: {
         ConditionsOfUseDisplay: () => import('@/components/ConditionsOfUseDisplay')
     },
-
-    mixins: [
-        app_mixin
-    ],
 
     created() {
         this.$store.dispatch('ui/pageTitle', this.$t('Conditions of Use'));
@@ -19,7 +12,7 @@ export default {
         return {
             title: this.$t('Conditions of Use'),
             meta: [
-                { vmid: 'description', name: 'description', content: `Conditions of Use for ${this.getSiteName()}` }
+                { vmid: 'description', name: 'description', content: `Conditions of Use for ${this.$store.state.ui.siteName}` }
             ]
         }
     }

@@ -1,6 +1,4 @@
 <script>
-import app_mixin from '@/mixins/app_mixin';
-
 export default {
     props: {
         uppercase: {
@@ -9,13 +7,9 @@ export default {
         }
     },
 
-    mixins: [
-        app_mixin
-    ],
-
     data: function() {
         return {
-            siteName: this.uppercase ? this.getSiteName().toUpperCase() : this.getSiteName()
+            siteName: this.uppercase ? this.$store.state.ui.siteName.toUpperCase() : this.$store.state.ui.siteName
         }
     }
 }

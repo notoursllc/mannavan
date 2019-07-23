@@ -1,14 +1,8 @@
 <script>
-import app_mixin from '@/mixins/app_mixin'
-
 export default {
-    mixins: [
-        app_mixin
-    ],
-
     computed: {
         returnsEmailAddress() {
-            return this.getHelpEmailAddress();
+            return this.$store.state.ui.infoEmailAddress;
         }
     },
 
@@ -20,7 +14,7 @@ export default {
         return {
             title: this.$t('Returns / Exchanges'),
             meta: [
-                { vmid: 'description', name: 'description', content: `Returns and Exchanges for your order at ${this.getSiteName()}` }
+                { vmid: 'description', name: 'description', content: `Returns and Exchanges for your order at ${this.$store.state.ui.siteName}` }
             ]
         }
     }

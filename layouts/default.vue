@@ -10,12 +10,6 @@ export default {
         AppSidenav
     },
 
-    computed: {
-        pageTitle() {
-            return this.$store.state.ui.pageTitle;
-        }
-    },
-
     created() {
         this.$store.dispatch('ui/closeSidebar')
     }

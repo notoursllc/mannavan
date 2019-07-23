@@ -1,6 +1,4 @@
 <script>
-import app_mixin from '@/mixins/app_mixin'
-
 export default {
     components: {
         IconLogo: () => import('@/components/icons/IconLogo')
@@ -9,7 +7,7 @@ export default {
     data: function() {
         return {
             year: new Date().getFullYear(),
-            siteName: app_mixin.methods.getSiteName()
+            siteName: this.$store.state.ui.siteName
         }
     }
 }

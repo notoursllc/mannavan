@@ -1,6 +1,5 @@
 <script>
 import payment_mixin from '@/mixins/payment_mixin'
-import app_mixin from '@/mixins/app_mixin'
 
 
 export default {
@@ -12,8 +11,7 @@ export default {
     },
 
     mixins: [
-        payment_mixin,
-        app_mixin
+        payment_mixin
     ],
 
     data: function() {
@@ -57,7 +55,7 @@ export default {
         return {
             title: this.$t('We have a winner!'),
             meta: [
-                { vmid: 'description', name: 'description', content: `Thanks for your order from ${this.getSiteName()}` }
+                { vmid: 'description', name: 'description', content: `Thanks for your order from ${this.$store.state.ui.siteName}` }
             ]
         }
     }

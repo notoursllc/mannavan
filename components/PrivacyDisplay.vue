@@ -1,6 +1,4 @@
 <script>
-import app_mixin from '@/mixins/app_mixin';
-
 export default {
     name: 'PrivacyDisplay',
 
@@ -8,14 +6,10 @@ export default {
         SiteName: () => import('@/components/SiteName')
     },
 
-    mixins: [
-        app_mixin
-    ],
-
     data: function() {
         return {
-            helpEmailAddress: this.getHelpEmailAddress(),
-            brandName: this.getBrandName()
+            helpEmailAddress: this.$store.state.ui.infoEmailAddress,
+            brandName: this.$store.state.ui.brandName
         }
     }
 }

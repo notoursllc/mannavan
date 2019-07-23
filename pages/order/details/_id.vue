@@ -1,5 +1,4 @@
 <script>
-import app_mixin from '@/mixins/app_mixin'
 import payment_mixin from '@/mixins/payment_mixin'
 
 
@@ -9,7 +8,6 @@ export default {
     },
 
     mixins: [
-        app_mixin,
         payment_mixin
     ],
 
@@ -44,7 +42,7 @@ export default {
         return {
             title: this.$t('Order Details'),
             meta: [
-                { vmid: 'description', name: 'description', content: `Order Details for your order from ${this.getSiteName()}` }
+                { vmid: 'description', name: 'description', content: `Order Details for your order from ${this.$store.state.ui.siteName}` }
             ]
         }
     }

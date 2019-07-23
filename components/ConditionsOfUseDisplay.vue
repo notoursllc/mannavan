@@ -1,7 +1,4 @@
 <script>
-import app_mixin from '@/mixins/app_mixin';
-
-
 export default {
     name: 'ConditionsOfUseDisplay',
 
@@ -9,14 +6,10 @@ export default {
         BrandName: () => import('@/components/BrandName')
     },
 
-    mixins: [
-        app_mixin
-    ],
-
     data: function() {
         return {
-            siteUrl: this.getSiteUrl(),
-            helpEmailAddress: this.getHelpEmailAddress()
+            siteUrl: this.$store.state.ui.siteUrlShort,
+            infoEmailAddress: this.$store.state.ui.infoEmailAddress
         }
     }
 }
@@ -227,7 +220,7 @@ export default {
 
         <h2>10. Complaint Procedures</h2>
         If you believe that any content or postings on this Site violates your intellectual property or other rights, please
-        notify <brand-name /> by email at {{ helpEmailAddress }} with a comprehensive detailed message setting forth the following
+        notify <brand-name /> by email at {{ infoEmailAddress }} with a comprehensive detailed message setting forth the following
         information: (a) your name and the name of your company, if any; (b) your contact information, including your email address;
         (c) the nature and substance of your complaint, the specific rights at issue, and your basis for making the complaint, including
         the content or posting that is objectionable; and (d) the following statement: “The statements, representations, and assertions

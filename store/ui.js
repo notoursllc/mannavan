@@ -1,12 +1,20 @@
 'use strict';
 
+const domainName = 'goBreadVan.com';
+
 export const state = () => ({
     sidebarOpened: true,
     isMobile: false,
     locales: ['en', 'fr'],
     locale: 'en',
     pageTitle: null,
-    inCheckoutFlow: false
+    inCheckoutFlow: false,
+    infoEmailAddress: `info@${domainName}`,
+    brandName: 'BreadVan',
+    siteName: domainName,
+    siteUrlLong: process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : `https://www.${domainName}`,
+    siteUrlShort: process.env.NODE_ENV === 'development' ? 'localhost:3000' : `www.${domainName}`,
+    twitterUser: 'gmnstLife'
 });
 
 export const mutations = {

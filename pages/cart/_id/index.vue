@@ -1,7 +1,6 @@
 <script>
     import isObject from 'lodash.isobject'
     import cloneDeep from 'lodash.clonedeep'
-    import app_mixin from '@/mixins/app_mixin'
 
 
     export default {
@@ -10,10 +9,6 @@
             CartTotalsTable: () => import('@/components/cart/CartTotalsTable'),
             GoToCheckoutButtons: () => import('@/components/cart/GoToCheckoutButtons')
         },
-
-        mixins: [
-            app_mixin
-        ],
 
         data: function() {
             return {
@@ -48,7 +43,7 @@
             return {
                 title: this.$t('Shopping Cart'),
                 meta: [
-                    { vmid: 'description', name: 'description', content: `Your Shopping Cart at ${this.getSiteName()}` }
+                    { vmid: 'description', name: 'description', content: `Your Shopping Cart at ${this.$store.state.ui.siteName}` }
                 ]
             }
         }

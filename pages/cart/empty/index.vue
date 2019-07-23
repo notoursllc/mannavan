@@ -1,15 +1,10 @@
 <script>
 import { mapGetters } from 'vuex'
-import app_mixin from '@/mixins/app_mixin'
 
 export default {
     components: {
         KeepShoppingButton: () => import('@/components/cart/KeepShoppingButton')
     },
-
-    mixins: [
-        app_mixin
-    ],
 
     computed: {
         ...mapGetters({
@@ -31,7 +26,7 @@ export default {
         return {
             title: this.$t('Secure Checkout'),
             meta: [
-                { vmid: 'description', name: 'description', content: `Your Shopping Cart at ${this.getSiteName()}` }
+                { vmid: 'description', name: 'description', content: `Your Shopping Cart at ${this.$store.state.ui.siteName}` }
             ]
         }
     }

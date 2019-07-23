@@ -1,5 +1,4 @@
 <script>
-import app_mixin from '@/mixins/app_mixin';
 import product_mixin from '@/mixins/product_mixin';
 
 export default {
@@ -12,7 +11,6 @@ export default {
     },
 
     mixins: [
-        app_mixin,
         product_mixin
     ],
 
@@ -78,7 +76,7 @@ export default {
         return {
             title: this.productTypeName,
             meta: [
-                { vmid: 'description', name: 'description', content: `${this.productTypeName} by ${this.getBrandName()}` }
+                { vmid: 'description', name: 'description', content: `${this.productTypeName} by ${this.$store.state.ui.brandName}` }
             ]
         }
     }

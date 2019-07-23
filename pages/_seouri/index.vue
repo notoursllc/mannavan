@@ -2,7 +2,6 @@
 import isObject from 'lodash.isobject'
 import _forEach from 'lodash.foreach'
 import product_mixin from '@/mixins/product_mixin'
-import app_mixin from '@/mixins/app_mixin'
 import shopping_cart_mixin from '@/mixins/shopping_cart_mixin'
 
 
@@ -34,9 +33,9 @@ export default {
             selectedSize: null,
             selectedQty: 1,
             isLoading: false,
-            siteUrl: this.getSiteUrl(true),
-            pageUrl: `${this.getSiteUrl(true)}${this.$route.fullPath}`,
-            twitterUser: this.getTwitterUser(),
+            siteUrl: this.$store.state.ui.siteUrlLong,
+            pageUrl: `${this.$store.state.ui.siteUrlLong}${this.$route.fullPath}`,
+            twitterUser: this.$store.state.ui.twitterUser,
             artistDialog: {
                 visible: false
             }
@@ -45,7 +44,6 @@ export default {
 
     mixins: [
         product_mixin,
-        app_mixin,
         shopping_cart_mixin
     ],
 
@@ -163,7 +161,7 @@ export default {
             title: this.productTitle,
             meta: [
                 { vmid: 'description', name: 'description', content: this.productDesc },
-                { name: 'og:site_name', content: this.getSiteName() },
+                { name: 'og:site_name', content: this.$store.state.ui.siteName },
                 { name: 'og:url', content: this.$route.fullPath },
                 { name: 'og:title', content: this.productTitle },
                 { name: 'og:type', content: 'website' },
