@@ -28,6 +28,10 @@ export default {
             </div>
 
             <div class="is-half phxl">
+                <div class="fs20 pbm">
+                    <slot name="title"></slot>
+                </div>
+
                 <div>
                     <slot name="description"></slot>
                 </div>

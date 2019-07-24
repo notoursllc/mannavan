@@ -5,6 +5,7 @@
 
     export default {
         components: {
+            PageTitle: () => import('@/components/PageTitle'),
             CartItems: () => import('@/components/cart/CartItems'),
             CartTotalsTable: () => import('@/components/cart/CartTotalsTable'),
             GoToCheckoutButtons: () => import('@/components/cart/GoToCheckoutButtons')
@@ -35,8 +36,6 @@
                     });
                 }
             }
-
-            this.$store.dispatch('ui/pageTitle', this.$t('Shopping Cart'));
         },
 
         head() {
@@ -52,24 +51,28 @@
 
 
 <template>
-    <div class="pageContainerMax">
-        <div class="checkout-buttons" v-if="shoppingCart.cart_items && shoppingCart.cart_items.length > 2">
-            <go-to-checkout-buttons />
-        </div>
+    <div>
+        <page-title>{{ $t('Shopping Cart') }}</page-title>
 
-        <cart-items
-            :shopping-cart="shoppingCart"
-            :highlight-item="added_cart_item"
-            v-on:updated="cloneCartFromState"></cart-items>
-
-        <div class="mtm clearfix">
-            <div class="floatRight">
-                <cart-totals-table :cart="shoppingCart"></cart-totals-table>
+        <div class="pageContainerMax">
+            <div class="checkout-buttons" v-if="shoppingCart.cart_items && shoppingCart.cart_items.length > 2">
+                <go-to-checkout-buttons />
             </div>
-        </div>
 
-        <div class="checkout-buttons" v-if="shoppingCart.num_items">
-            <go-to-checkout-buttons />
+            <cart-items
+                :shopping-cart="shoppingCart"
+                :highlight-item="added_cart_item"
+                v-on:updated="cloneCartFromState"></cart-items>
+
+            <div class="mtm clearfix">
+                <div class="floatRight">
+                    <cart-totals-table :cart="shoppingCart"></cart-totals-table>
+                </div>
+            </div>
+
+            <div class="checkout-buttons" v-if="shoppingCart.num_items">
+                <go-to-checkout-buttons />
+            </div>
         </div>
     </div>
 </template>

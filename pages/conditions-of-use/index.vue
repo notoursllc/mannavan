@@ -1,11 +1,8 @@
 <script>
 export default {
     components: {
+        PageTitle: () => import('@/components/PageTitle'),
         ConditionsOfUseDisplay: () => import('@/components/ConditionsOfUseDisplay')
-    },
-
-    created() {
-        this.$store.dispatch('ui/pageTitle', this.$t('Conditions of Use'));
     },
 
     head() {
@@ -21,8 +18,12 @@ export default {
 
 
 <template>
-    <div class="pageContainerMax priv">
-        <conditions-of-use-display />
+    <div>
+        <page-title>{{ $t('Conditions of Use') }}</page-title>
+
+        <div class="pageContainerMax priv">
+            <conditions-of-use-display />
+        </div>
     </div>
 </template>
 

@@ -44,15 +44,11 @@ export default {
         }
 
         this.$store.dispatch('ui/IN_CHECKOUT_FLOW', true);
-        this.$store.dispatch('ui/pageTitle', this.$t('Checkout'));
     },
 
     head() {
         return {
             title: this.$t('Checkout'),
-            script: [
-                { src: 'https://js.squareup.com/v2/paymentform', body: true }
-            ],
             meta: [
                 { vmid: 'description', name: 'description', content: `Your Shopping Cart at ${this.$store.state.ui.siteName}` }
             ]
@@ -63,7 +59,6 @@ export default {
 
 <template>
     <div class="checkout-container">
-
         <div class="order-container" v-loading="isLoading">
             <div class="order-wrapper">
                 <checkout-section-shipping />
@@ -76,7 +71,6 @@ export default {
                 </div>
             </div>
         </div>
-
 
         <div class="cart-container">
             <cart-items-mini :shopping-cart="shoppingCart" />

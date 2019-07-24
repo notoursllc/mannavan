@@ -65,10 +65,6 @@ export default {
         }
     },
 
-    created() {
-        this.$store.dispatch('ui/pageTitle', null);
-    },
-
     head() {
         return {
             title: 'BreadVan',

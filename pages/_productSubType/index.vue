@@ -67,11 +67,6 @@ export default {
         }
     },
 
-    created() {
-        // this.$store.dispatch('ui/pageTitle', this.productTypeName);
-        this.$store.dispatch('ui/pageTitle', null); // hide the top bar
-    },
-
     head() {
         return {
             title: this.productTypeName,

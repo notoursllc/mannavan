@@ -3,6 +3,7 @@ import app_mixin from '@/mixins/app_mixin'
 
 export default {
     components: {
+        PageTitle: () => import('@/components/PageTitle'),
         IconEnvelope: () => import('@/components/icons/IconEnvelope')
     },
 
@@ -14,10 +15,6 @@ export default {
         emailAddress() {
             return process.env.EMAIL_INFO;
         }
-    },
-
-    created() {
-        this.$store.dispatch('ui/pageTitle', this.$t('Contact Us!'));
     },
 
     head() {
@@ -33,14 +30,16 @@ export default {
 
 
 <template>
-    <div class="pageContainerMax priv">
+    <div>
+        <page-title>{{ $t('Contact Us!') }}</page-title>
 
-        <div class="tac">
-            <icon-envelope icon-name="email" class-name="fillGrayLight" width="80px" />
-            <div class="mts fs24">{{ $t('We want to hear from you!') }}</div>
-            <div class="fs16">{{ $t("We'll get back to you within 1 business day.") }}</div>
-            <div class="fs20 mtm"><a :href="`mailto:${emailAddress}`">{{ emailAddress }}</a></div>
+        <div class="pageContainerMax priv">
+            <div class="tac">
+                <icon-envelope icon-name="email" class-name="fillGrayLight" width="80px" />
+                <div class="mts fs24">{{ $t('We want to hear from you!') }}</div>
+                <div class="fs16">{{ $t("We'll get back to you within 1 business day.") }}</div>
+                <div class="fs20 mtm"><a :href="`mailto:${emailAddress}`">{{ emailAddress }}</a></div>
+            </div>
         </div>
-
     </div>
 </template>

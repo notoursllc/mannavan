@@ -3,6 +3,7 @@ import { mapGetters } from 'vuex'
 
 export default {
     components: {
+        PageTitle: () => import('@/components/PageTitle'),
         KeepShoppingButton: () => import('@/components/cart/KeepShoppingButton')
     },
 
@@ -19,7 +20,6 @@ export default {
         }
 
         this.$store.dispatch('ui/IN_CHECKOUT_FLOW', true);
-        this.$store.dispatch('ui/pageTitle', this.$t('Secure Checkout'));
     },
 
     head() {
@@ -35,11 +35,15 @@ export default {
 
 
 <template>
-    <div class="pageContainerMax fs16 pal tac mtl">
-        {{ $t('Your shopping cart does not contain any items.') }}
+    <div>
+        <page-title>{{ $t('Secure Checkout') }}</page-title>
 
-        <div class="mtl">
-            <keep-shopping-button></keep-shopping-button>
+        <div class="pageContainerMax fs16 pal tac mtl">
+            {{ $t('Your shopping cart does not contain any items2.') }}
+
+            <div class="mtl">
+                <keep-shopping-button></keep-shopping-button>
+            </div>
         </div>
     </div>
 </template>

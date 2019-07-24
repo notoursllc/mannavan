@@ -71,8 +71,6 @@ export default {
             let opts = product_mixin.methods.buildSizeOptions(data.product);
             data.sizeOptions = opts.sizeOpts;
 
-            store.dispatch('ui/pageTitle', data.product.title);
-
             return data;
         }
         catch(err) {
@@ -181,6 +179,9 @@ export default {
             <template slot="pics">
                 <product-image-carousel :product="product" />
             </template>
+
+            <!-- title -->
+            <div slot="title">{{ product.title }}</div>
 
             <!-- description -->
             <div slot="description" class="fs16">{{ product.description_long }}</div>

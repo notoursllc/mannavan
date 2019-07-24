@@ -4,6 +4,7 @@ import payment_mixin from '@/mixins/payment_mixin'
 
 export default {
     components: {
+        PageTitle: () => import('@/components/PageTitle'),
         OrderDetails: () => import('@/components/order/OrderDetails')
     },
 
@@ -27,7 +28,6 @@ export default {
 
     async created() {
         try {
-            this.$store.dispatch('ui/pageTitle', this.$t('Order Details'));
             this.order = await this.getPayment(this.$route.params.id);
             this.orderExists = true;
             this.loading = false;
@@ -50,16 +50,18 @@ export default {
 </script>
 
 <template>
-    <div class="pageContainerMax" v-loading.fullscreen.lock="loading">
+    <div>
+        <page-title>{{ $t('Order Details') }}</page-title>
 
-        <template v-if="!loading">
-            <div v-if="!orderExists" class="tac">
-                {{ $t('Oops we could not find the order you are looking for.') }}
-            </div>
-            <div v-else>
-                <order-details :order="order" />
-            </div>
-        </template>
-
+        <div class="pageContainerMax" v-loading.fullscreen.lock="loading">
+            <template v-if="!loading">
+                <div v-if="!orderExists" class="tac">
+                    {{ $t('Oops we could not find the order you are looking for.') }}
+                </div>
+                <div v-else>
+                    <order-details :order="order" />
+                </div>
+            </template>
+        </div>
     </div>
 </template>

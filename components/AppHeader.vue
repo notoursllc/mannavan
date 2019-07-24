@@ -1,52 +1,73 @@
 <script>
 import { mapGetters } from 'vuex';
-import product_mixin from '@/mixins/product_mixin';
 
 export default {
-    mixins: [
-        product_mixin
-    ],
-
     components: {
         IconVictory: () => import('@/components/icons/IconVictory'),
-        IconCart: () => import('@/components/icons/IconCart')
+        IconLock: () => import('@/components/icons/IconLock'),
+        IconCart: () => import('@/components/icons/IconCart'),
+        AppHeaderCheckoutPopover: () => import('@/components/AppHeaderCheckoutPopover')
     },
 
     computed: {
         ...mapGetters({
             numCartItems: 'shoppingcart/numItems',
+            inCheckoutFlow: 'ui/inCheckoutFlow'
         })
     }
 }
 </script>
 
 <template>
-    <header role="banner">
+    <header role="banner" :class="{'white': inCheckoutFlow, 'dark': !inCheckoutFlow}">
         <div class="header-inner">
 
-            <i class="el-icon-d-arrow-right header-hamburger cursorPointer"
-            @click="$store.dispatch('ui/toggleSidebar')"></i>
+            <!-- common header -->
+            <template v-if="!inCheckoutFlow">
+                <i class="el-icon-d-arrow-right header-hamburger cursorPointer"
+                @click="$store.dispatch('ui/toggleSidebar')"></i>
 
-            <div class="header-logo-container">
-                <nuxt-link
-                    :to="{ name: 'index' }"
-                    tag="span"
-                    class="cursorPointer header-logo">
-                    <icon-victory icon-name="logo" class-name="fillWhite" class="vam" />
-                </nuxt-link>
-            </div>
+                <div class="header-logo-container">
+                    <nuxt-link
+                        :to="{ name: 'index' }"
+                        tag="span"
+                        class="cursorPointer">
+                        <icon-victory icon-name="logo" class-name="fillWhite" class="vam" />
+                    </nuxt-link>
+                </div>
 
-            <ul class="header-nav tar">
-                <nuxt-link
-                    :to="{ name: 'cart-id' }"
-                    tag="li"
-                    class="header-label">
-                    <div class="cart-button" :class="{'bounce': numCartItems}">
-                        <icon-cart icon-name="shopping_cart" class-name="fillWhite" width="35px" height="35px" />
-                        <span class="badge" :class="{'badge-green': numCartItems}">{{ numCartItems }}</span>
-                    </div>
-                </nuxt-link>
-            </ul>
+                <ul class="header-nav tar">
+                    <nuxt-link
+                        :to="{ name: 'cart-id' }"
+                        tag="li"
+                        class="header-label">
+                        <div class="cart-button" :class="{'bounce': numCartItems}">
+                            <icon-cart icon-name="shopping_cart" class-name="fillWhite" width="35px" height="35px" />
+                            <span class="badge" :class="{'badge-green': numCartItems}">{{ numCartItems }}</span>
+                        </div>
+                    </nuxt-link>
+                </ul>
+            </template>
+
+            <!-- checkout header -->
+            <template v-else>
+                <div class="header-logo-container">
+                    <app-header-checkout-popover>
+                        <icon-victory icon-name="logo" class-name="fillGray" class="vam" />
+                    </app-header-checkout-popover>
+                </div>
+
+                <div class="header-checkout-middle" v-if="numCartItems">
+                    <span>{{ $t('Checkout') }}</span>
+                    <app-header-checkout-popover>
+                        (<a class="nowrap fs20">{{ numCartItems }}&nbsp;{{ $tc('items', numCartItems) }}</a>)
+                    </app-header-checkout-popover>
+                </div>
+
+                <div>
+                    <icon-lock icon-name="secure" class-name="fillGray" class="vam" width="25px" />
+                </div>
+            </template>
 
         </div>
     </header>
@@ -63,12 +84,20 @@ $header-height-small: 46px;
 header {
     @include flex-basis(auto);
     transition: .5s;
-    background: #5a5a5a;
     position: relative;
-    color: #fff;
     height: $header-height;
     line-height: $header-height;
     padding: 0;
+}
+
+header.dark {
+    background: #5a5a5a;
+    color: #fff;
+}
+
+header.white {
+    background: #fff;
+    border-bottom: 1px solid #ece9e9;
 }
 
 header:after {
@@ -100,11 +129,16 @@ header:after {
     .header-logo-container {
         @include flex-grow(0);
 
-        .header-logo {
-            svg {
-                width: 65px;
-            }
+        svg {
+            width: 65px;
         }
+    }
+
+    .header-checkout-middle {
+        @include flex-grow(1);
+        text-align: center;
+        font-size: 25px;
+        font-weight: 400;
     }
 
     .header-label {
@@ -184,10 +218,8 @@ header:after {
                 @include flex-grow(3);
                 text-align: center;
 
-                .header-logo {
-                    svg {
-                        width: 50px;
-                    }
+                svg {
+                    width: 50px;
                 }
             }
 

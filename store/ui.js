@@ -7,7 +7,6 @@ export const state = () => ({
     isMobile: false,
     locales: ['en', 'fr'],
     locale: 'en',
-    pageTitle: null,
     inCheckoutFlow: false,
     infoEmailAddress: `info@${domainName}`,
     brandName: 'BreadVan',
@@ -47,10 +46,6 @@ export const mutations = {
         }
     },
 
-    PAGE_TITLE(state, title) {
-        state.pageTitle = title;
-    },
-
     IN_CHECKOUT_FLOW: (state, inCheckoutFlow) => {
         state.inCheckoutFlow = inCheckoutFlow;
     }
@@ -71,10 +66,6 @@ export const actions = {
 
     windowResize ({ commit }) {
         commit('WINDOW_RESIZE')
-    },
-
-    pageTitle({ commit }, title) {
-        commit('PAGE_TITLE', title)
     },
 
     IN_CHECKOUT_FLOW: ({ commit }, inCheckoutFlow) => {

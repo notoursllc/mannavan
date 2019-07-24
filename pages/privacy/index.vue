@@ -1,11 +1,8 @@
 <script>
 export default {
     components: {
+        PageTitle: () => import('@/components/PageTitle'),
         PrivacyDisplay: () => import('@/components/PrivacyDisplay')
-    },
-
-    created() {
-        this.$store.dispatch('ui/pageTitle', this.$t('Privacy Notice'));
     },
 
     head() {
@@ -21,8 +18,12 @@ export default {
 
 
 <template>
-    <div class="pageContainerMax priv">
-        <privacy-display />
+    <div>
+        <page-title>{{ $t('Privacy Notice') }}</page-title>
+
+        <div class="pageContainerMax priv">
+            <privacy-display />
+        </div>
     </div>
 </template>
 

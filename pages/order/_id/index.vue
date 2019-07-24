@@ -40,7 +40,6 @@ export default {
 
     async created() {
         try {
-            this.$store.dispatch('ui/pageTitle', null);
             this.order = await this.getPayment(this.$route.params.id);
             this.orderExists = true;
         }

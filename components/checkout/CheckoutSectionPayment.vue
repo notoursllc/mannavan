@@ -168,6 +168,8 @@ export default {
     mounted: function() {
         let self = this;
 
+        // SqPaymentForm comes from the Square API at
+        // https://js.squareup.com/v2/paymentform
         this.paymentForm = new SqPaymentForm({
             autoBuild: false,
             applicationId: process.env.SQUARE_APP_ID,

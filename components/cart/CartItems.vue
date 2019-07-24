@@ -36,7 +36,8 @@ export default {
         ProductQuantityInput: () => import('@/components/product/ProductQuantityInput'),
         CartItemDisplay: () => import('@/components/cart/CartItemDisplay'),
         ProductDetailsDisplay: () => import('@/components/product/ProductDetailsDisplay'),
-        ProductImageCarousel: () => import('@/components/product/ProductImageCarousel')
+        ProductImageCarousel: () => import('@/components/product/ProductImageCarousel'),
+        KeepShoppingButton: () => import('@/components/cart/KeepShoppingButton')
     },
 
     mixins: [
@@ -123,6 +124,10 @@ export default {
     <div v-if="shoppingCart">
         <div v-if="!shoppingCart.num_items" class="fs16 tac pal">
             {{ $t('Your shopping cart does not contain any items.') }}
+
+            <div class="mtl">
+                <keep-shopping-button></keep-shopping-button>
+            </div>
         </div>
         <div v-else class="ptl">
             <cart-item-display

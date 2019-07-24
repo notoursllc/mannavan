@@ -12,7 +12,16 @@ module.exports = {
     head: {
         link: [
             { rel: 'icon', type: 'image/x-icon', href: '/images/favicon.ico' }
-        ]
+        ],
+        script: [
+            // NOTE: Putting this in the head() of the cart/checkout/index.vue file, instead of here,
+            // causes this to be loaded only for that route.  That's a good thing, but it caused a race
+            // condition resulting in a javascript error: SqPaymentForm is not defined
+            // That's because the CheckoutSectionPayment component, which uses SqPaymentForm, sometimes
+            // loads before the head() script is loaded.
+            // Putting it here doesn't seem ideal, but it's safest.
+            { src: 'https://js.squareup.com/v2/paymentform', body: true, async: true }
+        ],
     },
 
     meta: {
@@ -78,7 +87,8 @@ module.exports = {
 
     router: {
         middleware: [
-            'check-auth'
+            'check-auth',
+            'in-checkout'
         ]
     },
 
