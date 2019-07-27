@@ -16,7 +16,7 @@ export default {
 </script>
 
 <template>
-    <div class="pageContainerMax priv">
+    <div class="priv">
         We know how important it is to protect your personal information. We want to make every customer experience safe and secure.
         In keeping with that goal, we have developed this Privacy Notice to outline our guidelines for the collection and use of personal information.
 

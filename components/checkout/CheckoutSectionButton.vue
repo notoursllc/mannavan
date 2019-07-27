@@ -142,7 +142,7 @@ export default {
             :title="this.$t('Privacy Notice')"
             :visible.sync="privacyNoticeVisible"
             width="90%">
-            <div class="tal">
+            <div class="tal wordBreakBreakWord">
                 <privacy-display />
             </div>
         </el-dialog>
@@ -152,7 +152,7 @@ export default {
             :title="this.$t('Conditions of Use')"
             :visible.sync="conditionsOfUseVisible"
             width="90%">
-            <div class="tal">
+            <div class="tal wordBreakBreakWord">
                 <conditions-of-use-display />
             </div>
         </el-dialog>
