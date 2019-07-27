@@ -29,6 +29,8 @@ import {
     Submenu,
     Table,
     TableColumn,
+    Tabs,
+    TabPane,
     Tooltip,
     Upload
 } from 'element-ui';
@@ -61,6 +63,8 @@ export default () => {
     Vue.use(Submenu);
     Vue.use(Table);
     Vue.use(TableColumn);
+    Vue.use(Tabs);
+    Vue.use(TabPane);
     Vue.use(Tooltip);
     Vue.use(Upload);
 
