@@ -3,6 +3,7 @@ import { mapGetters } from 'vuex';
 import shopping_cart_mixin from '@/mixins/shopping_cart_mixin';
 import app_mixin from '@/mixins/app_mixin';
 import payment_mixin from '@/mixins/payment_mixin';
+import IconInfo from '@/components/icons/IconInfo';
 
 let currentNotification = null;
 
@@ -17,9 +18,9 @@ export default {
     components: {
         StatusWrapper: () => import('@/components/StatusWrapper'),
         IconLock: () => import('@/components/icons/IconLock'),
-        IconInfo: () => import('@/components/icons/IconInfo'),
         CreditCardIcon: () => import('@/components/CreditCardIcon'),
-        FormRow: () => import('@/components/FormRow')
+        FormRow: () => import('@/components/FormRow'),
+        IconInfo, // This one can not be imported asynchronously because it's being used in el-tooltip
     },
 
     mixins: [
