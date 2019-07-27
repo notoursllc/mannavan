@@ -19,7 +19,7 @@
     "knex:migrate": "node ./node_modules/knex/bin/cli.js migrate:latest --knexfile ./shopBac/knexfile.js",
     "knex:seed": "node --require dotenv/config ./node_modules/knex/bin/cli.js seed:run --knexfile ./shopBac/knexfile.js",
     "test:client": "npm run unit && npm run e2e",
-    "test:server": "NODE_ENV=test lab -a code -v --leaks shopBac/test/server",
+    "test:server": "NODE_ENV=test lab -a @hapi/code -v --leaks shopBac/test/server",
     "test:e2eOLD": "node test/client/e2e/runner.js",
     "e2e": "node ./node_modules/testcafe/bin/testcafe.js \"saucelabs:Chrome@beta:Windows 10\" test/client/e2e --app \"npm start\" --app-init-delay 10000",
     "e2e-local": "NODE_ENV=development node --require dotenv/config ./node_modules/testcafe/bin/testcafe.js firefox test/client/e2e --app \"npm run dev\" --app-init-delay 10000",
@@ -76,12 +76,12 @@
     "vuex-router-sync": "^5.0.0"
   },
   "devDependencies": {
-    "code": "^5.2.4",
+    "@hapi/code": "^5.3.1",
+    "@hapi/lab": "^19.1.0",
     "eslint": "^4.15.0",
     "eslint-loader": "^1.7.1",
     "eslint-plugin-vue": "^4.7.1",
     "extract-text-webpack-plugin": "^4.0.0-beta.0",
-    "lab": "^18.0.2",
     "nodemon": "^1.19.1",
     "testcafe": "^0.23.3",
     "testcafe-browser-provider-saucelabs": "^1.6.1",

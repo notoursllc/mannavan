@@ -44,19 +44,6 @@ export default {
             this.$store.dispatch('checkout/SHIPPING_FORM_VALID', isValid);
         },
 
-        updateShippingStateFromValidation: function(obj) {
-            // Just updating the shipping attributes:
-            let updates = {};
-            updates.shipping_company = obj.company_name;
-            updates.shipping_streetAddress = obj.address_line1;
-            updates.shipping_city = obj.city_locality;
-            updates.shipping_state = obj.state_province;
-            updates.shipping_postalCode = obj.postal_code;
-            updates.shipping_countryCodeAlpha2 = obj.country_code;
-
-            this.$store.dispatch('shoppingcart/CART_SET', updates);
-        },
-
         shippingFormDone: async function() {
             try {
                 const shippingAttributes = cloneDeep(this.shippingAttributes);
@@ -113,71 +100,37 @@ export default {
                 this.loading = true;
 
                 const result = await this.validateAddress({
-                    company_name: c.shipping_company,
-                    address_line1: c.shipping_streetAddress,
-                    city_locality: c.shipping_city,
-                    state_province: c.shipping_state,
-                    postal_code: c.shipping_postalCode,
-                    country_code: c.shipping_countryCodeAlpha2
+                    name: `${c.shipping_firstName} ${c.shipping_lastName}`,
+                    company: c.shipping_company,
+                    street1: c.shipping_streetAddress,
+                    city: c.shipping_city,
+                    state: c.shipping_state,
+                    zip: c.shipping_postalCode,
+                    country: c.shipping_countryCodeAlpha2
                 });
 
-                const validation = Array.isArray(result) ? result[0] : result;
-                if(isObject(validation)) {
-                    // First, checking for error messages:
-                    let errorMessages = [];
+                if(!isObject(result)
+                    || !result.hasOwnProperty('validation_results')
+                    || !result.validation_results.is_valid) {
+                    currentNotification = this.$notify({
+                        title: this.$t('The address you provided does not seem to be a valid mailing adddress.'),
+                        duration: 0,
+                        type: 'error'
+                    });
+                }
+                else {
+                    // Updating the shipping attributes:
+                    let updates = {};
+                    updates.shipping_company = result.company;
+                    updates.shipping_streetAddress = result.street1;
+                    updates.shipping_city = result.city;
+                    updates.shipping_state = result.state;
+                    updates.shipping_postalCode = result.zip;
+                    updates.shipping_countryCodeAlpha2 = result.country;
 
-                    if(Array.isArray(validation.messages)) {
-                        // Skipping message code 'a1003', because it seems kind of useless.  It's message is
-                        // "Some fields were modified while verifying the address.".  That will just confuse the user,
-                        // so it's probably better to display the default message in this case.
-                        let skipCodes = ['a1003'];
+                    this.$store.dispatch('shoppingcart/CART_SET', updates);
 
-                        forEach(validation.messages, (msg) => {
-                            if(skipCodes.indexOf(msg.code) < 0) {
-                                errorMessages.push(msg.message)
-                            }
-                        });
-                    }
-
-                    if(errorMessages.length) {
-                        currentNotification = this.$notify({
-                            title: this.$t('Address validation error'),
-                            message: errorMessages.join('\n\n'),
-                            duration: 0,
-                            type: 'error'
-                        });
-                    }
-                    else if(validation.status === 'error') {
-                        currentNotification = this.$notify({
-                            title: this.$t('The address you provided does not seem to be a valid mailing adddress.'),
-                            message: errorMessages.join('\n\n'),
-                            duration: 0,
-                            type: 'error'
-                        });
-                    }
-                    else {
-                        switch(validation.status) {
-                            case 'verified':
-                                this.updateShippingStateFromValidation(validation.matched_address);
-                                await this.shippingFormDone();
-                                break;
-
-                            // NOTE: The 'unverified' case could still be a correct address.
-                            // This will most likely happen if the country value
-                            // is not supported (https://docs.shipengine.com/docs/address-validation).
-                            // In this case we should consider 'unverified' as valid so the transaction can continue.
-                            //
-                            // ALSO NOTE: The 'matched_address' property is null when the status is 'unverified',
-                            // so we need to get the values from the 'original_address' property
-                            case 'unverified':
-                                this.updateShippingStateFromValidation(validation.original_address);
-                                await this.shippingFormDone();
-                                break;
-
-                            default:
-                                await this.shippingFormDone();
-                        }
-                    }
+                    await this.shippingFormDone();
                 }
 
                 this.loading = false;
