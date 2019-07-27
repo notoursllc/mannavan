@@ -122,7 +122,7 @@ export default {
 
         goToStore(seoUri) {
             let routeData = this.$router.resolve({
-                name: 'seouri',
+                name: 'p-seouri',
                 params: { seouri: seoUri }
             });
 

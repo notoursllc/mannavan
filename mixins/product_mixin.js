@@ -24,7 +24,7 @@ export default {
     methods: {
         goToProductDetails(seo_uri) {
             this.$router.push({
-                name: 'seouri',
+                name: 'p-seouri',
                 params: { seouri: seo_uri }
             });
         },

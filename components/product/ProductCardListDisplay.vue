@@ -34,7 +34,7 @@ export default {
                 v-for="product in products"
                 :key="product.id">
                 <nuxt-link
-                    :to="{ name: 'seouri', params: { seouri: product.seo_uri } }"
+                    :to="{ name: 'p-seouri', params: { seouri: product.seo_uri } }"
                     tag="span">
                     <product-card :product="product"></product-card>
                 </nuxt-link>
