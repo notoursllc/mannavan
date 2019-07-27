@@ -38,7 +38,7 @@ script:
   - npm run knex:migrate
   - npm run knex:seed
   - npm run test:server
-  - npm run e2e
+#   - npm run e2e
 
 # after_success:
 
