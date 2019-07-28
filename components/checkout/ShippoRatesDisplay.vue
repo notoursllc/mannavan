@@ -26,11 +26,10 @@ export default {
     },
 
     created: function() {
-        const unwatch = this.$watch('value', val => {
+        this.$watch('value', val => {
             if(val) {
                 // console.log("selectedRate", val);
                 this.selectTableRow(val);
-                unwatch();
             }
         });
 

@@ -1,10 +1,5 @@
 <script>
-import FormRow from '@/components/FormRow'
-import IconPencil from '@/components/icons/IconPencil'
-import IconTrash from '@/components/icons/IconTrash'
-import IconCheckSquare from '@/components/icons/IconCheckSquare'
 import product_mixin from '@/mixins/product_mixin'
-
 
 let currentNotification = null;
 
@@ -23,10 +18,9 @@ function showNotification(Notification) {
 
 export default {
     components: {
-        FormRow,
-        IconTrash,
-        IconPencil,
-        IconCheckSquare
+        FormRow: () => import('@/components/FormRow'),
+        IconCheckSquare: () => import('@/components/icons/IconCheckSquare'),
+        OperationsDropdown: () => import('@/components/OperationsDropdown')
     },
 
     props: {
@@ -66,7 +60,7 @@ export default {
 
         openSizeUpsertModal(size) {
             this.setSizeOptions(this.product.sizes);
-            this.sizeModal.size = size || sizeModalFormDefaults;
+            this.sizeModal.size = Object.assign({}, size) || sizeModalFormDefaults;
             this.sizeModal.isActive = true;
         },
 
@@ -185,10 +179,9 @@ export default {
     },
 
     mounted() {
-        const unwatch = this.$watch('productId', val => {
+        this.$watch('productId', val => {
             if(val) {
                 this.getProduct();
-                unwatch();
             }
         }, {immediate: true})
     }
@@ -219,36 +212,13 @@ export default {
 
                 <!-- size name -->
                 <el-table-column prop="size" label="Size">
-                    <template slot-scope="scope">{{ $t(scope.row.size) }}</template>
-                </el-table-column>
-
-                <!-- operations -->
-                <el-table-column
-                    label="Operations"
-                    align="center"
-                    width="150">
-                    <div slot-scope="scope" class="nowrap">
-                        <el-button
-                            type="primary"
-                            round
-                            @click="openSizeUpsertModal(scope.row)">
-                            <icon-pencil
-                                icon-name="edit"
-                                class-name="fillWhite"
-                                width="15px" />
-                        </el-button>
-
-                        <el-button
-                            type="danger"
-                            round
-                            @click="deleteSize(scope.row)"
-                            class="mrl">
-                            <icon-trash
-                                icon-name="delete"
-                                class-name="fillWhite"
-                                width="15px" />
-                        </el-button>
-                    </div>
+                    <template slot-scope="scope">
+                        {{ $t(scope.row.size) }}
+                        <operations-dropdown
+                            :show-view="false"
+                            @edit="openSizeUpsertModal(scope.row)"
+                            @delete="deleteSize(scope.row)" />
+                    </template>
                 </el-table-column>
 
                 <!-- is visible -->
@@ -316,14 +286,14 @@ export default {
         </div>
 
         <!-- product size edit dialog -->
-        <el-dialog :title="sizeModal.size.size ? 'EDIT: ' + $t(sizeModal.size.size) : 'ADD SIZE'"
+        <el-dialog :title="sizeModal.size.id ? 'EDIT: ' + $t(sizeModal.size.size) : 'ADD SIZE'"
                    :visible.sync="sizeModal.isActive"
                    :modal-append-to-body="false">
 
             <form-row>
                 <template slot="label">Size:</template>
                 <template slot="value">
-                    <div v-if="sizeModal.size.size">{{ $t(sizeModal.size.size) }}</div>
+                    <div v-if="sizeModal.size.id">{{ $t(sizeModal.size.size) }}</div>
                     <el-select
                         v-else
                         v-model="sizeModal.size.size"

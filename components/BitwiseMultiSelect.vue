@@ -50,7 +50,7 @@ export default {
             })
 
             this.selectedVal = values;
-            unwatch();
+            // unwatch();
         })
     }
 }

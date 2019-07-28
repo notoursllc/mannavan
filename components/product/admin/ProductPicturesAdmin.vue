@@ -1,10 +1,6 @@
 <script>
 import forEach from 'lodash.foreach'
 import { required } from 'vuelidate/lib/validators'
-import FormRow from '@/components/FormRow'
-import IconCheckSquare from '@/components/icons/IconCheckSquare'
-import IconTrash from '@/components/icons/IconTrash'
-import IconPencil from '@/components/icons/IconPencil'
 import product_mixin from '@/mixins/product_mixin'
 
 
@@ -26,10 +22,10 @@ function showNotification(Notification) {
 
 export default {
     components: {
-        FormRow,
-        IconCheckSquare,
-        IconPencil,
-        IconTrash
+        FormRow: () => import('@/components/FormRow'),
+        IconCheckSquare: () => import('@/components/icons/IconCheckSquare'),
+        IconTrash: () => import('@/components/icons/IconTrash'),
+        OperationsDropdown: () => import('@/components/OperationsDropdown')
     },
 
     props: {
@@ -219,22 +215,21 @@ export default {
 
 
         openPicEditModal(pic) {
-            this.picModal.form = pic || picModalFormDefaults;
+            this.picModal.form = Object.assign({}, pic) || picModalFormDefaults;
             this.picModal.isActive = true;
         },
 
 
         openPicQuickView(pic) {
-            this.picViewModal.pic = pic;
+            this.picViewModal.pic = Object.assign({}, pic);
             this.picViewModal.isActive = true;
         }
     },
 
     created() {
-        const unwatch = this.$watch('productId', val => {
+        this.$watch('productId', val => {
             if(val) {
                 this.getProduct();
-                unwatch();
             }
         }, {immediate: true})
     }
@@ -256,41 +251,17 @@ export default {
             <!-- picture -->
             <el-table-column
                 label="Picture"
-                width="100">
-                <template slot-scope="scope">
-                    <a @click="openPicQuickView(scope.row)" v-if="scope.row.url">
-                        <img :src="scope.row.url" class="width50" />
-                    </a>
-                </template>
-            </el-table-column>
-
-            <!-- operations -->
-            <el-table-column
-                label="Operations"
-                align="center"
                 width="150">
-                <div slot-scope="scope" class="nowrap">
-                    <el-button
-                        type="primary"
-                        round
-                        @click="openPicEditModal(scope.row)">
-                        <icon-pencil
-                            icon-name="edit"
-                            class-name="fillWhite"
-                            width="15px" />
-                    </el-button>
-
-                    <el-button
-                        type="danger"
-                        round
-                        @click="deletePic(scope.row)"
-                        class="mrl">
-                        <icon-trash
-                            icon-name="delete"
-                            class-name="fillWhite"
-                            width="15px" />
-                    </el-button>
-                </div>
+                <template slot-scope="scope">
+                    <span v-if="scope.row.url">
+                        <img :src="scope.row.url" class="width50" />
+                    </span>
+                    <operations-dropdown
+                        class="vat"
+                        @view="openPicQuickView(scope.row)"
+                        @edit="openPicEditModal(scope.row)"
+                        @delete="deletePic(scope.row)" />
+                </template>
             </el-table-column>
 
             <!-- url -->
