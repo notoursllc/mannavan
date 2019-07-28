@@ -15,6 +15,7 @@ function stripRelations(productJson) {
     delete productJson.created_at;
     delete productJson.updated_at;
     delete productJson.display_price;
+    delete productJson.total_inventory_count;
 
     return productJson;
 }
@@ -231,7 +232,7 @@ export default {
         },
 
 
-        async upsert(product) {
+        async upsertProduct(product) {
             let target = '/product/create';
 
             if(product.id) {

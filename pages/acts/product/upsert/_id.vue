@@ -151,12 +151,12 @@ export default {
             this.videoPlayerModal.player = player;
         },
 
-        async upsertProduct(product) {
+        async upsert(product) {
             try {
-                const p = await this.upsert(product);
+                const p = await this.upsertProduct(product);
 
                 if(!p) {
-                    throw new Error(this.$t('Error updating product'));
+                    throw new Error('Error updating product');
                 }
 
                 let title = 'Product added successfully';
@@ -348,7 +348,7 @@ export default {
                             <div class="ptl">
                                 <el-button
                                     type="primary"
-                                    @click="upsertProduct(product)">SUBMIT</el-button>
+                                    @click="upsert(product)">SUBMIT</el-button>
 
                                 <el-button @click="goToAdminProductList">CANCEL</el-button>
                             </div>
