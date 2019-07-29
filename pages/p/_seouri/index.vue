@@ -1,8 +1,10 @@
 <script>
-import isObject from 'lodash.isobject'
-import _forEach from 'lodash.foreach'
-import product_mixin from '@/mixins/product_mixin'
-import shopping_cart_mixin from '@/mixins/shopping_cart_mixin'
+import isObject from 'lodash.isobject';
+import _forEach from 'lodash.foreach';
+import product_mixin from '@/mixins/product_mixin';
+import shopping_cart_mixin from '@/mixins/shopping_cart_mixin';
+
+const globalTypes = process.env.GLOBAL_TYPES;
 
 
 let currentNotification = null;
@@ -56,6 +58,9 @@ export default {
         },
         mediaPicture() {
             return `${this.siteUrl}${this.product.pics[0]}`
+        },
+        showSizeChart() {
+            return this.product.sub_type & globalTypes.product.subtypes.PRODUCT_SUBTYPE_TOPS;
         }
     },
 
@@ -239,7 +244,9 @@ export default {
             </div>
 
             <!-- size chart -->
-            <div slot="under" class="ptl">
+            <div slot="under"
+                class="ptl"
+                v-if="showSizeChart">
                 <div class="fs16 mbm">{{ $t('Sizing') }}:</div>
                 <tshirt-size-chart
                     :fit="product.fit"
