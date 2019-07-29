@@ -5,7 +5,6 @@ export default {
     layout: 'home',
 
     components: {
-        HeroMain: () => import('@/components/HeroMain'),
         HeroProductTypeNav: () => import('@/components/HeroProductTypeNav'),
         ProductCardListDisplay: () => import('@/components/product/ProductCardListDisplay')
     },
@@ -81,15 +80,6 @@ export default {
 
 <template>
     <div>
-        <hero-main>
-            <div class="home-copy-55">
-                <h1 class="heading">Welcome to Breadvan</h1>
-                <div class="sub-heading">
-                    It's what drivers wear away from the track.
-                </div>
-            </div>
-        </hero-main>
-
         <hero-product-type-nav />
 
         <product-card-list-display
