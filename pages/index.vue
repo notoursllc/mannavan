@@ -4,17 +4,12 @@ import product_mixin from '@/mixins/product_mixin';
 let bgImages = [
     'bg_silver_car.jpg',
     'bg_black_5.jpg',
-    'bg_yellow_mclaren.jpg',
-    'bg_green_yellow_6.jpg',
-    // 'bg_seven_eleven.jpg'
+    'bg_green_yellow_6.jpg'
 ];
 
 function randomIntFromInterval(min, max) {
     return Math.floor(Math.random()*(max-min+1)+min);
 }
-
-const randomInt = randomIntFromInterval(0, (bgImages.length - 1));
-const randomImage = `/images/backgrounds/${ bgImages[randomInt] }`;
 
 
 export default {
@@ -80,11 +75,11 @@ export default {
 <template>
     <div>
         <hero-main :bg-image="bgImage">
-            <div class="heading-icon">
+            <!-- <div class="heading-icon">
                 <icon-logo icon-name="logo" class="vam" width="125px" />
-            </div>
+            </div> -->
             <div class="heading-text">
-                <h1 class="heading">This is what drivers wear<br/>off the track</h1>
+                <h1 class="heading"><mark>This is what drivers wear<br/>off the track</mark></h1>
                 <!-- <div class="sub-heading">
                     This is what drivers wear off the track.
                 </div> -->

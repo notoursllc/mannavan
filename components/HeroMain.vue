@@ -10,7 +10,7 @@ export default {
         heroMainStyle() {
             if(this.bgImage) {
                 return {
-                    'background-image': `linear-gradient(rgba(0, 0, 0, 0.5),rgba(0, 0, 0, 0.5)), url('${this.bgImage}')`
+                    'background-image': `linear-gradient(rgba(0, 0, 0, 0.1),rgba(0, 0, 0, 0.3)), url('${this.bgImage}')`
                 }
             }
         }
@@ -39,11 +39,11 @@ export default {
         @include align-items(stretch);
         @include align-content(stretch);
         background:#FFFFFF;
-        background-position: center center;
+        background-position: top center;
         // background-image: linear-gradient(rgba(0, 0, 0, 0.5),rgba(0, 0, 0, 0.5));
         background-size: cover;
         background-repeat: no-repeat;
-        background-attachment: fixed;
+        // background-attachment: fixed;
         color:#FF0077;
         text-align: left;
         position: relative;
@@ -85,7 +85,7 @@ export default {
             display: inline-block;
 
             .heading {
-                line-height: 1;
+                line-height: 1.3;
                 font-size: 40px;
                 font-weight: 650;
                 color: #f1eded;
@@ -94,6 +94,11 @@ export default {
             .sub-heading {
                 margin-top: 10px;
                 color: #fff;
+            }
+
+            mark {
+                color: #fff;
+                background-color: rgba(0,0,0,.3);
             }
         }
 
