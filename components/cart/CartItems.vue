@@ -2,16 +2,6 @@
 import product_mixin from '@/mixins/product_mixin';
 import shopping_cart_mixin from '@/mixins/shopping_cart_mixin';
 
-let currentNotification = null;
-
-
-function showNotification(Notification) {
-    if(currentNotification) {
-        currentNotification.close();
-    }
-    currentNotification = Notification
-}
-
 
 export default {
     props: {
@@ -75,12 +65,9 @@ export default {
                 loadingInstance.close();
             }
             catch(err) {
-                showNotification(
-                    this.$notify({
-                        type: 'error',
-                        title: this.$t('An error occurred'),
-                        duration: 0
-                    })
+                this.$errorMessage(
+                    this.$t('An error occurred'),
+                    { closeOthers: true }
                 )
             }
         },
@@ -95,12 +82,9 @@ export default {
                 loadingInstance.close();
             }
             catch(err) {
-                showNotification(
-                    this.$notify({
-                        type: 'error',
-                        title: this.$t('An error occurred'),
-                        duration: 0
-                    })
+                this.$errorMessage(
+                    this.$t('An error occurred'),
+                    { closeOthers: true }
                 )
             }
         },

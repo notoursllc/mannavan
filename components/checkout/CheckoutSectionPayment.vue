@@ -5,8 +5,6 @@ import app_mixin from '@/mixins/app_mixin';
 import payment_mixin from '@/mixins/payment_mixin';
 import IconInfo from '@/components/icons/IconInfo';
 
-let currentNotification = null;
-
 export default {
     props: {
         showPaymentForm: {
@@ -124,14 +122,12 @@ export default {
             }
             catch(error) {
                 console.log("CHECKOUT SEC PAYMENT CATCH", error)
-                this.closeCurrentNotification();
 
-                currentNotification = this.$notify({
-                    type: 'error',
-                    title: `${ this.$t('Error placing order') }:`,
-                    message: this.getApiErrorMessage(error),
-                    duration: 0
-                });
+                this.$errorMessage(
+                    `${this.$t('Error placing order')}: ${this.getApiErrorMessage(error)}`,
+                    { closeOthers: true }
+                )
+
 
                 this.dispatchFormStatus(false);
             }
@@ -139,12 +135,6 @@ export default {
 
         onPaymentSuccess(transactionId) {
             this.goToPaymentSuccess(transactionId);
-        },
-
-        closeCurrentNotification() {
-            if(currentNotification) {
-                currentNotification.close();
-            }
         }
     },
 
@@ -287,19 +277,16 @@ export default {
                 */
                 cardNonceResponseReceived: function(errors, nonce, cardData) {
                     if (errors) {
-                        self.closeCurrentNotification();
 
                         let errorMsg = [];
                         errors.forEach(function(error) {
                             errorMsg.push(error.message);
                         });
 
-                        currentNotification = self.$notify({
-                            type: 'error',
-                            title: `${ self.$t('Error placing order') }:`,
-                            message: errorMsg.join('\n'),
-                            duration: 0
-                        });
+                        this.$errorMessage(
+                            `${self.$t('Error placing order')}: ${errorMsg.join('\n')}`,
+                            { closeOthers: true }
+                        )
 
                         self.dispatchFormStatus(false);
                         return;

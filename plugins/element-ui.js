@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Element from 'element-ui/lib/element-ui.common';
 import locale from 'element-ui/lib/locale/lang/en';
+import isObject from 'lodash.isobject'
 
 import {
     Alert,
@@ -19,8 +20,8 @@ import {
     Loading,
     Menu,
     MenuItem,
+    Message,
     MessageBox,
-    Notification,
     Option,
     Popover,
     Radio,
@@ -36,7 +37,7 @@ import {
 } from 'element-ui';
 
 
-export default () => {
+export default ({ store }) => {
     Vue.use(Element, { locale });
 
     Vue.use(Alert);
@@ -69,6 +70,44 @@ export default () => {
     Vue.use(Upload);
 
     Vue.prototype.$confirm = MessageBox.confirm;
-    Vue.prototype.$notify = Notification;
     Vue.prototype.$loadingService = Loading.service;
+
+
+    Vue.prototype.$successMessage = function(message, config) {
+        let cfg = Object.assign({
+            message: message,
+            showClose: false,
+            duration: 5000
+        }, config);
+
+        openMessage('success', cfg);
+    }
+
+    Vue.prototype.$errorMessage = function(message, config) {
+        let cfg = Object.assign({
+            message: message,
+            showClose: true,
+            duration: 0
+        }, config);
+
+        openMessage('error', cfg);
+    }
+
+
+    async function openMessage(type, config) {
+        // this is my own attribute, it shouldn't get passed to element-ui:
+        if(config.hasOwnProperty('closeOthers')) {
+            if(config.closeOthers) {
+                await store.dispatch('ui/CLOSE_MESSAGE_INSTANCES');
+            }
+
+            delete config.closeOthers;
+        }
+
+        let messageInstance = Message[type](config);
+
+        if(config.duration === 0) {
+            store.dispatch('ui/ADD_MESSAGE_INSTANCE', messageInstance);
+        }
+    }
 }

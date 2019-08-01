@@ -12,6 +12,12 @@ export default {
 
     created() {
         this.$store.dispatch('ui/closeSidebar')
+    },
+
+    watch: {
+        $route() {
+            this.$store.dispatch('ui/CLOSE_MESSAGE_INSTANCES');
+        }
     }
 }
 </script>

@@ -1,20 +1,10 @@
 <script>
 import product_mixin from '@/mixins/product_mixin'
 
-let currentNotification = null;
 
 const sizeModalFormDefaults = {
     is_visible: true
 };
-
-
-function showNotification(Notification) {
-    if(currentNotification) {
-        currentNotification.close();
-    }
-    currentNotification = Notification
-}
-
 
 export default {
     components: {
@@ -77,13 +67,10 @@ export default {
                 }
             }
             catch(e) {
-                showNotification(
-                    this.$notify({
-                        type: 'error',
-                        title: e.message,
-                        duration: 0
-                    })
-                );
+                this.$errorMessage(
+                    e.message,
+                    { closeOthers: true }
+                )
             }
         },
 
@@ -93,13 +80,7 @@ export default {
                 this.sizeOptions = await this.buildMissingSizeOptions(sizes);
             }
             catch(err) {
-                showNotification(
-                    this.$notify({
-                        type: 'error',
-                        title: e.message,
-                        duration: 0
-                    })
-                )
+                this.$errorMessage(e.message);
             }
         },
 
@@ -123,22 +104,13 @@ export default {
 
                     this.getProduct();
 
-                    showNotification(
-                        this.$notify({
-                            type: 'success',
-                            title: 'Size deleted:',
-                            message: sizeName,
-                            duration: 4000
-                        })
-                    );
+                     this.$successMessage(`Size deleted: ${sizeName}`)
+
                 }
                 catch(e) {
-                    showNotification(
-                        this.$notify({
-                            type: 'error',
-                            title: e.message,
-                            duration: 0
-                        })
+                    this.$errorMessage(
+                        e.message,
+                        { closeOthers: true }
                     )
                 }
             }
@@ -156,23 +128,12 @@ export default {
 
                 this.resetSizeModalData();
                 this.getProduct();
-
-                showNotification(
-                    this.$notify({
-                        type: 'success',
-                        title: 'Size updated:',
-                        message: this.$t(sizeJson.size),
-                        duration: 4000
-                    })
-                )
+                this.$successMessage(`Size updated: ${this.$t(sizeJson.size)}`)
             }
             catch(e) {
-                showNotification(
-                    this.$notify({
-                        type: 'error',
-                        title: e.message,
-                        duration: 0
-                    })
+                this.$errorMessage(
+                    e.message,
+                    { closeOthers: true }
                 )
             }
         }

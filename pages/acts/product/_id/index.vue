@@ -1,17 +1,6 @@
 <script>
 import product_mixin from '@/mixins/product_mixin'
 
-let currentNotification = null;
-
-
-function showNotification(Notification) {
-    if(currentNotification) {
-        currentNotification.close();
-    }
-    currentNotification = Notification
-}
-
-
 export default{
     middleware: 'authenticated',
 
@@ -49,13 +38,10 @@ export default{
             }
         }
         catch(e) {
-            showNotification(
-                this.$notify({
-                    type: 'error',
-                    title: e.message,
-                    duration: 0
-                })
-            );
+            this.$errorMessage(
+                e.message,
+                { closeOthers: true }
+            )
         }
     }
 }

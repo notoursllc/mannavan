@@ -4,20 +4,10 @@ import { required } from 'vuelidate/lib/validators'
 import product_mixin from '@/mixins/product_mixin'
 
 
-let currentNotification = null;
-
 const picModalFormDefaults = {
     is_visible: true,
     sort_order: 1
 };
-
-
-function showNotification(Notification) {
-    if(currentNotification) {
-        currentNotification.close();
-    }
-    currentNotification = Notification
-}
 
 
 export default {
@@ -105,22 +95,17 @@ export default {
                 }
             }
             catch(e) {
-                showNotification(
-                    this.$notify({
-                        type: 'error',
-                        title: e.message,
-                        duration: 0
-                    })
-                );
+                this.$errorMessage(
+                    e.message,
+                    { closeOthers: true }
+                )
             }
         },
 
 
         async deletePic(pic) {
             try {
-                let picName = this.$t(pic.url);
-
-                await this.$confirm(`Remove this picture from the product? "${ picName }"`, 'Please confirm', {
+                await this.$confirm(`Remove this picture from the product? "${ pic.url }"`, 'Please confirm', {
                     confirmButtonText: 'OK',
                     cancelButtonText: 'Cancel',
                     type: 'warning'
@@ -137,23 +122,16 @@ export default {
 
                     this.$emit('updated');
 
-                    showNotification(
-                        this.$notify({
-                            type: 'success',
-                            title: 'Picture deleted:',
-                            message: picName,
-                            duration: 3000
-                        })
-                    );
+                    this.$successMessage(
+                        `Picture deleted:<br/><br/>${pic.url}`,
+                        { dangerouslyUseHTMLString: true }
+                    )
 
                 }
                 catch(e) {
-                    showNotification(
-                        this.$notify({
-                            type: 'error',
-                            title: e.message,
-                            duration: 0
-                        })
+                    this.$errorMessage(
+                        e.message,
+                        { closeOthers: true }
                     )
                 }
             }
@@ -193,22 +171,12 @@ export default {
 
                 this.$emit('updated');
 
-                showNotification(
-                    this.$notify({
-                        type: 'success',
-                        title: 'Picture saved',
-                        message: picJson.url,
-                        duration: 3000
-                    })
-                )
+                this.$successMessage('Picture saved')
             }
             catch(e) {
-                showNotification(
-                    this.$notify({
-                        type: 'error',
-                        title: e.message,
-                        duration: 0
-                    })
+                this.$errorMessage(
+                    e.message,
+                    { closeOthers: true }
                 )
             }
         },

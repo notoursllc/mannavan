@@ -4,8 +4,6 @@
     import cloneDeep from 'lodash.clonedeep'
     import shopping_cart_mixin from '@/mixins/shopping_cart_mixin'
 
-    let currentNotification = null;
-
     export default {
         components: {
             ShippoRatesDisplay: () => import('@/components/checkout/ShippoRatesDisplay')
@@ -32,12 +30,10 @@
         methods: {
             submitShippingMethodForm: async function() {
                 if(!this.selectedRate) {
-                    currentNotification = this.$notify({
-                        title: this.$t('Please select a shipping method'),
-                        message: this.$t('Thanks!'),
-                        duration: 0,
-                        type: 'error'
-                    });
+                    this.$errorMessage(
+                        this.$t('Please select a shipping method'),
+                        { closeOthers: true }
+                    )
                     return;
                 }
 
@@ -51,12 +47,10 @@
                     this.isLoading = false;
                 }
                 catch(err) {
-                    currentNotification = this.$notify({
-                        title: this.$t('An error occurred'),
-                        message: '',
-                        duration: 0,
-                        type: 'error'
-                    });
+                    this.$errorMessage(
+                        this.$t('An error occurred'),
+                        { closeOthers: true }
+                    )
                     this.isLoading = false;
                 }
             },
@@ -76,14 +70,10 @@
                     // this.$store.dispatch('shoppingcart/SET_SHIPPING_RATES_CACHE', cloneDeep(this.shippingRates));
                 }
                 catch(err) {
-                    let msg = 'We were unable to get shipping rates because of a server error.'
-
-                    currentNotification = this.$notify({
-                        title: this.$t('An error occurred'),
-                        message: msg,
-                        duration: 0,
-                        type: 'error'
-                    });
+                    this.$errorMessage(
+                        this.$t('We were unable to get shipping rates because of a server error'),
+                        { closeOthers: true }
+                    )
                 }
 
                 this.isLoading = false;

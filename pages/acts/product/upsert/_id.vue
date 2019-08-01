@@ -5,17 +5,6 @@ import shipping_mixin from '@/mixins/shipping_mixin'
 
 const globalTypes = process.env.GLOBAL_TYPES;
 
-let currentNotification = null;
-
-
-function showNotification(Notification) {
-    if(currentNotification) {
-        currentNotification.close();
-    }
-    currentNotification = Notification
-}
-
-
 export default {
     middleware: 'authenticated',
 
@@ -110,13 +99,10 @@ export default {
                 return product;
             }
             catch(e) {
-                showNotification(
-                    this.$notify({
-                        type: 'error',
-                        title: e.message,
-                        duration: 0
-                    })
-                );
+                this.$errorMessage(
+                    e.message,
+                    { closeOthers: true }
+                )
             }
         },
 
@@ -164,23 +150,14 @@ export default {
                     title = 'Product updated successfully';
                 }
 
-                this.$notify({
-                    type: 'success',
-                    title,
-                    message: p.title,
-                    duration: 3000
-                });
-
+                this.$successMessage(`${title}: ${p.title}`)
                 this.goToAdminProductList();
             }
             catch(e) {
-                showNotification(
-                    this.$notify({
-                        type: 'error',
-                        title: e.message,
-                        duration: 0
-                    })
-                );
+                this.$errorMessage(
+                    e.message,
+                    { closeOthers: true }
+                )
             }
         }
     },
@@ -204,13 +181,10 @@ export default {
             }
         }
         catch(e) {
-            showNotification(
-                this.$notify({
-                    type: 'error',
-                    title: e.message,
-                    duration: 0
-                })
-            );
+            this.$errorMessage(
+                e.message,
+                { closeOthers: true }
+            )
         }
     }
 }

@@ -2,6 +2,9 @@
 
 const domainName = 'goBreadVan.com';
 
+// This doens't need to be reactive, so not in state
+const messageInstances = [];
+
 export const state = () => ({
     sidebarOpened: true,
     isMobile: false,
@@ -48,6 +51,16 @@ export const mutations = {
 
     IN_CHECKOUT_FLOW: (state, inCheckoutFlow) => {
         state.inCheckoutFlow = inCheckoutFlow;
+    },
+
+    ADD_MESSAGE_INSTANCE: (state, messageInstance) => {
+        messageInstances.push(messageInstance);
+    },
+
+    CLOSE_MESSAGE_INSTANCES: (state) => {
+        messageInstances.forEach((messageInstance) => {
+            messageInstance.close();
+        });
     }
 }
 
@@ -70,7 +83,15 @@ export const actions = {
 
     IN_CHECKOUT_FLOW: ({ commit }, inCheckoutFlow) => {
         commit('IN_CHECKOUT_FLOW', inCheckoutFlow);
-    }
+    },
+
+    ADD_MESSAGE_INSTANCE: ({ commit }, messageInstance) => {
+        commit('ADD_MESSAGE_INSTANCE', messageInstance);
+    },
+
+    CLOSE_MESSAGE_INSTANCES: ({ commit }) => {
+        commit('CLOSE_MESSAGE_INSTANCES');
+    },
 }
 
 

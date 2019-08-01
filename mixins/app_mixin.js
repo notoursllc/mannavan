@@ -22,14 +22,6 @@ export default {
                     message: message
                 });
             }
-        },
-
-        singletonNotification(Notification) {
-            if(currentNotification) {
-                currentNotification.close();
-            }
-
-            currentNotification = Notification
         }
 
     }

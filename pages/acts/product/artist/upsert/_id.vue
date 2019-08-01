@@ -1,17 +1,6 @@
 <script>
 import product_mixin from '@/mixins/product_mixin'
 
-let currentNotification = null;
-
-
-function showNotification(Notification) {
-    if(currentNotification) {
-        currentNotification.close();
-    }
-    currentNotification = Notification
-}
-
-
 export default {
     middleware: 'authenticated',
 
@@ -45,13 +34,10 @@ export default {
                 return artist;
             }
             catch(e) {
-                showNotification(
-                    this.$notify({
-                        type: 'error',
-                        title: e.message,
-                        duration: 0
-                    })
-                );
+                this.$errorMessage(
+                    e.message,
+                    { closeOthers: true }
+                )
             }
         },
 
@@ -66,23 +52,17 @@ export default {
 
                 let title = artist.id ? 'Product artist updated successfully' : 'Product artist added successfully';
 
-                this.$notify({
-                    type: 'success',
-                    title,
-                    message: p.title,
-                    duration: 3000
-                });
+                this.$successMessage(
+                    `${title}: ${p.title}`
+                )
 
                 this.goToProductArtistList();
             }
             catch(e) {
-                showNotification(
-                    this.$notify({
-                        type: 'error',
-                        title: e.message,
-                        duration: 0
-                    })
-                );
+                this.$errorMessage(
+                    e.message,
+                    { closeOthers: true }
+                )
             }
         }
     },
@@ -98,13 +78,10 @@ export default {
             }
         }
         catch(e) {
-            showNotification(
-                this.$notify({
-                    type: 'error',
-                    title: e.message,
-                    duration: 0
-                })
-            );
+            this.$errorMessage(
+                e.message,
+                { closeOthers: true }
+            )
         }
     }
 }

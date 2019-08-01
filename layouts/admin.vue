@@ -43,6 +43,12 @@ export default {
         if (process.browser) {
             window.removeEventListener('resize', this.handleResize);
         }
+    },
+
+    watch: {
+        $route() {
+            this.$store.dispatch('ui/CLOSE_MESSAGE_INSTANCES');
+        }
     }
 }
 </script>

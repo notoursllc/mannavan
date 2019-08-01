@@ -4,17 +4,7 @@ import forEach from 'lodash.foreach';
 import TreeView from 'vue-json-tree-view'
 import payment_mixin from '@/mixins/payment_mixin'
 
-let currentNotification = null;
-
 Vue.use(TreeView);
-
-
-function showNotification(Notification) {
-    if(currentNotification) {
-        currentNotification.close();
-    }
-    currentNotification = Notification
-}
 
 
 export default{
@@ -72,38 +62,21 @@ export default{
                 }
             }
             catch(e) {
-                showNotification(
-                    this.$notify({
-                        type: 'error',
-                        title: e.message,
-                        duration: 0
-                    })
-                );
+                this.$errorMessage(
+                    e.message,
+                    { closeOthers: true }
+                )
             }
         },
 
         labelPurchased() {
             this.loadPayment();
-
-            showNotification(
-                this.$notify({
-                    type: 'success',
-                    title: "Shipping label purchased successfully",
-                    duration: 4000
-                })
-            );
+            this.$successMessage('Shipping label purchased successfully');
         },
 
         labelDeleted() {
             this.loadPayment();
-
-            showNotification(
-                this.$notify({
-                    type: 'success',
-                    title: "Shipping label deleted successfully",
-                    duration: 4000
-                })
-            );
+            this.$successMessage('Shipping label deleted successfully');
         }
     },
 

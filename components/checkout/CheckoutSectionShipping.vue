@@ -6,8 +6,6 @@ import cloneDeep from 'lodash.clonedeep'
 import shopping_cart_mixin from '@/mixins/shopping_cart_mixin'
 import app_mixin from '@/mixins/app_mixin'
 
-let currentNotification = null;
-
 
 export default {
     components: {
@@ -79,12 +77,10 @@ export default {
             catch(err) {
                 this.dispatchFormStatus(false);
 
-                currentNotification = this.$notify({
-                    title: this.$t('An error occurred'),
-                    message: 'A server error occurred while setting the shipping address.',
-                    duration: 0,
-                    type: 'error'
-                });
+                this.$errorMessage(
+                    this.$t('A server error occurred while setting the shipping address'),
+                    { closeOthers: true }
+                )
             }
         },
 
@@ -92,10 +88,6 @@ export default {
             try {
                 let self = this;
                 let c = this.shoppingCart;
-
-                if(currentNotification) {
-                    currentNotification.close();
-                }
 
                 this.loading = true;
 
@@ -112,11 +104,10 @@ export default {
                 if(!isObject(result)
                     || !result.hasOwnProperty('validation_results')
                     || !result.validation_results.is_valid) {
-                    currentNotification = this.$notify({
-                        title: this.$t('The address you provided does not seem to be a valid mailing adddress.'),
-                        duration: 0,
-                        type: 'error'
-                    });
+                     this.$errorMessage(
+                        this.$t('The address you provided does not seem to be a valid mailing adddress.'),
+                        { closeOthers: true }
+                    )
                 }
                 else {
                     // Updating the shipping attributes:
@@ -142,12 +133,10 @@ export default {
                     msg = error.response.data.message;
                 }
 
-                currentNotification = this.$notify({
-                    title: msg || "An internal server error occurred",
-                    // message: errorMessage,
-                    duration: 0,
-                    type: 'error'
-                });
+                this.$errorMessage(
+                    msg || 'An internal server error occurred',
+                    { closeOthers: true }
+                )
 
                 this.loading = false;
             }

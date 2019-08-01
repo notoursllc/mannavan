@@ -5,18 +5,7 @@ import TreeView from 'vue-json-tree-view'
 import payment_mixin from '@/mixins/payment_mixin'
 import shipping_mixin from '@/mixins/shipping_mixin'
 
-let currentNotification = null;
-
 Vue.use(TreeView);
-
-
-function showNotification(Notification) {
-    if(currentNotification) {
-        currentNotification.close();
-    }
-    currentNotification = Notification
-}
-
 
 export default{
     props: {
@@ -218,13 +207,10 @@ export default{
 
             }
             catch(e) {
-                showNotification(
-                    this.$notify({
-                        type: 'error',
-                        title: e.message,
-                        duration: 0
-                    })
-                );
+                this.$errorMessage(
+                    e.message,
+                    { closeOthers: true }
+                )
             }
         }
     },

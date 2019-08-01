@@ -1,17 +1,6 @@
 <script>
 import product_mixin from '@/mixins/product_mixin'
 
-let currentNotification = null;
-
-
-function showNotification(Notification) {
-    if(currentNotification) {
-        currentNotification.close();
-    }
-    currentNotification = Notification
-}
-
-
 export default {
     middleware: [
         'authenticated'
@@ -83,27 +72,14 @@ export default {
 
                 // Don't delete the artist if it is related to any products
                 if(resposne.pagination.rowCount) {
-                    showNotification(
-                        this.$notify({
-                            type: 'error',
-                            title: 'Error deleting artist',
-                            message: `"${ name || id }" can not be deleted because the artist is assigned to ${resposne.pagination.rowCount} products`,
-                            duration: 0
-                        })
+                    this.$errorMessage(
+                        `"${ name || id }" can not be deleted because the artist is assigned to ${resposne.pagination.rowCount} products`,
                     );
                     return;
                 }
 
                 await this.deleteProductArtist(id);
-
-                showNotification(
-                    this.$notify({
-                        type: 'success',
-                        title: `"${ name || id }" deleted successfully`,
-                        duration: 3000
-                    })
-                );
-
+                this.$successMessage(`"${ name || id }" deleted successfully`);
                 this.fetchArtists();
             }
             catch(err) {

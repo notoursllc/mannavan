@@ -6,19 +6,6 @@ import shopping_cart_mixin from '@/mixins/shopping_cart_mixin';
 
 const globalTypes = process.env.GLOBAL_TYPES;
 
-
-let currentNotification = null;
-
-
-function showNotification(Notification) {
-    if(currentNotification) {
-        currentNotification.close();
-    }
-
-    currentNotification = Notification
-}
-
-
 export default {
     components: {
         ProductPrice: () => import('@/components/product/ProductPrice'),
@@ -86,23 +73,15 @@ export default {
     methods: {
         addToCart: async function() {
             if (!this.selectedSize) {
-                showNotification(
-                    this.$notify({
-                        type: 'error',
-                        title: this.$t('Please select a size'),
-                        message: this.$t('We want to make sure it fits!'),
-                        duration: 0
-                    })
+                this.$errorMessage(
+                    this.$t('Please select a size'),
+                    { closeOthers: true }
                 )
             }
             else if (!this.selectedQty) {
-                showNotification(
-                    this.$notify({
-                        type: 'error',
-                        title: this.$t('Please select a quantity'),
-                        message: this.$t('Thanks!'),
-                        duration: 0
-                    })
+                this.$errorMessage(
+                    this.$t('Please select a quantity'),
+                    { closeOthers: true }
                 )
             }
             else {
@@ -125,13 +104,8 @@ export default {
                 catch(err) {
                     this.isLoading = false;
 
-                    showNotification(
-                        this.$notify({
-                            type: 'error',
-                            title: this.$t('Error'),
-                            message: err.response.data.message,
-                            duration: 0
-                        })
+                    this.$errorMessage(
+                        err.response.data.message,
                     )
                 }
             }
@@ -148,13 +122,9 @@ export default {
 
     created() {
         if(!this.product) {
-            showNotification(
-                this.$notify({
-                    type: 'error',
-                    title: this.$t('Product not found'),
-                    // message: null,
-                    duration: 0
-                })
+            this.$errorMessage(
+                this.$t('Product not found'),
+                { closeOthers: true }
             )
         }
     },

@@ -94,13 +94,10 @@ export default {
         },
 
         paymentError(data) {
-            this.singletonNotification(
-                this.$notify({
-                    type: 'error',
-                    title: this.$t('An error occurred while processing the PayPal transaction'),
-                    duration: 0
-                })
-            );
+            this.$errorMessage(
+                this.$t('An error occurred while processing the PayPal transaction'),
+                { closeOthers: true }
+            )
         }
     }
 }
