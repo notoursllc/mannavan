@@ -51,9 +51,11 @@ export default{
     <el-select
         v-model="selectedArtist"
         @change="emitChange"
+        @clear="() => { selectedArtist = null }"
         class="widthAll"
         filterable
-        :no-match-text="$t('No matching values')">
+        :no-match-text="$t('No matching values')"
+        :clearable="true">
         <el-option
             v-for="obj in artists"
             :key="obj.id"

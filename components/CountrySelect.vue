@@ -261,8 +261,10 @@
                filterable
                :placeholder="placeholder"
                :no-match-text="$t('No matching values')"
+               :clearable="true"
                @change="emitChange"
                @visible-change="emitVisibleChange"
+               @clear="() => { selectedCountry = null }"
                class="widthAll">
         <el-option
                 v-for="obj in countryList"

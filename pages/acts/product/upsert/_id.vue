@@ -17,7 +17,8 @@ export default {
         BitwiseMultiSelect: () => import('@/components/BitwiseMultiSelect'),
         IconNewWindow: () => import('@/components/icons/IconNewWindow'),
         IconPlayVideo: () => import('@/components/icons/IconPlayVideo'),
-        ProductArtistSelect: () => import('@/components/product/admin/ProductArtistSelect')
+        ProductArtistSelect: () => import('@/components/product/admin/ProductArtistSelect'),
+        Fab: () => import('@/components/Fab')
     },
 
     mixins: [
@@ -69,15 +70,6 @@ export default {
             let self = this;
             forEach(this.productInfo.fits, function(val, key) {
                 opts[self.$t(key)] = val;
-            });
-            return opts;
-        },
-
-        packageTypeSelectOptions() {
-            let opts = {};
-            let self = this;
-            forEach(this.shippingPackageTypes, function(obj) {
-                opts[obj.label] = obj.type;
             });
             return opts;
         },
@@ -137,19 +129,15 @@ export default {
             this.videoPlayerModal.player = player;
         },
 
-        async upsert(product) {
+        async upsert() {
             try {
-                const p = await this.upsertProduct(product);
+                const p = await this.upsertProduct(this.product);
 
                 if(!p) {
                     throw new Error('Error updating product');
                 }
 
-                let title = 'Product added successfully';
-                if(product.id) {
-                    title = 'Product updated successfully';
-                }
-
+                let title = this.product.id ? 'Product updated successfully' : 'Product added successfully';
                 this.$successMessage(`${title}: ${p.title}`)
                 this.goToAdminProductList();
             }
@@ -192,7 +180,10 @@ export default {
 
 
 <template>
-    <div class="pal">
+    <div>
+        <fab type="save" @click="upsert" />
+        <fab type="cancel" @click="goToAdminProductList" />
+
         <div class="tar mbm" v-if="product.id">
             <el-button @click="goToStore(product.seo_uri)">
                 <icon-new-window icon-name="new_window" width="15px" />
@@ -297,7 +288,11 @@ export default {
                     <form-row>
                         <template slot="label">Material type:</template>
                         <template slot="value">
-                            <el-select v-model="product.material_type" class="widthAll">
+                            <el-select
+                                v-model="product.material_type"
+                                class="widthAll"
+                                :clearable="true"
+                                @clear="() => { product.material_type = null }">
                                 <el-option
                                     v-for="(val, key) in globalTypes.product.material_types"
                                     :key="val"
@@ -313,19 +308,6 @@ export default {
                         <template slot="label">Artist:</template>
                         <template slot="value">
                             <product-artist-select v-model="product.product_artist_id" />
-                        </template>
-                    </form-row>
-
-
-                    <form-row>
-                        <template slot="value">
-                            <div class="ptl">
-                                <el-button
-                                    type="primary"
-                                    @click="upsert(product)">SUBMIT</el-button>
-
-                                <el-button @click="goToAdminProductList">CANCEL</el-button>
-                            </div>
                         </template>
                     </form-row>
                 </div>
@@ -428,15 +410,15 @@ export default {
                     <form-row>
                         <template slot="label">Shipping package type:</template>
                         <template slot="value">
-                            <!-- <bitwise-multi-select
-                            v-model="product.shipping_package_type"
-                            :options="packageTypeSelectOptions"></bitwise-multi-select> -->
-                            <el-select v-model="product.shipping_package_type">
+                            <el-select
+                                v-model="product.shipping_package_type"
+                                :clearable="true"
+                                @clear="() => { product.shipping_package_type = null }">
                                 <el-option
-                                    v-for="(val, key) in packageTypeSelectOptions"
-                                    :key="val"
-                                    :label="key"
-                                    :value="val">
+                                    v-for="obj in shippingPackageTypes"
+                                    :key="obj.id"
+                                    :label="obj.label"
+                                    :value="obj.type">
                                 </el-option>
                             </el-select>
                         </template>

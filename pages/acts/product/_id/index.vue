@@ -7,7 +7,8 @@ export default{
     layout: 'admin',
 
     components: {
-        ProductDetailsJsonView: () => import('@/components/product/admin/ProductDetailsJsonView')
+        ProductDetailsJsonView: () => import('@/components/product/admin/ProductDetailsJsonView'),
+        Fab: () => import('@/components/Fab')
     },
 
     mixins: [
@@ -49,11 +50,8 @@ export default{
 
 
 <template>
-    <div class="pal">
-        <div class="tar mbl">
-            <el-button type="primary"
-                        @click="goToEdit">EDIT PRODUCT</el-button>
-        </div>
+    <div>
+        <fab type="edit" @click="goToEdit" />
 
         <product-details-json-view :product="product"></product-details-json-view>
     </div>

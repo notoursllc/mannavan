@@ -74,8 +74,10 @@ export default{
             v-model="selectedState"
             :placeholder="placeholder"
             :no-match-text="$t('No matching values')"
-            @change="emitChange"
             :disabled="disabled"
+            :clearable="true"
+            @change="emitChange"
+            @clear="() => { selectedState = null }"
             class="widthAll">
             <el-option
                 v-for="(label, abbr) in stateOptions"

@@ -12,7 +12,8 @@ export default {
 
     components: {
         ProductDetailsJsonView: () => import('@/components/product/admin/ProductDetailsJsonView'),
-        IconPencil: () => import('@/components/icons/IconPencil')
+        OperationsDropdown: () => import('@/components/OperationsDropdown'),
+        Fab: () => import('@/components/Fab')
     },
 
     mixins: [
@@ -82,11 +83,8 @@ export default {
 
 
 <template>
-    <div class="pal">
-
-        <div class="tar mbl">
-            <el-button type="primary" @click="goToAdminProductAdd">ADD PRODUCT</el-button>
-        </div>
+    <div>
+        <fab type="add" @click="goToAdminProductAdd" />
 
         <el-table
             :data="products"
@@ -118,8 +116,11 @@ export default {
                 label="Title"
                 sortable="custom">
                 <template slot-scope="scope">
-                    <div>{{ scope.row.title }}</div>
-                    <el-button type="text" @click="goToAdminProductUpsert(scope.row.id)">EDIT</el-button>
+                    {{ scope.row.title }}
+                    <operations-dropdown
+                        :show-delete="false"
+                        @view="goToAdminProductDetails(scope.row.id)"
+                        @edit="goToAdminProductUpsert(scope.row.id)" />
                 </template>
             </el-table-column>
 

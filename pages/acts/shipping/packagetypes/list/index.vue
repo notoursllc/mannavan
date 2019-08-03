@@ -9,8 +9,8 @@ export default {
     layout: 'admin',
 
     components: {
-        IconTrash: () => import('@/components/icons/IconTrash'),
-        IconPencil: () => import('@/components/icons/IconPencil')
+        OperationsDropdown: () => import('@/components/OperationsDropdown'),
+        Fab: () => import('@/components/Fab')
     },
 
     mixins: [
@@ -103,11 +103,8 @@ export default {
 
 
 <template>
-    <div class="pal">
-
-        <div class="tar mbl">
-            <el-button type="primary" @click="goToPackageTypeUpsert()">ADD PACKAGE TYPE</el-button>
-        </div>
+    <div>
+        <fab type="add" @click="goToPackageTypeUpsert" />
 
         <el-table
             :data="shippingPackageTypes"
@@ -126,7 +123,11 @@ export default {
                 label="Label"
                 sortable="custom">
                 <template slot-scope="scope">
-                    <div>{{ scope.row.label }}</div>
+                    {{ scope.row.label }}
+                    <operations-dropdown
+                        :show-view="false"
+                        @edit="goToPackageTypeUpsert(scope.row.id)"
+                        @delete="deleteType(scope.row)" />
                 </template>
             </el-table-column>
 
@@ -163,35 +164,6 @@ export default {
                 prop="weight"
                 label="Weight (oz)"
                 sortable="custom">
-            </el-table-column>
-
-                        <!-- operations -->
-            <el-table-column
-                label="Operations"
-                align="center"
-                width="150">
-                <div slot-scope="scope" class="nowrap">
-                    <el-button
-                        type="primary"
-                        round
-                        @click="goToPackageTypeUpsert(scope.row.id)">
-                        <icon-pencil
-                            icon-name="edit"
-                            class-name="fillWhite"
-                            width="15px" />
-                    </el-button>
-
-                    <el-button
-                        type="danger"
-                        round
-                        @click="deleteType(scope.row)"
-                        class="mrl">
-                        <icon-trash
-                            icon-name="delete"
-                            class-name="fillWhite"
-                            width="15px" />
-                    </el-button>
-                </div>
             </el-table-column>
         </el-table>
 

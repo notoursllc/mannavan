@@ -139,7 +139,9 @@ export default {
         </header>
 
         <main :class="{'sidenav-opened': $store.state.ui.sidebarOpened}">
-            <nuxt/>
+            <div class="mainContent">
+                <nuxt/>
+            </div>
         </main>
     </div>
 </template>
@@ -157,6 +159,10 @@ $header-height: 50px;
 .layoutContainer {
     header, main {
         transition: .5s;
+    }
+
+    .mainContent {
+        padding: 20px 20px 100px 20px; // need some bottom padding to accommodate FAB buttons
     }
 
     .header {

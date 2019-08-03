@@ -61,7 +61,9 @@ export default {
         v-model="selectedVal"
         multiple
         :placeholder="placeholder"
-        @change="selectValueChanged">
+        :clearable="true"
+        @change="selectValueChanged"
+        @clear="() => { selectedVal = null }">
         <el-option
             v-for="(val, key) in options"
             :key="val"

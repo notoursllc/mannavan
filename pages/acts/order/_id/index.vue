@@ -14,7 +14,7 @@ export default{
 
     components: {
         FormRow: () => import('@/components/FormRow'),
-        CartShippingAddressDisplay: () => import('@/components/cart/CartShippingAddressDisplay'),
+        AddressDisplay: () => import('@/components/AddressDisplay'),
         ShippingLabelButton: () => import('@/components/payment/ShippingLabelButton'),
         CartItems: () => import('@/components/cart/CartItems')
     },
@@ -60,6 +60,8 @@ export default{
                 if(!this.payment.shippo_order_id) {
                     this.showShippoWarning = true;
                 }
+
+                console.log("PAYMENT", this.payment)
             }
             catch(e) {
                 this.$errorMessage(
@@ -88,8 +90,7 @@ export default{
 
 
 <template>
-    <div class="pal">
-
+    <div>
         <!-- alert -->
         <div class="mbm" v-if="showShippoWarning">
             <el-alert
@@ -153,12 +154,56 @@ export default{
                 </form-row>
 
                 <!-- transaction id -->
-                  <form-row>
+                <form-row>
                     <template slot="label">Success:</template>
                     <template slot="value">
-                        <span v-bind:class="{'colorGreen':payment.transaction.success, 'colorRed':!payment.transaction.success}">
-                            {{ payment.transaction.success ? 'Yes' : 'No '}}
-                        </span>
+                        <div v-for="obj in payment.transaction.tenders" :key="obj.id">
+                            {{ obj.card_details.status }}
+                        </div>
+                    </template>
+                </form-row>
+            </div>
+        </div>
+
+        <!-- cart items-->
+        <div class="g-spec">
+            <div class="g-spec-label">Cart items ({{ payment.shoppingCart.num_items }}):</div>
+            <div class="g-spec-content">
+                <cart-items
+                    :shopping-cart="payment.shoppingCart"
+                    :allow-edit="false" />
+            </div>
+        </div>
+
+        <!-- totals-->
+        <div class="g-spec">
+            <div class="g-spec-label">Totals:</div>
+            <div class="g-spec-content">
+                  <form-row>
+                    <template slot="label">Subtotal:</template>
+                    <template slot="value">
+                        <div class="mono tar">{{ $n(payment.shoppingCart.sub_total, 'currency') }}</div>
+                    </template>
+                </form-row>
+
+                <form-row>
+                    <template slot="label">Shipping:</template>
+                    <template slot="value">
+                        <div class="mono tar">{{ $n(payment.shoppingCart.shipping_total, 'currency') }}</div>
+                    </template>
+                </form-row>
+
+                <form-row>
+                    <template slot="label">Estimated tax:</template>
+                    <template slot="value">
+                        <div class="mono tar">{{ $n(payment.shoppingCart.sales_tax, 'currency') }}</div>
+                    </template>
+                </form-row>
+
+                <form-row>
+                    <template slot="label">Order total:</template>
+                    <template slot="value">
+                        <div class="mono tar">{{ $n(payment.shoppingCart.grand_total, 'currency') }}</div>
                     </template>
                 </form-row>
             </div>
@@ -214,79 +259,16 @@ export default{
         <div class="g-spec">
             <div class="g-spec-label">{{ $t('Shipping address') }}:</div>
             <div class="g-spec-content">
-                <cart-shipping-address-display
-                            :shopping-cart="payment.shoppingCart" />
-            </div>
-        </div>
-
-        <!-- cart items-->
-        <div class="g-spec">
-            <div class="g-spec-label">Cart items ({{ payment.shoppingCart.num_items }}):</div>
-            <div class="g-spec-content">
-                <cart-items
-                    :shopping-cart="payment.shoppingCart"
-                    :allow-edit="false" />
-            </div>
-        </div>
-
-        <!-- totals-->
-        <div class="g-spec">
-            <div class="g-spec-label">Totals:</div>
-            <div class="g-spec-content">
-                  <form-row>
-                    <template slot="label">Subtotal:</template>
-                    <template slot="value">
-                        <div class="mono tar">{{ $n(payment.shoppingCart.sub_total, 'currency') }}</div>
-                    </template>
-                </form-row>
-
-                <form-row>
-                    <template slot="label">Shipping:</template>
-                    <template slot="value">
-                        <div class="mono tar">{{ $n(payment.shoppingCart.shipping_total, 'currency') }}</div>
-                    </template>
-                </form-row>
-
-                <form-row>
-                    <template slot="label">Estimated tax:</template>
-                    <template slot="value">
-                        <div class="mono tar">{{ $n(payment.shoppingCart.sales_tax, 'currency') }}</div>
-                    </template>
-                </form-row>
-
-                <form-row>
-                    <template slot="label">Order total:</template>
-                    <template slot="value">
-                        <div class="mono tar">{{ $n(payment.shoppingCart.grand_total, 'currency') }}</div>
-                    </template>
-                </form-row>
-            </div>
-        </div>
-
-        <!-- payment method -->
-        <div class="g-spec">
-            <div class="g-spec-label">{{ $t('Payment method') }}:</div>
-            <div class="g-spec-content">
-                <form-row>
-                    <template slot="label">Card number:</template>
-                    <template slot="value">
-                        {{ payment.transaction.creditCard.maskedNumber }}
-                    </template>
-                </form-row>
-
-                <form-row>
-                    <template slot="label">Card type:</template>
-                    <template slot="value">
-                        {{ payment.transaction.creditCard.cardType }}
-                    </template>
-                </form-row>
-
-                <form-row>
-                    <template slot="label">Expiration:</template>
-                    <template slot="value">
-                        {{ payment.transaction.creditCard.expirationDate }}
-                    </template>
-                </form-row>
+                <address-display
+                    :first-name="payment.shoppingCart.shipping_firstName"
+                    :last-name="payment.shoppingCart.shipping_lastName"
+                    :street-address="payment.shoppingCart.shipping_streetAddress"
+                    :extended-address="payment.shoppingCart.shipping_extendedAddress"
+                    :company="payment.shoppingCart.shipping_company"
+                    :country-code="payment.shoppingCart.shipping_countryCodeAlpha2"
+                    :city="payment.shoppingCart.shipping_city"
+                    :state="payment.shoppingCart.shipping_state"
+                    :zip="payment.shoppingCart.shipping_postalCode" />
             </div>
         </div>
 
@@ -295,17 +277,45 @@ export default{
             <div class="g-spec-label">{{ $t('Billing address') }}:</div>
             <div class="g-spec-content">
                 <address-display
-                    :first-name="payment.transaction.billing.firstName"
-                    :last-name="payment.transaction.billing.lastName"
-                    :street-address="payment.transaction.billing.streetAddress"
-                    :extended-address="payment.transaction.billing.extendedAddress"
-                    :company="payment.transaction.billing.company"
-                    :country-code="payment.transaction.billing.countryCodeAlpha2"
-                    :city="payment.transaction.billing.locality"
-                    :state="payment.transaction.billing.region"
-                    :zip="payment.transaction.billing.postalCode" />
+                    :first-name="payment.shoppingCart.billing_firstName"
+                    :last-name="payment.shoppingCart.billing_lastName"
+                    :street-address="payment.shoppingCart.billing_streetAddress"
+                    :extended-address="payment.shoppingCart.billing_extendedAddress"
+                    :company="payment.shoppingCart.billing_company"
+                    :country-code="payment.shoppingCart.billing_countryCodeAlpha2"
+                    :city="payment.shoppingCart.billing_city"
+                    :state="payment.shoppingCart.billing_state"
+                    :zip="payment.shoppingCart.billing_postalCode" />
             </div>
         </div>
+
+
+
+        <!-- payment method -->
+        <div class="g-spec">
+            <div class="g-spec-label">{{ $t('Payment method') }}:</div>
+            <div class="g-spec-content">
+                <form-row>
+                    <template slot="label">Card number:</template>
+                    <template slot="value">
+                        <div v-for="obj in payment.transaction.tenders" :key="obj.id">
+                            {{ obj.card_details.card.last_4 }}
+                        </div>
+                    </template>
+                </form-row>
+
+                <form-row>
+                    <template slot="label">Card type:</template>
+                    <template slot="value">
+                        <div v-for="obj in payment.transaction.tenders" :key="obj.id">
+                            {{ obj.card_details.card.card_brand }}
+                        </div>
+                    </template>
+                </form-row>
+            </div>
+        </div>
+
+
 
         <!-- json dialog -->
         <el-dialog title="Product video"

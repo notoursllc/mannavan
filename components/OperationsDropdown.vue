@@ -6,6 +6,16 @@ export default {
         showView: {
             type: Boolean,
             default: true,
+        },
+
+        showEdit: {
+            type: Boolean,
+            default: true,
+        },
+
+        showDelete: {
+            type: Boolean,
+            default: true,
         }
     },
 
@@ -24,9 +34,9 @@ export default {
             <i class="el-icon-arrow-down" />
         </el-button>
         <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item command="view" v-if="showView">Quick View</el-dropdown-item>
-            <el-dropdown-item command="edit">Edit</el-dropdown-item>
-            <el-dropdown-item command="delete">Delete</el-dropdown-item>
+            <el-dropdown-item command="view" v-if="showView">View</el-dropdown-item>
+            <el-dropdown-item command="edit" v-if="showEdit">Edit</el-dropdown-item>
+            <el-dropdown-item command="delete" v-if="showDelete">Delete</el-dropdown-item>
         </el-dropdown-menu>
     </el-dropdown>
 </template>
