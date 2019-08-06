@@ -21,7 +21,7 @@ export default {
 </script>
 
 <template>
-    <headroom>
+    <headroom :disabled="inCheckoutFlow">
         <header role="banner" :class="{'white': inCheckoutFlow, 'dark': !inCheckoutFlow}">
             <div class="header-inner">
 
