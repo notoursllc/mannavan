@@ -44,10 +44,10 @@ export default {
             return this.product ? this.product.description_long : '';
         },
         mediaPicture() {
-            return `${this.siteUrl}${this.product.pics[0]}`
+            return this.product ? `${this.siteUrl}${this.product.pics[0]}` : '';
         },
         showSizeChart() {
-            return this.product.sub_type & globalTypes.product.subtypes.PRODUCT_SUBTYPE_TOPS;
+            return this.product && this.product.sub_type & globalTypes.product.subtypes.PRODUCT_SUBTYPE_TOPS;
         }
     },
 
@@ -112,7 +112,6 @@ export default {
         },
 
         goToCart: function() {
-            // this.$router.push(`/cart/${this.product.id}`);
             this.$router.push({
                 name: 'cart-id',
                 params: { id: this.product.id }
@@ -149,90 +148,92 @@ export default {
 
 <template>
     <div class="pageContainerMax">
-        <product-details-display v-if="product">
-            <!-- pics -->
-            <template slot="pics">
-                <product-image-carousel :product="product" />
-            </template>
+        <template v-if="product">
+            <product-details-display >
+                <!-- pics -->
+                <template slot="pics">
+                    <product-image-carousel :product="product" />
+                </template>
 
-            <!-- title -->
-            <div slot="title">{{ product.title }}</div>
+                <!-- title -->
+                <div slot="title">{{ product.title }}</div>
 
-            <!-- description -->
-            <div slot="description" class="fs16">{{ product.description_long }}</div>
+                <!-- description -->
+                <div slot="description" class="fs16">{{ product.description_long }}</div>
 
-            <!-- artist -->
-            <div slot="artist" v-if="product.artist && product.artist.id" class="mtl fs12">
-                {{ $t('Artist') }}:
-                <span class="underlineDotted cursorPointer mls"
-                    @click="artistDialog.visible = true">{{ product.artist.name }}</span>
-            </div>
-
-            <!-- price -->
-            <div slot="price" class="mtl fs20">
-                <product-price :product="product"></product-price>
-            </div>
-
-            <!-- size -->
-            <template slot="size">
-                <div class="fwb">{{ $t('Size') }}</div>
-                <el-select
-                    v-model="selectedSize"
-                    :no-data-text="$t('Sorry this item does not have any sizes available')"
-                    placeholder="Select"
-                    class="width125">
-                    <el-option
-                        v-for="size in sizeOptions"
-                        :key="size"
-                        :label="$t(size)"
-                        :value="size" />
-                </el-select>
-            </template>
-
-            <!-- quantity -->
-            <template slot="quantity">
-                <div class="fwb">{{ $t('Quantity') }}</div>
-
-                <div>
-                    <div class="displayTableCell prl fs20 vat pts colorGreen fw600">{{ selectedQty }}</div>
-                    <div class="displayTableCell">
-                        <product-quantity-input
-                            v-model="selectedQty"
-                            :sizes="product.sizes"
-                            :selected-size="selectedSize" />
-                    </div>
+                <!-- artist -->
+                <div slot="artist" v-if="product.artist && product.artist.id" class="mtl fs12">
+                    {{ $t('Artist') }}:
+                    <span class="underlineDotted cursorPointer mls"
+                        @click="artistDialog.visible = true">{{ product.artist.name }}</span>
                 </div>
-            </template>
 
-            <!-- add to cart button -->
-            <div slot="button" class="ptl">
-                <el-button
-                    type="primary"
-                    @click="addToCart"
-                    :loading="isLoading"
-                    round>{{ $t('ADD TO CART') }}</el-button>
-            </div>
+                <!-- price -->
+                <div slot="price" class="mtl fs20">
+                    <product-price :product="product"></product-price>
+                </div>
 
-            <!-- size chart -->
-            <div slot="under"
-                class="ptl"
-                v-if="showSizeChart">
-                <div class="fs16 mbm">{{ $t('Sizing') }}:</div>
-                <tshirt-size-chart
-                    :fit="product.fit"
-                    :material="product.material_type"
-                    :highlight="selectedSize" />
-            </div>
-        </product-details-display>
+                <!-- size -->
+                <template slot="size">
+                    <div class="fwb">{{ $t('Size') }}</div>
+                    <el-select
+                        v-model="selectedSize"
+                        :no-data-text="$t('Sorry this item does not have any sizes available')"
+                        placeholder="Select"
+                        class="width125">
+                        <el-option
+                            v-for="size in sizeOptions"
+                            :key="size"
+                            :label="$t(size)"
+                            :value="size" />
+                    </el-select>
+                </template>
 
-        <!-- artist dialog -->
-        <el-dialog
-            :title="product.artist ? product.artist.name : null"
-            :visible.sync="artistDialog.visible"
-            top="5vh"
-            width="320px">
-            <div class="mtm">{{ product.artist ? product.artist.description_long : null }}</div>
-        </el-dialog>
+                <!-- quantity -->
+                <template slot="quantity">
+                    <div class="fwb">{{ $t('Quantity') }}</div>
+
+                    <div>
+                        <div class="displayTableCell prl fs20 vat pts colorGreen fw600">{{ selectedQty }}</div>
+                        <div class="displayTableCell">
+                            <product-quantity-input
+                                v-model="selectedQty"
+                                :sizes="product.sizes"
+                                :selected-size="selectedSize" />
+                        </div>
+                    </div>
+                </template>
+
+                <!-- add to cart button -->
+                <div slot="button" class="ptl">
+                    <el-button
+                        type="primary"
+                        @click="addToCart"
+                        :loading="isLoading"
+                        round>{{ $t('ADD TO CART') }}</el-button>
+                </div>
+
+                <!-- size chart -->
+                <div slot="under"
+                    class="ptl"
+                    v-if="showSizeChart">
+                    <div class="fs16 mbm">{{ $t('Sizing') }}:</div>
+                    <tshirt-size-chart
+                        :fit="product.fit"
+                        :material="product.material_type"
+                        :highlight="selectedSize" />
+                </div>
+            </product-details-display>
+
+            <!-- artist dialog -->
+            <el-dialog
+                :title="product.artist ? product.artist.name : null"
+                :visible.sync="artistDialog.visible"
+                top="5vh"
+                width="320px">
+                <div class="mtm">{{ product.artist ? product.artist.description_long : null }}</div>
+            </el-dialog>
+        </template>
     </div>
 </template>
 
