@@ -68,6 +68,7 @@
     "uuid": "^3.3.2",
     "v-img": "^0.2.0",
     "vue-carousel": "^0.8.1",
+    "vue-headroom": "^0.10.1",
     "vue-i18n": "^8.3.2",
     "vue-json-tree-view": "^2.1.4",
     "vue-social-sharing": "^2.4.5",
