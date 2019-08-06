@@ -91,14 +91,17 @@ export default {
                 this.product = await this.getProductById(this.productId, { viewAllRelated: true });
 
                 if(!this.product) {
-                    throw new Error(this.$t('Product not found'));
+                    this.$errorMessage(
+                        this.$t('Product not found'),
+                        { closeOthers: true }
+                    );
                 }
             }
             catch(e) {
                 this.$errorMessage(
                     e.message,
                     { closeOthers: true }
-                )
+                );
             }
         },
 
@@ -115,7 +118,11 @@ export default {
                     const pictureJson = await this.deleteProductPicture(pic.id);
 
                     if(!pictureJson) {
-                        throw new Error(this.$t('Product picture not found'));
+                        this.$errorMessage(
+                            this.$t('Product picture not found'),
+                            { closeOthers: true }
+                        );
+                        return;
                     }
 
                     this.getProduct();
@@ -126,13 +133,12 @@ export default {
                         `Picture deleted:<br/><br/>${pic.url}`,
                         { dangerouslyUseHTMLString: true }
                     )
-
                 }
-                catch(e) {
+                catch(err) {
                     this.$errorMessage(
-                        e.message,
+                        err.message,
                         { closeOthers: true }
-                    )
+                    );
                 }
             }
             catch(e) {
@@ -173,9 +179,9 @@ export default {
 
                 this.$successMessage('Picture saved')
             }
-            catch(e) {
+            catch(err) {
                 this.$errorMessage(
-                    e.message,
+                    err.message,
                     { closeOthers: true }
                 )
             }

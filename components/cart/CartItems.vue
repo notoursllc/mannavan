@@ -55,11 +55,13 @@ export default {
         async updateCartItemQuantity(item) {
             try {
                 const loadingInstance = this.$loadingService({ target: `#cartItem${item.id}` });
-
-                const response = await this.updateItemQty({
+                const updateConfig = {
                     id: item.id,
                     qty: item.qty
-                });
+                };
+
+                const response = await this.updateItemQty(updateConfig);
+
                 this.setCartAndTokenStateFromResponse(response);
                 this.$emit('updated');
                 loadingInstance.close();
@@ -68,7 +70,13 @@ export default {
                 this.$errorMessage(
                     this.$t('An error occurred'),
                     { closeOthers: true }
-                )
+                );
+
+                this.$bugsnag.notify(err, {
+                    request: {
+                        updateItemQty: updateConfig
+                    }
+                });
             }
         },
 
@@ -85,7 +93,11 @@ export default {
                 this.$errorMessage(
                     this.$t('An error occurred'),
                     { closeOthers: true }
-                )
+                );
+
+                this.$bugsnag.notify(err, {
+                    request: { deleteItem: { id: id } }
+                });
             }
         },
 

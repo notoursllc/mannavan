@@ -80,18 +80,23 @@ export default {
                 this.$errorMessage(
                     this.$t('A server error occurred while setting the shipping address'),
                     { closeOthers: true }
-                )
+                );
+
+                this.$bugsnag.notify(err, {
+                    request: {
+                        setShippingAddress: shippingAttributes
+                    }
+                });
             }
         },
 
         submitShippingForm: async function() {
             try {
-                let self = this;
                 let c = this.shoppingCart;
 
                 this.loading = true;
 
-                const result = await this.validateAddress({
+                const validateAddressConfig = {
                     name: `${c.shipping_firstName} ${c.shipping_lastName}`,
                     company: c.shipping_company,
                     street1: c.shipping_streetAddress,
@@ -99,7 +104,9 @@ export default {
                     state: c.shipping_state,
                     zip: c.shipping_postalCode,
                     country: c.shipping_countryCodeAlpha2
-                });
+                };
+
+                const result = await this.validateAddress(validateAddressConfig);
 
                 if(!isObject(result)
                     || !result.hasOwnProperty('validation_results')
@@ -136,7 +143,13 @@ export default {
                 this.$errorMessage(
                     msg || 'An internal server error occurred',
                     { closeOthers: true }
-                )
+                );
+
+                this.$bugsnag.notify(error, {
+                    request: {
+                        validateAddress: validateAddressConfig
+                    }
+                });
 
                 this.loading = false;
             }

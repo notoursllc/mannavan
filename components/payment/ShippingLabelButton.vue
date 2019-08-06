@@ -206,11 +206,13 @@ export default{
                 this.labelForm.servicelevel_token = cart.shipping_rate.servicelevel.token;
 
             }
-            catch(e) {
+            catch(err) {
                 this.$errorMessage(
-                    e.message,
+                    err.message,
                     { closeOthers: true }
-                )
+                );
+
+                this.$bugsnag.notify(err);
             }
         }
     },

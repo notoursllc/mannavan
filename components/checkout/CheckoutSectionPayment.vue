@@ -98,14 +98,12 @@ export default {
 
         doCheckout: async function(nonce) {
             try {
-                let self = this;
-
-                const result = await this.checkout({
+                const checkoutConfig = {
                     nonce: nonce,
                     ...this.billingAttributes
-                });
+                };
 
-                console.log("CHECKOUT RESPONSE", result);
+                const result = await this.checkout(checkoutConfig);
 
                 this.$store.dispatch('shoppingcart/CHECKOUT_CLEANUP');
 
@@ -121,15 +119,19 @@ export default {
                 return;
             }
             catch(error) {
-                console.log("CHECKOUT SEC PAYMENT CATCH", error)
+                this.dispatchFormStatus(false);
 
                 this.$errorMessage(
                     `${this.$t('Error placing order')}: ${this.getApiErrorMessage(error)}`,
                     { closeOthers: true }
-                )
+                );
 
 
-                this.dispatchFormStatus(false);
+                this.$bugsnag.notify(error, {
+                    request: {
+                        checkout: checkoutConfig
+                    }
+                });
             }
         },
 

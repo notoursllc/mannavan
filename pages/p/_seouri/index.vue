@@ -87,14 +87,16 @@ export default {
             else {
                 this.isLoading = true;
 
+                const addItemConfig = {
+                    id: this.product.id,
+                    options: {
+                        size: this.selectedSize,
+                        qty: this.selectedQty
+                    }
+                };
+
                 try {
-                    const response = await this.addItem({
-                        id: this.product.id,
-                        options: {
-                            size: this.selectedSize,
-                            qty: this.selectedQty
-                        }
-                    });
+                    const response = await this.addItem(addItemConfig);
                     this.setCartAndTokenStateFromResponse(response);
 
                     this.isLoading = false;
@@ -106,7 +108,13 @@ export default {
 
                     this.$errorMessage(
                         err.response.data.message,
-                    )
+                    );
+
+                    this.$bugsnag.notify(err, {
+                        request: {
+                            addItem: addItemConfig
+                        }
+                    });
                 }
             }
         },

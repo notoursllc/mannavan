@@ -8,3 +8,5 @@ const bugsnagClient = bugsnag({
 });
 
 bugsnagClient.use(bugsnagVue, Vue);
+
+Vue.prototype.$bugsnag = bugsnagClient;

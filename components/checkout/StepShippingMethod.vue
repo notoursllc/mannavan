@@ -37,22 +37,27 @@
                     return;
                 }
 
-                try {
-                    this.isLoading = true;
+                this.isLoading = true;
 
+                try {
                     const response = await this.setShippingRate(this.selectedRate);
                     this.setCartAndTokenStateFromResponse(response);
-
                     this.$emit('done', 'shipping-method-step') ;
-                    this.isLoading = false;
                 }
                 catch(err) {
                     this.$errorMessage(
                         this.$t('An error occurred'),
                         { closeOthers: true }
-                    )
-                    this.isLoading = false;
+                    );
+
+                    this.$bugsnag.notify(err, {
+                        request: {
+                            setShippingRate: this.selectedRate
+                        }
+                    });
                 }
+
+                this.isLoading = false;
             },
 
             fetchShippingRates: async function() {
@@ -73,7 +78,13 @@
                     this.$errorMessage(
                         this.$t('We were unable to get shipping rates because of a server error'),
                         { closeOthers: true }
-                    )
+                    );
+
+                    this.$bugsnag.notify(err, {
+                        request: {
+                            getShippingRates: null
+                        }
+                    });
                 }
 
                 this.isLoading = false;
