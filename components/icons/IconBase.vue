@@ -22,6 +22,9 @@ export default {
         },
         iconName: {
             type: String
+        },
+        title: {
+            type: String
         }
     },
 
@@ -39,7 +42,7 @@ export default {
         :viewBox="viewBox"
         :style="{'width':width, 'height':height}"
         role="presentation">
-        <title :id="iconName" lang="en">{{iconName}} icon</title>
+        <title :id="iconName" lang="en">{{title}}</title>
         <g :class="className">
             <slot></slot>
         </g>

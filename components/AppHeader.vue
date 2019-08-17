@@ -11,17 +11,39 @@ export default {
         headroom
     },
 
+    data: function() {
+        return {
+            productAddedToCart: {
+                showPopover: false,
+                product: null
+            }
+        }
+    },
+
     computed: {
         ...mapGetters({
             numCartItems: 'shoppingcart/numItems',
             inCheckoutFlow: 'ui/inCheckoutFlow'
         })
+    },
+
+    created() {
+        const onProductAddedToCart = (product) => {
+            this.productAddedToCart.product = product;
+            this.productAddedToCart.showPopover = true;
+        };
+
+        this.$nuxt.$on('PRODUCT_ADDED_TO_CART', onProductAddedToCart)
+
+        this.$once("hook:beforeDestroy", () => {
+            this.$nuxt.$off('PRODUCT_ADDED_TO_CART', onProductAddedToCart);
+        });
     }
 }
 </script>
 
 <template>
-    <headroom :disabled="inCheckoutFlow">
+    <headroom :disabled="inCheckoutFlow" :zIndex="10">
         <header role="banner" :class="{'white': inCheckoutFlow, 'dark': !inCheckoutFlow}">
             <div class="header-inner">
 
@@ -44,10 +66,39 @@ export default {
                             :to="{ name: 'cart-id' }"
                             tag="li"
                             class="header-label">
-                            <div class="cart-button" :class="{'bounce': numCartItems}">
-                                <icon-cart icon-name="shopping_cart" class-name="fillWhite" width="35px" height="35px" />
-                                <span class="badge" :class="{'badge-green': numCartItems}">{{ numCartItems }}</span>
-                            </div>
+                            <el-popover
+                                v-model="productAddedToCart.showPopover"
+                                placement="bottom"
+                                width="300"
+                                trigger="manual">
+                                <span slot="reference"
+                                    class="cart-button"
+                                    :class="{'bounce': numCartItems}">
+                                    <icon-cart icon-name="shopping_cart" class-name="fillWhite" width="35px" height="35px" />
+                                    <span class="badge" :class="{'badge-green': numCartItems}">{{ numCartItems }}</span>
+                                </span>
+
+                                <div class="tac fw500 fs16 mbs">{{ $t('Item added!') }}</div>
+                                <div class="tac" v-if="productAddedToCart.product">
+                                      TODO: show mini cart item here<br/>
+                                      {{ productAddedToCart.product.title }}
+
+                                    <div class="mtl tac">
+                                        <nuxt-link :to="{ name: 'cart-id' }" tag="span">
+                                            <el-button
+                                                type="primary"
+                                                size="small"
+                                                round>{{ $t('View My Order') }}</el-button>
+                                        </nuxt-link>
+
+                                        <el-button
+                                            size="small"
+                                            round
+                                            class="mlm"
+                                            @click="() => { productAddedToCart.showPopover = false }">{{ $t('Hide') }}</el-button>
+                                    </div>
+                                </div>
+                            </el-popover>
                         </nuxt-link>
                     </ul>
                 </template>
@@ -189,7 +240,7 @@ header:after {
             text-align: center;
             white-space: nowrap;
             position: absolute;
-            top: -4px;
+            top: -20px;
             right: -10px;
             letter-spacing: normal;
         }

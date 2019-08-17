@@ -23,14 +23,17 @@
                         :key="index"
                         :to="{ name: 'productSubType', params: { productSubType: getUrlPathForProductSubType(type) } }"
                         tag="a">{{ $tc(type, 2) }}</nuxt-link>
+
+                    <nuxt-link
+                        :to="{ name: 'index' }"
+                        tag="a">{{ $t('All') }}</nuxt-link>
                </div>
            </div>
         </el-popover>
 
-        <el-button class="colorBlack"
-                   size="large"
+        <el-button size="large"
                    v-popover:keepshoppingpopover
-                   round>{{ $t('CONTINUE SHOPPING') }}</el-button>
+                   round>{{ $t('Order More') }}</el-button>
     </div>
 </template>
 

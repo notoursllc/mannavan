@@ -4,22 +4,21 @@ export default {
 </script>
 
 <template>
-    <article class="cartItem">
-
+    <article class="cartItem is-flexbox">
         <!-- pic -->
         <div class="picCell">
             <slot name="pic"></slot>
         </div>
 
-        <div class="flexGrow pam">
-            <div class="cartItemCols">
+        <div class="content-cell">
+            <div class="cart-item-header">
                 <!-- title -->
-                <div class="cartItemCol flexGrow">
-                    <slot name="title"></slot>
-                </div>
+                <slot name="title"></slot>
+            </div>
 
+            <div class="cart-item-footer">
                 <!-- Variants -->
-                <div class="cartItemCol">
+                <div class="cart-item-footer-cell">
                     <label>{{ $t('Size') }}:</label>
                     <span>
                         <slot name="size"></slot>
@@ -27,7 +26,7 @@ export default {
                 </div>
 
                 <!-- Price -->
-                <div class="cartItemCol">
+                <div class="cart-item-footer-cell">
                     <label>{{ $t('Price') }}:</label>
                     <span>
                         <slot name="price"></slot>
@@ -35,13 +34,17 @@ export default {
                 </div>
 
                 <!-- Quantity -->
-                <div class="cartItemCol">
+                <div class="cart-item-footer-cell">
                     <label>{{ $t('Quantity') }}:</label>
                     <span>
                         <slot name="quantity"></slot>
                     </span>
                 </div>
             </div>
+        </div>
+
+        <div class="deleteButton">
+            <slot name="delete-button"></slot>
         </div>
     </article>
 </template>
@@ -50,34 +53,60 @@ export default {
     @import "~assets/css/components/_variables.scss";
     @import "~assets/css/components/_mixins.scss";
 
-    .cartItem {
-        width: 100%;
-        margin-bottom: 20px;
-        background-color: #fff;
-        @include box-shadow(0px, 1px, 2px, rgba(0,0,0,.1));
-        transition: background-color .5s linear;
+    .is-flexbox {
         @include flexbox();
         @include flex-wrap(nowrap);
         @include flex-direction(row);
         @include align-content(stretch);
+    }
 
-        .cartItemCols {
+    .cartItem {
+        margin: 0 10px 20px 10px;
+        background-color: #fff;
+        @include box-shadow(0px, 1px, 2px, rgba(0,0,0,.1));
+        transition: background-color .5s linear;
+        position: relative;
+        @include flexbox();
+        @include flex-direction(row);
+
+        .content-cell {
+            @include flex-grow(1);
             @include flexbox();
-            @include flex-wrap(nowrap);
-            @include flex-direction(row);
-            @include align-content(stretch);
+            @include flex-direction(column);
 
-            .cartItemCol {
-                padding: 0 15px;
+            .cart-item-header {
+                padding: 10px 20px !important;
+                @include flex-grow(1);
+            }
+
+            .cart-item-footer {
+                padding: 0;
+                background: #f9f9f9;
+                padding: 3px 0;
+
+                @include flexbox();
+                @include flex-wrap(nowrap);
+                @include flex-direction(row);
+            }
+
+            .cart-item-footer-cell {
+                display: inline-block;
+                vertical-align: top;
+                padding: 0 10px;
+                @include flex-grow(1);
+                text-align: center;
 
                 >label,
                 >span {
                     display: block;
+                    font-size: 15px;
+                    font-weight: 500;
                 }
 
                 >label {
-                    font-size: 12px;
-                    color: #7e7e7e;
+                    font-size: 14px;
+                    line-height: 25px;
+                    font-weight: 300;
                 }
             }
         }
@@ -95,27 +124,13 @@ export default {
             background-size: cover;
             background-position: center;
         }
-    }
 
-    @media #{$medium-and-down} {
-        .cartItemCols {
-            @include flex-direction(column !important);
-            @include align-items(flex-start !important);
-
-            .cartItemCol {
-                margin-bottom: 5px;
-                display: table-row !important;
-
-                >label,
-                >span {
-                    display: inline-block !important;
-                }
-
-                >label {
-                    padding-right: 10px;
-                    vertical-align: top;
-                }
-            }
+        .deleteButton {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 20px;
+            height: 20px;
         }
     }
 

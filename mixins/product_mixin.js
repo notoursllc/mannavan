@@ -328,7 +328,7 @@ export default {
             let sizeOpts = [];
             let maxInventoryCount = 0;
 
-            if (Array.isArray(product.sizes)) {
+            if (isObject(product) && Array.isArray(product.sizes)) {
                 product.sizes.forEach((obj) => {
                     if (obj.is_visible && obj.inventory_count) {
                         sizeOpts.push(obj.size);

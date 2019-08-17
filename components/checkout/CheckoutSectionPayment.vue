@@ -141,25 +141,24 @@ export default {
     },
 
 
-    created() {
-        this.$nuxt.$on('CHECKOUT_SUBMIT_PAYMENT_FORM', () => {
-           this.paymentForm.requestCardNonce();
-        });
-
-        this.$nuxt.$on('CHECKOUT_PAYMENT_SUCCESS', (transactionId) => {
-           this.onPaymentSuccess(transactionId);
-        });
-    },
-
-
-    beforeDestroy() {
-        this.$nuxt.$off('CHECKOUT_SUBMIT_PAYMENT_FORM');
-        this.$nuxt.$off('CHECKOUT_PAYMENT_SUCCESS');
-    },
-
-
-    mounted: function() {
+    mounted() {
         let self = this;
+
+        const onCheckoutSubmitPaymentForm = () => {
+           this.paymentForm.requestCardNonce();
+        };
+
+        const onCheckoutPaymentSuccess = (transactionId) => {
+           this.onPaymentSuccess(transactionId);
+        };
+
+        this.$nuxt.$on('CHECKOUT_SUBMIT_PAYMENT_FORM', onCheckoutSubmitPaymentForm);
+        this.$nuxt.$on('CHECKOUT_PAYMENT_SUCCESS', onCheckoutPaymentSuccess);
+
+        this.$once("hook:beforeDestroy", () => {
+            this.$nuxt.$off('CHECKOUT_SUBMIT_PAYMENT_FORM', onCheckoutSubmitPaymentForm);
+            this.$nuxt.$off('CHECKOUT_PAYMENT_SUCCESS', onCheckoutPaymentSuccess);
+        });
 
         // SqPaymentForm comes from the Square API at
         // https://js.squareup.com/v2/paymentform

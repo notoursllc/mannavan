@@ -49,7 +49,7 @@ export default {
         // height: 40px;
         overflow: hidden;
         font-size: 14px;
-        font-weight: bold;
+        font-weight: 500;
         width: 100%;
     }
 </style>

@@ -8,12 +8,11 @@
 // Vue.use(SocialSharing)
 
 export default {
-    // components: {
-    //     IconFacebook,
-    //     IconGooglePlus,
-    //     IconTwitter,
-    //     IconPinterest
-    // },
+    name: 'ProductDetailsLayout',
+
+    components: {
+        FormRow: () => import('@/components/FormRow')
+    },
 }
 </script>
 
@@ -44,20 +43,30 @@ export default {
                     <slot name="price"></slot>
                 </div>
 
-                <div class="pvl"><hr></div>
+                <hr>
 
-                <!-- Size -->
-                <div class="inlineBlock vat mbl" style="padding-right:40px;">
-                    <slot name="size"></slot>
-                </div>
+                <div class="pbl">
+                    <div class="displayTable widthAll">
+                        <!-- Size -->
+                        <form-row>
+                            <template slot="label">{{ $t('Size') }}:</template>
+                            <template slot="value">
+                                <slot name="size"></slot>
+                            </template>
+                        </form-row>
 
-                <!-- quantity -->
-                <div class="inlineBlock vat mbl">
-                    <slot name="quantity"></slot>
+                        <!-- Quantity -->
+                        <form-row>
+                            <template slot="label">{{ $t('Quantity') }}:</template>
+                            <template slot="value">
+                                <slot name="quantity"></slot>
+                            </template>
+                        </form-row>
+                    </div>
                 </div>
 
                 <!-- button -->
-                <div>
+                <div class="tac">
                     <slot name="button"></slot>
                 </div>
             </div>

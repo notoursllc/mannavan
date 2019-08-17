@@ -18,18 +18,16 @@ export default {
 
 <template>
     <div class="inlineBlock">
-        <div class="btn-container">
+        <div class="btn-keep-shopping">
+            <keep-shopping-button />
+        </div>
+
+        <div class="btn-complete">
             <el-button
                 type="primary"
                 size="large"
                 @click="onCheckoutClick"
-                round>{{ $t('PROCEED TO CHECKOUT') }}</el-button>
-        </div>
-
-        <div class="or-container colorGray">{{ $t('OR') }}</div>
-
-        <div class="btn-container">
-            <keep-shopping-button />
+                round>{{ $t('Complete Order') }}</el-button>
         </div>
     </div>
 </template>
@@ -38,24 +36,23 @@ export default {
 <style lang="scss">
     @import "~assets/css/components/_variables.scss";
 
-    .btn-container,
-    .or-container {
+    .btn-keep-shopping {
+        margin-right: 20px;
+    }
+
+    .btn-keep-shopping,
+    .btn-complete {
         display: inline-block;
     }
 
-    .or-container {
-        padding: 0 20px;
-    }
-
-
     @media #{$small-and-down} {
-        .btn-container,
-        .or-container {
-            display: block;
+        .btn-keep-shopping {
+            margin-right: 0;
         }
 
-        .or-container {
-            padding: 10px 0;
+        .btn-keep-shopping,
+        .btn-complete {
+            display: block;
         }
     }
 </style>

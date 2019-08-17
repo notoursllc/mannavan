@@ -1,7 +1,7 @@
 <script>
 import product_mixin from '@/mixins/product_mixin';
 import shopping_cart_mixin from '@/mixins/shopping_cart_mixin';
-
+import IconTimesSquare from '@/components/icons/IconTimesSquare';
 
 export default {
     props: {
@@ -25,9 +25,10 @@ export default {
         ProductPrice: () => import('@/components/product/ProductPrice'),
         ProductQuantityInput: () => import('@/components/product/ProductQuantityInput'),
         CartItemDisplay: () => import('@/components/cart/CartItemDisplay'),
-        ProductDetailsDisplay: () => import('@/components/product/ProductDetailsDisplay'),
+        ProductDetailsLayout: () => import('@/components/product/details/ProductDetailsLayout'),
         ProductImageCarousel: () => import('@/components/product/ProductImageCarousel'),
-        KeepShoppingButton: () => import('@/components/cart/KeepShoppingButton')
+        KeepShoppingButton: () => import('@/components/cart/KeepShoppingButton'),
+        IconTimesSquare
     },
 
     mixins: [
@@ -138,6 +139,40 @@ export default {
                         :style="'background-image:url(' + featuredProductPic(item.product) + ');'"></figure>
                 </template>
 
+                <template slot="delete-button" v-if="allowEdit">
+                    <el-popover
+                        v-model="confirmDeleteModals[item.id]"
+                        width="200"
+                        trigger="click"
+                        placement="bottom-start">
+                        <div class="tac">{{ $t('Remove this item?') }}</div>
+                        <div class="tac mtm">
+                            <el-button
+                                type="primary"
+                                size="mini"
+                                @click="confirmDeleteModals[item.id] = false; removeItem(item.id)">{{ $t('CONFIRM') }}</el-button>
+
+                            <el-button
+                                size="mini"
+                                type="text"
+                                @click="confirmDeleteModals[item.id] = false">{{ $t('cancel') }}</el-button>
+                        </div>
+
+                        <span class="cursorPointer" slot="reference">
+                            <el-tooltip
+                                effect="light"
+                                :content="$t('Remove item from cart')"
+                                placement="top-start">
+                                <icon-times-square
+                                    icon-name="times"
+                                    class-name="fillGrayLight"
+                                    width="20px"
+                                    class="status-icon" />
+                            </el-tooltip>
+                        </span>
+                    </el-popover>
+                </template>
+
                 <!-- title -->
                 <template slot="title">
                     <el-tooltip
@@ -146,30 +181,6 @@ export default {
                         placement="top-start">
                         <a class="underlineDotted" @click="showProductDetailsDialog(item)">{{ item.product.title }}</a>
                     </el-tooltip>
-
-                    <div v-if="allowEdit" class="mts">
-                        <el-popover
-                            v-model="confirmDeleteModals[item.id]"
-                            width="200"
-                            trigger="click"
-                            placement="start/right-end">
-                            <div>{{ $t('Delete this item?') }}</div>
-                            <div class="tar mtm">
-                                <el-button
-                                    type="primary"
-                                    size="mini"
-                                    @click="confirmDeleteModals[item.id] = false; removeItem(item.id)">{{ $t('CONFIRM') }}</el-button>
-
-                                <el-button
-                                    size="mini"
-                                    type="text"
-                                    @click="confirmDeleteModals[item.id] = false">{{ $t('cancel') }}</el-button>
-                            </div>
-                            <el-button
-                                slot="reference"
-                                type="text">{{ $t('Delete') }}</el-button>
-                        </el-popover>
-                    </div>
                 </template>
 
                 <!-- size -->
@@ -179,25 +190,26 @@ export default {
 
                 <!-- price -->
                 <template slot="price">
-                    <product-price :product="item.product" />
+                    <product-price
+                        :product="item.product"
+                        :show-strikethrough="true"
+                        :stacked="false" />
                 </template>
 
                 <!-- quantity -->
                 <template slot="quantity">
-                    <div v-if="allowEdit" class="itemVal">
-                        <div class="displayTableCell prl fwb vat">{{ item.qty }}</div>
-                        <div class="displayTableCell">
-                            <product-quantity-input
-                                v-model="item.qty"
-                                :sizes="item.product.sizes"
-                                :selected-size="item.variants.size"
-                                button-size="small"
-                                v-on:input="val => {updateCartItemQuantity(item)}" />
-                        </div>
-                    </div>
-                    <div v-else class="itemVal">
+                    <template v-if="allowEdit">
+                        <product-quantity-input
+                            v-model="item.qty"
+                            :sizes="item.product.sizes"
+                            :selected-size="item.variants.size"
+                            menu-size="mini"
+                            :stacked="false"
+                            @change="val => { updateCartItemQuantity(item) }" />
+                    </template>
+                    <template v-else>
                         {{ item.qty }}
-                    </div>
+                    </template>
                 </template>
             </cart-item-display>
 
@@ -207,7 +219,7 @@ export default {
                 custom-class="productDialog">
 
                 <div class="pageContainerMax">
-                    <product-details-display>
+                    <product-details-layout>
                         <!-- pics -->
                         <template slot="pics">
                             <product-image-carousel :product="productDetailsDialog.cartItem.product" />
@@ -227,16 +239,14 @@ export default {
 
                         <!-- size -->
                         <template slot="size">
-                            <div class="fwb">{{ $t('Size') }}:</div>
                             {{ $t(productDetailsDialog.cartItem.variants.size) }}
                         </template>
 
                         <!-- quantity -->
                         <template slot="quantity">
-                            <div class="fwb">{{ $t('Quantity') }}:</div>
                             {{ productDetailsDialog.cartItem.qty }}
                         </template>
-                    </product-details-display>
+                    </product-details-layout>
                 </div>
             </el-dialog>
         </div>

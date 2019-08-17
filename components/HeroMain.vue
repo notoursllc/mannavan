@@ -87,7 +87,7 @@ export default {
             .heading {
                 line-height: 1.3;
                 font-size: 40px;
-                font-weight: 650;
+                font-weight: 300;
                 color: #f1eded;
             }
 

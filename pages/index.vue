@@ -4,7 +4,7 @@ import product_mixin from '@/mixins/product_mixin';
 let bgImages = [
     'bg_silver_car.jpg',
     'bg_black_5.jpg',
-    'bg_green_yellow_6.jpg'
+    // 'bg_green_yellow_6.jpg'
 ];
 
 function randomIntFromInterval(min, max) {
@@ -79,7 +79,7 @@ export default {
                 <icon-logo icon-name="logo" class="vam" width="125px" />
             </div> -->
             <div class="heading-text">
-                <h1 class="heading"><mark>This is what drivers wear<br/>off the track</mark></h1>
+                <h1 class="heading"><mark>Everyday is race day.<br/>Dress like it.</mark></h1>
                 <!-- <div class="sub-heading">
                     This is what drivers wear off the track.
                 </div> -->

@@ -16,6 +16,9 @@ export default {
         },
         iconName: {
             type: String
+        },
+        title: {
+            type: String
         }
     },
 

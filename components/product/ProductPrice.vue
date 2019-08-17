@@ -11,7 +11,12 @@ export default {
         showStrikethrough: {
             type: Boolean,
             default: true
-        }
+        },
+
+        stacked: {
+            type: Boolean,
+            default: false
+        },
     },
 
     computed: {
@@ -40,8 +45,8 @@ export default {
 <template>
     <div class="inlineBlock">
         <div v-if="salePrice && basePrice && showStrikethrough">
-            <div class="colorGrayLighter strikethrough mrs basePrice">{{ basePrice }}</div>
-            <div>{{ salePrice }}</div>
+            <div class="colorGrayLighter strikethrough mrs basePrice" :class="{ 'inlineBlock': !stacked }">{{ basePrice }}</div>
+            <div class="inlineBlock">{{ salePrice }}</div>
         </div>
         <div v-else-if="salePrice" class="inlineBlock">{{ salePrice }}</div>
         <div v-else class="inlineBlock">{{ basePrice }}</div>

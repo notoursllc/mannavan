@@ -5,7 +5,7 @@
     "About Billing and Shipping Addresses": "About Billing and Shipping Addresses",
     "accept_privacy_and_tos": "By placing your order, you agree to {siteName} {linkPrivacy} and {linkTos}.",
     "Address_or_PO_Box": "Address (or PO Box)",
-    "ADD TO CART": "ADD TO CART",
+    "Add To Your Order": "Add To Your Order",
     "Added to Cart": "Added to Cart",
     "ADDRESS LINE 1": "ADDRESS LINE 1",
     "Address line 1": "Address line 1",
@@ -46,13 +46,13 @@
     "Choose a payment method": "Choose a payment method",
     "COMPANY NAME": "COMPANY NAME",
     "Company name": "Company name",
+    "Complete Order": "Complete Order",
     "Conditions": "Conditions",
     "Conditions of Use": "Conditions of Use",
     "CONFIRM": "CONFIRM",
     "Contact Us!": "Contact Us!",
     "CONTINUE": "CONTINUE",
     "CONTINUE TO SHIPPING METHOD": "CONTINUE TO SHIPPING METHOD",
-    "CONTINUE SHOPPING": "CONTINUE SHOPPING",
     "correct_address_statement": "If the address contains typos or other errors, your package may be undeliverable.",
     "COUNTRY": "COUNTRY",
     "Country": "Country",
@@ -63,7 +63,6 @@
 
     "day_days": "day | days",
     "Delete": "Delete",
-    "Delete this item?": "Delete this item?",
     "digits_text": "digit | digits",
 
     "Email address": "Email address",
@@ -82,6 +81,7 @@
     "FIT_TYPE_WOMENS": "Womens",
 
     "HATS": "HATS",
+    "Hide": "Hide",
     "Hip": "Hip",
     "Hip measurement": "Hip measurement",
     "hip_measurement_description": "The hip is measured around the circumference of the body, at the bottom of the shirt.",
@@ -89,6 +89,7 @@
 
     "In inches": "In inches",
     "Introducing Breadvan": "Introducing Breadvan",
+    "Item added!": "Item added!",
     "items": "item | items",
 
     "LAST NAME": "LAST NAME",
@@ -113,6 +114,7 @@
     "OR": "OR",
     "Order": "Order",
     "Order Details": "Order Details",
+    "Order More": "Order More",
     "Order not found": "Order not found",
     "Order summary": "Order summary",
     "Order total": "Order total",
@@ -142,7 +144,6 @@
     "Price": "Price",
     "Privacy": "Privacy",
     "Privacy Notice": "Privacy Notice",
-    "PROCEED TO CHECKOUT": "PROCEED TO CHECKOUT",
     "Processing": "Processing",
     "Product quick view": "Product quick view",
     "PRODUCT_SUBTYPE_HATS": "Hat | Hats",
@@ -156,6 +157,8 @@
     "Quantity": "Quantity",
 
     "RECEIPT": "RECEIPT",
+    "Remove item from cart": "Remove item from cart",
+    "Remove this item?": "Remove this item?",
     "Reports": "Reports",
     "Required": "Required",
     "results": "result | results",
@@ -221,6 +224,7 @@
 
     "Victory!": "Victory!",
     "View": "View",
+    "View My Order": "View My Order",
     "Vintage. Racing.": "Vintage. Racing.",
 
     "We have a winner!": "We have a winner!",

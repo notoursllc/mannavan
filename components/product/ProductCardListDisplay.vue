@@ -1,5 +1,4 @@
 <script>
-import ProductCard from '@/components/product/ProductCard';
 import product_mixin from '@/mixins/product_mixin';
 
 export default {
@@ -20,7 +19,49 @@ export default {
     ],
 
     components: {
-        ProductCard
+        ProductCard: () => import('@/components/product/ProductCard'),
+        ProductDetails: () => import('@/components/product/details/ProductDetails'),
+    },
+
+    data: function() {
+        return {
+            productDialog: {
+                visible: false,
+                product: null
+            }
+        }
+    },
+
+    methods: {
+        async showProduct(seouri) {
+            this.productDialog.product = await this.getProductBySeoUri(seouri);
+
+            if(!this.productDialog.product) {
+                this.$errorMessage(
+                    this.$t('Product not found'),
+                    { closeOthers: true }
+                );
+                return;
+            }
+
+            this.productDialog.visible = true;
+        },
+
+        onProductAddedToCart(product) {
+            this.productDialog.visible = false;
+            this.$nuxt.$emit('PRODUCT_ADDED_TO_CART', product);
+
+            // this.$router.push({
+            //     name: 'cart-id',
+            //     params: { id: product.id }
+            // });
+            // this.productDialog.visible = false;
+
+            // this.$router.push({
+            //     name: 'cart-id',
+            //     params: { id: product.id }
+            // });
+        }
     }
 }
 </script>
@@ -33,13 +74,23 @@ export default {
                 style="padding:0"
                 v-for="product in products"
                 :key="product.id">
-                <nuxt-link
-                    :to="{ name: 'p-seouri', params: { seouri: product.seo_uri } }"
-                    tag="span">
-                    <product-card :product="product"></product-card>
-                </nuxt-link>
+                <span @click="showProduct(product.seo_uri)">
+                    <product-card :product="product" />
+                </span>
             </div>
         </div>
+
+        <!-- artist dialog -->
+        <el-dialog
+            title=""
+            :visible.sync="productDialog.visible"
+            :append-to-body="true"
+            top="5vh"
+            width="95%">
+            <product-details
+                :product="productDialog.product"
+                @addedToCart="onProductAddedToCart" />
+        </el-dialog>
     </div>
 </template>
 
