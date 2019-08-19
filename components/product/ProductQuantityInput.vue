@@ -8,6 +8,8 @@
 export default {
     name: 'ProductQuantityInput',
 
+    inheritAttrs: false,
+
     props: {
         value: {
             type: Number,
@@ -74,12 +76,6 @@ export default {
         }
     },
 
-    methods: {
-        emitInput(val) {
-            this.$emit('input', val)
-        }
-    },
-
     watch: {
         value: {
             handler: function(newVal) {
@@ -96,7 +92,7 @@ export default {
     <div class="inlineBlock widthAll">
         <el-select
             v-model="selectedVal"
-            @change="emitInput"
+            v-on="$listeners"
             class="widthAll"
             :class="numberSelectClasses"
             :size="menuSize">
