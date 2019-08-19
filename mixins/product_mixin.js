@@ -373,6 +373,21 @@ export default {
         },
 
 
+        getInventoryCountForSize(selectedSize, product) {
+            let inventoryCount = null;
+
+            if(selectedSize && Array.isArray(product.sizes)) {
+                product.sizes.forEach((size) => {
+                    if(selectedSize === size.size && size.hasOwnProperty('inventory_count')) {
+                        inventoryCount = size['inventory_count'];
+                    }
+                });
+            }
+
+            return inventoryCount;
+        },
+
+
         async upsertProductSize(size) {
             let uri = '/product/size/create' ;
 
@@ -414,5 +429,6 @@ export default {
             const response = await this.$axios.$post(`/product/pic/delete`, { id });
             return response.data;
         }
+
     }
 }

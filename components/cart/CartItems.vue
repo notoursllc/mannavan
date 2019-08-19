@@ -53,6 +53,10 @@ export default {
     },
 
     methods: {
+        getProductQuantityMaxValue(selectedSize, product) {
+            return this.getInventoryCountForSize(selectedSize, product);
+        },
+
         async updateCartItemQuantity(item) {
             try {
                 const loadingInstance = this.$loadingService({ target: `#cartItem${item.id}` });
@@ -201,11 +205,11 @@ export default {
                     <template v-if="allowEdit">
                         <product-quantity-input
                             v-model="item.qty"
-                            :sizes="item.product.sizes"
-                            :selected-size="item.variants.size"
+                            :min="1"
+                            :max="getProductQuantityMaxValue(item.variants.size, item.product)"
                             menu-size="mini"
                             :stacked="false"
-                            @change="val => { updateCartItemQuantity(item) }" />
+                            @change="val => { updateCartItemQuantity(item) }"  />
                     </template>
                     <template v-else>
                         {{ item.qty }}

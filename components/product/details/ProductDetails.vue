@@ -26,6 +26,7 @@ export default {
         return {
             selectedSize: null,
             selectedQty: 1,
+            productQuantityMaxValue: 30,
             isLoading: false,
             siteUrl: this.$store.state.ui.siteUrlLong,
             pageUrl: `${this.$store.state.ui.siteUrlLong}${this.$route.fullPath}`,
@@ -91,7 +92,6 @@ export default {
 
                     this.isLoading = false;
 
-console.log("ADDED RESPONSE", response)
                     this.$emit('addedToCart', this.product)
                     return;
                 }
@@ -107,6 +107,18 @@ console.log("ADDED RESPONSE", response)
                             addItem: addItemConfig
                         }
                     });
+                }
+            }
+        },
+
+        onSizeChange(newVal) {
+            const inventoryCount = this.getInventoryCountForSize(newVal, this.product);
+
+            if(inventoryCount) {
+                this.productQuantityMaxValue = inventoryCount;
+
+                if(inventoryCount < this.selectedQty) {
+                    this.selectedQty = this.productQuantityMaxValue;
                 }
             }
         }
@@ -145,6 +157,7 @@ console.log("ADDED RESPONSE", response)
             <template slot="size">
                 <el-select
                     v-model="selectedSize"
+                    @change="onSizeChange"
                     :no-data-text="$t('Sorry this item does not have any sizes available')"
                     placeholder="Select a Size"
                     class="widthAll">
@@ -160,8 +173,8 @@ console.log("ADDED RESPONSE", response)
             <template slot="quantity" v-if="sizeOptions.length">
                 <product-quantity-input
                     v-model="selectedQty"
-                    :sizes="product.sizes"
-                    :selected-size="selectedSize" />
+                    :min="1"
+                    :max="productQuantityMaxValue" />
             </template>
 
             <!-- add to cart button -->

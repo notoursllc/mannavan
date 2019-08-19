@@ -14,13 +14,14 @@ export default {
             default: 1
         },
 
-        sizes: {
-            type: Array,
-            required: true
+        min: {
+            type: Number,
+            default: 1
         },
 
-        selectedSize: {
-            type: String
+        max: {
+            type: Number,
+            default: 1
         },
 
         menuSize: {
@@ -34,38 +35,19 @@ export default {
         }
     },
 
-    components: {
-        NumberSelect: () => import('@/components/NumberSelect')
-    },
-
     data: function() {
         return {
-            selectedVal: null,
-            maxValue: 30,
-            minValue: 1,
-            step: 1
+            selectedVal: null
         }
     },
 
     computed: {
-        selectedSizeObject() {
-            let obj = {};
-
-            if(this.selectedSize && Array.isArray(this.sizes)) {
-                this.sizes.forEach((size) => {
-                    if(this.selectedSize === size.size) {
-                        obj = size;
-                    }
-                });
+        numberOptions: function() {
+            let opts = [];
+            for(var i = this.min; i <= this.max; i++) {
+                opts.push(i);
             }
-
-            return obj;
-        },
-
-        selectedSizeInventoryCount() {
-            if(this.selectedSizeObject.hasOwnProperty('inventory_count')) {
-                return parseInt(this.selectedSizeObject.inventory_count, 10) || 0;
-            }
+            return opts;
         },
 
         numberSelectClasses() {
@@ -93,7 +75,7 @@ export default {
     },
 
     methods: {
-        emitChange(val) {
+        emitInput(val) {
             this.$emit('input', val)
         }
     },
@@ -104,21 +86,6 @@ export default {
                 this.selectedVal = newVal;
             },
             immediate: true,
-        },
-
-        selectedSize: {
-            handler: function(newVal) {
-                if(newVal) {
-                    this.maxValue = this.selectedSizeInventoryCount;
-
-                    if(this.maxValue < this.selectedVal) {
-                        this.selectedVal = this.maxValue;
-                    }
-
-                    this.emitChange(this.selectedVal);
-                }
-            },
-            immediate: true,
         }
     }
 }
@@ -126,21 +93,25 @@ export default {
 
 
 <template>
-    <div class="inlineBlock">
-        <number-select
+    <div class="inlineBlock widthAll">
+        <el-select
             v-model="selectedVal"
-            :min="minValue"
-            :max="maxValue"
-            :size="menuSize"
-            placeholder=""
+            @change="emitInput"
+            class="widthAll"
             :class="numberSelectClasses"
-            @input="emitChange" />
+            :size="menuSize">
+            <el-option
+                v-for="num in numberOptions"
+                :key="num"
+                :label="num"
+                :value="num" />
+        </el-select>
 
         <div class="mts colorOrange"
             :class="messageClasses"
-            v-if="selectedSizeInventoryCount > 0 && selectedSizeInventoryCount <= 10">
+            v-if="max > 0 && max <= 10">
             <i18n path="only_num_left">
-                <span place="qty">{{ selectedSizeInventoryCount }}</span>
+                <span place="qty">{{ max }}</span>
             </i18n>
         </div>
     </div>
