@@ -83,7 +83,7 @@ export default {
 
 .sidenav {
     position: fixed;
-    width: 400px;
+    width: 350px;
     left: 0;
     top: 0;
     margin: 0;

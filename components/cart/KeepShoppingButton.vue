@@ -1,11 +1,18 @@
 <script>
-    import product_mixin from '@/mixins/product_mixin'
+import { mapGetters } from 'vuex';
+import product_mixin from '@/mixins/product_mixin'
 
-    export default {
-        mixins: [
-            product_mixin
-        ]
-    }
+export default {
+    mixins: [
+        product_mixin
+    ],
+
+    computed: {
+        ...mapGetters({
+            numCartItems: 'shoppingcart/numItems'
+        })
+    },
+}
 </script>
 
 <template>
@@ -26,14 +33,15 @@
 
                     <nuxt-link
                         :to="{ name: 'index' }"
-                        tag="a">{{ $t('All') }}</nuxt-link>
+                        tag="a">{{ $t('All products') }}</nuxt-link>
                </div>
            </div>
         </el-popover>
 
-        <el-button size="large"
-                   v-popover:keepshoppingpopover
-                   round>{{ $t('Order More') }}</el-button>
+        <el-button
+            size="large"
+            v-popover:keepshoppingpopover
+            round>{{ numCartItems ? $t('Order More') : $t('Continue Shopping') }}</el-button>
     </div>
 </template>
 

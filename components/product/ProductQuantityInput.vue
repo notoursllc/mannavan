@@ -59,7 +59,7 @@ export default {
         },
 
         messageClasses() {
-            const classes = [];
+            const classes = ['product-qty-msg', 'colorOrange'];
 
             if(this.menuSize === 'mini' || this.menuSize === 'small') {
                 classes.push('fs12')
@@ -103,8 +103,7 @@ export default {
                 :value="num" />
         </el-select>
 
-        <div class="mts colorOrange"
-            :class="messageClasses"
+        <div :class="messageClasses"
             v-if="max > 0 && max <= 10">
             <i18n path="only_num_left">
                 <span place="qty">{{ max }}</span>
@@ -115,19 +114,33 @@ export default {
 
 
 <style lang="scss" scoped>
-    .el-input-number {
-        width: 120px;
-    }
+@import '~assets/css/components/_variables.scss';
 
-    .numberButtons .el-button {
-        border-radius: 0 !important;
-    }
+.el-input-number {
+    width: 120px;
+}
 
-    .product-qty-input {
-        width: 100%;
+.numberButtons .el-button {
+    border-radius: 0 !important;
+}
 
-        input {
-            text-align: center !important;
-        }
+.product-qty-input {
+    width: 100%;
+
+    input {
+        text-align: center !important;
     }
+}
+
+.product-qty-msg {
+    margin-top: 5px;
+}
+
+@media #{$small-and-down} {
+    .product-qty-msg {
+        margin-top: 0;
+        display: block;
+        text-align: center;
+    }
+}
 </style>

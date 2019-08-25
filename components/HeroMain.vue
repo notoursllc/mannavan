@@ -123,7 +123,6 @@ export default {
             .heading-text {
                 .heading {
                     font-size: 30px;
-                    font-weight: 550;
                 }
             }
         }

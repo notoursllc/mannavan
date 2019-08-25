@@ -294,10 +294,6 @@ header:after {
                 svg {
                     width: 30px !important;
                 }
-
-                .badge {
-                    top: -2px;
-                }
             }
         }
     }
