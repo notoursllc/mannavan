@@ -80,11 +80,12 @@ export default {
             </div>
         </div>
 
-        <!-- artist dialog -->
+        <!-- product dialog -->
         <el-dialog
             title=""
             :visible.sync="productDialog.visible"
             :append-to-body="true"
+            :key="new Date().getTime()"
             top="5vh"
             width="95%">
             <product-details
