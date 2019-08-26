@@ -65,15 +65,15 @@ export default {
                         <nuxt-link
                             :to="{ name: 'cart-id' }"
                             tag="li"
-                            class="header-label">
+                            class="header-label"
+                            :class="{'bounce': numCartItems}">
+
                             <el-popover
                                 v-model="productAddedToCart.showPopover"
                                 placement="bottom"
                                 width="300"
                                 trigger="manual">
-                                <span slot="reference"
-                                    class="cart-button"
-                                    :class="{'bounce': numCartItems}">
+                                <span slot="reference" class="cart-button">
                                     <icon-cart icon-name="shopping_cart" class-name="fillWhite" width="35px" height="35px" />
                                     <span class="badge" :class="{'badge-green': numCartItems}">{{ numCartItems }}</span>
                                 </span>
