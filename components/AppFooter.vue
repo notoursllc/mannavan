@@ -17,9 +17,13 @@ export default {
     <footer class="footer">
         <div class="content">
             <div class="nav-container">
+                <nav class="nav-item" id="footer-logo">
+                    <icon-logo icon-name="breadvan_vintage_racing_apparel" class-name="fillWhite" width="125px" />
+                </nav>
+
                 <nav class="nav-item">
                     <dl>
-                        <dt>Product</dt>
+                        <!-- <dt>Product</dt> -->
                         <dd>
                             <nuxt-link tag="a"
                                 class="underline"
@@ -31,7 +35,7 @@ export default {
 
                 <nav class="nav-item">
                     <dl>
-                        <dt>Company</dt>
+                        <!-- <dt>Company</dt> -->
                         <dd>
                             <nuxt-link
                                 :to="{name: 'contact-us'}"
@@ -48,10 +52,6 @@ export default {
                                 data-testid="footer-link-conditions">{{ $t('Conditions of Use') }}</nuxt-link>
                         </dd>
                     </dl>
-                </nav>
-
-                <nav class="nav-item" id="footer-logo">
-                    <icon-logo icon-name="breadvan_vintage_racing_apparel" class-name="fillWhite" width="150px" />
                 </nav>
             </div>
         </div>
@@ -89,6 +89,7 @@ footer {
     }
 
     .nav-container {
+        @include flexbox();
         @include flex-direction(row);
         @include justify-content(space-between);
         @include align-items(flex-start);
@@ -99,12 +100,7 @@ footer {
             @include justify-content(center);
             @include flex-basis(auto);
             @include flex-grow(1);
-            margin-bottom: 20px;
         }
-    }
-
-    #footer-logo {
-        display: none;
     }
 
     dt {
@@ -124,24 +120,13 @@ footer {
     }
 }
 
-@media #{$medium-and-up} {
+@media #{$medium-and-down} {
     footer {
         margin-bottom: 0;
 
-        .nav-container {
-            @include flexbox()
-        }
-
-        .nav-item {
-            @include flexbox()
-        }
 
         #footer-logo {
-            display: flex !important;
-        }
-
-        dt {
-            margin-bottom: 15px;
+            display: none;
         }
 
         dd {
