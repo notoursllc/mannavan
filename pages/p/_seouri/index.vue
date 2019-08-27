@@ -40,17 +40,6 @@ export default {
         }
     },
 
-    methods: {
-        onProductAddedToCart(product) {
-            this.$nuxt.$emit('PRODUCT_ADDED_TO_CART', product);
-
-            // this.$router.push({
-            //     name: 'cart-id',
-            //     params: { id: product.id }
-            // });
-        }
-    },
-
     created() {
         if(!this.product) {
             this.$errorMessage(
@@ -81,9 +70,7 @@ export default {
 <template>
     <div class="pageContainerMax">
         <template v-if="product">
-            <product-details
-                :product="product"
-                @addedToCart="onProductAddedToCart" />
+            <product-details :product="product" />
         </template>
     </div>
 </template>

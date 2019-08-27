@@ -6,7 +6,7 @@
     "accept_privacy_and_tos": "By placing your order, you agree to {siteName} {linkPrivacy} and {linkTos}.",
     "Address_or_PO_Box": "Address (or PO Box)",
     "Add To Your Order": "Add To Your Order",
-    "Added to Cart": "Added to Cart",
+    "Added To Your Order": "Added To Your Order",
     "ADDRESS LINE 1": "ADDRESS LINE 1",
     "Address line 1": "Address line 1",
     "ADDRESS LINE 2": "ADDRESS LINE 2",
@@ -90,7 +90,6 @@
 
     "In inches": "In inches",
     "Introducing Breadvan": "Introducing Breadvan",
-    "Item added!": "Item added!",
     "items": "item | items",
 
     "LAST NAME": "LAST NAME",

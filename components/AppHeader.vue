@@ -1,6 +1,7 @@
 <script>
 import { mapGetters } from 'vuex';
 import { headroom } from 'vue-headroom'
+import product_mixin from '@/mixins/product_mixin';
 
 export default {
     components: {
@@ -10,6 +11,10 @@ export default {
         AppHeaderCheckoutPopover: () => import('@/components/AppHeaderCheckoutPopover'),
         headroom
     },
+
+    mixins: [
+        product_mixin
+    ],
 
     data: function() {
         return {
@@ -71,17 +76,16 @@ export default {
                             <el-popover
                                 v-model="productAddedToCart.showPopover"
                                 placement="bottom"
-                                width="300"
+                                width="250"
                                 trigger="manual">
                                 <span slot="reference" class="cart-button">
                                     <icon-cart icon-name="shopping_cart" class-name="fillWhite" width="35px" height="35px" />
                                     <span class="badge" :class="{'badge-green': numCartItems}">{{ numCartItems }}</span>
                                 </span>
 
-                                <div class="tac fw500 fs16 mbs">{{ $t('Item added!') }}</div>
+                                <div class="tac fw500 fs16 mbm">{{ $t('Added To Your Order') }}:</div>
                                 <div class="tac" v-if="productAddedToCart.product">
-                                      TODO: show mini cart item here<br/>
-                                      {{ productAddedToCart.product.title }}
+                                    <div class="miniProductPic" :style="'background-image:url(' + featuredProductPic(productAddedToCart.product) + ');'"></div>
 
                                     <div class="mtl tac">
                                         <nuxt-link :to="{ name: 'cart-id' }" tag="span">
@@ -250,6 +254,14 @@ header:after {
             color: #fff;
         }
     }
+}
+
+.miniProductPic {
+    width: 128px;
+    min-height: 128px;
+    background-size: cover;
+    background-position: center;
+    display: inline-block;
 }
 
 

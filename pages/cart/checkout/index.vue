@@ -12,7 +12,7 @@ export default {
         CheckoutSectionPayment: () => import('@/components/checkout/CheckoutSectionPayment'),
         CheckoutSectionBilling: () => import('@/components/checkout/CheckoutSectionBilling'),
         CheckoutSectionButton: () => import('@/components/checkout/CheckoutSectionButton'),
-        CartItemsMini: () => import('@/components/cart/CartItemsMini'),
+        CartItemMini: () => import('@/components/cart/CartItemMini'),
         CartTotalsTable: () => import('@/components/cart/CartTotalsTable')
     },
 
@@ -73,7 +73,18 @@ export default {
         </div>
 
         <div class="cart-container">
-            <cart-items-mini :shopping-cart="shoppingCart" />
+            <!-- <cart-items-mini :shopping-cart="shoppingCart" /> -->
+            <div v-if="shoppingCart">
+                <div v-if="!shoppingCart.num_items" class="fs16 tac pal">
+                    {{ $t('Your shopping cart does not contain any items.') }}
+                </div>
+                <div v-else class="ptl">
+                    <cart-item-mini
+                        v-for="item in shoppingCart.cart_items"
+                        :key="item.id"
+                        :cart-item="item" />
+                </div>
+            </div>
 
             <div class="ptl">
                 <cart-totals-table

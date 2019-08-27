@@ -45,23 +45,19 @@ export default {
             }
 
             this.productDialog.visible = true;
-        },
-
-        onProductAddedToCart(product) {
-            this.productDialog.visible = false;
-            this.$nuxt.$emit('PRODUCT_ADDED_TO_CART', product);
-
-            // this.$router.push({
-            //     name: 'cart-id',
-            //     params: { id: product.id }
-            // });
-            // this.productDialog.visible = false;
-
-            // this.$router.push({
-            //     name: 'cart-id',
-            //     params: { id: product.id }
-            // });
         }
+    },
+
+    created() {
+        const onProductAddedToCart = (product) => {
+            this.productDialog.visible = false;
+        };
+
+        this.$nuxt.$on('PRODUCT_ADDED_TO_CART', onProductAddedToCart)
+
+        this.$once("hook:beforeDestroy", () => {
+            this.$nuxt.$off('PRODUCT_ADDED_TO_CART', onProductAddedToCart);
+        });
     }
 }
 </script>
@@ -88,9 +84,7 @@ export default {
             :key="new Date().getTime()"
             top="5vh"
             width="95%">
-            <product-details
-                :product="productDialog.product"
-                @addedToCart="onProductAddedToCart" />
+            <product-details :product="productDialog.product" />
         </el-dialog>
     </div>
 </template>
