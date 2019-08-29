@@ -66,10 +66,10 @@
     width: 80%;
 }
 
-.el-button {
+.el-button:not(.nogrow) {
     @include grow()
 }
-.el-button:hover {
+.el-button:not(.nogrow):hover {
     @include growHover()
 }
 

@@ -7,6 +7,8 @@ import shopping_cart_mixin from '@/mixins/shopping_cart_mixin';
 const globalTypes = process.env.GLOBAL_TYPES;
 
 export default {
+    name: 'ProductDetails',
+
     props: {
         product: {
             type: Object,
@@ -16,10 +18,12 @@ export default {
 
     components: {
         ProductPrice: () => import('@/components/product/ProductPrice'),
-        ProductQuantityInput: () => import('@/components/product/ProductQuantityInput'),
+        ProductQuantityWarning: () => import('@/components/product/ProductQuantityWarning'),
         ProductDetailsLayout: () => import('@/components/product/details/ProductDetailsLayout'),
         ProductImageCarousel: () => import('@/components/product/ProductImageCarousel'),
-        TshirtSizeChart: () => import('@/components/product/TshirtSizeChart')
+        ProductSizeButtons: () => import('@/components/product/ProductSizeButtons'),
+        TshirtSizeChart: () => import('@/components/product/TshirtSizeChart'),
+        NumberInput: () => import('@/components/NumberInput')
     },
 
     data() {
@@ -92,8 +96,7 @@ export default {
 
                     this.isLoading = false;
 
-                    this.$emit('addedToCart', this.product)
-                    return;
+                    this.$nuxt.$emit('PRODUCT_ADDED_TO_CART', this.product);
                 }
                 catch(err) {
                     this.isLoading = false;
@@ -135,61 +138,63 @@ export default {
                 <product-image-carousel :product="product" />
             </template>
 
-            <!-- title -->
-            <div slot="title">{{ product.title }}</div>
+            <template slot="info">
+                <!-- title -->
+                <div class="fs20 pbm">{{ product.title }}</div>
 
-            <!-- description -->
-            <div slot="description" class="fs16">{{ product.description_long }}</div>
+                <!-- description -->
+                <div class="fs16">{{ product.description_long }}</div>
 
-            <!-- artist -->
-            <div slot="artist" v-if="product.artist && product.artist.id" class="mtl fs12">
-                {{ $t('Artist') }}:
-                <span class="underlineDotted cursorPointer mls"
-                    @click="artistDialog.visible = true">{{ product.artist.name }}</span>
-            </div>
+                <!-- artist -->
+                <div v-if="product.artist && product.artist.id" class="mtl fs12">
+                    {{ $t('Artist') }}:
+                    <span class="underlineDotted cursorPointer mls"
+                        @click="artistDialog.visible = true">{{ product.artist.name }}</span>
+                </div>
 
-            <!-- price -->
-            <div slot="price" class="mtl fs20">
-                <product-price :product="product"></product-price>
-            </div>
+                <!-- price -->
+                <div class="mtl fs20">
+                    <product-price :product="product"></product-price>
+                </div>
 
-            <!-- size -->
-            <template slot="size">
-                <el-select
-                    v-model="selectedSize"
-                    @change="onSizeChange"
-                    :no-data-text="$t('Sorry this item does not have any sizes available')"
-                    placeholder="Select a Size"
-                    class="widthAll">
-                    <el-option
-                        v-for="size in sizeOptions"
-                        :key="size"
-                        :label="$t(size)"
-                        :value="size" />
-                </el-select>
+                <hr/>
+
+                <!-- size -->
+                <div class="mbl">
+                    <div class="fwb mbs">{{ $t('Size') }}:</div>
+                    <product-size-buttons
+                        v-model="selectedSize"
+                        @input="onSizeChange"
+                        :product="product" />
+                </div>
+
+                <!-- quantity -->
+                <div v-if="sizeOptions.length" style="max-width:175px">
+                    <div class="mbs">
+                        <span class="fwb">{{ $t('Quantity') }}:</span>
+                        <span class="plm"><product-quantity-warning :max="productQuantityMaxValue" /></span>
+                    </div>
+                    <number-input
+                        v-model="selectedQty"
+                        :min="1"
+                        :max="productQuantityMaxValue" />
+                </div>
+
+                <!-- add to cart button -->
+                <div class="tac ptxl">
+                    <el-button
+                        type="primary"
+                        @click="addToCart"
+                        :loading="isLoading"
+                        :disabled="!sizeOptions.length"
+                        round
+                        class="is-huge">{{ $t('Add To Your Order') }}</el-button>
+                </div>
             </template>
-
-            <!-- quantity -->
-            <template slot="quantity" v-if="sizeOptions.length">
-                <product-quantity-input
-                    v-model="selectedQty"
-                    :min="1"
-                    :max="productQuantityMaxValue" />
-            </template>
-
-            <!-- add to cart button -->
-            <div slot="button" class="ptl">
-                <el-button
-                    type="primary"
-                    @click="addToCart"
-                    :loading="isLoading"
-                    :disabled="!sizeOptions.length"
-                    round>{{ $t('Add To Your Order') }}</el-button>
-            </div>
 
             <!-- size chart -->
             <div slot="under"
-                class="ptl"
+                class="ptxl"
                 v-if="showSizeChart">
                 <div class="fs16 mbm">{{ $t('Sizing') }}:</div>
                 <tshirt-size-chart

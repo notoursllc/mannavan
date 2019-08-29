@@ -26,49 +26,8 @@ export default {
                 </div>
             </div>
 
-            <div class="is-half phxl">
-                <div class="fs20 pbm">
-                    <slot name="title"></slot>
-                </div>
-
-                <div>
-                    <slot name="description"></slot>
-                </div>
-
-                <div>
-                    <slot name="artist"></slot>
-                </div>
-
-                <div class="fs20">
-                    <slot name="price"></slot>
-                </div>
-
-                <hr>
-
-                <div class="pbl">
-                    <div class="displayTable widthAll">
-                        <!-- Size -->
-                        <form-row>
-                            <template slot="label">{{ $t('Size') }}:</template>
-                            <template slot="value">
-                                <slot name="size"></slot>
-                            </template>
-                        </form-row>
-
-                        <!-- Quantity -->
-                        <form-row>
-                            <template slot="label">{{ $t('Quantity') }}:</template>
-                            <template slot="value">
-                                <slot name="quantity"></slot>
-                            </template>
-                        </form-row>
-                    </div>
-                </div>
-
-                <!-- button -->
-                <div class="tac">
-                    <slot name="button"></slot>
-                </div>
+            <div class="is-half prod-info">
+                <slot name="info"></slot>
             </div>
         </div>
 
@@ -122,6 +81,10 @@ export default {
     width: 50%;
 }
 
+.prod-info {
+    padding: 0 30px;
+}
+
 @media #{$medium-and-down} {
     .prod-container {
         display: block;
@@ -129,6 +92,10 @@ export default {
     .is-half {
         @include flex(1 0 auto);
         width: 100%;
+    }
+
+    .prod-info {
+        padding: 0 5px;
     }
 }
 

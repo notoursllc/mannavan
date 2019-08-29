@@ -1,52 +1,29 @@
 <script>
-    import isObject from 'lodash.isobject'
-    import cloneDeep from 'lodash.clonedeep'
+import { mapGetters } from 'vuex'
 
+export default {
+    components: {
+        PageTitle: () => import('@/components/PageTitle'),
+        CartItems: () => import('@/components/cart/CartItems'),
+        CartTotalsTable: () => import('@/components/cart/CartTotalsTable'),
+        GoToCheckoutButtons: () => import('@/components/cart/GoToCheckoutButtons')
+    },
 
-    export default {
-        components: {
-            PageTitle: () => import('@/components/PageTitle'),
-            CartItems: () => import('@/components/cart/CartItems'),
-            CartTotalsTable: () => import('@/components/cart/CartTotalsTable'),
-            GoToCheckoutButtons: () => import('@/components/cart/GoToCheckoutButtons')
-        },
+    computed: {
+        ...mapGetters({
+            shoppingCart: 'shoppingcart/cart'
+        })
+    },
 
-        data: function() {
-            return {
-                added_cart_item: null,
-                shoppingCart: {}
-            }
-        },
-
-        methods: {
-            cloneCartFromState() {
-                this.shoppingCart = cloneDeep(this.$store.state.shoppingcart.cart);
-            }
-        },
-
-        created() {
-            this.cloneCartFromState();
-
-            if(this.$route.params.id) {
-                if(isObject(this.shoppingCart) && Array.isArray(this.shoppingCart.cart_items)) {
-                    this.shoppingCart.cart_items.forEach((item) => {
-                        if(item.product_id === this.$route.params.id) {
-                            this.added_cart_item = item.id;
-                        }
-                    });
-                }
-            }
-        },
-
-        head() {
-            return {
-                title: this.$t('Shopping Cart'),
-                meta: [
-                    { vmid: 'description', name: 'description', content: `Your Shopping Cart at ${this.$store.state.ui.siteName}` }
-                ]
-            }
+    head() {
+        return {
+            title: this.$t('Shopping Cart'),
+            meta: [
+                { vmid: 'description', name: 'description', content: `Your Shopping Cart at ${this.$store.state.ui.siteName}` }
+            ]
         }
     }
+}
 </script>
 
 
@@ -59,14 +36,11 @@
                 <go-to-checkout-buttons />
             </div>
 
-            <cart-items
-                :shopping-cart="shoppingCart"
-                :highlight-item="added_cart_item"
-                v-on:updated="cloneCartFromState"></cart-items>
+            <cart-items />
 
             <div class="mtm clearfix">
                 <div class="floatRight">
-                    <cart-totals-table :cart="shoppingCart"></cart-totals-table>
+                    <cart-totals-table :cart="shoppingCart" />
                 </div>
             </div>
 
