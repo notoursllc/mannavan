@@ -13,7 +13,6 @@ export default{
     layout: 'admin',
 
     components: {
-        FormRow: () => import('@/components/FormRow'),
         AddressDisplay: () => import('@/components/AddressDisplay'),
         ShippingLabelButton: () => import('@/components/payment/ShippingLabelButton'),
         CartItems: () => import('@/components/cart/CartItems')
@@ -111,25 +110,25 @@ export default{
             <div class="g-spec-label">Documents</div>
             <div class="g-spec-content">
                 <!-- Packing slip -->
-                  <form-row>
-                    <template slot="label">Packing slip:</template>
-                    <template slot="value">
+                <div class="formRow">
+                    <label>Packing slip:</label>
+                    <span>
                         <el-button
                             size="mini"
                             @click="viewPackingSlip">{{ $t('View') }}</el-button>
-                    </template>
-                </form-row>
+                    </span>
+                </div>
 
                 <!-- Shipping Label -->
-                  <form-row>
-                    <template slot="label">Shipping Label:</template>
-                    <template slot="value">
+                <div class="formRow">
+                    <label>Shipping Label:</label>
+                    <span>
                         <shipping-label-button
                             :payment="payment"
                             @purchased="labelPurchased"
                             @deleted="labelDeleted" />
-                    </template>
-                </form-row>
+                    </span>
+                </div>
             </div>
         </div>
 
@@ -138,30 +137,26 @@ export default{
             <div class="g-spec-label">General Info</div>
             <div class="g-spec-content">
                 <!-- Order date -->
-                <form-row>
-                    <template slot="label">Ordered on:</template>
-                    <template slot="value">
-                        {{ payment.created_at | format8601 }}
-                    </template>
-                </form-row>
+                <div class="formRow">
+                    <label>Ordered on:</label>
+                    <span>{{ payment.created_at | format8601 }}</span>
+                </div>
 
                 <!-- transaction id -->
-                <form-row>
-                    <template slot="label">Transaction ID:</template>
-                    <template slot="value">
-                        {{ payment.transaction.id }}
-                    </template>
-                </form-row>
+                <div class="formRow">
+                    <label>Transaction ID:</label>
+                    <span>{{ payment.transaction.id }}</span>
+                </div>
 
                 <!-- transaction id -->
-                <form-row>
-                    <template slot="label">Success:</template>
-                    <template slot="value">
+                <div class="formRow">
+                    <label>Success:</label>
+                    <span>
                         <div v-for="obj in payment.transaction.tenders" :key="obj.id">
                             {{ obj.card_details.status }}
                         </div>
-                    </template>
-                </form-row>
+                    </span>
+                </div>
             </div>
         </div>
 
@@ -179,33 +174,25 @@ export default{
         <div class="g-spec">
             <div class="g-spec-label">Totals:</div>
             <div class="g-spec-content">
-                  <form-row>
-                    <template slot="label">Subtotal:</template>
-                    <template slot="value">
-                        <div class="mono tar">{{ $n(payment.shoppingCart.sub_total, 'currency') }}</div>
-                    </template>
-                </form-row>
+                <div class="formRow">
+                    <label>Subtotal:</label>
+                    <span class="mono tar">{{ $n(payment.shoppingCart.sub_total, 'currency') }}</span>
+                </div>
 
-                <form-row>
-                    <template slot="label">Shipping:</template>
-                    <template slot="value">
-                        <div class="mono tar">{{ $n(payment.shoppingCart.shipping_total, 'currency') }}</div>
-                    </template>
-                </form-row>
+                <div class="formRow">
+                    <label>Shipping:</label>
+                    <span class="mono tar">{{ $n(payment.shoppingCart.shipping_total, 'currency') }}</span>
+                </div>
 
-                <form-row>
-                    <template slot="label">Estimated tax:</template>
-                    <template slot="value">
-                        <div class="mono tar">{{ $n(payment.shoppingCart.sales_tax, 'currency') }}</div>
-                    </template>
-                </form-row>
+                <div class="formRow">
+                    <label>Estimated tax:</label>
+                    <span class="mono tar">{{ $n(payment.shoppingCart.sales_tax, 'currency') }}</span>
+                </div>
 
-                <form-row>
-                    <template slot="label">Order total:</template>
-                    <template slot="value">
-                        <div class="mono tar">{{ $n(payment.shoppingCart.grand_total, 'currency') }}</div>
-                    </template>
-                </form-row>
+                <div class="formRow">
+                    <label>Order total:</label>
+                    <span class="mono tar">{{ $n(payment.shoppingCart.grand_total, 'currency') }}</span>
+                </div>
             </div>
         </div>
 
@@ -214,44 +201,34 @@ export default{
             <div class="g-spec-label">{{ $t('Package') }}:</div>
             <div class="g-spec-content">
                 <!-- product weight total -->
-                <form-row>
-                    <template slot="label">Product weight total (oz):</template>
-                    <template slot="value">
-                        {{ payment.shoppingCart.product_weight_total }}
-                    </template>
-                </form-row>
+                <div class="formRow">
+                    <label>Product weight total (oz):</label>
+                    <span>{{ payment.shoppingCart.product_weight_total }}</span>
+                </div>
 
                 <!-- postage quoted -->
-                <form-row>
-                    <template slot="label">Postage quoted:</template>
-                    <template slot="value">
-                        {{ $n(payment.shoppingCart.shipping_rate.amount, 'currency') }}
-                    </template>
-                </form-row>
+                <div class="formRow">
+                    <label>Postage quoted:</label>
+                    <span>{{ $n(payment.shoppingCart.shipping_rate.amount, 'currency') }}</span>
+                </div>
 
                 <!-- provider -->
-                <form-row>
-                    <template slot="label">Provider:</template>
-                    <template slot="value">
-                        {{ payment.shoppingCart.shipping_rate.provider }}
-                    </template>
-                </form-row>
+                <div class="formRow">
+                    <label>Provider:</label>
+                    <span>{{ payment.shoppingCart.shipping_rate.provider }}</span>
+                </div>
 
                 <!-- service level -->
-                <form-row>
-                    <template slot="label">Service level:</template>
-                    <template slot="value">
-                        {{ payment.shoppingCart.shipping_rate.servicelevel.name }}
-                    </template>
-                </form-row>
+                <div class="formRow">
+                    <label>Service level:</label>
+                    <span>{{ payment.shoppingCart.shipping_rate.servicelevel.name }}</span>
+                </div>
 
                 <!-- shipping estimate-->
-                <form-row>
-                    <template slot="label">Shipping estimate (days):</template>
-                    <template slot="value">
-                        {{ payment.shoppingCart.shipping_rate.estimated_days }}
-                    </template>
-                </form-row>
+                <div class="formRow">
+                    <label>Shipping estimate (days):</label>
+                    <span>{{ payment.shoppingCart.shipping_rate.estimated_days }}</span>
+                </div>
             </div>
         </div>
 
@@ -290,31 +267,29 @@ export default{
         </div>
 
 
-
         <!-- payment method -->
         <div class="g-spec">
             <div class="g-spec-label">{{ $t('Payment method') }}:</div>
             <div class="g-spec-content">
-                <form-row>
-                    <template slot="label">Card number:</template>
-                    <template slot="value">
+                <div class="formRow">
+                    <label>Card number:</label>
+                    <span>
                         <div v-for="obj in payment.transaction.tenders" :key="obj.id">
                             {{ obj.card_details.card.last_4 }}
                         </div>
-                    </template>
-                </form-row>
+                    </span>
+                </div>
 
-                <form-row>
-                    <template slot="label">Card type:</template>
-                    <template slot="value">
+                <div class="formRow">
+                    <label>Card type:</label>
+                    <span>
                         <div v-for="obj in payment.transaction.tenders" :key="obj.id">
                             {{ obj.card_details.card.card_brand }}
                         </div>
-                    </template>
-                </form-row>
+                    </span>
+                </div>
             </div>
         </div>
-
 
 
         <!-- json dialog -->
@@ -327,7 +302,10 @@ export default{
     </div>
 </template>
 
-<style>
+
+<style lang="scss">
+@import "~assets/css/components/_formRow.scss";
+
 .parcel:nth-child(2n) {
     background-color: #f1f1f1;
 }

@@ -24,7 +24,6 @@ export default {
         ProductImageCarousel: () => import('@/components/product/ProductImageCarousel'),
         NumberInput: () => import('@/components/NumberInput'),
         ProductQuantityWarning: () => import('@/components/product/ProductQuantityWarning'),
-        FormRow: () => import('@/components/FormRow'),
         IconTimesSquare
     },
 
@@ -242,16 +241,16 @@ export default {
 
                     <div class="displayTable">
                         <!-- size -->
-                        <form-row :value-class="formValueClass">
-                            <span slot="label" class="nowrap fwb">{{ $t('Size') }}:</span>
-                            <template slot="value">{{ $t(data.variants.size) }}</template>
-                        </form-row>
+                        <div class="formRow">
+                            <label class="nowrap fwb">{{ $t('Size') }}:</label>
+                            <span>{{ $t(data.variants.size) }}</span>
+                        </div>
 
                         <!-- quantity -->
-                        <form-row :value-class="formValueClass">
-                            <span slot="label" class="nowrap fwb">{{ $t('Quantity') }}:</span>
-                            <template slot="value">{{ data.qty }}</template>
-                        </form-row>
+                        <div class="formRow">
+                            <label class="nowrap fwb">{{ $t('Quantity') }}:</label>
+                            <span>{{ data.qty }}</span>
+                        </div>
                     </div>
                 </template>
             </product-details-layout>
@@ -262,6 +261,7 @@ export default {
 <style lang="scss">
     @import "~assets/css/components/_variables.scss";
     @import "~assets/css/components/_mixins.scss";
+    @import "~assets/css/components/_formRow.scss";
 
     .is-flexbox {
         @include flexbox();

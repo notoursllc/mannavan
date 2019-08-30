@@ -52,7 +52,6 @@
             CountrySelect: () => import('@/components/CountrySelect'),
             SelectStateProvince: () => import('@/components/SelectStateProvince'),
             StatusWrapper: () => import('@/components/StatusWrapper'),
-            FormRow: () => import('@/components/FormRow'),
             ShippingBillingHelp: () => import('@/components/checkout/ShippingBillingHelp')
         },
 
@@ -204,35 +203,35 @@
 <template>
     <div class="displayTable widthAll">
         <!-- First Name -->
-        <form-row :value-class="formValueClass">
-            <span slot="label" class="lineHeight40">{{ $t('First name') }}:</span>
-            <template slot="value">
+        <div class="formRow">
+            <label class="nowrap lineHeight40">{{ $t('First name') }}:</label>
+            <span class="widthAll">
                 <status-wrapper :success="canShowGreenCheck('firstName')" :failed="canShowValidationMsg('firstName')">
                     <el-input
                         v-model="firstName"
                         :class="{ 'inputError': $v.form.firstName.$error }" />
                     <p role="alert" v-show="canShowValidationMsg('firstName')">{{ $t('Required') }}</p>
                 </status-wrapper>
-            </template>
-        </form-row>
+            </span>
+        </div>
 
         <!-- Last Name -->
-        <form-row :value-class="formValueClass">
-            <span slot="label" class="lineHeight40">{{ $t('Last name') }}:</span>
-            <template slot="value">
+        <div class="formRow">
+            <label class="nowrap lineHeight40">{{ $t('Last name') }}:</label>
+            <span class="widthAll">
                 <status-wrapper :success="canShowGreenCheck('lastName')" :failed="canShowValidationMsg('lastName')">
                     <el-input
                         v-model="lastName"
                         :class="{ 'inputError': $v.form.lastName.$error }" />
                     <p role="alert" v-show="canShowValidationMsg('lastName')">{{ $t('Required') }}</p>
                 </status-wrapper>
-            </template>
-        </form-row>
+            </span>
+        </div>
 
         <!-- Email -->
-        <form-row v-if="type === 'shipping'" :value-class="formValueClass">
-            <span slot="label" class="lineHeight40">{{ $t('Email address') }}:</span>
-            <template slot="value">
+        <div class="formRow">
+            <label class="nowrap lineHeight40">{{ $t('Email address') }}:</label>
+            <span class="widthAll">
                 <status-wrapper :success="canShowGreenCheck('email')" :failed="canShowValidationMsg('email')">
                     <el-input
                         v-model="email"
@@ -242,13 +241,13 @@
                         <p v-if="!$v.form.email.email">{{ $t('Please enter a valid email address.') }}</p>
                     </div>
                 </status-wrapper>
-            </template>
-        </form-row>
+            </span>
+        </div>
 
         <!-- Country -->
-        <form-row :value-class="formValueClass">
-            <span slot="label" class="lineHeight40">{{ $t('Country') }}:</span>
-            <template slot="value">
+        <div class="formRow">
+            <label class="nowrap lineHeight40">{{ $t('Country') }}:</label>
+            <span class="widthAll">
                 <status-wrapper :success="canShowGreenCheck('countryCodeAlpha2')" :failed="canShowValidationMsg('countryCodeAlpha2')">
                     <country-select
                         v-model="countryCodeAlpha2"
@@ -256,48 +255,48 @@
                         @change="newVal => countryCodeAlpha2 = newVal" />
                     <p role="alert" v-show="canShowValidationMsg('countryCodeAlpha2')">{{ $t('Required') }}</p>
                 </status-wrapper>
-            </template>
-        </form-row>
+            </span>
+        </div>
 
         <!-- Street Address -->
-        <form-row :value-class="formValueClass">
-            <span slot="label" class="lineHeight40">{{ $t('Address line 1') }}:</span>
-            <template slot="value">
+        <div class="formRow">
+            <label class="nowrap lineHeight40">{{ $t('Address line 1') }}:</label>
+            <span class="widthAll">
                 <status-wrapper :success="canShowGreenCheck('streetAddress')" :failed="canShowValidationMsg('streetAddress')">
                     <el-input
                         v-model="streetAddress"
                         :class="{ 'inputError': $v.form.streetAddress.$error }" />
                     <p role="alert" v-show="canShowValidationMsg('streetAddress')">{{ $t('Required') }}</p>
                 </status-wrapper>
-            </template>
-        </form-row>
+            </span>
+        </div>
 
         <!-- Extended Address -->
         <!-- This value may be returned by the paypal response, so only displaying it if it does -->
-        <form-row v-if="form.extendedAddress" :value-class="formValueClass">
-            <span slot="label" class="lineHeight40">{{ $t('Address line 2') }}:</span>
-            <template slot="value">
+        <div class="formRow" v-if="form.extendedAddress">
+            <label class="nowrap lineHeight40">{{ $t('Address line 2') }}:</label>
+            <span class="widthAll">
                 <el-input v-model="extendedAddress" />
-            </template>
-        </form-row>
+            </span>
+        </div>
 
         <!-- City -->
-        <form-row :value-class="formValueClass">
-            <span slot="label" class="lineHeight40">{{ $t('City') }}:</span>
-            <template slot="value">
+        <div class="formRow">
+            <label class="nowrap lineHeight40">{{ $t('City') }}:</label>
+            <span class="widthAll">
                 <status-wrapper :success="canShowGreenCheck('city')" :failed="canShowValidationMsg('city')">
                     <el-input
                         v-model="city"
                         :class="{ 'inputError': $v.form.city.$error }" />
                     <p role="alert" v-show="canShowValidationMsg('city')">{{ $t('Required') }}</p>
                 </status-wrapper>
-            </template>
-        </form-row>
+            </span>
+        </div>
 
         <!-- State -->
-        <form-row :value-class="formValueClass">
-            <span slot="label" class="lineHeight40 nowrap">{{ $t('State/Province/Region') }}:</span>
-            <template slot="value">
+        <div class="formRow">
+            <label class="nowrap lineHeight40">{{ $t('State/Province/Region') }}:</label>
+            <span class="widthAll">
                 <status-wrapper :success="canShowGreenCheck('state')" :failed="canShowValidationMsg('state')">
                     <select-state-province
                         v-model="state"
@@ -307,45 +306,48 @@
                     <p role="alert" v-show="canShowValidationMsg('state')">{{ $t('Required') }}</p>
                     <p v-show="!stateSelectEnabled" class="colorGray fs12">{{ $t('Please select a Country first') }}</p>
                 </status-wrapper>
-            </template>
-        </form-row>
+            </span>
+        </div>
 
         <!-- Postal Code -->
-        <form-row :value-class="formValueClass">
-            <span slot="label" class="lineHeight40 nowrap">{{ $t('Postal code') }}:</span>
-            <template slot="value">
+        <div class="formRow">
+            <label class="nowrap lineHeight40">{{ $t('Postal code') }}:</label>
+            <span class="widthAll">
                 <status-wrapper :success="canShowGreenCheck('postalCode')" :failed="canShowValidationMsg('postalCode')">
                     <el-input
                         v-model="postalCode"
                         :class="{ 'inputError': $v.form.postalCode.$error }" />
                     <p role="alert" v-show="canShowValidationMsg('postalCode')">{{ $t('Required') }}</p>
                 </status-wrapper>
-            </template>
-        </form-row>
+            </span>
+        </div>
 
         <!-- Company Name -->
-        <form-row :value-class="formValueClass">
-            <span slot="label" class="lineHeight40 nowrap">{{ $t('Company name') }}:</span>
-            <template slot="value">
+        <div class="formRow">
+            <label class="nowrap lineHeight40">{{ $t('Company name') }}:</label>
+            <span class="widthAll">
                 <status-wrapper :success="canShowGreenCheck('company')">
                     <el-input
                         v-model="company"
                         :placeholder="'(' + $t('optional') + ')'" />
                 </status-wrapper>
-            </template>
-        </form-row>
+            </span>
+        </div>
 
-        <form-row :value-class="formValueClass">
-            <div slot="value" class="ptm fs14">
-                <shipping-billing-help></shipping-billing-help>
-            </div>
-        </form-row>
+        <div class="formRow">
+            <label></label>
+            <span class="widthAll ptm fs14">
+                <shipping-billing-help />
+            </span>
+        </div>
+
     </div>
 </template>
 
 
 <style lang="scss">
-    @import "../../assets/css/components/_variables.scss";
+    @import "~assets/css/components/_variables.scss";
+    @import "~assets/css/components/_formRow.scss";
 
     .inputError input,
     .inputError select {

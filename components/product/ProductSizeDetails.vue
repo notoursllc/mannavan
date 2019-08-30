@@ -5,54 +5,54 @@ export default {
             type: Object,
             required: true
         }
-    },
-
-    components: {
-        FormRow: () => import('@/components/FormRow')
     }
 }
 </script>
 
 <template>
     <div>
-        <form-row>
-            <template slot="label">Size:</template>
-            <template slot="value">{{ $t(size.size) }}</template>
-        </form-row>
+        <div class="formRow">
+            <label>Size:</label>
+            <span>{{ $t(size.size) }}</span>
+        </div>
 
-        <form-row>
-            <template slot="label">Sort order:</template>
-            <template slot="value">{{ $t(size.sort) }}</template>
-        </form-row>
+        <div class="formRow">
+            <label>Sort order:</label>
+            <span>{{ size.sort }}</span>
+        </div>
 
-        <form-row>
-            <template slot="label">Is visible:</template>
-            <template slot="value">{{ $t(size.is_visible) }}</template>
-        </form-row>
+        <div class="formRow">
+            <label>Is visible:</label>
+            <span>{{ size.is_visible }}</span>
+        </div>
 
-        <form-row>
-            <template slot="label">Cost:</template>
-            <template slot="value">{{ $t(size.cost) }}</template>
-        </form-row>
+        <div class="formRow">
+            <label>Cost:</label>
+            <span>{{ size.cost }}</span>
+        </div>
 
-        <form-row>
-            <template slot="label">Base price:</template>
-            <template slot="value">{{ $t(size.base_price) }}</template>
-        </form-row>
+        <div class="formRow">
+            <label>Base price:</label>
+            <span>{{ size.base_price }}</span>
+        </div>
 
-        <form-row>
-            <template slot="label">Sale price:</template>
-            <template slot="value">{{ $t(size.sale_price) }}</template>
-        </form-row>
+        <div class="formRow">
+            <label>Sale price:</label>
+            <span>{{ size.sale_price }}</span>
+        </div>
 
-        <form-row>
-            <template slot="label">Is on sale:</template>
-            <template slot="value">{{ $t(size.is_on_sale) }}</template>
-        </form-row>
+        <div class="formRow">
+            <label>Is on sale:</label>
+            <span>{{ size.is_on_sale }}</span>
+        </div>
 
-        <form-row>
-            <template slot="label">Inventory count:</template>
-            <template slot="value">{{ $t(size.inventory_count) }}</template>
-        </form-row>
+        <div class="formRow">
+            <label>Inventory count:</label>
+            <span>{{ size.inventory_count }}</span>
+        </div>
     </div>
 </template>
+
+<style lang="scss" scoped>
+@import "~assets/css/components/_formRow.scss";
+</style>

@@ -7,7 +7,6 @@ export default {
     layout: 'admin',
 
     components: {
-        FormRow: () => import('@/components/FormRow'),
         CountrySelect: () => import('@/components/CountrySelect'),
         SelectStateProvince: () => import('@/components/SelectStateProvince'),
         Fab: () => import('@/components/Fab')
@@ -106,41 +105,41 @@ export default {
                 <div class="g-spec-label">Personal</div>
                 <div class="g-spec-content">
                     <!-- name -->
-                    <form-row>
-                        <template slot="label">Name:</template>
-                        <template slot="value">
+                    <div class="formRow">
+                        <label>Name:</label>
+                        <span>
                             <el-input v-model="artist.name" />
-                        </template>
-                    </form-row>
+                        </span>
+                    </div>
 
                     <!-- email -->
-                    <form-row>
-                        <template slot="label">Email:</template>
-                        <template slot="value">
+                    <div class="formRow">
+                        <label>Email:</label>
+                        <span>
                             <el-input v-model="artist.email" />
-                        </template>
-                    </form-row>
+                        </span>
+                    </div>
 
                     <!-- short description -->
-                    <form-row>
-                        <template slot="label">Short description:</template>
-                        <template slot="value">
+                    <div class="formRow">
+                        <label>Short description:</label>
+                        <span>
                             <el-input
                                 v-model="artist.description_short"
                                 type="textarea" />
-                        </template>
-                    </form-row>
+                        </span>
+                    </div>
 
                     <!-- long description -->
-                        <form-row>
-                        <template slot="label">Long description:</template>
-                        <template slot="value">
+                    <div class="formRow">
+                        <label>Long description:</label>
+                        <span>
                             <el-input
                                 v-model="artist.description_long"
                                 type="textarea"
                                 :rows="2" />
-                        </template>
-                    </form-row>
+                        </span>
+                    </div>
                 </div>
             </div>
 
@@ -148,32 +147,32 @@ export default {
                 <div class="g-spec-label">Address</div>
                 <div class="g-spec-content">
                     <!-- city -->
-                    <form-row>
-                        <template slot="label">City:</template>
-                        <template slot="value">
+                    <div class="formRow">
+                        <label>City:</label>
+                        <span>
                             <el-input v-model="artist.city" />
-                        </template>
-                    </form-row>
+                        </span>
+                    </div>
 
                     <!-- state / province -->
-                    <form-row>
-                        <template slot="label">State / Province:</template>
-                        <template slot="value">
+                    <div class="formRow">
+                        <label>State / Province:</label>
+                        <span>
                             <select-state-province
                                 v-model.trim="artist.prov_state"
                                 :country="artist.country" />
-                        </template>
-                    </form-row>
+                        </span>
+                    </div>
 
                     <!-- country -->
-                    <form-row>
-                        <template slot="label">Country:</template>
-                        <template slot="value">
+                    <div class="formRow">
+                        <label>Country:</label>
+                        <span>
                             <country-select
                                 :init-value="artist.country"
                                 @change="(val) => { artist.country = val }" />
-                        </template>
-                    </form-row>
+                        </span>
+                    </div>
                 </div>
             </div>
 
@@ -181,20 +180,16 @@ export default {
                 <div class="g-spec-label">General</div>
                 <div class="g-spec-content">
                     <!-- created -->
-                    <form-row>
-                        <template slot="label">Created:</template>
-                        <template slot="value">
-                            {{ artist.created_at | format8601 }}
-                        </template>
-                    </form-row>
+                    <div class="formRow">
+                        <label>Created:</label>
+                        <span>{{ artist.created_at | format8601 }}</span>
+                    </div>
 
                     <!-- updated -->
-                    <form-row>
-                        <template slot="label">Updated:</template>
-                        <template slot="value">
-                            {{ artist.updated_at | format8601 }}
-                        </template>
-                    </form-row>
+                    <div class="formRow">
+                        <label>Updated:</label>
+                        <span>{{ artist.updated_at | format8601 }}</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -204,17 +199,18 @@ export default {
 
 
 <style lang="scss">
-    @import "~assets/css/components/_table.scss";
+@import "~assets/css/components/_table.scss";
+@import "~assets/css/components/_formRow.scss";
 
-    .formContainer {
-        width: 500px;
+.formContainer {
+    width: 500px;
 
-        .formRow > label {
-            white-space: nowrap;
-        }
-
-        .formRow > span {
-            width: 100%;
-        }
+    .formRow > label {
+        white-space: nowrap;
     }
+
+    .formRow > span {
+        width: 100%;
+    }
+}
 </style>

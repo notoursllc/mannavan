@@ -11,7 +11,6 @@ export default {
     layout: 'admin',
 
     components: {
-        FormRow: () => import('@/components/FormRow'),
         ProductSizeAdmin: () => import('@/components/product/admin/ProductSizeAdmin'),
         ProductPicturesAdmin: () => import('@/components/product/admin/ProductPicturesAdmin'),
         BitwiseMultiSelect: () => import('@/components/BitwiseMultiSelect'),
@@ -199,95 +198,95 @@ export default {
                 class="phl">
                 <div class="formContainer">
                     <!-- is_available -->
-                    <form-row>
-                        <template slot="label">Available:</template>
-                        <template slot="value">
+                    <div class="formRow">
+                        <label>Available:</label>
+                        <span>
                             <el-checkbox v-model="product.is_available" />
-                        </template>
-                    </form-row>
+                        </span>
+                    </div>
 
                     <!-- hide_if_out_of_stock -->
-                    <form-row>
-                        <template slot="label">Hide if out of stock:</template>
-                        <template slot="value">
+                    <div class="formRow">
+                        <label>Hide if out of stock:</label>
+                        <span>
                             <el-checkbox v-model="product.hide_if_out_of_stock" />
-                        </template>
-                    </form-row>
+                        </span>
+                    </div>
 
                     <!-- title -->
-                    <form-row>
-                        <template slot="label">Title:</template>
-                        <template slot="value">
+                    <div class="formRow">
+                        <label>Title:</label>
+                        <span>
                             <el-input v-model="product.title" />
-                        </template>
-                    </form-row>
+                        </span>
+                    </div>
 
                     <!-- description_short -->
-                    <form-row>
-                        <template slot="label">Short Description:</template>
-                        <template slot="value">
+                    <div class="formRow">
+                        <label>Short Description:</label>
+                        <span>
                             <el-input
                                 type="textarea"
                                 :rows="2"
                                 v-model="product.description_short" />
-                        </template>
-                    </form-row>
+                        </span>
+                    </div>
 
                     <!-- description_long -->
-                    <form-row>
-                        <template slot="label">Long Description:</template>
-                        <template slot="value">
+                    <div class="formRow">
+                        <label>Long Description:</label>
+                        <span>
                             <el-input
                                 type="textarea"
                                 :rows="3"
                                 v-model="product.description_long" />
-                        </template>
-                    </form-row>
+                        </span>
+                    </div>
 
                     <!-- seo_uri -->
-                    <form-row>
-                        <template slot="label">SEO URI:</template>
-                        <template slot="value">
+                    <div class="formRow">
+                        <label>SEO URI:</label>
+                        <span>
                             <el-input v-model="product.seo_uri" />
-                        </template>
-                    </form-row>
+                        </span>
+                    </div>
 
                     <!-- weight_oz -->
-                    <form-row>
-                        <template slot="label">Weight (oz):</template>
-                        <template slot="value">
+                    <div class="formRow">
+                        <label>Weight (oz):</label>
+                        <span>
                             <el-input-number
                                 v-model="product.weight_oz"
                                 controls-position="right"
                                 :step=".1"
                                 class="widthAll" />
-                        </template>
-                    </form-row>
+                        </span>
+                    </div>
 
                     <!-- tax_code -->
-                    <form-row>
-                        <template slot="label">Tax code:</template>
-                        <template slot="value">
+                    <div class="formRow">
+                        <label>Tax code:</label>
+                        <span>
                             <el-input-number
                                 v-model="product.tax_code"
                                 controls-position="right"
                                 :step="1"
                                 class="widthAll" />
-                        </template>
-                    </form-row>
+                        </span>
+                    </div>
 
                     <!-- sku -->
-                    <form-row>
-                        <template slot="label">SKU:</template>
-                        <template slot="value">
+                    <div class="formRow">
+                        <label>SKU:</label>
+                        <span>
                             <el-input v-model="product.sku" />
-                        </template>
-                    </form-row>
+                        </span>
+                    </div>
 
                     <!-- material type -->
-                    <form-row>
-                        <template slot="label">Material type:</template>
-                        <template slot="value">
+                    <div class="formRow">
+                        <label>Material type:</label>
+                        <span>
                             <el-select
                                 v-model="product.material_type"
                                 class="widthAll"
@@ -300,16 +299,16 @@ export default {
                                     :value="val">
                                 </el-option>
                             </el-select>
-                        </template>
-                    </form-row>
+                        </span>
+                    </div>
 
                     <!-- artist -->
-                    <form-row>
-                        <template slot="label">Artist:</template>
-                        <template slot="value">
+                    <div class="formRow">
+                        <label>Artist:</label>
+                        <span>
                             <product-artist-select v-model="product.product_artist_id" />
-                        </template>
-                    </form-row>
+                        </span>
+                    </div>
                 </div>
             </el-tab-pane>
 
@@ -320,45 +319,45 @@ export default {
                 class="phl">
                 <div class="formContainer">
                     <!-- cost -->
-                    <form-row>
-                        <template slot="label">Cost:</template>
-                        <template slot="value">
+                    <div class="formRow">
+                        <label>Cost:</label>
+                        <span>
                             <el-input-number
                                 v-model="product.cost"
                                 controls-position="right"
                                 :step=".01" />
-                        </template>
-                    </form-row>
+                        </span>
+                    </div>
 
                     <!-- base_price -->
-                    <form-row>
-                        <template slot="label">Base price:</template>
-                        <template slot="value">
+                    <div class="formRow">
+                        <label>Base price:</label>
+                        <span>
                             <el-input-number
                                 v-model="product.base_price"
                                 controls-position="right"
                                 :step=".01" />
-                        </template>
-                    </form-row>
+                        </span>
+                    </div>
 
                     <!-- sale_price -->
-                    <form-row>
-                        <template slot="label">Sale price:</template>
-                        <template slot="value">
+                    <div class="formRow">
+                        <label>Sale price:</label>
+                        <span>
                             <el-input-number
                                 v-model="product.sale_price"
                                 controls-position="right"
                                 :step=".01" />
-                        </template>
-                    </form-row>
+                        </span>
+                    </div>
 
                     <!-- sale_price -->
-                    <form-row>
-                        <template slot="label">On sale:</template>
-                        <template slot="value">
+                    <div class="formRow">
+                        <label>On sale:</label>
+                        <span>
                             <el-checkbox v-model="product.is_on_sale" />
-                        </template>
-                    </form-row>
+                        </span>
+                    </div>
                 </div>
             </el-tab-pane>
 
@@ -369,34 +368,34 @@ export default {
                 class="phl">
                 <div class="formContainer">
                     <!-- type -->
-                    <form-row>
-                        <template slot="label">Product type:</template>
-                        <template slot="value">
+                    <div class="formRow">
+                        <label>Product type:</label>
+                        <span>
                             <bitwise-multi-select
                                 v-model="product.type"
                                 :options="typeSelectOptions" />
-                        </template>
-                    </form-row>
+                        </span>
+                    </div>
 
                     <!-- sub_type -->
-                    <form-row>
-                        <template slot="label">Product sub-type:</template>
-                        <template slot="value">
+                    <div class="formRow">
+                        <label>Product sub-type:</label>
+                        <span>
                             <bitwise-multi-select
                                 v-model="product.sub_type"
                                 :options="subTypeSelectOptions" />
-                        </template>
-                    </form-row>
+                        </span>
+                    </div>
 
                     <!-- fits -->
-                    <form-row>
-                        <template slot="label">Fit type:</template>
-                        <template slot="value">
+                    <div class="formRow">
+                        <label>Fit type:</label>
+                        <span>
                             <bitwise-multi-select
                                 v-model="product.fit"
                                 :options="fitSelectOptions" />
-                        </template>
-                    </form-row>
+                        </span>
+                    </div>
                 </div>
             </el-tab-pane>
 
@@ -407,9 +406,9 @@ export default {
                 class="phl">
                 <div class="formContainer">
                     <!-- package type -->
-                    <form-row>
-                        <template slot="label">Shipping package type:</template>
-                        <template slot="value">
+                    <div class="formRow">
+                        <label>Shipping package type:</label>
+                        <span>
                             <el-select
                                 v-model="product.shipping_package_type"
                                 :clearable="true"
@@ -421,8 +420,8 @@ export default {
                                     :value="obj.type">
                                 </el-option>
                             </el-select>
-                        </template>
-                    </form-row>
+                        </span>
+                    </div>
                 </div>
             </el-tab-pane>
 
@@ -442,9 +441,9 @@ export default {
                 :disabled="!product.id"
                 class="phl">
                 <!-- video_url -->
-                <form-row>
-                    <template slot="label">Video URL:</template>
-                    <template slot="value">
+                <div class="formRow">
+                    <label>Video URL:</label>
+                    <span>
                         <el-input v-model="product.video_url" style="width:600px">
                             <el-button
                                 slot="append"
@@ -453,8 +452,8 @@ export default {
                                 <icon-play-video icon-name="play" width="20px" />
                             </el-button>
                         </el-input>
-                    </template>
-                </form-row>
+                    </span>
+                </div>
 
                 <!-- pictures -->
                 <div class="mtl">
@@ -484,6 +483,7 @@ export default {
 
 <style lang="scss">
     @import "~assets/css/components/_table.scss";
+    @import "~assets/css/components/_formRow.scss";
 
     .prodPic {
         width: 400px;

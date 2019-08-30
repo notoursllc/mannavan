@@ -17,7 +17,6 @@ export default {
         StatusWrapper: () => import('@/components/StatusWrapper'),
         IconLock: () => import('@/components/icons/IconLock'),
         CreditCardIcon: () => import('@/components/CreditCardIcon'),
-        FormRow: () => import('@/components/FormRow'),
         IconInfo, // This one can not be imported asynchronously because it's being used in el-tooltip
     },
 
@@ -40,7 +39,6 @@ export default {
                 'sq-cvv': null,
                 'sq-postal-code': null
             },
-            formValueClass: {'widthAll': true},
             nonce: null
         }
     },
@@ -359,9 +357,9 @@ export default {
 
                 <div class="displayTable widthAll" v-show="showSquareInputFields">
                     <!-- card number -->
-                    <form-row :value-class="formValueClass">
-                        <span slot="label" class="nowrap lineHeight40">{{ $t('Card number') }}:</span>
-                        <template slot="value">
+                    <div class="formRow">
+                        <label class="nowrap lineHeight40">{{ $t('Card number') }}:</label>
+                        <span class="widthAll">
                             <status-wrapper
                                 :success="inputStatus['sq-card-number'] === 'success'"
                                 :failed="inputStatus['sq-card-number'] === 'failed'"
@@ -371,26 +369,26 @@ export default {
                                     <credit-card-icon :card-type="cardType"></credit-card-icon>
                                 </span>
                             </status-wrapper>
-                        </template>
-                    </form-row>
+                        </span>
+                    </div>
 
                     <!-- expiration date -->
-                    <form-row :value-class="formValueClass">
-                        <span slot="label" class="nowrap lineHeight40">{{ $t('Expiration date') }}:</span>
-                        <template slot="value">
+                    <div class="formRow">
+                        <label class="nowrap lineHeight40">{{ $t('Expiration date') }}:</label>
+                        <span class="widthAll">
                             <status-wrapper
                                 :success="inputStatus['sq-expiration-date'] === 'success'"
                                 :failed="inputStatus['sq-expiration-date'] === 'failed'"
                                 :className="{'widthAll': true}">
                                 <div id="sq-expiration-date"></div>
                             </status-wrapper>
-                        </template>
-                    </form-row>
+                        </span>
+                    </div>
 
                     <!-- cvv -->
-                    <form-row :value-class="formValueClass">
-                        <span slot="label" class="nowrap lineHeight40">{{ $t('CVV') }}:</span>
-                        <template slot="value">
+                    <div class="formRow">
+                        <label class="nowrap lineHeight40">{{ $t('CVV') }}:</label>
+                        <span class="widthAll">
                             <status-wrapper
                                 :className="{'widthAll': true, 'el-input-error': inputStatus['sq-cvv'] === 'failed'}"
                                 :success="inputStatus['sq-cvv'] === 'success'"
@@ -408,21 +406,21 @@ export default {
                                         width="18px" />
                                 </el-tooltip>
                             </status-wrapper>
-                        </template>
-                    </form-row>
+                        </span>
+                    </div>
 
                     <!-- postal code -->
-                    <form-row :value-class="formValueClass">
-                        <span slot="label" class="nowrap lineHeight40">{{ $t('Postal code') }}:</span>
-                        <template slot="value">
+                    <div class="formRow">
+                        <label class="nowrap lineHeight40">{{ $t('Postal code') }}:</label>
+                        <span class="widthAll">
                             <status-wrapper
                                 :className="{'widthAll': true, 'el-input-error': inputStatus['sq-postal-code'] === 'failed'}"
                                 :success="inputStatus['sq-postal-code'] === 'success'"
                                 :failed="inputStatus['sq-postal-code'] === 'failed'">
                                 <div id="sq-postal-code"></div>
                             </status-wrapper>
-                        </template>
-                    </form-row>
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -432,6 +430,7 @@ export default {
 
 <style lang="scss">
 @import "@/assets/css/components/_mixins.scss";
+@import "~assets/css/components/_formRow.scss";
 
 .card-icon {
     position: absolute;

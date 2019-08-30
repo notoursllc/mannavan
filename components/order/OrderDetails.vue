@@ -14,7 +14,6 @@ export default {
         PaymentTypeDisplay: () => import('@/components/payment/PaymentTypeDisplay'),
         CartTotalsTable: () => import('@/components/cart/CartTotalsTable'),
         CartShippingAddressDisplay: () => import('@/components/cart/CartShippingAddressDisplay'),
-        FormRow: () => import('@/components/FormRow'),
         CartItems: () => import('@/components/cart/CartItems')
     },
 
@@ -37,22 +36,29 @@ export default {
 <template>
     <div>
         <div class="mbl">
-            <form-row>
-                <template slot="label"><span class="fwb">{{ $t('Ordered on') }}:</span></template>
-                <template slot="value">{{ order.created_at | format8601 }}</template>
-            </form-row>
+            <!-- ordered on -->
+            <div class="formRow">
+                <label class="fwb">{{ $t('Ordered on') }}:</label>
+                <span class="widthAll">
+                    {{ order.created_at | format8601 }}
+                </span>
+            </div>
 
-            <form-row>
-                <template slot="label"><span class="fwb">{{ $t('Order') }}:</span></template>
-                <template slot="value">{{ order.id }}</template>
-            </form-row>
+            <!-- order -->
+            <div class="formRow">
+                <label class="fwb">{{ $t('Order') }}:</label>
+                <span class="widthAll">
+                    {{ order.id }}
+                </span>
+            </div>
 
-            <form-row>
-                <template slot="label"><span class="fwb">{{ $t('Payment method') }}:</span></template>
-                <template slot="value">
+            <!-- payment method -->
+            <div class="formRow">
+                <label class="fwb">{{ $t('Payment method') }}:</label>
+                <span class="widthAll">
                     <payment-type-display :payment="order" />
-                </template>
-            </form-row>
+                </span>
+            </div>
         </div>
 
         <div>
@@ -79,3 +85,8 @@ export default {
             :allow-edit="false" />
     </div>
 </template>
+
+
+<style lang="scss">
+@import "~assets/css/components/_formRow.scss";
+</style>

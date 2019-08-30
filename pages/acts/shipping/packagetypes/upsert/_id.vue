@@ -7,7 +7,6 @@ export default {
     layout: 'admin',
 
     components: {
-        FormRow: () => import('@/components/FormRow'),
         Fab: () => import('@/components/Fab')
     },
 
@@ -100,20 +99,20 @@ export default {
                 <div class="g-spec-label">General Info</div>
                 <div class="g-spec-content">
                     <!-- type ID -->
-                    <form-row>
-                        <template slot="label">Type ID:</template>
-                        <template slot="value">
+                    <div class="formRow">
+                        <label>Type ID:</label>
+                        <span>
                             <el-input v-model="packageType.type" />
-                        </template>
-                    </form-row>
+                        </span>
+                    </div>
 
                     <!-- label -->
-                    <form-row>
-                        <template slot="label">Label:</template>
-                        <template slot="value">
+                    <div class="formRow">
+                        <label>Label:</label>
+                        <span>
                             <el-input v-model="packageType.label" />
-                        </template>
-                    </form-row>
+                        </span>
+                    </div>
                 </div>
             </div>
 
@@ -122,45 +121,45 @@ export default {
                 <div class="g-spec-content">
 
                     <!-- length -->
-                    <form-row>
-                        <template slot="label">Length:</template>
-                        <template slot="value">
+                    <div class="formRow">
+                        <label>Length:</label>
+                        <span>
                             <el-input-number
                                 v-model="packageType.length"
                                 :precision="2"
                                 :step="0.01"
                                 :min="0.01" />
-                        </template>
-                    </form-row>
+                        </span>
+                    </div>
 
                     <!-- width -->
-                    <form-row>
-                        <template slot="label">Width:</template>
-                        <template slot="value">
+                    <div class="formRow">
+                        <label>Width:</label>
+                        <span>
                             <el-input-number
                                 v-model="packageType.width"
                                 :precision="2"
                                 :step="0.01"
                                 :min="0.01" />
-                        </template>
-                    </form-row>
+                        </span>
+                    </div>
 
                     <!-- height -->
-                    <form-row>
-                        <template slot="label">Height:</template>
-                        <template slot="value">
+                    <div class="formRow">
+                        <label>Height:</label>
+                        <span>
                             <el-input-number
                                 v-model="packageType.height"
                                 :precision="2"
                                 :step="0.01"
                                 :min="0.01" />
-                        </template>
-                    </form-row>
+                        </span>
+                    </div>
 
                     <!-- distance unit -->
-                    <form-row>
-                        <template slot="label">Distance Unit:</template>
-                        <template slot="value">
+                    <div class="formRow">
+                        <label>Distance Unit:</label>
+                        <span>
                             <el-select
                                 v-model="packageType.distance_unit"
                                 :clearable="true"
@@ -172,8 +171,8 @@ export default {
                                     :value="val">
                                 </el-option>
                             </el-select>
-                        </template>
-                    </form-row>
+                        </span>
+                    </div>
                 </div>
             </div>
 
@@ -181,15 +180,15 @@ export default {
                 <div class="g-spec-label">Package weight</div>
                 <div class="g-spec-content">
                     <!-- weight - note the back end requires this to be ounces -->
-                    <form-row>
-                        <template slot="label">Weight (oz):</template>
-                        <template slot="value">
+                    <div class="formRow">
+                        <label>Weight (oz):</label>
+                        <span>
                             <el-input-number
                                 v-model="packageType.weight"
                                 :precision="2"
                                 :step="0.01" />
-                        </template>
-                    </form-row>
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -199,6 +198,7 @@ export default {
 
 <style lang="scss">
     @import "~assets/css/components/_table.scss";
+    @import "~assets/css/components/_formRow.scss";
 
     .formContainer {
         width: 500px;

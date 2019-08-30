@@ -8,11 +8,7 @@
 // Vue.use(SocialSharing)
 
 export default {
-    name: 'ProductDetailsLayout',
-
-    components: {
-        FormRow: () => import('@/components/FormRow')
-    },
+    name: 'ProductDetailsLayout'
 }
 </script>
 

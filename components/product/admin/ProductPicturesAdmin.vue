@@ -12,7 +12,6 @@ const picModalFormDefaults = {
 
 export default {
     components: {
-        FormRow: () => import('@/components/FormRow'),
         IconCheckSquare: () => import('@/components/icons/IconCheckSquare'),
         IconTrash: () => import('@/components/icons/IconTrash'),
         OperationsDropdown: () => import('@/components/OperationsDropdown')
@@ -281,40 +280,40 @@ export default {
                    :modal-append-to-body="false">
 
             <!-- Is visible -->
-            <form-row>
-                <template slot="label">Is visible:</template>
-                <template slot="value">
+            <div class="formRow">
+                <label>Is visible:</label>
+                <span>
                     <el-checkbox v-model="picModal.form.is_visible" />
-                </template>
-            </form-row>
+                </span>
+            </div>
 
             <!-- Sort order -->
-            <form-row>
-                <template slot="label">Sort order:</template>
-                <template slot="value">
+            <div class="formRow">
+                <label>Sort order:</label>
+                <span>
                     <el-input-number
                         v-model="picModal.form.sort_order"
                         controls-position="right"
                         :step="1" />
                     <p role="alert"
                         v-show="$v.picModal.form.sort_order.$invalid">{{ $t('Required') }}</p>
-                </template>
-            </form-row>
+                </span>
+            </div>
 
             <!-- Current picture -->
-            <form-row v-if="picModal.form.file_name">
-                <template slot="label">Current picture:</template>
-                <template slot="value">
+            <div class="formRow">
+                <label>Current picture:</label>
+                <span>
                     <img :src="picModal.form.url" width="200" />
-                </template>
-            </form-row>
+                </span>
+            </div>
 
             <!-- Upload picture -->
-            <form-row>
-                <template slot="label">
+            <div class="formRow">
+                <label>
                     {{ picModal.form.file_name ? 'Replacement picture:' : 'Upload picture:' }}:
-                </template>
-                <template slot="value">
+                </label>
+                <span>
                     <div v-if="!picModal.tempImage">
                         <input type="file" ref="file" @change="onFileChange" />
                     </div>
@@ -330,12 +329,13 @@ export default {
                             </span>
                         </div>
                     </div>
-                </template>
-            </form-row>
+                </span>
+            </div>
 
             <!-- buttons -->
-            <form-row>
-                <template slot="value">
+            <div class="formRow">
+                <label></label>
+                <span>
                     <div class="ptl nowrap">
                         <el-button
                             type="primary"
@@ -344,8 +344,12 @@ export default {
                             :disabled="$v.picModal.form.$invalid">SAVE</el-button>
                         <el-button @click="picModal.isActive = false">CANCEL</el-button>
                     </div>
-                </template>
-            </form-row>
+                </span>
+            </div>
         </el-dialog>
     </div>
 </template>
+
+<style lang="scss" scoped>
+@import "~assets/css/components/_formRow.scss";
+</style>
