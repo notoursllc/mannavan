@@ -14,7 +14,7 @@ export default {
         PaymentTypeDisplay: () => import('@/components/payment/PaymentTypeDisplay'),
         CartTotalsTable: () => import('@/components/cart/CartTotalsTable'),
         CartShippingAddressDisplay: () => import('@/components/cart/CartShippingAddressDisplay'),
-        CartItems: () => import('@/components/cart/CartItems')
+        CartItem: () => import('@/components/cart/CartItem')
     },
 
     mixins:[
@@ -80,9 +80,15 @@ export default {
             </div>
         </div>
 
-        <cart-items
-            :shopping-cart="order.shoppingCart"
-            :allow-edit="false" />
+        <div class="ptl">
+            <cart-item
+                v-for="item in order.shoppingCart.cart_items"
+                :key="item.id"
+                :data="item"
+                :show-price-strikethrough="false"
+                :show-quantity-warning="false"/>
+        </div>
+
     </div>
 </template>
 

@@ -15,6 +15,16 @@ export default {
         editMode: {
             type: Boolean,
             default: false
+        },
+
+        showPriceStrikethrough: {
+            type: Boolean,
+            default: true
+        },
+
+        showQuantityWarning: {
+            type: Boolean,
+            default: true
         }
     },
 
@@ -149,7 +159,7 @@ export default {
                             <!-- price -->
                             <product-price
                                 :product="data.product"
-                                :show-strikethrough="true"
+                                :show-strikethrough="showPriceStrikethrough"
                                 :stacked="false" />
                         </span>
                     </div>
@@ -157,7 +167,8 @@ export default {
                     <!-- Quantity -->
                     <div class="cart-item-footer-cell">
                         <label>
-                            {{ $t('Quantity') }}: <span class="fs12"><product-quantity-warning :max="getProductQuantityMaxValue(data.variants.size, data.product)" /></span>
+                            {{ $t('Quantity') }}:
+                            <span class="fs12" v-if="showQuantityWarning"><product-quantity-warning :max="getProductQuantityMaxValue(data.variants.size, data.product)" /></span>
                         </label>
                         <span>
                             <template v-if="editMode">
