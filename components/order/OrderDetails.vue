@@ -38,7 +38,7 @@ export default {
         <div class="mbl">
             <!-- ordered on -->
             <div class="formRow">
-                <label class="fwb">{{ $t('Ordered on') }}:</label>
+                <label class="fwb nowrap">{{ $t('Ordered on') }}:</label>
                 <span class="widthAll">
                     {{ order.created_at | format8601 }}
                 </span>
@@ -46,7 +46,7 @@ export default {
 
             <!-- order -->
             <div class="formRow">
-                <label class="fwb">{{ $t('Order') }}:</label>
+                <label class="fwb nowrap">{{ $t('Order') }}:</label>
                 <span class="widthAll">
                     {{ order.id }}
                 </span>
@@ -54,7 +54,7 @@ export default {
 
             <!-- payment method -->
             <div class="formRow">
-                <label class="fwb">{{ $t('Payment method') }}:</label>
+                <label class="fwb nowrap">{{ $t('Payment method') }}:</label>
                 <span class="widthAll">
                     <payment-type-display :payment="order" />
                 </span>
@@ -63,13 +63,13 @@ export default {
 
         <div>
             <div class="mbl mrxl inlineBlock vat">
-                <div class="fwb">{{ $t('Shipping to') }}:</div>
+                <div class="fwb nowrap">{{ $t('Shipping to') }}:</div>
                 <cart-shipping-address-display
                             :shopping-cart="order.shoppingCart" />
             </div>
 
             <div class="mbl inlineBlock vat">
-                <div class="fwb">{{ $t('Order summary') }}:</div>
+                <div class="fwb nowrap">{{ $t('Order summary') }}:</div>
                 <div>
                     <cart-totals-table
                         :cart="order.shoppingCart"
