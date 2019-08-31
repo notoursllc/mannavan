@@ -208,8 +208,9 @@ export default {
         <el-dialog
             :title="product.artist ? product.artist.name : null"
             :visible.sync="artistDialog.visible"
-            top="5vh"
-            width="320px">
+            top="7vh"
+            width="320px"
+            append-to-body>
             <div class="mtm">{{ product.artist ? product.artist.description_long : null }}</div>
         </el-dialog>
     </div>
