@@ -232,8 +232,8 @@ export default {
             <div class="ptl">
                 <cart-totals-table
                     :cart="shoppingCart"
-                    :show-shipping-cost="true"
-                    :show-sales-tax="true" />
+                    :show-shipping-cost="false"
+                    :show-sales-tax="false" />
             </div>
         </div>
     </div>
