@@ -465,13 +465,13 @@ export default {
                         @close="modalClosed"
                         width="90%"
                         top="5vh">
-                    <no-ssr  placeholder="Loading...">
+                    <client-only  placeholder="Loading...">
                         <youtube
                             :video-id="videoPlayerModal.videoId"
                             :player-vars="{ autoplay: 1 }"
                             player-width="100%"
                             @playing="videoPlaying"></youtube>
-                    </no-ssr>
+                    </client-only>
                 </el-dialog>
             </el-tab-pane>
 

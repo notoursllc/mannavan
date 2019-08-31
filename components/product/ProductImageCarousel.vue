@@ -68,7 +68,7 @@ export default {
 <template>
     <div>
         <div v-if="product">
-            <no-ssr :placeholder="$t('Loading pictures...')">
+            <client-only :placeholder="$t('Loading pictures...')">
                 <carousel :autoplay="true"
                             :autoplayHoverPause="true"
                             :navigationEnabled="!!productPics.length"
@@ -82,7 +82,7 @@ export default {
                             v-img="{group:'prod', src:getLargePic(key)}" />
                     </slide>
                 </carousel>
-            </no-ssr>
+            </client-only>
         </div>
     </div>
 </template>
