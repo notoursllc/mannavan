@@ -45,12 +45,17 @@ export default {
             }
 
             this.productDialog.visible = true;
+        },
+
+        onProductDialogClose() {
+            this.$store.dispatch('ui/CLOSE_MESSAGE_INSTANCES');
         }
     },
 
     created() {
         const onProductAddedToCart = (product) => {
             this.productDialog.visible = false;
+            this.onProductDialogClose();
         };
 
         this.$nuxt.$on('PRODUCT_ADDED_TO_CART', onProductAddedToCart)
@@ -82,6 +87,7 @@ export default {
             :visible.sync="productDialog.visible"
             :append-to-body="true"
             :key="new Date().getTime()"
+            @close="onProductDialogClose"
             top="5vh"
             width="95%">
             <product-details :product="productDialog.product" />
@@ -96,7 +102,7 @@ export default {
 
 .prod-card-container {
     background-color: #f4f4f4;
-    padding: 30px;
+    padding: 30px 30px 50px 30px;
 }
 
 .flex-container {

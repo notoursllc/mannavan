@@ -54,13 +54,4 @@ export default {
         @include flex-grow(1);
     }
 }
-
-
-@media #{$medium-and-up} {
-    .layoutContainer {
-        main {
-            padding-bottom: 50px;
-        }
-    }
-}
 </style>

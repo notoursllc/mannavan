@@ -34,7 +34,6 @@ export default {
 
     methods: {
         onSizeClick(size) {
-            console.log("size click", size)
             this.$emit('input', size)
         }
     }

@@ -86,8 +86,7 @@ export default {
             </div>
         </hero-main>
         <hero-product-type-nav />
-        <product-card-list-display
-            :products="products" />
+        <product-card-list-display :products="products" />
     </div>
 </template>
 
