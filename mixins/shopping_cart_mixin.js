@@ -1,4 +1,5 @@
-'use strict';
+import { convertEmptyStringsToNull } from '../utils/common';
+
 
 export default {
     methods: {
@@ -30,7 +31,7 @@ export default {
 
 
         async setShippingAddress(address) {
-            return await this.$axios.post('/cart/shipping/address', address);
+            return await this.$axios.post('/cart/shipping/address', convertEmptyStringsToNull(address));
         },
 
 
