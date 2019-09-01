@@ -104,11 +104,7 @@ export default {
         </el-select>
 
         <div :class="messageClasses"
-            v-if="max > 0 && max <= 10">
-            <i18n path="only_num_left">
-                <span place="qty">{{ max }}</span>
-            </i18n>
-        </div>
+            v-if="max > 0 && max <= 10">{{ $t('only_num_left', { qty: max }) }}</div>
     </div>
 </template>
 

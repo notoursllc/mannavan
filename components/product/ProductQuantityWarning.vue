@@ -13,9 +13,6 @@ export default {
 
 
 <template>
-    <div v-if="max > 0 && max <= 10" class="inlineBlock colorOrange">
-        <i18n path="only_num_left">
-            <span place="qty">{{ max }}</span>
-        </i18n>
-    </div>
+    <div v-if="max > 0 && max <= 10"
+        class="inlineBlock colorOrange">{{ $t('only_num_left', { qty: max }) }}</div>
 </template>

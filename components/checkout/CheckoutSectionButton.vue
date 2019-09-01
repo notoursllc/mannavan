@@ -128,9 +128,9 @@ export default {
 
         <div class="fs12 mtl">
             <i18n path="accept_privacy_and_tos" tag="div">
-                <span place="siteName"><site-name></site-name>'s</span>
-                <a place="linkPrivacy" @click="privacyNoticeVisible = true">{{ $t('Privacy Notice') }}</a>
-                <a place="linkTos" @click="conditionsOfUseVisible = true">{{ $t('Conditions of Use') }}</a>
+                <span slot="siteName"><site-name />'s</span>
+                <a slot="linkPrivacy" @click="privacyNoticeVisible = true">{{ $t('Privacy Notice') }}</a>
+                <a slot="linkTos" @click="conditionsOfUseVisible = true">{{ $t('Conditions of Use') }}</a>
             </i18n>
         </div>
 
