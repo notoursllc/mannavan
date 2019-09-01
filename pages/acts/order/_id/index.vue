@@ -15,7 +15,7 @@ export default{
     components: {
         AddressDisplay: () => import('@/components/AddressDisplay'),
         ShippingLabelButton: () => import('@/components/payment/ShippingLabelButton'),
-        CartItems: () => import('@/components/cart/CartItems')
+        CartItem: () => import('@/components/cart/CartItem')
     },
 
     mixins: [
@@ -164,9 +164,12 @@ export default{
         <div class="g-spec">
             <div class="g-spec-label">Cart items ({{ payment.shoppingCart.num_items }}):</div>
             <div class="g-spec-content">
-                <cart-items
-                    :shopping-cart="payment.shoppingCart"
-                    :allow-edit="false" />
+                <cart-item
+                    v-for="item in payment.shoppingCart.cart_items"
+                    :key="item.id"
+                    :data="item"
+                    :show-price-strikethrough="false"
+                    :show-quantity-warning="false"/>
             </div>
         </div>
 
