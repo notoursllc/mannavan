@@ -1,8 +1,15 @@
 <script>
+import product_mixin from '@/mixins/product_mixin';
+
 export default {
     components: {
-        IconLogo: () => import('@/components/icons/IconLogo')
+        IconLogo: () => import('@/components/icons/IconLogo'),
+        IconLock: () => import('@/components/icons/IconLock')
     },
+
+    mixins: [
+        product_mixin
+    ],
 
     data: function() {
         return {
@@ -17,18 +24,58 @@ export default {
     <footer class="footer">
         <div class="content">
             <div class="nav-container">
-                <nav class="nav-item" id="footer-logo">
-                    <icon-logo icon-name="breadvan_vintage_racing_apparel" class-name="fillWhite" width="125px" />
+
+                <nav class="nav-item">
+                    <dl>
+                        <dt>{{ $t('PRODUCTS') }}</dt>
+
+                        <dd v-for="(index, type) in getProductSubTypes()" :key="index">
+                            <nuxt-link
+                                tag="a"
+                                :to="{ name: 'productSubType', params: { productSubType: getUrlPathForProductSubType(type) } }">{{ $tc(type, 2) }}</nuxt-link>
+                        </dd>
+                    </dl>
                 </nav>
 
                 <nav class="nav-item">
                     <dl>
-                        <!-- <dt>Product</dt> -->
+                        <dt>{{ $t('TERMS') }}</dt>
+
                         <dd>
                             <nuxt-link tag="a"
                                 class="underline"
                                 :to="{name: 'returns'}"
                                 data-testid="footer-link-returns">{{ $t('Returns / Exchanges') }}</nuxt-link>
+                        </dd>
+                        <dd>
+                            <nuxt-link
+                                :to="{name: 'privacy'}"
+                                data-testid="footer-link-privacy">{{ $t('Privacy') }}</nuxt-link>
+                        </dd>
+                        <dd>
+                            <nuxt-link
+                                :to="{name: 'conditions-of-use'}"
+                                data-testid="footer-link-conditions">{{ $t('Conditions of Use') }}</nuxt-link>
+                        </dd>
+                        <dd>
+                            <nuxt-link
+                                :to="{name: 'use-of-cookies'}"
+                                data-testid="use-of-cookies">{{ $t('Use of Cookies') }}</nuxt-link>
+                        </dd>
+                    </dl>
+                </nav>
+
+
+                <nav class="nav-item">
+                    <dl>
+                        <dt>
+                            <icon-lock icon-name="secure" class-name="fillWhite" width="16px" />
+                            {{ $t('SECURE') }}
+                        </dt>
+
+                        <dd>
+                            {{ $t('footer_cart_secure')}}
+
                         </dd>
                     </dl>
                 </nav>
@@ -41,23 +88,19 @@ export default {
                                 :to="{name: 'contact-us'}"
                                 data-testid="footer-link-contactus">{{ $t('Contact Us!') }}</nuxt-link>
                         </dd>
-                        <dd>
-                            <nuxt-link
-                                :to="{name: 'privacy'}"
-                                data-testid="footer-link-privacy">{{ $t('Privacy') }}</nuxt-link>
-                        </dd>
-                        <dd>
-                            <nuxt-link
-                                :to="{name: 'conditions-of-use'}"
-                                data-testid="footer-link-conditions">{{ $t('Conditions of Use') }}</nuxt-link>
-                        </dd>
                     </dl>
                 </nav>
             </div>
         </div>
 
-        <div class="sub-footer tar">
-            &#169; {{ year }} {{ siteName }}, {{ $t('All Rights Reserved') }}.
+        <div class="sub-footer">
+            <nav class="nav-item">
+                <icon-logo icon-name="breadvan_vintage_racing_apparel" class-name="fillWhite" width="100px" />
+            </nav>
+
+            <nav class="nav-item fs12">
+                &#169; {{ year }} {{ siteName }}, {{ $t('All Rights Reserved') }}.
+            </nav>
         </div>
     </footer>
 </template>
@@ -100,11 +143,13 @@ footer {
             @include justify-content(center);
             @include flex-basis(auto);
             @include flex-grow(1);
+            max-width: 200px;
+            padding: 0 10px 40px 10px;
         }
     }
 
     dt {
-        margin-bottom: 5px;
+        margin-bottom: 15px;
         font-weight: bold;
     }
 
@@ -113,6 +158,11 @@ footer {
     }
 
     .sub-footer {
+        @include flexbox();
+        @include flex-direction(row);
+        @include justify-content(space-between);
+        @include align-items(flex-start);
+        @include flex-wrap(wrap);
         background-color: rgba(0, 0, 0, 0.1);
         color: #fff;
         margin-top: 10px;

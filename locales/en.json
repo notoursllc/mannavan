@@ -72,6 +72,7 @@
     "Estimated tax": "Estimated tax",
     "Expiration date": "Expiration date",
 
+    "footer_cart_secure": "Our cart is protected by 256-bit encrypted connection and we never store your card details.",
     "fill_out_form_warning": "Please fill out the form completely before continuing. Thanks!",
     "Finding your security code": "Finding your security code",
     "FIRST NAME": "FIRST NAME",
@@ -152,6 +153,7 @@
     "PRODUCT_TYPE_APPAREL": "Apparel",
     "Product not found": "Product not found",
     "Products": "Products",
+    "PRODUCTS": "PRODUCTS",
 
     "quantity": "quantity",
     "Quantity": "Quantity",
@@ -168,6 +170,7 @@
 
     "Same as shipping address": "Same as shipping address",
     "SAVE": "SAVE",
+    "SECURE": "SECURE",
     "Secure Checkout": "Secure Checkout",
     "Secure Payment": "Secure Payment",
     "Ship to": "Ship to",
@@ -210,6 +213,7 @@
     "Subtotal": "Subtotal",
 
     "Tax": "Tax",
+    "TERMS": "TERMS",
     "Thanks!": "Thanks!",
     "The address you provided does not seem to be a valid mailing adddress.": "The address you provided does not seem to be a valid mailing adddress.",
     "There was an error setting up the payment client!": "There was an error setting up the payment client!",
@@ -221,6 +225,7 @@
 
     "Unable to initialize PayPal flow. Are your options correct?": "Unable to initialize PayPal flow. Are your options correct?",
     "Use a different billing address": "Use a different billing address",
+    "Use of Cookies": "Use of Cookies",
 
     "Victory!": "Victory!",
     "View": "View",
