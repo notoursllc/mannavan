@@ -145,7 +145,8 @@ export default {
             :title="headerDialog.title"
             :visible.sync="headerDialog.visible"
             width="250px"
-            :lock-scroll="false">
+            :lock-scroll="false"
+            append-to-body>
             <div class="tac">
                 <icon-size-chart-chest-measurement
                     v-show="this.headerDialog.type === 'chest'"
