@@ -405,8 +405,12 @@ export default {
 
 
 
-        async deleteProductSize(sizeId) {
-            const response = await this.$axios.$post(`/product/size/delete`, { id: sizeId })
+        async deleteProductSize(id) {
+            const response = await this.$axios.$delete(`/product/size`, {
+                params: {
+                    id
+                }
+            });
             return response.data;
         },
 
@@ -426,7 +430,11 @@ export default {
 
 
         async deleteProductPicture(id) {
-            const response = await this.$axios.$post(`/product/pic/delete`, { id });
+            const response = await this.$axios.$delete(`/product/pic`, {
+                params: {
+                    id
+                }
+            });
             return response.data;
         }
 
