@@ -146,6 +146,23 @@ export default {
                     { closeOthers: true }
                 )
             }
+        },
+
+        async onProductDelete() {
+            try {
+                await this.$confirm(`Delete product "${ this.product.title }"?`, 'Please confirm', {
+                    confirmButtonText: 'OK',
+                    cancelButtonText: 'Cancel',
+                    type: 'warning'
+                });
+
+                await this.deleteProduct(this.product.id);
+                this.$successMessage(`"${ this.product.title }" deleted successfully`);
+                this.goToAdminProductList();
+            }
+            catch(err) {
+                // Do nothing
+            }
         }
     },
 
@@ -181,7 +198,7 @@ export default {
 <template>
     <div>
         <fab type="save" @click="upsert" />
-        <fab type="cancel" @click="goToAdminProductList" />
+        <fab type="delete" :column="2" @click="onProductDelete" />
 
         <div class="tar mbm" v-if="product.id">
             <el-button @click="goToStore(product.seo_uri)">

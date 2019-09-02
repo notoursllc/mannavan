@@ -5,6 +5,11 @@ export default {
             type: String,
             required: false,
             default: 'primary'
+        },
+        column: {
+            type: Number,
+            required: false,
+            default: 1
         }
     },
 
@@ -51,6 +56,12 @@ export default {
                 default:
                     return 'el-icon-plus';
             }
+        },
+
+        buttonClass() {
+            if(this.type === 'cancel' || this.column === 2) {
+                return 'fab2'
+            }
         }
     },
 
@@ -69,7 +80,7 @@ export default {
         round
         @click="onclick"
         class="fab"
-        :class="{'fab-cancel': type === 'cancel'}" />
+        :class="buttonClass" />
 </template>
 
 
@@ -86,7 +97,7 @@ export default {
     padding: 17px;
 }
 
-.fab-cancel {
+.fab2 {
     right: 100px;
 }
 </style>

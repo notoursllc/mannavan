@@ -30,31 +30,24 @@ export default {
         }
     },
 
-    async asyncData({ params, store, app }) {
-        const products = await product_mixin.methods.getProducts.call(app, {
-            // where: ['is_available', '=', true],
-            // andWhere: [
-            //     ['total_inventory_count', '>', 0]
-            // ],
-            orderBy: 'updated_at',
-            orderDir: 'DESC'
-        });
-
-        return {
-            products
-        }
-    },
-
     methods: {
         async fetchProducts() {
-            this.products = await this.getProducts({
-                // where: ['is_available', '=', true],
-                // whereRaw: ['sub_type & ? > 0', [productTypeId]],
-                // andWhere: [
-                //     ['total_inventory_count', '>', 0]
-                // ],
-                ...this.sortData
-            });
+            try {
+                this.products = await this.getProducts({
+                    // where: ['is_available', '=', true],
+                    // whereRaw: ['sub_type & ? > 0', [productTypeId]],
+                    // andWhere: [
+                    //     ['total_inventory_count', '>', 0]
+                    // ],
+                    ...this.sortData
+                });
+            }
+            catch(err) {
+                this.$errorMessage(
+                    err.message,
+                    { closeOthers: true }
+                )
+            }
         },
 
         subTypeLabel(subType) {
@@ -76,7 +69,28 @@ export default {
             this.sortData.orderBy = val.prop || 'updated_at';
             this.sortData.orderDir = val.order === 'ascending' ? 'ASC' : 'DESC';
             this.fetchProducts();
+        },
+
+        async onProductDelete(product) {
+            try {
+                await this.$confirm(`Delete product "${ product.title }"?`, 'Please confirm', {
+                    confirmButtonText: 'OK',
+                    cancelButtonText: 'Cancel',
+                    type: 'warning'
+                });
+
+                await this.deleteProduct(product.id);
+                this.$successMessage(`"${ product.title }" deleted successfully`);
+                this.fetchProducts();
+            }
+            catch(err) {
+                // Do nothing
+            }
         }
+    },
+
+    created() {
+        this.fetchProducts();
     }
 }
 </script>
@@ -118,9 +132,9 @@ export default {
                 <template slot-scope="scope">
                     {{ scope.row.title }}
                     <operations-dropdown
-                        :show-delete="false"
                         @view="goToAdminProductDetails(scope.row.id)"
-                        @edit="goToAdminProductUpsert(scope.row.id)" />
+                        @edit="goToAdminProductUpsert(scope.row.id)"
+                        @delete="onProductDelete(scope.row)" />
                 </template>
             </el-table-column>
 

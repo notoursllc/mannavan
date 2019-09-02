@@ -104,6 +104,16 @@ export default {
         },
 
 
+        async deleteProduct(id) {
+            const response = await this.$axios.$delete(`/product`, {
+                params: {
+                    id
+                }
+            });
+            return response.data;
+        },
+
+
         async getProductArtists(params) {
             let paramString = queryString.stringify(params, {arrayFormat: 'bracket'});
 
