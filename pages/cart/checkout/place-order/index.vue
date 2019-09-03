@@ -40,6 +40,7 @@ export default {
             paymentFormIsReady: false,
             paymentFormIsValid: false,
             paymentMethod: 'CREDIT_CARD',
+            billingAdddress: 'SAME', //  SAME \ DIFFERENT
             masterpass: false,
             applePay: false,
             cardType: null,
@@ -106,6 +107,13 @@ export default {
 
         onBillingFormValid(val) {
             this.billingFormValid = val;
+        },
+
+        // NOTE: el-radio element does not accept a 'label' value of boolean
+        // (only string or number), so we need to check the string value in
+        // order to set a boolean val for 'billingSameAsShipping's
+        onBillingAddressRadioChange(val) {
+            this.billingSameAsShipping = (val === 'SAME' ? true : false);
         },
 
         async submitPaymentForm() {
@@ -532,17 +540,19 @@ export default {
                     <div class="g-spec-locked" v-show="paymentMethod === 'CREDIT_CARD'" >
                         <div class="g-spec-label colorGreen fs20">{{ $t('Billing address') }}</div>
                         <div class="g-spec-content">
-                            <el-radio-group v-model="billingSameAsShipping">
+                            <el-radio-group
+                                v-model="billingAdddress"
+                                @change="onBillingAddressRadioChange">
                                 <div class="inlineBlock mrl mbm">
                                     <el-radio
-                                        :label="true"
+                                        label="SAME"
                                         border
                                         size="medium">{{ $t('Same as shipping address') }}</el-radio>
                                 </div>
 
                                 <div class="inlineBlock">
                                     <el-radio
-                                        :label="false"
+                                        label="DIFFERENT"
                                         border
                                         size="medium">{{ $t('Use a different billing address') }}</el-radio>
                                 </div>
