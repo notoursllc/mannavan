@@ -143,7 +143,7 @@ export default {
                 <div class="fs20 pbm">{{ product.title }}</div>
 
                 <!-- description -->
-                <div class="fs16">{{ product.description_long }}</div>
+                <div class="fs16 wordBreakBreakWord">{{ product.description_long }}</div>
 
                 <!-- artist -->
                 <div v-if="product.artist && product.artist.id" class="mtl fs12">

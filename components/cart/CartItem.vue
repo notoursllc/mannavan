@@ -241,7 +241,7 @@ export default {
                     <div class="fs20 pbm">{{ data.product.title }}</div>
 
                     <!-- description -->
-                    <div class="pbl fs16">{{ data.product.description_long }}</div>
+                    <div class="pbl fs16 wordBreakBreakWord">{{ data.product.description_long }}</div>
 
                     <!-- price -->
                     <div class="fs20">
@@ -282,7 +282,7 @@ export default {
     }
 
     .cartItem {
-        margin: 0 10px 20px 10px;
+        margin-bottom: 20px;
         background-color: #fff;
         @include box-shadow(0px, 1px, 2px, rgba(0,0,0,.1));
         transition: background-color .5s linear;

@@ -102,7 +102,7 @@ export default {
 
 .prod-card-container {
     background-color: #f4f4f4;
-    padding: 30px 30px 50px 30px;
+    padding: 30px 30px 100px 30px;
 }
 
 .flex-container {

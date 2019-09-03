@@ -43,6 +43,7 @@ export default {
     .btn-keep-shopping,
     .btn-complete {
         display: inline-block;
+        margin-bottom: 20px;
     }
 
     @media #{$small-and-down} {
