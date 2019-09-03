@@ -22,8 +22,7 @@ export default {
 
     data: function() {
         return {
-            loading: false,
-            shippingFormIsValid: false
+            loading: false
         }
     },
 
@@ -33,24 +32,17 @@ export default {
             shippingAttributes: 'shoppingcart/shippingAttributes'
         }),
 
-        paymentMethod() {
-            return this.$store.state.checkout.paymentMethod;
-        },
-
-        // shippingFormIsValid() {
-        //     return this.$store.state.checkout.validations.shippingForm;
-        // },
-
-        isLoading() {
-            return this.$store.state.checkout.isLoading;
+        shippingFormIsValid: {
+            get: function() {
+                return this.$store.state.checkout.validations.shippingForm;
+            },
+            set: async function(newVal) {
+                await this.$store.dispatch('checkout/SHIPPING_FORM_VALID', newVal);
+            }
         }
     },
 
     methods: {
-        dispatchFormStatus(isValid) {
-            this.$store.dispatch('checkout/SHIPPING_FORM_VALID', isValid);
-        },
-
         shippingFormDone: async function() {
             try {
                 const shippingAttributes = cloneDeep(this.shippingAttributes);
@@ -81,11 +73,11 @@ export default {
                     }
                 }
 
-                this.dispatchFormStatus(true);
+                this.shippingFormIsValid = true;
                 this.$router.push({ name: 'cart-checkout-place-order' });
             }
             catch(err) {
-                this.dispatchFormStatus(false);
+                this.shippingFormIsValid = false;
 
                 this.$errorMessage(
                     this.$t('A server error occurred while setting the shipping address'),
@@ -191,7 +183,7 @@ export default {
 
 <template>
     <div class="checkout-container">
-        <div class="order-container" v-loading="isLoading">
+        <div class="order-container">
             <div class="order-wrapper">
 
                 <div class="g-spec-locked">
@@ -218,7 +210,6 @@ export default {
                         </div>
                     </div>
                 </div>
-
 
             </div>
         </div>
