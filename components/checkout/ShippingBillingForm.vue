@@ -118,11 +118,11 @@
             canShowValidationMsg(attr) {
                 switch(attr) {
                     case 'email':
-                        return this.$v.form.email.$dirty
+                        return this.$v.form.email.$dirty;
 
                     default:
                         // return true;
-                        return this.$v.form[attr].$dirty && !this.$v.form[attr].required
+                        return this.$v.form[attr].$dirty && !this.$v.form[attr].required;
                 }
             },
 
@@ -229,7 +229,7 @@
         </div>
 
         <!-- Email -->
-        <div class="formRow">
+        <div class="formRow" v-if="type === 'shipping'">
             <label class="nowrap lineHeight40">{{ $t('Email address') }}:</label>
             <span class="widthAll">
                 <status-wrapper :success="canShowGreenCheck('email')" :failed="canShowValidationMsg('email')">

@@ -105,7 +105,6 @@ export default {
         },
 
         onBillingFormValid(val) {
-            console.log("onBillingFormValid", val)
             this.billingFormValid = val;
         },
 

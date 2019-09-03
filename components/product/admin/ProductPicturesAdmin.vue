@@ -301,7 +301,7 @@ export default {
             </div>
 
             <!-- Current picture -->
-            <div class="formRow">
+            <div class="formRow" v-if="picModal.form.file_name">
                 <label>Current picture:</label>
                 <span>
                     <img :src="picModal.form.url" width="200" />
