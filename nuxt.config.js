@@ -2,6 +2,8 @@
 const pkg = require('./package');
 const globalTypes = require('./shopBac/server/global_types');
 
+const isProduction = process.env.NODE_ENV === 'production';
+
 module.exports = {
     mode: 'universal',
 
@@ -20,7 +22,11 @@ module.exports = {
             // That's because the CheckoutSectionPayment component, which uses SqPaymentForm, sometimes
             // loads before the head() script is loaded.
             // Putting it here doesn't seem ideal, but it's safest.
-            { src: 'https://js.squareup.com/v2/paymentform', body: true, async: true }
+            {
+                src: isProduction ? 'https://js.squareup.com/v2/paymentform' : 'https://js.squareupsandbox.com/v2/paymentform',
+                body: true,
+                async: true
+            }
         ],
     },
 
@@ -47,9 +53,9 @@ module.exports = {
         SHIPPING_ADDRESS_FROM_ZIP: process.env.SHIPPING_ADDRESS_FROM_ZIP,
         SHIPPING_ADDRESS_FROM_COUNTRY_CODE: process.env.SHIPPING_ADDRESS_FROM_COUNTRY_CODE,
         SHIPPING_ADDRESS_FROM_PHONE: process.env.SHIPPING_ADDRESS_FROM_PHONE,
-        SQUARE_APP_ID: process.env.NODE_ENV === 'development' ? process.env.SQUARE_SANDBOX_APP_ID : process.env.SQUARE_PRODUCTION_APP_ID,
-        SQUARE_ACCESS_TOKEN: process.env.NODE_ENV === 'development' ? process.env.SQUARE_SANDBOX_ACCESS_TOKEN : process.env.SQUARE_PRODUCTION_ACCESS_TOKEN,
-        SQUARE_LOCATION_ID: process.env.NODE_ENV === 'development' ? process.env.SQUARE_SANDBOX_LOCATION_ID : process.env.SQUARE_PRODUCTION_LOCATION_ID,
+        SQUARE_APP_ID: isProduction ? process.env.SQUARE_PRODUCTION_APP_ID : process.env.SQUARE_SANDBOX_APP_ID,
+        SQUARE_ACCESS_TOKEN: isProduction ? process.env.SQUARE_PRODUCTION_ACCESS_TOKEN : process.env.SQUARE_SANDBOX_ACCESS_TOKEN,
+        SQUARE_LOCATION_ID: isProduction ? process.env.SQUARE_PRODUCTION_LOCATION_ID : process.env.SQUARE_SANDBOX_LOCATION_ID,
     },
 
     /*

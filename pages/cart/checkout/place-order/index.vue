@@ -40,7 +40,7 @@ export default {
             paymentFormIsReady: false,
             paymentFormIsValid: false,
             paymentMethod: 'CREDIT_CARD',
-            billingAdddress: 'SAME', //  SAME \ DIFFERENT
+            billingAdddress: null, //  SAME \ DIFFERENT
             masterpass: false,
             applePay: false,
             cardType: null,
@@ -220,6 +220,8 @@ export default {
     },
 
     mounted() {
+        this.$store.dispatch('ui/IN_CHECKOUT_FLOW', true);
+
         let self = this;
 
         if(this.cartEmptyRedirect(this.shoppingCart)) {
@@ -231,12 +233,20 @@ export default {
             return true;
         }
 
+        if (!SqPaymentForm.isSupportedBrowser()) {
+            self.$errorMessage(
+                `${self.$t('checkout_unsupported_browser')}`,
+                { closeOthers: true }
+            );
+            return;
+        }
+
         // SqPaymentForm comes from the Square API at https://js.squareup.com/v2/paymentform
         this.paymentForm = new SqPaymentForm({
             autoBuild: false,
             applicationId: process.env.SQUARE_APP_ID,
             locationId: process.env.SQUARE_LOCATION_ID,
-            inputClass: "el-input__inner",
+            inputClass: 'el-input__inner',
 
             // Initialize the payment form elements
             // Customize the CSS for SqPaymentForm iframe elements
@@ -248,33 +258,36 @@ export default {
             ],
 
             // Initialize Apple Pay placeholder ID
+            applePay: false,
             // applePay: {
             //     elementId: "sq-apple-pay"
             // },
 
             // Initialize Masterpass placeholder ID
+            masterpass: false,
             // masterpass: {
             //     elementId: "sq-masterpass"
             // },
 
             // Initialize the credit card placeholders
             cardNumber: {
-                elementId: "sq-card-number",
+                elementId: 'sq-card-number',
+                // placeholder: '• • • •  • • • •  • • • •  • • • •'
                 // placeholder: "Card number"
             },
 
             cvv: {
-                elementId: "sq-cvv",
+                elementId: 'sq-cvv',
                 // placeholder: "CVV"
             },
 
             expirationDate: {
-                elementId: "sq-expiration-date",
-                placeholder: "MM / YY"
+                elementId: 'sq-expiration-date',
+                placeholder: 'MM/YY'
             },
 
             postalCode: {
-                elementId: "sq-postal-code",
+                elementId: 'sq-postal-code',
                 // placeholder: "Zip Code"
             },
 
@@ -320,27 +333,24 @@ export default {
                 /*
                 * Triggered when: the page is loaded.
                 */
-                methodsSupported: function(methods) {
-                    // Only show the button if Apple Pay for Web is enabled
-                    // Otherwise, display the wallet not enabled message.
-                    self.applePay = methods.applePay;
-                    self.masterpass = methods.masterpass;
-                },
+                // methodsSupported: function(methods) {
+                //     // Only show the button if Apple Pay for Web is enabled
+                //     // Otherwise, display the wallet not enabled message.
+                //     self.applePay = methods.applePay;
+                //     self.masterpass = methods.masterpass;
+                // },
 
                 /*
-                * Digital Wallet related functions
+                * Triggered when: a digital wallet payment button is clicked.
+                * Replace the JSON object declaration with a function that creates
+                * a JSON object with Digital Wallet payment details
+                * https://github.com/square/connect-api-examples/blob/master/templates/web-ui/payment-form/basic/sqpaymentform-basic.js
                 */
-                createPaymentRequest: function() {
-                    var paymentRequestJson;
-                    /* ADD CODE TO SET/CREATE paymentRequestJson */
-                    return paymentRequestJson;
-                },
-
-                validateShippingContact: function(contact) {
-                    var validationErrorObj;
-                    /* ADD CODE TO SET validationErrorObj IF ERRORS ARE FOUND */
-                    return validationErrorObj;
-                },
+                // createPaymentRequest: function() {
+                //     var paymentRequestJson;
+                //     /* ADD CODE TO SET/CREATE paymentRequestJson */
+                //     return paymentRequestJson;
+                // },
 
                 /*
                 * Triggered when: SqPaymentForm completes a card nonce request
@@ -358,7 +368,11 @@ export default {
                             { closeOthers: true }
                         )
 
-                        this.paymentFormIsValid = false;
+                        self.$bugsnag.notify('Error placing order', {
+                            errors: errors
+                        });
+
+                        self.paymentFormIsValid = false;
                         return;
                     }
 
@@ -369,14 +383,24 @@ export default {
                 * Triggered when: SqPaymentForm is fully loaded
                 */
                 paymentFormLoaded: function() {
+                    self.paymentForm.setPostalCode(self.shoppingCart.shipping_postalCode);
+                    self.paymentForm.focus('cardNumber');
                     // self.paymentFormIsReady = true;
-                }
+                },
+
+                /*
+                * Triggered when: the page loads and an unsupported browser is detected
+                */
+                unsupportedBrowserDetected: function () {
+                    self.$errorMessage(
+                        `${self.$t('Error placing order')}: ${self.$t('checkout_unsupported_browser')}`,
+                        { closeOthers: true }
+                    )
+                },
             }
         });
 
         this.paymentForm.build();
-
-        this.$store.dispatch('ui/IN_CHECKOUT_FLOW', true);
     },
 
     head() {

@@ -38,6 +38,7 @@
     "Change": "Change",
     "Checkout": "Checkout",
     "Check out our first product": "Check out our first product",
+    "checkout_unsupported_browser": "Your browser is not supported.  Perhaps it is too old.  Please consider upgrading to a modern browser.",
     "Chest": "Chest",
     "Chest measurement": "Chest measurement",
     "chest_measurement_description": "The chest is measured around the circumference of the body, 1 inch below the armpit.",
