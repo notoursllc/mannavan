@@ -1,66 +1,42 @@
 <script>
-    export default{
-        props: {
-            payment: {
-                type: Object
-            }
+export default{
+    props: {
+        payment: {
+            type: Object
+        }
+    },
+
+    components: {
+        CreditCardIcon: () => import('@/components/CreditCardIcon')
+    },
+
+    methods: {
+        isPaypalTransaction() {
+            return parseInt(this.payment.payment_type, 10) === 2;
+        }
+    },
+
+    computed: {
+        cardType: function() {
+            return this.isPaypalTransaction() ? 'paypal' : this.payment.transaction.card_details.card.card_brand;
         },
 
-        components: {
-            CreditCardIcon: () => import('@/components/CreditCardIcon')
+        lastFour: function() {
+            return this.isPaypalTransaction() ? null : this.payment.transaction.card_details.card.last_4;
         },
 
-        methods: {
-            isPaypalTransaction() {
-                return parseInt(this.payment.payment_type, 10) === 2;
-            }
-        },
-
-        computed: {
-            cardType: function() {
-                let type = null;
-
-                if(this.isPaypalTransaction()) {
-                    type = 'paypal';
-                }
-                else {
-                    if(Array.isArray(this.payment.transaction.tenders)) {
-                        this.payment.transaction.tenders.forEach((obj) => {
-                            type = obj.card_details.card.card_brand;
-                        });
-                    }
-                }
-
-                return type;
-            },
-
-            lastFour: function() {
-                let last_four = null;
-
-                if(!this.isPaypalTransaction() && Array.isArray(this.payment.transaction.tenders)) {
-                    this.payment.transaction.tenders.forEach((obj) => {
-                        last_four = obj.card_details.card.last_4;
-                    });
-                }
-
-                return last_four;
-            },
-
-            paypalPayerEmail: function() {
-                if(this.isPaypalTransaction()) {
-                    return this.payment.transaction.result.payer.email_address;
-                }
-                return null;
-            }
-        },
+        paypalPayerEmail: function() {
+            return this.isPaypalTransaction() ? this.payment.transaction.result.payer.email_address : null;
+        }
     }
+}
 </script>
 
 
 <template>
     <span>
-        <credit-card-icon :card-type="cardType" />&nbsp;
-        <span v-show="lastFour">**** {{ lastFour }}</span>
-        <span v-show="paypalPayerEmail" class="pls">{{ paypalPayerEmail }}</span>
+        <credit-card-icon :card-type="cardType" />
+        <span v-if="lastFour" class="pls">**** {{ lastFour }}</span>
+        <span v-if="paypalPayerEmail" class="pls">{{ paypalPayerEmail }}</span>
     </span>
 </template>

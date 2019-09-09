@@ -1,6 +1,6 @@
 <script>
-import payment_mixin from '@/mixins/payment_mixin'
-
+import isObject from 'lodash.isobject';
+import payment_mixin from '@/mixins/payment_mixin';
 
 export default {
     components: {
@@ -17,34 +17,20 @@ export default {
     data: function() {
         return {
             loading: true,
-            orderExists: false,
-            order: {
-                shipping: {},
-                shoppingCart: {},
-                transaction: {
-                    payment: {}
-                }
+            paymentExists: false,
+            payment: {
+                shoppingCart: {}
             }
-        }
-    },
-
-    computed: {
-        cardType: function() {
-            if(this.order.transaction.payment.type === 'paypal_account') {
-                return 'paypal';
-            }
-
-            return this.order.transaction.payment.cardType;
         }
     },
 
     async created() {
         try {
-            this.order = await this.getPayment(this.$route.params.id);
-            this.orderExists = true;
+            this.payment = await this.getPayment(this.$route.params.id);
+            this.paymentExists = true;
         }
         catch(e) {
-            this.orderExists = false;
+            this.paymentExists = false;
         }
 
         this.loading = false;
@@ -66,7 +52,7 @@ export default {
     <div class="mbl" v-loading.fullscreen.lock="loading">
         <template v-if="!loading">
 
-            <div v-if="!orderExists" class="tac">
+            <div v-if="!paymentExists" class="tac">
                 {{ $t('Oops we could not find the order you are looking for.') }}
             </div>
 
@@ -100,7 +86,7 @@ export default {
                             <icon-envelope icon-name="email" class-name="fillGreen" width="50px" />
                         </div>
                         <div class="fwb fs20">
-                            {{ order.shoppingCart.shipping_email }}
+                            {{ payment.shoppingCart.shipping_email }}
                         </div>
                     </div>
 
@@ -110,32 +96,31 @@ export default {
                 <div class="displayTable mha">
                     <div class="mtl">
                         <div class="fwb">{{ $t('Shipping to') }}:</div>
-                        <cart-shipping-address-display
-                            :shopping-cart="order.shoppingCart" />
+                        <cart-shipping-address-display :shopping-cart="payment.shoppingCart" />
                     </div>
 
                     <div class="mtl">
                         <div class="displayTableRow">
                             <div class="displayTableCell prm pbs">{{ $t('# items') }}:</div>
-                            <div class="displayTableCell fwb pbs">{{ order.shoppingCart.num_items }}</div>
+                            <div class="displayTableCell fwb pbs">{{ payment.shoppingCart.num_items }}</div>
                         </div>
 
                         <div class="displayTableRow">
                             <div class="displayTableCell prm pbs">{{ $t('Total') }}:</div>
-                            <div class="displayTableCell fwb pbs">{{ $n(order.shoppingCart.grand_total, 'currency') }}</div>
+                            <div class="displayTableCell fwb pbs">{{ $n(payment.shoppingCart.grand_total, 'currency') }}</div>
                         </div>
 
                         <div class="displayTableRow">
                             <div class="displayTableCell prm pbs">{{ $t('Payment method') }}:</div>
                             <div class="displayTableCell fwb pbs">
-                                <payment-type-display :payment="order" />
+                                <payment-type-display :payment="payment" />
                             </div>
                         </div>
 
                         <div class="displayTableRow">
                             <div class="displayTableCell prm pbs">{{ $t('Order') }}:</div>
                             <div class="displayTableCell fwb pbs">
-                                <a v-if="order.id" @click="goToPaymentDetails(order.id)">{{ order.id }}</a>
+                                <a v-if="payment.id" @click="goToPaymentDetails(payment.id)">{{ payment.id }}</a>
                             </div>
                         </div>
                     </div>
