@@ -224,7 +224,7 @@ export default {
 
         .racecar {
             position: absolute;
-            bottom: -1px;
+            bottom: -2px;
             display: block;
             opacity: 0;
             width: 90px;
