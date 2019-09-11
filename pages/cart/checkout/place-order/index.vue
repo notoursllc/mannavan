@@ -385,7 +385,7 @@ export default {
                 paymentFormLoaded: function() {
                     self.paymentForm.setPostalCode(self.shoppingCart.shipping_postalCode);
                     self.paymentForm.focus('cardNumber');
-                    // self.paymentFormIsReady = true;
+                    self.paymentFormIsReady = true;
                 },
 
                 /*
@@ -488,7 +488,9 @@ export default {
                                     </el-radio-group>
                                 </div>
 
-                                <div class="displayTable widthAll" v-show="this.paymentMethod === 'CREDIT_CARD'">
+                                <div class="displayTable widthAll"
+                                    v-show="this.paymentMethod === 'CREDIT_CARD'"
+                                    v-loading="!paymentFormIsReady">
                                     <!-- card number -->
                                     <div class="formRow">
                                         <label class="nowrap lineHeight40">{{ $t('Card number') }}:</label>
