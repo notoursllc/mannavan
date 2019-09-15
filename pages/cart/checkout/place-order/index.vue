@@ -1,6 +1,7 @@
 <script>
 import { mapGetters } from 'vuex';
 import cloneDeep from 'lodash.clonedeep';
+import isObject from 'lodash.isobject';
 import shopping_cart_mixin from '@/mixins/shopping_cart_mixin';
 import payment_mixin from '@/mixins/payment_mixin';
 import app_mixin from '@/mixins/app_mixin';
@@ -181,12 +182,12 @@ export default {
         },
 
         async doCheckout(nonce) {
-            try {
-                const checkoutConfig = {
-                    nonce: nonce,
-                    ...this.billingAttributes
-                };
+            const checkoutConfig = {
+                nonce: nonce,
+                ...this.billingAttributes
+            };
 
+            try {
                 const result = await this.checkout(checkoutConfig);
 
                 this.$store.dispatch('shoppingcart/CHECKOUT_CLEANUP');
@@ -205,10 +206,25 @@ export default {
             catch(err) {
                 this.paymentFormIsValid = false;
 
-                this.$errorMessage(
-                    `${this.$t('Error placing order')}: ${this.getApiErrorMessage(err)}`,
-                    { closeOthers: true }
-                );
+               // The API response probably has a 'data' property in this case, which
+                // will give us the error code from the Square API
+                if (err.response && Array.isArray(err.response.data.data)) {
+                    let msg = '';
+
+                    err.response.data.data.forEach((obj, key) => {
+                        msg += this.$t(obj.code) + '\n';
+                    });
+
+                    //TODO - set error state on CVV (or any relevant) input
+
+                    this.$errorMessage(msg, { closeOthers: true });
+                }
+                else {
+                    this.$errorMessage(
+                        `${this.$t('Error placing order')}: ${this.getApiErrorMessage(err)}`,
+                        { closeOthers: true }
+                    );
+                }
 
                 this.$bugsnag.notify(err, {
                     request: {

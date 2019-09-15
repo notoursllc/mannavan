@@ -57,11 +57,12 @@ export default {
 
 
         async checkout(params) {
-            const response = await this.$axios.post('/cart/checkout', params);
+            // note: using $post instead of post
+            const response = await this.$axios.$post('/cart/checkout', params);
 
             // note: cart/checkout only returns an object containing a transaction id,
             // so no need to update the shopping cart or token state
-            return response.data.data;
+            return response.data;
         },
 
 
