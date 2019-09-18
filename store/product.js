@@ -1,18 +1,40 @@
 'use strict';
 
 export const state = () => ({
-    subTypes: {
-        PRODUCT_SUBTYPE_HATS: 1,
-        PRODUCT_SUBTYPE_TOPS: 2
-    },
-    seoUri: {
-        PRODUCT_SUBTYPE_HATS: 'hats',
-        PRODUCT_SUBTYPE_TOPS: 'tops'
-    }
+    types: {},
+    subTypes: {},
+    seoUri: {}
 })
 
 
 export const mutations = {
+    PRODUCT_TYPES: (state, productTypes) => {
+        if(Array.isArray(productTypes)) {
+            productTypes.forEach((obj) => {
+                state.types[obj.name] = obj.value;
+            })
+        }
+    },
+
+    PRODUCT_SUBTYPES: (state, subTypes) => {
+        if(Array.isArray(subTypes)) {
+            subTypes.forEach((obj) => {
+                state.subTypes[obj.name] = obj.value;
+                state.seoUri[obj.name] = obj.slug;
+            })
+        }
+    }
+}
+
+
+export const actions = {
+    PRODUCT_TYPES ({ commit }, productTypes) {
+        commit('PRODUCT_TYPES', productTypes)
+    },
+
+    PRODUCT_SUBTYPES ({ commit }, subTypes) {
+        commit('PRODUCT_SUBTYPES', subTypes)
+    }
 }
 
 

@@ -83,6 +83,7 @@ module.exports = {
         '@/plugins/axios.js',
         '@/plugins/i18n.js',
         '@/plugins/element-ui',
+        '@/plugins/global-properties',
         '@/plugins/vuelidate',
         '@/plugins/format8601',
         '@/plugins/prettyJson',
