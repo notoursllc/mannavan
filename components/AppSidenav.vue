@@ -16,7 +16,11 @@ export default {
     computed: {
         ...mapGetters({
             numCartItems: 'shoppingcart/numItems',
-        })
+        }),
+
+        productSubTypes() {
+            return this.getProductSubTypes(true);
+        }
     },
 
     methods: {
@@ -40,9 +44,9 @@ export default {
             class="sidenav-menu-main">
 
             <el-menu-item
-                v-for="(index, type) in getProductSubTypes()"
-                :key="type"
-                :route="{ name: 'productSubType', params: { productSubType: getUrlPathForProductSubType(type) } }"
+                v-for="(obj, type) in productSubTypes"
+                :key="obj.id"
+                :route="{ name: 'productSubType', params: { productSubType: obj.slug } }"
                 :index="type"
                 @click="onMenuItemClick">{{ $tc(type, 2) }}</el-menu-item>
 

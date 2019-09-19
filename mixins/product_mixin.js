@@ -180,41 +180,16 @@ export default {
         },
 
 
-        getProductSubTypes() {
-            const globalTypes = process.env.GLOBAL_TYPES;
-            const whiteList = process.env.PRODUCT_SUBTYPE_WHITELIST ? process.env.PRODUCT_SUBTYPE_WHITELIST.split(',') : [];
-            const cleanSubtypes = {};
+        getProductSubTypes(onlyAvailable) {
+            const subTypes = Object.assign({}, this.$store.state.product.subTypes);
 
-            if(isObject(globalTypes)) {
-                _forEach(globalTypes.product.subtypes, (val, subtype) => {
-                    if(whiteList.indexOf(subtype) > -1) {
-                        cleanSubtypes[subtype] = val;
-                    }
-                });
-
-                return cleanSubtypes;
-            }
-        },
-
-
-        /**
-         * The URL path is created by removing the last part
-         * of the 'PRODUCT_SUBTYPE_FOO' string ('FOO') and
-         * converting that to lower case ('foo')
-         *
-         * So 'PRODUCT_SUBTYPE_HATS' will return 'hats'
-         *
-         * @param String subtype  'PRODUCT_SUBTYPE_FOO'
-         */
-        getUrlPathForProductSubType(subtype) {
-            const subtypes = this.getProductSubTypes();
-
-            if(isObject(subtypes) && subtypes.hasOwnProperty(subtype)) {
-                let type = subtype.substring('PRODUCT_SUBTYPE_'.length);
-                if(type) {
-                    return type.toLowerCase();
+            Object.keys(subTypes).forEach((key) => {
+                if(onlyAvailable && !subTypes[key].is_available) {
+                    delete subTypes[key];
                 }
-            }
+            });
+
+            return subTypes;
         },
 
 
@@ -301,32 +276,6 @@ export default {
 
                 resolve(getSortedArray(sortObj));
             });
-        },
-
-
-        /**
-         * Get the product subtype id for a given label (english string)
-         *
-         * @param {*} type  hats | tops | socks
-         */
-        getIdByProductType(type) {
-            let response = {
-                productTypeId: 0,
-                productSubType: null
-            }
-
-            // TODO: is using 'this' going to work if this method
-            // is not called when this mixin is not used as a component mixin?
-            let data = this.getProductSubTypes();
-
-            _forEach(data, (index, subtype) => {
-                if(subtype.indexOf(`PRODUCT_SUBTYPE_${type.toUpperCase()}`) === 0) {
-                    response.productTypeId = index;
-                    response.productSubType = subtype;
-                }
-            });
-
-            return response;
         },
 
 

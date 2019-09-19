@@ -10,7 +10,11 @@ export default {
     computed: {
         ...mapGetters({
             numCartItems: 'shoppingcart/numItems'
-        })
+        }),
+
+        productSubTypes() {
+            return this.getProductSubTypes(true);
+        }
     },
 }
 </script>
@@ -26,9 +30,9 @@ export default {
                <div>{{ $t('Shop for') }}:</div>
                <div class="tac pts keepShoppingLinks">
                     <nuxt-link
-                        v-for="(index, type) in getProductSubTypes()"
-                        :key="index"
-                        :to="{ name: 'productSubType', params: { productSubType: getUrlPathForProductSubType(type) } }"
+                        v-for="(obj, type) in productSubTypes"
+                        :key="obj.id"
+                        :to="{ name: 'productSubType', params: { productSubType: obj.slug } }"
                         tag="a">{{ $tc(type, 2) }}</nuxt-link>
 
                     <nuxt-link

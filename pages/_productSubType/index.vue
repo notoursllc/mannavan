@@ -27,10 +27,14 @@ export default {
             let subTypeData = {};
 
             if(params.productSubType) {
-                subTypeData = product_mixin.methods.getIdByProductType(params.productSubType);
+                const subTypes = store.state.product.subTypes;
+                Object.keys(subTypes).forEach((id) => {
+                    if(subTypes[id].slug === params.productSubType.trim()) {
+                        subTypeData = subTypes[id];
+                    }
+                });
             }
 
-            // console.log('subTypeData', subTypeData)
 
             let searchConfig = {
                 where: ['is_available', '=', true],
@@ -41,8 +45,8 @@ export default {
                 orderDir: 'DESC'
             };
 
-            if(subTypeData.productTypeId) {
-                searchConfig.whereRaw = ['sub_type & ? > 0', [subTypeData.productTypeId]];
+            if(subTypeData.value) {
+                searchConfig.whereRaw = ['sub_type & ? > 0', [subTypeData.value]];
             }
 
             const products = await product_mixin.methods.getProducts.call(
@@ -52,7 +56,7 @@ export default {
 
             return {
                 products: products,
-                productSubType: subTypeData.productSubType
+                productSubType: subTypeData.name
             }
         }
         catch(err) {

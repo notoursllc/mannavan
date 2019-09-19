@@ -7,7 +7,13 @@ const globalTypes = process.env.GLOBAL_TYPES;
 export default {
     mixins: [
         product_mixin
-    ]
+    ],
+
+    computed: {
+        productSubTypes() {
+            return this.getProductSubTypes(true);
+        }
+    }
 }
 </script>
 
@@ -16,9 +22,9 @@ export default {
     <div>
         <div class="hero-prod-types">
             <nuxt-link
-                v-for="(index, type) in getProductSubTypes()"
-                :key="index"
-                :to="{ name: 'productSubType', params: { productSubType: getUrlPathForProductSubType(type) } }"
+                v-for="(obj, type) in productSubTypes"
+                :key="obj.id"
+                :to="{ name: 'productSubType', params: { productSubType: obj.slug } }"
                 tag="el-button"
                 class="is-round"
                 active-class="el-button--success">{{ $tc(type, 2) }}</nuxt-link>

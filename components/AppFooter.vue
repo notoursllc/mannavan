@@ -16,6 +16,12 @@ export default {
             year: new Date().getFullYear(),
             siteName: this.$store.state.ui.siteName
         }
+    },
+
+    computed: {
+        productSubTypes() {
+            return this.getProductSubTypes(true);
+        }
     }
 }
 </script>
@@ -29,10 +35,10 @@ export default {
                     <dl>
                         <dt>{{ $t('PRODUCTS') }}</dt>
 
-                        <dd v-for="(index, type) in getProductSubTypes()" :key="index">
+                        <dd v-for="(obj, type) in productSubTypes" :key="obj.id">
                             <nuxt-link
                                 tag="a"
-                                :to="{ name: 'productSubType', params: { productSubType: getUrlPathForProductSubType(type) } }">{{ $tc(type, 2) }}</nuxt-link>
+                                :to="{ name: 'productSubType', params: { productSubType: obj.slug } }">{{ $tc(type, 2) }}</nuxt-link>
                         </dd>
                     </dl>
                 </nav>
