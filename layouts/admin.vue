@@ -68,6 +68,17 @@ export default {
                     text-color="#fff"
                     active-text-color="#ffd04b">
 
+                    <el-submenu index="categories_menu">
+                        <template slot="title">
+                            <span>Categories</span>
+                        </template>
+
+                        <el-menu-item
+                            :route="{ name: 'acts-categories-packagetypes' }"
+                            index="/shipping/packagetypes"
+                            @click="menuItemClick">Shipping Package Types</el-menu-item>
+                    </el-submenu>
+
                     <el-submenu index="1">
                         <template slot="title">
                             <span>Product</span>
@@ -93,17 +104,6 @@ export default {
                             :route="{ name: 'acts-order-list' }"
                             index="/orders"
                             @click="menuItemClick">List</el-menu-item>
-                    </el-submenu>
-
-                    <el-submenu index="shipping_menu">
-                        <template slot="title">
-                            <span>Shipping</span>
-                        </template>
-
-                        <el-menu-item
-                            :route="{ name: 'acts-shipping-packagetypes-list' }"
-                            index="/shipping/packagetypes"
-                            @click="menuItemClick">Package Types</el-menu-item>
                     </el-submenu>
 
                     <el-menu-item
@@ -148,7 +148,7 @@ export default {
 
 
 <style lang="scss" scoped>
-$sidenav-width: 200px;
+$sidenav-width: 225px;
 $header-height: 50px;
 
 @import "~assets/css/components/_variables.scss";

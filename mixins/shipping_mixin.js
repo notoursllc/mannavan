@@ -51,21 +51,6 @@ export default {
             return response.data;
         },
 
-
-        goToPackageTypeList() {
-            this.$router.push({
-                name: 'acts-shipping-packagetypes-list'
-            });
-        },
-
-
-        goToPackageTypeUpsert(id) {
-            this.$router.push({
-                name: 'acts-shipping-packagetypes-upsert-id',
-                params: { id: id }
-            });
-        },
-
         getShippingParcelDistanceUnits() {
             return [
                 'cm',

@@ -10,7 +10,8 @@ export default {
 
     components: {
         OperationsDropdown: () => import('@/components/OperationsDropdown'),
-        Fab: () => import('@/components/Fab')
+        Fab: () => import('@/components/Fab'),
+        ShippingPackageTypeUpsertForm: () => import('@/components/admin/categories/ShippingPackageTypeUpsertForm')
     },
 
     mixins: [
@@ -19,26 +20,15 @@ export default {
 
     data() {
         return {
+            dialog: {
+                show: false,
+                packageTypeId: null
+            },
             shippingPackageTypes: [],
             sortData: {
                 orderBy: 'updated_at',
                 orderDir: 'DESC'
             }
-        }
-    },
-
-    async asyncData({ params, store, app }) {
-        const shippingPackageTypes = await shipping_mixin.methods.getPackageTypes.call(app, {
-            // where: ['is_available', '=', true],
-            // andWhere: [
-            //     ['total_inventory_count', '>', 0]
-            // ],
-            orderBy: 'updated_at',
-            orderDir: 'DESC'
-        });
-
-        return {
-            shippingPackageTypes
         }
     },
 
@@ -84,7 +74,7 @@ export default {
                     }
 
                     this.fetchPackageTypes();
-                    this.$successMessage(`Package Type deleted: ${packageTypeJson.label}`)
+                    this.$successMessage(`Package Type deleted: ${data.label}`)
                 }
                 catch(e) {
                     this.$errorMessage(
@@ -96,7 +86,21 @@ export default {
             catch(err) {
                 // Do nothing
             }
+        },
+
+        onUpsertClick(id) {
+            this.dialog.packageTypeId = id || null;
+            this.dialog.show = true;
+        },
+
+        onUpsertSuccess() {
+            this.dialog.show = false;
+            this.fetchPackageTypes();
         }
+    },
+
+    created() {
+        this.fetchPackageTypes();
     }
 }
 </script>
@@ -104,7 +108,7 @@ export default {
 
 <template>
     <div>
-        <fab type="add" @click="goToPackageTypeUpsert" />
+        <fab type="add" @click="onUpsertClick" />
 
         <el-table
             :data="shippingPackageTypes"
@@ -126,7 +130,7 @@ export default {
                     {{ scope.row.label }}
                     <operations-dropdown
                         :show-view="false"
-                        @edit="goToPackageTypeUpsert(scope.row.id)"
+                        @edit="onUpsertClick(scope.row.id)"
                         @delete="deleteType(scope.row)" />
                 </template>
             </el-table-column>
@@ -166,6 +170,17 @@ export default {
                 sortable="custom">
             </el-table-column>
         </el-table>
+
+        <el-dialog
+            :visible.sync="dialog.show"
+            :destroy-on-close="true"
+            width="95%"
+            top="5vh">
+            <shipping-package-type-upsert-form
+                :id="dialog.packageTypeId"
+                @success="onUpsertSuccess"
+                @cancel="dialog.show = false" />
+        </el-dialog>
 
     </div>
 </template>
