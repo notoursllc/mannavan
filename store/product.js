@@ -10,7 +10,7 @@ export const mutations = {
     PRODUCT_TYPES: (state, productTypes) => {
         if(Array.isArray(productTypes)) {
             productTypes.forEach((obj) => {
-                state.types[obj.name] = obj.value;
+                state.types[obj.name] = obj;
             })
         }
     },

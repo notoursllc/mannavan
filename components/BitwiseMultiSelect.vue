@@ -22,9 +22,8 @@ export default {
         }
     },
 
-
     methods: {
-        selectValueChanged: function(valueArray) {
+        selectValueChanged(valueArray) {
             let total = 0;
 
             if(!Array.isArray(valueArray)) {
@@ -36,11 +35,9 @@ export default {
             })
 
             this.$emit('input', total)
-        }
-    },
+        },
 
-    created: function() {
-        let unwatch = this.$watch('options', function(newVal, oldVal) {
+        setSelectedValue() {
             let values = [];
 
             forEach(this.options, (val, key) => {
@@ -50,8 +47,23 @@ export default {
             })
 
             this.selectedVal = values;
-            // unwatch();
-        })
+        }
+    },
+
+    watch: {
+        value: {
+            handler(newVal) {
+                this.setSelectedValue();
+            },
+            immediate: true,
+        },
+
+        options: {
+            handler(newVal) {
+                this.setSelectedValue();
+            },
+            immediate: true,
+        }
     }
 }
 </script>

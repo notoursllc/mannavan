@@ -12,6 +12,8 @@ export default {
 
     components: {
         ProductSizeAdmin: () => import('@/components/product/admin/ProductSizeAdmin'),
+        ProductTypeSelect: () => import('@/components/product/admin/ProductTypeSelect'),
+        ProductSubtypeSelect: () => import('@/components/product/admin/ProductSubtypeSelect'),
         ProductPicturesAdmin: () => import('@/components/product/admin/ProductPicturesAdmin'),
         BitwiseMultiSelect: () => import('@/components/BitwiseMultiSelect'),
         IconNewWindow: () => import('@/components/icons/IconNewWindow'),
@@ -46,24 +48,6 @@ export default {
     },
 
     computed: {
-        typeSelectOptions() {
-            let opts = {};
-            let self = this;
-            forEach(this.productInfo.types, function(val, key) {
-                opts[self.$t(key)] = val;
-            });
-            return opts;
-        },
-
-        subTypeSelectOptions() {
-            let opts = {};
-            let self = this;
-            forEach(this.productInfo.subTypes, function(val, key) {
-                opts[self.$tc(key, 2)] = val;
-            });
-            return opts;
-        },
-
         fitSelectOptions() {
             let opts = {};
             let self = this;
@@ -388,9 +372,7 @@ export default {
                     <div class="formRow">
                         <label>Product type:</label>
                         <span>
-                            <bitwise-multi-select
-                                v-model="product.type"
-                                :options="typeSelectOptions" />
+                            <product-type-select v-model="product.type" />
                         </span>
                     </div>
 
@@ -398,9 +380,7 @@ export default {
                     <div class="formRow">
                         <label>Product sub-type:</label>
                         <span>
-                            <bitwise-multi-select
-                                v-model="product.sub_type"
-                                :options="subTypeSelectOptions" />
+                            <product-subtype-select v-model="product.sub_type" />
                         </span>
                     </div>
 
