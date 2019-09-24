@@ -1,8 +1,15 @@
 <script>
-export default{
+import product_type_mixin from '@/mixins/product_type_mixin';
+
+export default {
     props: {
         value: {
             type: Number
+        },
+
+        isSubType: {
+            type: Boolean,
+            default: false
         }
     },
 
@@ -10,32 +17,49 @@ export default{
         BitwiseMultiSelect: () => import('@/components/BitwiseMultiSelect')
     },
 
-    computed: {
-        selectOptions() {
-            let opts = {};
-            let self = this;
-
-            const types = Object.assign({}, this.$store.state.product.types);
-
-            Object.keys(types).forEach((key) => {
-                opts[this.$t(key)] = types[key].value;
-            });
-
-            return opts;
-        }
-    },
+    mixins: [
+        product_type_mixin
+    ],
 
     data: function() {
         return {
-            selectedVal: null
+            selectedVal: null,
+            selectOptions: []
         }
     },
 
     methods: {
         emitChange(val) {
-            console.log("ON INPUT", val)
             this.$emit('input', val)
+        },
+
+        async createOptions() {
+            let opts = [];
+            let types = [];
+
+            if(this.isSubType) {
+                types = await this.getProductSubTypes();
+            }
+            else {
+                types = await this.getProductTypes();
+            }
+
+            types.forEach((obj) => {
+                opts.push(
+                    {
+                        label: this.$t(obj.name),
+                        value: obj.value,
+                        disabled: !obj.is_available
+                    }
+                )
+            });
+
+            this.selectOptions = opts
         }
+    },
+
+    created() {
+        this.createOptions();
     },
 
     watch: {

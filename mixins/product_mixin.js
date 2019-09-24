@@ -23,44 +23,6 @@ function stripRelations(productJson) {
 
 export default {
     methods: {
-        goToProductDetails(seo_uri) {
-            this.$router.push({
-                name: 'p-seouri',
-                params: { seouri: seo_uri }
-            });
-        },
-
-
-        goToAdminProductDetails(id) {
-            this.$router.push({
-                name: 'acts-product-id',
-                params: { id }
-            });
-        },
-
-
-        goToAdminProductUpsert(productId) {
-            this.$router.push({
-                name: 'acts-product-upsert-id',
-                params: { id: productId }
-            });
-        },
-
-
-        goToAdminProductAdd() {
-            this.$router.push({
-                name: 'acts-product-upsert-id'
-            });
-        },
-
-
-        goToAdminProductList() {
-            this.$router.push({
-                name: 'acts-product-list'
-            });
-        },
-
-
         async getProducts(params) {
             let paramString = queryString.stringify(params, {arrayFormat: 'bracket'});
 
@@ -165,6 +127,66 @@ export default {
         },
 
 
+
+        /******************************
+         * Product Sub Types
+         ******************************/
+
+        getProductSubTypes(onlyAvailable) {
+            const subTypes = Object.assign({}, this.$store.state.product.subTypes);
+
+            Object.keys(subTypes).forEach((key) => {
+                if(onlyAvailable && !subTypes[key].is_available) {
+                    delete subTypes[key];
+                }
+            });
+
+            return subTypes;
+        },
+
+
+        /******************************
+         * Navigation
+         ******************************/
+
+        goToProductDetails(seo_uri) {
+            this.$router.push({
+                name: 'p-seouri',
+                params: { seouri: seo_uri }
+            });
+        },
+
+
+        goToAdminProductDetails(id) {
+            this.$router.push({
+                name: 'acts-product-id',
+                params: { id }
+            });
+        },
+
+
+        goToAdminProductUpsert(productId) {
+            this.$router.push({
+                name: 'acts-product-upsert-id',
+                params: { id: productId }
+            });
+        },
+
+
+        goToAdminProductAdd() {
+            this.$router.push({
+                name: 'acts-product-upsert-id'
+            });
+        },
+
+
+        goToAdminProductList() {
+            this.$router.push({
+                name: 'acts-product-list'
+            });
+        },
+
+
         goToProductArtistList() {
             this.$router.push({
                 name: 'acts-product-artist-list',
@@ -180,17 +202,7 @@ export default {
         },
 
 
-        getProductSubTypes(onlyAvailable) {
-            const subTypes = Object.assign({}, this.$store.state.product.subTypes);
 
-            Object.keys(subTypes).forEach((key) => {
-                if(onlyAvailable && !subTypes[key].is_available) {
-                    delete subTypes[key];
-                }
-            });
-
-            return subTypes;
-        },
 
 
         featuredProductPic(product) {

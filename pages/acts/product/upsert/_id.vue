@@ -13,7 +13,6 @@ export default {
     components: {
         ProductSizeAdmin: () => import('@/components/product/admin/ProductSizeAdmin'),
         ProductTypeSelect: () => import('@/components/product/admin/ProductTypeSelect'),
-        ProductSubtypeSelect: () => import('@/components/product/admin/ProductSubtypeSelect'),
         ProductPicturesAdmin: () => import('@/components/product/admin/ProductPicturesAdmin'),
         BitwiseMultiSelect: () => import('@/components/BitwiseMultiSelect'),
         IconNewWindow: () => import('@/components/icons/IconNewWindow'),
@@ -49,10 +48,12 @@ export default {
 
     computed: {
         fitSelectOptions() {
-            let opts = {};
-            let self = this;
-            forEach(this.productInfo.fits, function(val, key) {
-                opts[self.$t(key)] = val;
+            let opts = [];
+            forEach(this.productInfo.fits, (val, key) => {
+                opts.push({
+                    label: this.$t(key),
+                    value: val
+                })
             });
             return opts;
         },
@@ -380,7 +381,9 @@ export default {
                     <div class="formRow">
                         <label>Product sub-type:</label>
                         <span>
-                            <product-subtype-select v-model="product.sub_type" />
+                            <product-type-select
+                                v-model="product.sub_type"
+                                :is-sub-type="true" />
                         </span>
                     </div>
 

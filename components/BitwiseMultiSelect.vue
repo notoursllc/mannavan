@@ -11,7 +11,7 @@ export default {
         },
 
         options: {
-            type: Object,
+            type: Array,
             required: true
         }
     },
@@ -40,11 +40,11 @@ export default {
         setSelectedValue() {
             let values = [];
 
-            forEach(this.options, (val, key) => {
-                if(val & this.value) {
-                    values.push(val);
+            this.options.forEach((obj) => {
+                if(obj.value & this.value) {
+                    values.push(obj.value);
                 }
-            })
+            });
 
             this.selectedVal = values;
         }
@@ -77,10 +77,10 @@ export default {
         @change="selectValueChanged"
         @clear="() => { selectedVal = null }">
         <el-option
-            v-for="(val, key) in options"
-            :key="val"
-            :label="key"
-            :value="val">
-        </el-option>
+            v-for="obj in options"
+            :key="obj.value"
+            :label="obj.label"
+            :value="obj.value"
+            :disabled="obj.disabled" />
     </el-select>
 </template>

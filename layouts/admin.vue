@@ -74,6 +74,16 @@ export default {
                         </template>
 
                         <el-menu-item
+                            :route="{ name: 'acts-categories-product-types' }"
+                            index="productTypes"
+                            @click="menuItemClick">Product Types</el-menu-item>
+
+                        <el-menu-item
+                            :route="{ name: 'acts-categories-product-sub-types' }"
+                            index="productSubTypes"
+                            @click="menuItemClick">Product Sub-Types</el-menu-item>
+
+                        <el-menu-item
                             :route="{ name: 'acts-categories-packagetypes' }"
                             index="/shipping/packagetypes"
                             @click="menuItemClick">Shipping Package Types</el-menu-item>
