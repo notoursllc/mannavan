@@ -66,7 +66,7 @@ export default {
 
     computed: {
         productTypeName() {
-            return this.$tc(this.productSubType, 2);
+            return this.$t(this.productSubType);
         }
     },
 

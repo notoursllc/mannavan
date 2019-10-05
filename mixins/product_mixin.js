@@ -95,13 +95,15 @@ export default {
         },
 
         async upsertProductArtist(artist) {
-            let uri = '/artist/create' ;
+            let response;
 
             if(artist.id) {
-                uri = '/artist/update';
+                response = await this.$axios.$put('/artist', artist);
+            }
+            else {
+                response = await this.$axios.$post('/artist', artist);
             }
 
-            const response = await this.$axios.$post(uri, artist);
             return response.data;
         },
 
@@ -230,16 +232,15 @@ export default {
 
 
         async upsertProduct(product) {
-            let target = '/product/create';
+            let response;
+            let cleanProduct = stripRelations(product);
 
             if(product.id) {
-                target = '/product/update'
+                response = await this.$axios.$put('/product', cleanProduct);
             }
-
-            const response = await this.$axios.$post(
-                target,
-                stripRelations(product)
-            );
+            else {
+                response = await this.$axios.$post('/product', cleanProduct);
+            }
 
             return response.data;
         },
@@ -392,7 +393,7 @@ export default {
 
         async upsertProductPicture(formData) {
             const response = await this.$axios.$post(
-                '/product/pic/upsert',
+                '/product/pic',
                 formData,
                 { headers: { 'Content-Type': 'multipart/form-data' } }
             )

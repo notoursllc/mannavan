@@ -27,7 +27,7 @@ export default {
                 :to="{ name: 'productSubType', params: { productSubType: obj.slug } }"
                 tag="el-button"
                 class="is-round"
-                active-class="el-button--success">{{ $tc(type, 2) }}</nuxt-link>
+                active-class="el-button--success">{{ $t(type) }}</nuxt-link>
 
             <nuxt-link
                 :to="{ name: 'index' }"

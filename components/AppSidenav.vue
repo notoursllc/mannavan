@@ -48,7 +48,7 @@ export default {
                 :key="obj.id"
                 :route="{ name: 'productSubType', params: { productSubType: obj.slug } }"
                 :index="type"
-                @click="onMenuItemClick">{{ $tc(type, 2) }}</el-menu-item>
+                @click="onMenuItemClick">{{ $t(type) }}</el-menu-item>
 
             <!-- all products -->
             <el-menu-item

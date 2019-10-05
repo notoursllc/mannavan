@@ -52,12 +52,11 @@ export default {
 
         subTypeLabel(subType) {
             let values = [];
-            let self = this;
 
-            forEach(this.getProductSubTypes(), function(val, key) {
+            forEach(this.getProductSubTypes(), (val, key) => {
                 if(subType & key) {
                     values.push(
-                        self.$tc(key, 2)
+                        this.$t(key)
                     );
                 }
             });

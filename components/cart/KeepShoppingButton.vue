@@ -33,7 +33,7 @@ export default {
                         v-for="(obj, type) in productSubTypes"
                         :key="obj.id"
                         :to="{ name: 'productSubType', params: { productSubType: obj.slug } }"
-                        tag="a">{{ $tc(type, 2) }}</nuxt-link>
+                        tag="a">{{ $t(type) }}</nuxt-link>
 
                     <nuxt-link
                         :to="{ name: 'index' }"

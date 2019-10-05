@@ -38,7 +38,7 @@ export default {
                         <dd v-for="(obj, type) in productSubTypes" :key="obj.id">
                             <nuxt-link
                                 tag="a"
-                                :to="{ name: 'productSubType', params: { productSubType: obj.slug } }">{{ $tc(type, 2) }}</nuxt-link>
+                                :to="{ name: 'productSubType', params: { productSubType: obj.slug } }">{{ $t(type) }}</nuxt-link>
                         </dd>
                     </dl>
                 </nav>
