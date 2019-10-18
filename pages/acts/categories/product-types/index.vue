@@ -102,15 +102,15 @@ export default {
             }
         },
 
-        async onUpsertSuccess(type) {
+        async onUpsertFormSave(type) {
             try {
-                const p = await this.upsertProductType(this.dialog.type);
+                const p = await this.upsertProductType(type);
 
                 if(!p) {
                     throw new Error(this.$t('Error updating Product Type'));
                 }
 
-                let title = this.dialog.type.id ? 'Product Type updated successfully' : 'Product Type added successfully';
+                let title = type.id ? 'Product Type updated successfully' : 'Product Type added successfully';
                 this.$successMessage(`${title}: ${p.name}`);
 
                 this.dialog.show = false;
@@ -152,7 +152,7 @@ export default {
             :visible.sync="dialog.show">
             <product-type-upsert-form
                 :type="dialog.type"
-                @save="onUpsertSuccess"
+                @save="onUpsertFormSave"
                 @cancel="onUpsertCancel" />
         </app-dialog>
     </div>
