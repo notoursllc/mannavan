@@ -92,6 +92,11 @@ export default {
                             :route="{ name: 'acts-categories-fit-types' }"
                             index="fitTypes"
                             @click="menuItemClick">Fit Types</el-menu-item>
+
+                        <el-menu-item
+                            :route="{ name: 'acts-categories-material-types' }"
+                            index="fitTypes"
+                            @click="menuItemClick">Material Types</el-menu-item>
                     </el-submenu>
 
                     <el-submenu index="1">
