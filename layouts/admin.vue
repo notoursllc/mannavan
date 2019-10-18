@@ -85,8 +85,13 @@ export default {
 
                         <el-menu-item
                             :route="{ name: 'acts-categories-packagetypes' }"
-                            index="/shipping/packagetypes"
+                            index="shippingPackageTypes"
                             @click="menuItemClick">Shipping Package Types</el-menu-item>
+
+                        <el-menu-item
+                            :route="{ name: 'acts-categories-fit-types' }"
+                            index="fitTypes"
+                            @click="menuItemClick">Fit Types</el-menu-item>
                     </el-submenu>
 
                     <el-submenu index="1">
@@ -105,23 +110,20 @@ export default {
                             @click="menuItemClick">Artists</el-menu-item>
                     </el-submenu>
 
-                    <el-submenu index="order_menu">
-                        <template slot="title">
-                            <span>Payments</span>
-                        </template>
+                    <el-menu-item
+                        :route="{ name: 'acts-tax-list' }"
+                        index="/taxes"
+                        @click="menuItemClick">Taxes</el-menu-item>
 
-                        <el-menu-item
-                            :route="{ name: 'acts-order-list' }"
-                            index="/orders"
-                            @click="menuItemClick">List</el-menu-item>
-                    </el-submenu>
+                    <el-menu-item
+                        :route="{ name: 'acts-order-list' }"
+                        index="/orders"
+                        @click="menuItemClick">Payments</el-menu-item>
 
                     <el-menu-item
                         :route="{ name: 'acts-reports' }"
                         index="/reports"
-                        @click="menuItemClick">
-                        <span>{{ $t('Reports') }}</span>
-                    </el-menu-item>
+                        @click="menuItemClick">Reports</el-menu-item>
                 </el-menu>
             </aside>
 
