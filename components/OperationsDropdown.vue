@@ -31,7 +31,7 @@ export default {
 <template>
     <el-dropdown @command="onCommand">
         <el-button size="mini">
-            <i class="el-icon-arrow-down" />
+            <i class="el-icon-more" />
         </el-button>
         <el-dropdown-menu slot="dropdown">
             <el-dropdown-item command="view" v-if="showView">View</el-dropdown-item>
