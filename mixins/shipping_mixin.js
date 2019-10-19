@@ -6,7 +6,7 @@ import isObject from 'lodash.isobject';
 
 export default {
     methods: {
-        async getPackageTypes(params) {
+        async shipmix_getPackageTypes(params) {
             let paramString = queryString.stringify(params, {arrayFormat: 'bracket'});
 
             const response = await this.$axios.$get(`/shipping/packagetypes?${paramString}`); // TODO: is there a XSS issue here?
@@ -32,19 +32,20 @@ export default {
 
 
         async upsertPackageType(packageType) {
-            let uri = '/shipping/packagetype/create' ;
+            let response;
 
             if(packageType.id) {
-                uri = '/shipping/packagetype/update';
+                response = await this.$axios.$put('/shipping/packagetype', packageType);
+            }
+            else {
+                response = await this.$axios.$post('/shipping/packagetype', packageType);
             }
 
-            const response = await this.$axios.$post(uri, packageType);
             return response.data;
         },
 
 
         async deletePackageType(id) {
-            console.log("DEL", id)
             const response = await this.$axios.$delete('/shipping/packagetype', {
                 params: { id }
             });
