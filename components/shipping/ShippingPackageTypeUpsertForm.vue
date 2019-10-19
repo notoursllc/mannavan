@@ -92,18 +92,10 @@ export default {
 
 
 <template>
-    <div class="displayTable widthAll">
+    <div class="displayTable">
         <div class="g-spec">
-            <div class="g-spec-label">General Info</div>
-            <div class="g-spec-content">
-                <!-- type ID -->
-                <div class="formRow">
-                    <label>Type ID:</label>
-                    <span>
-                        <el-input v-model="packageType.type" />
-                    </span>
-                </div>
-
+            <div class="g-spec-label nowrap">Details</div>
+            <div class="g-spec-content widthAll">
                 <!-- label -->
                 <div class="formRow">
                     <label>Label:</label>
@@ -115,7 +107,7 @@ export default {
         </div>
 
         <div class="g-spec">
-            <div class="g-spec-label">Package dimensions</div>
+            <div class="g-spec-label nowrap">Package dimensions</div>
             <div class="g-spec-content">
 
                 <!-- length -->
@@ -175,7 +167,7 @@ export default {
         </div>
 
         <div class="g-spec">
-            <div class="g-spec-label">Package weight</div>
+            <div class="g-spec-label nowrap">Package weight</div>
             <div class="g-spec-content">
                 <!-- weight - note the back end requires this to be ounces -->
                 <div class="formRow">

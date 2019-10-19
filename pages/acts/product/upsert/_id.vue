@@ -3,8 +3,6 @@ import forEach from 'lodash.foreach'
 import product_mixin from '@/mixins/product_mixin'
 import shipping_mixin from '@/mixins/shipping_mixin'
 
-const globalTypes = process.env.GLOBAL_TYPES;
-
 export default {
     middleware: 'authenticated',
 
@@ -13,11 +11,15 @@ export default {
     components: {
         ProductSizeAdmin: () => import('@/components/product/admin/ProductSizeAdmin'),
         ProductTypeSelect: () => import('@/components/product/admin/ProductTypeSelect'),
+        FitTypeSelect: () => import('@/components/product/admin/FitTypeSelect'),
+        MaterialTypeSelect: () => import('@/components/product/admin/MaterialTypeSelect'),
         ProductPicturesAdmin: () => import('@/components/product/admin/ProductPicturesAdmin'),
-        BitwiseMultiSelect: () => import('@/components/BitwiseMultiSelect'),
         IconNewWindow: () => import('@/components/icons/IconNewWindow'),
         IconPlayVideo: () => import('@/components/icons/IconPlayVideo'),
         ProductArtistSelect: () => import('@/components/product/admin/ProductArtistSelect'),
+        ProductVariationAdmin: () => import('@/components/product/admin/ProductVariationAdmin'),
+        TaxSelect: () => import('@/components/tax/TaxSelect'),
+        ShippingPackageTypeSelect: () => import('@/components/shipping/ShippingPackageTypeSelect'),
         Fab: () => import('@/components/Fab')
     },
 
@@ -28,13 +30,10 @@ export default {
 
     data() {
         return {
-            globalTypes: globalTypes,
             product: {
                 sizes: []
             },
-            productInfo: {},
             productPics: [],
-            shippingPackageTypes: [],
             videoPlayerModal: {
                 isActive: false,
                 videoId: null,
@@ -47,17 +46,6 @@ export default {
     },
 
     computed: {
-        fitSelectOptions() {
-            let opts = [];
-            forEach(this.productInfo.fits, (val, key) => {
-                opts.push({
-                    label: this.$t(key),
-                    value: val
-                })
-            });
-            return opts;
-        },
-
         productSizes() {
             return this.product.sizes;
         }
@@ -131,23 +119,6 @@ export default {
                     { closeOthers: true }
                 )
             }
-        },
-
-        async onProductDelete() {
-            try {
-                await this.$confirm(`Delete product "${ this.product.title }"?`, 'Please confirm', {
-                    confirmButtonText: 'OK',
-                    cancelButtonText: 'Cancel',
-                    type: 'warning'
-                });
-
-                await this.deleteProduct(this.product.id);
-                this.$successMessage(`"${ this.product.title }" deleted successfully`);
-                this.goToAdminProductList();
-            }
-            catch(err) {
-                // Do nothing
-            }
         }
     },
 
@@ -159,14 +130,6 @@ export default {
             else {
                 // setting some defaults:
                 this.product.is_available = true;
-                this.product.hide_if_out_of_stock = true;
-            }
-
-            this.productInfo = await this.getProductInfo();
-            this.shippingPackageTypes = await this.getPackageTypes();
-
-            if(!this.productInfo) {
-                throw new Error(this.$t('Product info not found'));
             }
         }
         catch(e) {
@@ -183,7 +146,6 @@ export default {
 <template>
     <div>
         <fab type="save" @click="upsert" />
-        <fab type="delete" :column="2" @click="onProductDelete" />
 
         <div class="tar mbm" v-if="product.id">
             <el-button @click="goToStore(product.seo_uri)">
@@ -196,235 +158,208 @@ export default {
 
             <!-- general info -->
             <el-tab-pane
-                label="General Info"
+                label="Product"
                 class="phl">
-                <div class="formContainer">
-                    <!-- is_available -->
-                    <div class="formRow">
-                        <label>Available:</label>
-                        <span>
-                            <el-checkbox v-model="product.is_available" />
-                        </span>
+
+                <div class="displayTable widthAll">
+                    <div class="g-spec">
+                        <div class="g-spec-label"></div>
+                        <div class="g-spec-content">
+                            <!-- is_available -->
+                            <div class="formRow">
+                                <label>Available:</label>
+                                <span>
+                                    <el-checkbox v-model="product.is_available" />
+                                </span>
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- hide_if_out_of_stock -->
-                    <div class="formRow">
-                        <label>Hide if out of stock:</label>
-                        <span>
-                            <el-checkbox v-model="product.hide_if_out_of_stock" />
-                        </span>
+                    <div class="g-spec">
+                        <div class="g-spec-label">Categories</div>
+                        <div class="g-spec-content">
+                            <!-- type -->
+                            <div class="formRow">
+                                <label>Product type:</label>
+                                <span>
+                                    <product-type-select v-model="product.type" />
+                                </span>
+                            </div>
+
+                            <!-- sub_type -->
+                            <div class="formRow">
+                                <label>Product sub-type:</label>
+                                <span>
+                                    <product-type-select
+                                        v-model="product.sub_type"
+                                        :is-sub-type="true" />
+                                </span>
+                            </div>
+
+                            <!-- fits -->
+                            <div class="formRow">
+                                <label>Fit type:</label>
+                                <span>
+                                    <fit-type-select v-model="product.fit" />
+                                </span>
+                            </div>
+
+                            <!-- material type -->
+                            <div class="formRow">
+                                <label>Material type:</label>
+                                <span>
+                                    <material-type-select v-model="product.material_type" />
+                                </span>
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- title -->
-                    <div class="formRow">
-                        <label>Title:</label>
-                        <span>
-                            <el-input v-model="product.title" />
-                        </span>
+                    <div class="g-spec">
+                        <div class="g-spec-label">Details</div>
+                        <div class="g-spec-content">
+
+                            <!-- title -->
+                            <div class="formRow">
+                                <label>Title:</label>
+                                <span>
+                                    <el-input v-model="product.title" />
+                                </span>
+                            </div>
+
+                            <!-- description_short -->
+                            <div class="formRow">
+                                <label>Short Description:</label>
+                                <span>
+                                    <el-input
+                                        type="textarea"
+                                        :rows="2"
+                                        v-model="product.description_short" />
+                                </span>
+                            </div>
+
+                            <!-- description_long -->
+                            <div class="formRow">
+                                <label>Long Description:</label>
+                                <span>
+                                    <el-input
+                                        type="textarea"
+                                        :rows="3"
+                                        v-model="product.description_long" />
+                                </span>
+                            </div>
+
+                            <!-- seo_uri -->
+                            <div class="formRow">
+                                <label>SEO URI:</label>
+                                <span>
+                                    <el-input v-model="product.seo_uri" />
+                                </span>
+                            </div>
+
+                            <!-- tax_code -->
+                            <!-- <div class="formRow">
+                                <label>Tax code:</label>
+                                <span>
+                                    <el-input-number
+                                        v-model="product.tax_code"
+                                        controls-position="right"
+                                        :step="1" />
+                                </span>
+                            </div> -->
+
+                            <!-- video_url -->
+                            <div class="formRow">
+                                <label>Video URL:</label>
+                                <span>
+                                    <el-input v-model="product.video_url" style="width:600px">
+                                        <el-button
+                                            slot="append"
+                                            v-if="product.video_url"
+                                            @click="playVideo(product.video_url)">
+                                            <icon-play-video icon-name="play" width="20px" />
+                                        </el-button>
+                                    </el-input>
+                                </span>
+                            </div>
+
+                            <!-- artist -->
+                            <div class="formRow">
+                                <label>Artist:</label>
+                                <span>
+                                    <product-artist-select v-model="product.product_artist_id" />
+                                </span>
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- description_short -->
-                    <div class="formRow">
-                        <label>Short Description:</label>
-                        <span>
-                            <el-input
-                                type="textarea"
-                                :rows="2"
-                                v-model="product.description_short" />
-                        </span>
+                    <div class="g-spec">
+                        <div class="g-spec-label">Pricing</div>
+                        <div class="g-spec-content">
+                            <!-- Tax -->
+                            <div class="formRow">
+                                <label>Taxes:</label>
+                                <span>
+                                    <tax-select v-model="product.tax_id" />
+                                </span>
+                            </div>
+
+                            <!-- base_price -->
+                            <div class="formRow">
+                                <label>Base price:</label>
+                                <span>
+                                    <el-input-number
+                                        v-model="product.base_price"
+                                        controls-position="right"
+                                        :step=".01" />
+                                </span>
+                            </div>
+
+                            <!-- sale_price -->
+                            <div class="formRow">
+                                <label>Sale price:</label>
+                                <span>
+                                    <el-input-number
+                                        v-model="product.sale_price"
+                                        controls-position="right"
+                                        :step=".01" />
+                                </span>
+                            </div>
+
+                            <!-- sale_price -->
+                            <div class="formRow">
+                                <label>On sale:</label>
+                                <span>
+                                    <el-checkbox v-model="product.is_on_sale" />
+                                </span>
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- description_long -->
-                    <div class="formRow">
-                        <label>Long Description:</label>
-                        <span>
-                            <el-input
-                                type="textarea"
-                                :rows="3"
-                                v-model="product.description_long" />
-                        </span>
+                    <div class="g-spec">
+                        <div class="g-spec-label">Shipping</div>
+                        <div class="g-spec-content">
+                            <!-- Package type -->
+                            <div class="formRow">
+                                <label>Package type:</label>
+                                <span>
+                                    <shipping-package-type-select v-model="product.shipping_package_type_id" />
+                                </span>
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- seo_uri -->
-                    <div class="formRow">
-                        <label>SEO URI:</label>
-                        <span>
-                            <el-input v-model="product.seo_uri" />
-                        </span>
-                    </div>
-
-                    <!-- weight_oz -->
-                    <div class="formRow">
-                        <label>Weight (oz):</label>
-                        <span>
-                            <el-input-number
-                                v-model="product.weight_oz"
-                                controls-position="right"
-                                :step=".1"
-                                class="widthAll" />
-                        </span>
-                    </div>
-
-                    <!-- tax_code -->
-                    <div class="formRow">
-                        <label>Tax code:</label>
-                        <span>
-                            <el-input-number
-                                v-model="product.tax_code"
-                                controls-position="right"
-                                :step="1"
-                                class="widthAll" />
-                        </span>
-                    </div>
-
-                    <!-- sku -->
-                    <div class="formRow">
-                        <label>SKU:</label>
-                        <span>
-                            <el-input v-model="product.sku" />
-                        </span>
-                    </div>
-
-                    <!-- material type -->
-                    <div class="formRow">
-                        <label>Material type:</label>
-                        <span>
-                            <el-select
-                                v-model="product.material_type"
-                                class="widthAll"
-                                :clearable="true"
-                                @clear="() => { product.material_type = null }">
-                                <el-option
-                                    v-for="(val, key) in globalTypes.product.material_types"
-                                    :key="val"
-                                    :label="$t(key)"
-                                    :value="val">
-                                </el-option>
-                            </el-select>
-                        </span>
-                    </div>
-
-                    <!-- artist -->
-                    <div class="formRow">
-                        <label>Artist:</label>
-                        <span>
-                            <product-artist-select v-model="product.product_artist_id" />
-                        </span>
-                    </div>
                 </div>
             </el-tab-pane>
 
-
-            <!-- pricing -->
+            <!-- variations -->
             <el-tab-pane
-                label="Pricing"
+                label="Variations"
+                :disabled="!product.id"
                 class="phl">
-                <div class="formContainer">
-                    <!-- cost -->
-                    <div class="formRow">
-                        <label>Cost:</label>
-                        <span>
-                            <el-input-number
-                                v-model="product.cost"
-                                controls-position="right"
-                                :step=".01" />
-                        </span>
-                    </div>
-
-                    <!-- base_price -->
-                    <div class="formRow">
-                        <label>Base price:</label>
-                        <span>
-                            <el-input-number
-                                v-model="product.base_price"
-                                controls-position="right"
-                                :step=".01" />
-                        </span>
-                    </div>
-
-                    <!-- sale_price -->
-                    <div class="formRow">
-                        <label>Sale price:</label>
-                        <span>
-                            <el-input-number
-                                v-model="product.sale_price"
-                                controls-position="right"
-                                :step=".01" />
-                        </span>
-                    </div>
-
-                    <!-- sale_price -->
-                    <div class="formRow">
-                        <label>On sale:</label>
-                        <span>
-                            <el-checkbox v-model="product.is_on_sale" />
-                        </span>
-                    </div>
-                </div>
+                <template v-if="product.id">
+                    <product-variation-admin :product-id="product.id" />
+                </template>
             </el-tab-pane>
-
-
-            <!-- categories -->
-            <el-tab-pane
-                label="Categories"
-                class="phl">
-                <div class="formContainer">
-                    <!-- type -->
-                    <div class="formRow">
-                        <label>Product type:</label>
-                        <span>
-                            <product-type-select v-model="product.type" />
-                        </span>
-                    </div>
-
-                    <!-- sub_type -->
-                    <div class="formRow">
-                        <label>Product sub-type:</label>
-                        <span>
-                            <product-type-select
-                                v-model="product.sub_type"
-                                :is-sub-type="true" />
-                        </span>
-                    </div>
-
-                    <!-- fits -->
-                    <div class="formRow">
-                        <label>Fit type:</label>
-                        <span>
-                            <bitwise-multi-select
-                                v-model="product.fit"
-                                :options="fitSelectOptions" />
-                        </span>
-                    </div>
-                </div>
-            </el-tab-pane>
-
-
-            <!-- shipping -->
-            <el-tab-pane
-                label="Shipping"
-                class="phl">
-                <div class="formContainer">
-                    <!-- package type -->
-                    <div class="formRow">
-                        <label>Shipping package type:</label>
-                        <span>
-                            <el-select
-                                v-model="product.shipping_package_type"
-                                :clearable="true"
-                                @clear="() => { product.shipping_package_type = null }">
-                                <el-option
-                                    v-for="obj in shippingPackageTypes"
-                                    :key="obj.id"
-                                    :label="obj.label"
-                                    :value="obj.type">
-                                </el-option>
-                            </el-select>
-                        </span>
-                    </div>
-                </div>
-            </el-tab-pane>
-
 
             <!-- sizes -->
             <el-tab-pane
@@ -435,47 +370,29 @@ export default {
             </el-tab-pane>
 
 
-            <!-- media -->
+            <!-- pictures -->
             <el-tab-pane
-                label="Media"
+                label="Pictures"
                 :disabled="!product.id"
                 class="phl">
-                <!-- video_url -->
-                <div class="formRow">
-                    <label>Video URL:</label>
-                    <span>
-                        <el-input v-model="product.video_url" style="width:600px">
-                            <el-button
-                                slot="append"
-                                v-if="product.video_url"
-                                @click="playVideo(product.video_url)">
-                                <icon-play-video icon-name="play" width="20px" />
-                            </el-button>
-                        </el-input>
-                    </span>
-                </div>
-
-                <!-- pictures -->
-                <div class="mtl">
-                    <product-pictures-admin :product-id="product.id"></product-pictures-admin>
-                </div>
-
-                <el-dialog title="Product video"
-                        :visible.sync="videoPlayerModal.isActive"
-                        @close="modalClosed"
-                        width="90%"
-                        top="5vh">
-                    <client-only  placeholder="Loading...">
-                        <youtube
-                            :video-id="videoPlayerModal.videoId"
-                            :player-vars="{ autoplay: 1 }"
-                            player-width="100%"
-                            @playing="videoPlaying"></youtube>
-                    </client-only>
-                </el-dialog>
+                <product-pictures-admin :product-id="product.id"></product-pictures-admin>
             </el-tab-pane>
-
         </el-tabs>
+
+
+        <el-dialog title="Product video"
+                :visible.sync="videoPlayerModal.isActive"
+                @close="modalClosed"
+                width="90%"
+                top="5vh">
+            <client-only  placeholder="Loading...">
+                <youtube
+                    :video-id="videoPlayerModal.videoId"
+                    :player-vars="{ autoplay: 1 }"
+                    player-width="100%"
+                    @playing="videoPlaying"></youtube>
+            </client-only>
+        </el-dialog>
 
     </div>
 </template>

@@ -11,7 +11,7 @@ export default {
     components: {
         OperationsDropdown: () => import('@/components/OperationsDropdown'),
         Fab: () => import('@/components/Fab'),
-        ShippingPackageTypeUpsertForm: () => import('@/components/admin/categories/ShippingPackageTypeUpsertForm')
+        ShippingPackageTypeUpsertForm: () => import('@/components/shipping/ShippingPackageTypeUpsertForm')
     },
 
     mixins: [
@@ -35,7 +35,7 @@ export default {
     methods: {
         async fetchPackageTypes() {
             try {
-                this.shippingPackageTypes = await this.getPackageTypes({
+                this.shippingPackageTypes = await this.shipmix_getPackageTypes({
                     // where: ['is_available', '=', true],
                     // whereRaw: ['sub_type & ? > 0', [productTypeId]],
                     // andWhere: [

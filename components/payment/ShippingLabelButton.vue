@@ -105,7 +105,7 @@ export default{
 
         async buildParcelData() {
             let packageTypes = {};
-            this.shippingPackageTypes = await this.getPackageTypes();
+            this.shippingPackageTypes = await this.shipmix_getPackageTypes();
 
             this.payment.shoppingCart.cart_items.forEach((obj) => {
                 let packageType = obj.product.shipping_package_type;
