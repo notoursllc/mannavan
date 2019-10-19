@@ -10,6 +10,9 @@ function stripRelations(productJson) {
     delete productJson.artist;
     delete productJson.sizes;
     delete productJson.pics;
+    delete productJson.tax;
+    delete productJson.variations;
+    delete productJson.package_type;
 
     // also strip uneditable values:
     delete productJson.created_at;
@@ -129,6 +132,17 @@ export default {
         },
 
 
+        async prodmix_variations(product_id) {
+            const response = await this.$axios.$get('/product/variations', {
+                params: {
+                    product_id
+                }
+            });
+
+            return response.data;
+        },
+
+
 
         /******************************
          * Product Sub Types
@@ -144,6 +158,21 @@ export default {
             });
 
             return subTypes;
+        },
+
+        prodmix_getSubTypeLabel(value) {
+            const subTypes = this.getProductSubTypes(true);
+            const values = [];
+
+            Object.keys(subTypes).forEach((key) => {
+                if(value & subTypes[key].value) {
+                    values.push(
+                        this.$t(subTypes[key].name)
+                    );
+                }
+            });
+
+            return values.join(', ');
         },
 
 
@@ -204,30 +233,27 @@ export default {
         },
 
 
-
-
-
         featuredProductPic(product) {
             let pic = null;
 
-            if(Array.isArray(product.pics)) {
-                let len = product.pics.length;
+            if(Array.isArray(product.variations)) {
+                product.variations.forEach((variation) => {
+                    if(variation.published && Array.isArray(variation.pics)) {
+                        let len = variation.pics.length;
 
-                // The related sizes for a product are ordered by sort order (ASC)
-                // so the first 'is_visible' pic will be the featured pic
-                for(let i=0; i<len; i++) {
-                    if(product.pics[i].is_visible) {
-                        pic = product.pics[i].url;
-                        break;
+                        // The related pics for a product variant are ordered by sort order (ASC)
+                        // so the first 'is_visible' pic will be the featured pic
+                        for(let i=0; i<len; i++) {
+                            if(variation.pics[i].is_visible) {
+                                pic = variation.pics[i].url;
+                                break;
+                            }
+                        }
                     }
-                }
-
-                if(pic) {
-                    return pic;
-                }
+                })
             }
 
-            return;
+            return pic;
         },
 
 
@@ -296,6 +322,7 @@ export default {
          * Product Sizes
          ******************************/
 
+        // TODO: refactor this to get size options from product variation
         buildSizeOptions(product) {
             let sizeOpts = [];
             let maxInventoryCount = 0;

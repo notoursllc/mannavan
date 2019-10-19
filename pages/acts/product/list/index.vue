@@ -50,20 +50,6 @@ export default {
             }
         },
 
-        subTypeLabel(subType) {
-            let values = [];
-
-            forEach(this.getProductSubTypes(), (val, key) => {
-                if(subType & key) {
-                    values.push(
-                        this.$t(key)
-                    );
-                }
-            });
-
-            return values.join(', ');
-        },
-
         sortChanged(val) {
             this.sortData.orderBy = val.prop || 'updated_at';
             this.sortData.orderDir = val.order === 'ascending' ? 'ASC' : 'DESC';
@@ -85,6 +71,24 @@ export default {
             catch(err) {
                 // Do nothing
             }
+        },
+
+        numberOfPicsInProduct(product) {
+            let count = 0;
+
+            if(Array.isArray(product.variations)) {
+                product.variations.forEach((variation) => {
+                    if(variation.published && Array.isArray(variation.pics)) {
+                        variation.pics.forEach((pic) => {
+                            if(pic.is_visible) {
+                                count++;
+                            }
+                        })
+                    }
+                })
+            }
+
+            return count;
         }
     },
 
@@ -115,11 +119,12 @@ export default {
                 label="Featured Image"
                 width="140">
                 <template slot-scope="scope">
-                    <img v-if="scope.row.pics.length"
-                        :src="featuredProductPic(scope.row)"
-                        alt="Image"
-                        class="prodPicSmall" />
-                    <div class="fs12"># pictures: {{ scope.row.pics.length }}</div>
+                    <template v-if="featuredProductPic(scope.row)">
+                        <img :src="featuredProductPic(scope.row)"
+                            alt="Image"
+                            class="prodPicSmall" />
+                        <div class="fs12"># pictures: {{ numberOfPicsInProduct(scope.row) }}</div>
+                    </template>
                 </template>
             </el-table-column>
 
@@ -152,12 +157,12 @@ export default {
 
             <!-- product sub-type -->
             <el-table-column
-                label="Type"
+                label="Sub Type"
                 prop="sub_type"
                 width="120"
                 sortable="custom">
                 <template slot-scope="scope">
-                    {{ subTypeLabel(scope.row.sub_type) }}
+                    {{ prodmix_getSubTypeLabel(scope.row.sub_type) }}
                 </template>
             </el-table-column>
 
@@ -166,17 +171,6 @@ export default {
                 prop="display_price"
                 label="Display Price"
                 width="140"></el-table-column>
-
-            <!-- updated -->
-            <el-table-column
-                label="Updated"
-                prop="updated_at"
-                width="120"
-                sortable="custom">
-                <template slot-scope="scope">
-                    {{ scope.row.updated_at | format8601 }}
-                </template>
-            </el-table-column>
         </el-table>
     </div>
 </template>
