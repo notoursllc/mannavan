@@ -17,8 +17,16 @@ export default {
         },
 
 
-        async varimix_add(data) {
-            let response = await this.$axios.$post('/variation', data);
+        async varimix_upsert(data) {
+            let response;
+
+            if(data.id) {
+                response = await this.$axios.$put('/variation', data);
+            }
+            else {
+                response = await this.$axios.$post('/variation', data);
+            }
+
             return response.data;
         },
 
@@ -38,6 +46,13 @@ export default {
 
             return response.data;
         },
+
+
+        getFeaturedPic(variation) {
+            if(Array.isArray(variation.pics) && variation.pics[0]) {
+                return variation.pics[0].url;
+            }
+        }
 
 
         // varimix_goToList() {

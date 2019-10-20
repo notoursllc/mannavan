@@ -17,7 +17,7 @@ export default {
         IconNewWindow: () => import('@/components/icons/IconNewWindow'),
         IconPlayVideo: () => import('@/components/icons/IconPlayVideo'),
         ProductArtistSelect: () => import('@/components/product/admin/ProductArtistSelect'),
-        ProductVariationAdmin: () => import('@/components/product/admin/ProductVariationAdmin'),
+        VariationList: () => import('@/components/product/admin/variation/VariationList'),
         TaxSelect: () => import('@/components/tax/TaxSelect'),
         ShippingPackageTypeSelect: () => import('@/components/shipping/ShippingPackageTypeSelect'),
         Fab: () => import('@/components/Fab')
@@ -357,7 +357,7 @@ export default {
                 :disabled="!product.id"
                 class="phl">
                 <template v-if="product.id">
-                    <product-variation-admin :product-id="product.id" />
+                    <variation-list :product-id="product.id" />
                 </template>
             </el-tab-pane>
 
