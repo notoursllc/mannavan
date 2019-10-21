@@ -30,9 +30,11 @@ export default {
 
 <template>
     <el-dropdown @command="onCommand">
-        <el-button size="mini">
-            <i class="el-icon-more" />
-        </el-button>
+        <slot>
+            <el-button size="mini">
+                <i class="el-icon-more" />
+            </el-button>
+        </slot>
         <el-dropdown-menu slot="dropdown">
             <el-dropdown-item command="view" v-if="showView">View</el-dropdown-item>
             <el-dropdown-item command="edit" v-if="showEdit">Edit</el-dropdown-item>

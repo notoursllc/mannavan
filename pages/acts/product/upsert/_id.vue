@@ -348,17 +348,17 @@ export default {
                         </div>
                     </div>
 
-                </div>
-            </el-tab-pane>
+                    <div class="g-spec">
+                        <div class="g-spec-label">Variations</div>
+                        <div class="g-spec-content">
+                            <!-- Package type -->
+                            <template v-if="product.id">
+                                <variation-list :product-id="product.id" />
+                            </template>
+                        </div>
+                    </div>
 
-            <!-- variations -->
-            <el-tab-pane
-                label="Variations"
-                :disabled="!product.id"
-                class="phl">
-                <template v-if="product.id">
-                    <variation-list :product-id="product.id" />
-                </template>
+                </div>
             </el-tab-pane>
 
             <!-- sizes -->

@@ -82,10 +82,13 @@ export default {
     },
 
     watch: {
-        productId: {
+        id: {
             handler(newVal) {
                 if(newVal) {
                     this.getVariation();
+                }
+                else {
+                    this.resetData();
                 }
             },
             immediate: true,

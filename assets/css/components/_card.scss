@@ -1,0 +1,64 @@
+.card {
+    position: relative;
+    margin: .5rem 0 1rem 0;
+    background-color: #fff;
+    border-radius: 2px;
+
+    .card-image {
+        position: relative;
+
+        img {
+            display: block;
+            border-radius: 2px 2px 0 0;
+            position: relative;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .card-title {
+            color: #fff;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            max-width: 100%;
+            padding: 15px;
+            font-size: 24px;
+            font-weight: 300;
+        }
+    }
+
+    .card-content {
+        padding: 15px;
+        border-radius: 0 0 2px 2px;
+        position: relative;
+
+        .fab {
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            padding: 0;
+            color: #fff;
+            position: absolute;
+            right: 24px;
+            top: -15px;
+            font-size: 14px;
+            outline: 0;
+            background-color: #F44336;
+
+            i {
+                width: inherit;
+                display: inline-block;
+                text-align: center;
+                color: #fff;
+                font-size: 14px;
+                line-height: 30px;
+            }
+        }
+    }
+}
+
+

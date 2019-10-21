@@ -29,14 +29,15 @@ export default {
             variations: [],
             upsertModal: {
                 isActive: false,
-                variation: {}
+                variation: {
+                    id: null,
+                    name: null
+                }
             }
         }
     },
 
     methods: {
-
-
         async getVariations() {
             try {
                 this.variations = await this.prodmix_variations(this.productId);
@@ -81,7 +82,8 @@ export default {
         },
 
         onDoUpsert(variation) {
-            this.upsertModal.variation = variation || {};
+            this.upsertModal.variation.id = variation ? variation.id : null;
+            this.upsertModal.variation.name = variation ? variation.name : null;
             this.upsertModal.isActive = true;
         },
 
@@ -116,65 +118,43 @@ export default {
             <el-button type="primary" @click="onDoUpsert()">ADD VARIATION</el-button>
         </div>
 
-        <el-table
-            :data="variations"
-            class="widthAll">
+        <div class="inlineBlock" v-for="v in variations" :key="v.id" style="width:300px; padding: 0 10px;">
+            <div class="card">
+                <div class="card-image">
+                    <img :src="getFeaturedPic(v)" />
+                    <span class="card-title">
+                        {{ v.name }}
+                    </span>
+                </div>
+                <div class="card-content">
+                    <div class="fab tac bgRed">
+                        <operations-dropdown
+                                :show-view="false"
+                                @edit="onDoUpsert(v)"
+                                @delete="deleteVariation(v)">
+                            <i class="el-icon-more" />
+                        </operations-dropdown>
+                    </div>
 
-            <el-table-column type="expand">
-                <template slot-scope="scope">
-                    <pre style="overflow-x:scroll">{{ scope.row | formatJson }}</pre>
-                </template>
-            </el-table-column>
+                    <div class="displayTable">
+                        <div class="formRow">
+                            <label>SKU:</label>
+                            <span>{{ v.sku }}</span>
+                        </div>
 
-            <!-- picture -->
-            <el-table-column prop="name" label="Name">
-                <template slot-scope="scope" v-if="getFeaturedPic(scope.row)">
-                    <img :src="getFeaturedPic(scope.row)"
-                        alt="Image"
-                        class="prodPicSmall" />
-                    <div class="fs12"># pictures: {{ scope.row.pics.length }}</div>
-                </template>
-            </el-table-column>
+                        <div class="formRow">
+                            <label>Inventory:</label>
+                            <span>{{ v.inventory_count }}</span>
+                        </div>
 
-            <!-- name -->
-            <el-table-column
-                prop="name"
-                label="Name" />
-
-            <!-- sku -->
-            <el-table-column
-                prop="sku"
-                label="SKU" />
-
-            <!-- inventory count -->
-            <el-table-column
-                prop="inventory_count"
-                label="Inventory"
-                align="right">
-                <template slot-scope="scope">
-                    {{ $n(scope.row.inventory_count) }}
-                </template>
-            </el-table-column>
-
-            <!-- weight -->
-            <el-table-column
-                prop="weight_oz"
-                label="Weight (oz)"
-                align="right" />
-
-            <el-table-column
-                fixed="right"
-                align="right"
-                width="50">
-                <template slot-scope="scope">
-                    <operations-dropdown
-                        :show-view="false"
-                        @edit="onDoUpsert(scope.row)"
-                        @delete="deleteVariation(scope.row)" />
-                </template>
-            </el-table-column>
-        </el-table>
-
+                        <div class="formRow">
+                            <label>Weight (oz):</label>
+                            <span>{{ v.weight_oz }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <el-dialog
             :title="upsertModal.variation.name ? 'EDIT: ' + $t(upsertModal.variation.name) : 'ADD VARIATION'"
@@ -193,8 +173,15 @@ export default {
 
 <style lang="scss" scoped>
 @import "~assets/css/components/_formRow.scss";
+@import "~assets/css/components/_card.scss";
 
-.prodPicSmall {
-    width: 70px;
+.card-image {
+    height: 200px;
+    background-color: #fff;
+    overflow: hidden;
+}
+
+.bgRed {
+    background-color: #F44336;
 }
 </style>
