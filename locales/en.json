@@ -107,6 +107,8 @@
     "MATERIAL_TYPE_COTTON": "Cotton",
     "MATERIAL_TYPE_TRI_BLEND": "Tri-Blend",
 
+    "n_in_stock": "{numInventory} in stock",
+    "n_in_stock_for_n_variants": "{numInventory} in stock for {numVariants} variant | {numInventory} in stock for {numVariants} variants",
     "No matching values": "No matching values",
     "No results": "No results",
 
@@ -148,9 +150,9 @@
     "Privacy Notice": "Privacy Notice",
     "Processing": "Processing",
     "Product quick view": "Product quick view",
-    "PRODUCT_SUBTYPE_HATS": "Hats",
-    "PRODUCT_SUBTYPE_SOCKS": "Socks",
-    "PRODUCT_SUBTYPE_TOPS": "Tops",
+    "PRODUCT_SUBTYPE_HAT": "Hats",
+    "PRODUCT_SUBTYPE_SOCK": "Socks",
+    "PRODUCT_SUBTYPE_TOP": "Tops",
     "PRODUCT_TYPE_APPAREL": "Apparel",
     "Product not found": "Product not found",
     "Products": "Products",

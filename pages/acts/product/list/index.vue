@@ -33,7 +33,7 @@ export default {
     methods: {
         async fetchProducts() {
             try {
-                this.products = await this.getProducts({
+                this.products = await this.getAdminProducts({
                     // where: ['is_available', '=', true],
                     // whereRaw: ['sub_type & ? > 0', [productTypeId]],
                     // andWhere: [
@@ -89,6 +89,21 @@ export default {
             }
 
             return count;
+        },
+
+        getInventoryCountString(prod) {
+            const numVariants = Array.isArray(prod.variants) ? prod.variants.length : 0;
+            const totalInventoryCount = prod.total_inventory_count || 0;
+
+            if(numVariants) {
+                return this.$tc(
+                    'n_in_stock_for_n_variants',
+                    numVariants,
+                    { numInventory: totalInventoryCount, numVariants: numVariants }
+                );
+            }
+
+            return this.$t('n_in_stock', { numInventory: totalInventoryCount })
         }
     },
 
@@ -116,7 +131,6 @@ export default {
 
             <!-- featured image -->
             <el-table-column
-                label="Featured Image"
                 width="140">
                 <template slot-scope="scope">
                     <template v-if="featuredProductPic(scope.row)">
@@ -142,15 +156,23 @@ export default {
                 </template>
             </el-table-column>
 
-            <!-- available -->
+            <!-- inventory count -->
             <el-table-column
-                label="Available"
+                label="Inventory">
+                <template slot-scope="scope">
+                    {{ getInventoryCountString(scope.row) }}
+                </template>
+            </el-table-column>
+
+            <!-- published -->
+            <el-table-column
+                label="Published"
                 width="120"
-                prop="is_available"
+                prop="published"
                 sortable="custom">
                 <template slot-scope="scope">
-                    <span v-bind:class="{'colorGreen':scope.row.is_available, 'colorRed':!scope.row.is_available}">
-                        {{ scope.row.is_available ? 'Yes' : 'No '}}
+                    <span v-bind:class="{'colorGreen':scope.row.published, 'colorRed':!scope.row.published}">
+                        {{ scope.row.published ? 'Yes' : 'No '}}
                     </span>
                 </template>
             </el-table-column>
@@ -166,11 +188,10 @@ export default {
                 </template>
             </el-table-column>
 
-            <!-- display price -->
+            <!-- vendor -->
             <el-table-column
-                prop="display_price"
-                label="Display Price"
-                width="140"></el-table-column>
+                prop="vendor"
+                label="Vendor" />
         </el-table>
     </div>
 </template>

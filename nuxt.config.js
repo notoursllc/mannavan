@@ -79,7 +79,7 @@ module.exports = {
     ** Plugins to load before mounting the App
     */
     plugins: [
-        '@/plugins/axios.js',
+        '@/plugins/api.js',
         '@/plugins/i18n.js',
         '@/plugins/element-ui',
         '@/plugins/global-properties',

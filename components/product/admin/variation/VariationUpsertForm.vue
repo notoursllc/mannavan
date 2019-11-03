@@ -24,6 +24,10 @@ export default {
         }
     },
 
+    components: {
+        OptionList: () => import('@/components/product/admin/option/OptionList'),
+    },
+
     mixins: [
         variation_mixin
     ],
@@ -99,100 +103,121 @@ export default {
 
 
 <template>
-    <div v-cloak class="mha displayTable">
-        <!-- Published -->
-        <div class="formRow">
-            <label>Published:</label>
-            <span>
-                <el-checkbox v-model="variation.published" />
-            </span>
+    <div>
+        <div class="g-spec">
+            <div class="g-spec-label">Variation</div>
+            <div class="g-spec-content">
+
+                <div v-cloak class="mha displayTable">
+                    <!-- Published -->
+                    <div class="formRow">
+                        <label>Published:</label>
+                        <span>
+                            <el-checkbox v-model="variation.published" />
+                        </span>
+                    </div>
+
+                    <!-- Name -->
+                    <div class="formRow">
+                        <label>Name:</label>
+                        <span>
+                            <el-input v-model="variation.name" />
+                        </span>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="formRow">
+                        <label>Description:</label>
+                        <span>
+                            <el-input
+                                type="textarea"
+                                :rows="2"
+                                v-model="variation.description" />
+                        </span>
+                    </div>
+
+                    <!-- SKU -->
+                    <div class="formRow">
+                        <label>SKU:</label>
+                        <span>
+                            <el-input v-model="variation.sku" />
+                        </span>
+                    </div>
+
+                    <!-- Ordinal -->
+                    <div class="formRow">
+                        <label>Ordinal:</label>
+                        <span>
+                            <el-input-number
+                                v-model="variation.ordinal"
+                                controls-position="right"
+                                :step="1" />
+                        </span>
+                    </div>
+
+                    <!-- Weight -->
+                    <div class="formRow">
+                        <label>Weight (oz):</label>
+                        <span>
+                            <el-input-number
+                                v-model="variation.weight_oz"
+                                controls-position="right"
+                                :step=".1" />
+                        </span>
+                    </div>
+
+                    <!-- Inventory alert threshold -->
+                    <div class="formRow">
+                        <label>Inventory alert threshold:</label>
+                        <span>
+                            <el-input-number
+                                v-model="variation.inventory_alert_threshold"
+                                controls-position="right"
+                                :step="1" />
+                        </span>
+                    </div>
+
+                    <!-- Inventory count -->
+                    <div class="formRow">
+                        <label>Inventory count:</label>
+                        <span>
+                            <el-input-number
+                                v-model="variation.inventory_count"
+                                controls-position="right"
+                                :step="1" />
+                        </span>
+                    </div>
+
+                    <!-- Show inventory alert -->
+                    <div class="formRow">
+                        <label>Show inventory alert:</label>
+                        <span>
+                            <el-checkbox v-model="variation.inventory_alert_show" />
+                        </span>
+                    </div>
+
+                    <!-- Hide if out of stock -->
+                    <div class="formRow">
+                        <label>Hide if out of stock:</label>
+                        <span>
+                            <el-checkbox v-model="variation.hide_if_out_of_stock" />
+                        </span>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <!-- Name -->
-        <div class="formRow">
-            <label>Name:</label>
-            <span>
-                <el-input v-model="variation.name" />
-            </span>
+        <div class="g-spec">
+            <div class="g-spec-label">Options</div>
+            <div class="g-spec-content">
+                <option-list :variation-id="variation.id" />
+            </div>
         </div>
 
-        <!-- Description -->
-        <div class="formRow">
-            <label>Description:</label>
-            <span>
-                <el-input
-                    type="textarea"
-                    :rows="2"
-                    v-model="variation.description" />
-            </span>
-        </div>
-
-        <!-- SKU -->
-        <div class="formRow">
-            <label>SKU:</label>
-            <span>
-                <el-input v-model="variation.sku" />
-            </span>
-        </div>
-
-        <!-- Ordinal -->
-        <div class="formRow">
-            <label>Ordinal:</label>
-            <span>
-                <el-input-number
-                    v-model="variation.ordinal"
-                    controls-position="right"
-                    :step="1" />
-            </span>
-        </div>
-
-        <!-- Weight -->
-        <div class="formRow">
-            <label>Weight (oz):</label>
-            <span>
-                <el-input-number
-                    v-model="variation.weight_oz"
-                    controls-position="right"
-                    :step=".1" />
-            </span>
-        </div>
-
-        <!-- Inventory alert threshold -->
-        <div class="formRow">
-            <label>Inventory alert threshold:</label>
-            <span>
-                <el-input-number
-                    v-model="variation.inventory_alert_threshold"
-                    controls-position="right"
-                    :step="1" />
-            </span>
-        </div>
-
-        <!-- Inventory count -->
-        <div class="formRow">
-            <label>Inventory count:</label>
-            <span>
-                <el-input-number
-                    v-model="variation.inventory_count"
-                    controls-position="right"
-                    :step="1" />
-            </span>
-        </div>
-
-        <!-- Show inventory alert -->
-        <div class="formRow">
-            <label>Show inventory alert:</label>
-            <span>
-                <el-checkbox v-model="variation.inventory_alert_show" />
-            </span>
-        </div>
-
-        <!-- Hide if out of stock -->
-        <div class="formRow">
-            <label>Hide if out of stock:</label>
-            <span>
-                <el-checkbox v-model="variation.hide_if_out_of_stock" />
-            </span>
+        <div class="g-spec">
+            <div class="g-spec-label">Pictures</div>
+            <div class="g-spec-content">
+            </div>
         </div>
 
         <!-- buttons -->

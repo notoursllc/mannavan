@@ -110,9 +110,24 @@ export default {
                             @click="menuItemClick">List</el-menu-item>
 
                         <el-menu-item
+                            :route="{ name: 'acts-product-collections' }"
+                            index="productCollections"
+                            @click="menuItemClick">Collections</el-menu-item>
+
+                        <el-menu-item
+                            :route="{ name: 'acts-product-types' }"
+                            index="productTypes"
+                            @click="menuItemClick">Product Types</el-menu-item>
+
+                        <el-menu-item
+                            :route="{ name: 'acts-product-sub-types' }"
+                            index="productSubTypes"
+                            @click="menuItemClick">Product Sub-Types</el-menu-item>
+
+                        <!-- <el-menu-item
                             :route="{ name: 'acts-product-artist-list' }"
                             index="/product-artists"
-                            @click="menuItemClick">Artists</el-menu-item>
+                            @click="menuItemClick">Artists</el-menu-item> -->
                     </el-submenu>
 
                     <el-menu-item
@@ -164,13 +179,22 @@ export default {
 </template>
 
 
-<style lang="scss" scoped>
+<style lang="scss">
 $sidenav-width: 225px;
 $header-height: 50px;
 
 @import "~assets/css/components/_variables.scss";
 @import "~assets/css/components/_mixins.scss";
 @import "~assets/css/components/_sidenav.scss";
+
+// some overrides
+.sidenav {
+    .el-menu-item,
+    .el-submenu__title {
+        height: 30px;
+        line-height: 30px;
+    }
+}
 
 
 .layoutContainer {

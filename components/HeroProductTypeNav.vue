@@ -1,5 +1,5 @@
 <script>
-import product_mixin from '@/mixins/product_mixin';
+import product_mixin from '@/mixins/product_type_mixin';
 
 const globalTypes = process.env.GLOBAL_TYPES;
 
@@ -11,7 +11,7 @@ export default {
 
     computed: {
         productSubTypes() {
-            return this.getProductSubTypes(true);
+            return this.$api.masterTypes.list("product_sub_type");
         }
     }
 }

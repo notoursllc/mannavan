@@ -160,7 +160,8 @@ export default {
             :title="upsertModal.variation.name ? 'EDIT: ' + $t(upsertModal.variation.name) : 'ADD VARIATION'"
             :visible.sync="upsertModal.isActive"
             :modal-append-to-body="false"
-            :fullscreen="true">
+            width="95%"
+            top="5vh">
             <variation-upsert-form
                 :id="upsertModal.variation.id"
                 :product-id="productId"

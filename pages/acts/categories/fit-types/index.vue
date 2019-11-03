@@ -12,9 +12,7 @@ export default {
 
     components: {
         AppDialog: () => import('@/components/AppDialog'),
-        ProductTypesTable: () => import('@/components/product/admin/ProductTypesTable'),
         Fab: () => import('@/components/Fab'),
-        ProductTypeUpsertForm: () => import('@/components/product/admin/ProductTypeUpsertForm')
     },
 
     mixins: [
@@ -90,7 +88,7 @@ export default {
                     const types = await this.fitmix_list();
                     this.dialog.type = {
                         is_available: true,
-                        value: this.getNextAvailableTypeValue(types)
+                        value: this.prodTypeMix_getNextAvailableTypeValue(types)
                     };
                 }
 
@@ -142,9 +140,9 @@ export default {
 
 <template>
     <div>
-        <fab type="add" @click="onUpsertClick" />
+        <!-- <fab type="add" @click="onUpsertClick" />
 
-        <product-types-table
+        <master-types-table
             :types="types"
             @edit="onUpsertClick"
             @delete="onTypeDelete" />
@@ -156,6 +154,6 @@ export default {
                 :type="dialog.type"
                 @save="onUpsertFormSave"
                 @cancel="onUpsertCancel" />
-        </app-dialog>
+        </app-dialog> -->
     </div>
 </template>

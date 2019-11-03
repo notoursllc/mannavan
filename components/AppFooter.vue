@@ -1,5 +1,5 @@
 <script>
-import product_mixin from '@/mixins/product_mixin';
+import product_mixin from '@/mixins/product_type_mixin';
 
 export default {
     components: {
@@ -20,7 +20,7 @@ export default {
 
     computed: {
         productSubTypes() {
-            return this.getProductSubTypes(true);
+            return this.$api.masterTypes.list("product_sub_type");
         }
     }
 }

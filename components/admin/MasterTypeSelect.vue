@@ -1,25 +1,21 @@
 <script>
-import product_type_mixin from '@/mixins/product_type_mixin';
-
 export default {
+    name: 'MasterTypeSelect',
+
     props: {
-        value: {
-            type: Number
+        object: {
+            type: String,
+            required: true
         },
 
-        isSubType: {
-            type: Boolean,
-            default: false
+        value: {
+            type: Number
         }
     },
 
     components: {
         BitwiseMultiSelect: () => import('@/components/BitwiseMultiSelect')
     },
-
-    mixins: [
-        product_type_mixin
-    ],
 
     data: function() {
         return {
@@ -35,21 +31,14 @@ export default {
 
         async createOptions() {
             let opts = [];
-            let types = [];
-
-            if(this.isSubType) {
-                types = await this.getProductSubTypes();
-            }
-            else {
-                types = await this.getProductTypes();
-            }
+            let types = await this.$api.masterTypes.list(this.object);
 
             types.forEach((obj) => {
                 opts.push(
                     {
                         label: this.$t(obj.name),
                         value: obj.value,
-                        disabled: !obj.is_available
+                        disabled: !obj.published
                     }
                 )
             });

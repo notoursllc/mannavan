@@ -1,6 +1,6 @@
 <script>
 import { mapGetters } from 'vuex';
-import product_mixin from '@/mixins/product_mixin'
+import product_mixin from '@/mixins/product_type_mixin'
 
 export default {
     mixins: [
@@ -13,7 +13,7 @@ export default {
         }),
 
         productSubTypes() {
-            return this.getProductSubTypes(true);
+            return this.$api.masterTypes.list("product_sub_type");
         }
     },
 }

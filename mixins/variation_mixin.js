@@ -48,6 +48,17 @@ export default {
         },
 
 
+        async varimix_options(product_variation_id) {
+            const response = await this.$axios.$get('/variation/options', {
+                params: {
+                    product_variation_id
+                }
+            });
+
+            return response.data;
+        },
+
+
         getFeaturedPic(variation) {
             if(Array.isArray(variation.pics) && variation.pics[0]) {
                 return variation.pics[0].url;

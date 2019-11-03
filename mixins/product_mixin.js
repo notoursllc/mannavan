@@ -35,6 +35,15 @@ export default {
         },
 
 
+        async getAdminProducts(params) {
+            let paramString = queryString.stringify(params, {arrayFormat: 'bracket'});
+
+            // const response = await this.$axios.$get(`/products?${paramString}`); // TODO: is there a XSS issue here?
+            const response = await this.$axios.$get(`/admin/products?${paramString}`); // TODO: is there a XSS issue here?
+            return response.data;
+        },
+
+
         async getProductInfo() {
             const response = await this.$axios.$get('/product/info');
             return response.data;

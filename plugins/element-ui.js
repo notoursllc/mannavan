@@ -9,6 +9,7 @@ import {
     BreadcrumbItem,
     Button,
     ButtonGroup,
+    Card,
     Checkbox,
     Dialog,
     Dropdown,
@@ -45,6 +46,7 @@ export default ({ store }) => {
     Vue.use(BreadcrumbItem);
     Vue.use(Button);
     Vue.use(ButtonGroup);
+    Vue.use(Card);
     Vue.use(Checkbox);
     Vue.use(Dialog);
     Vue.use(Dropdown);
