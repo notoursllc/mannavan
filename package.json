@@ -67,6 +67,7 @@
     "square-connect": "^2.20190925.0",
     "uuid": "^3.3.3",
     "v-img": "^0.2.0",
+    "v-money": "^0.8.1",
     "vue-carousel": "^0.8.1",
     "vue-headroom": "^0.10.1",
     "vue-i18n": "^8.14.1",
