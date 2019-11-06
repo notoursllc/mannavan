@@ -16,7 +16,8 @@ export default {
         AppDialog: () => import('@/components/AppDialog'),
         Fab: () => import('@/components/Fab'),
         OperationsDropdown: () => import('@/components/OperationsDropdown'),
-        BooleanTag: () => import('@/components/admin/BooleanTag')
+        BooleanTag: () => import('@/components/admin/BooleanTag'),
+        MetaDataBuilder: () => import('@/components/admin/MetaDataBuilder'),
     },
 
     data() {
@@ -25,7 +26,8 @@ export default {
             form: {
                 name: null,
                 slug: null,
-                published: true
+                published: true,
+                metadata: null
             },
             types: []
         }
@@ -248,6 +250,14 @@ export default {
                 <div class="formRow">
                     <label>Value:</label>
                     <span> {{ form.value }}</span>
+                </div>
+
+                <!-- Meta data -->
+                <div class="formRow">
+                    <label>Meta data:</label>
+                    <span>
+                        <meta-data-builder v-model="form.metadata" />
+                    </span>
                 </div>
 
                 <!-- buttons -->

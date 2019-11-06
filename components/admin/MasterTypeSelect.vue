@@ -36,7 +36,7 @@ export default {
             types.forEach((obj) => {
                 opts.push(
                     {
-                        label: this.$t(obj.name),
+                        label: obj.name,
                         value: obj.value,
                         disabled: !obj.published
                     }

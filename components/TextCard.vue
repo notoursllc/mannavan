@@ -6,12 +6,7 @@ export default {
 
 <template>
     <div class="textCard">
-        <div class="textCardHeader">
-            <slot name="header"></slot>
-        </div>
-        <div class="textCardContent">
-            <slot></slot>
-        </div>
+        <slot></slot>
     </div>
 </template>
 
@@ -22,6 +17,13 @@ export default {
 .textCard {
     box-shadow: 0 0 0 1px rgba(63,63,68,.05), 0 1px 3px 0 rgba(63,63,68,.15);
     background-color: #fff;
+
+    h4 {
+        font-size: 13px;
+        font-weight: 500;
+        padding: 10px 20px;
+        border-bottom: 1px solid #EBEEF5;
+    }
 
     .textCardHeader {
         padding: 12px 20px;

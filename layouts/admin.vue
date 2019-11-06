@@ -74,26 +74,6 @@ export default {
                         </template>
 
                         <el-menu-item
-                            :route="{ name: 'acts-categories-product-types' }"
-                            index="productTypes"
-                            @click="menuItemClick">Product Types</el-menu-item>
-
-                        <el-menu-item
-                            :route="{ name: 'acts-categories-product-sub-types' }"
-                            index="productSubTypes"
-                            @click="menuItemClick">Product Sub-Types</el-menu-item>
-
-                        <el-menu-item
-                            :route="{ name: 'acts-categories-packagetypes' }"
-                            index="shippingPackageTypes"
-                            @click="menuItemClick">Shipping Package Types</el-menu-item>
-
-                        <el-menu-item
-                            :route="{ name: 'acts-categories-fit-types' }"
-                            index="fitTypes"
-                            @click="menuItemClick">Fit Types</el-menu-item>
-
-                        <el-menu-item
                             :route="{ name: 'acts-categories-material-types' }"
                             index="fitTypes"
                             @click="menuItemClick">Material Types</el-menu-item>
@@ -117,12 +97,27 @@ export default {
                         <el-menu-item
                             :route="{ name: 'acts-product-types' }"
                             index="productTypes"
-                            @click="menuItemClick">Product Types</el-menu-item>
+                            @click="menuItemClick">Types</el-menu-item>
 
                         <el-menu-item
                             :route="{ name: 'acts-product-sub-types' }"
                             index="productSubTypes"
-                            @click="menuItemClick">Product Sub-Types</el-menu-item>
+                            @click="menuItemClick">Sub-Types</el-menu-item>
+
+                        <el-menu-item
+                            :route="{ name: 'acts-product-fit-types' }"
+                            index="productFitTypes"
+                            @click="menuItemClick">Fit Types</el-menu-item>
+
+                        <el-menu-item
+                            :route="{ name: 'acts-product-sales-channel-types' }"
+                            index="productSalesChannelTypes"
+                            @click="menuItemClick">Sales Channels</el-menu-item>
+
+                        <el-menu-item
+                            :route="{ name: 'acts-product-vendors' }"
+                            index="productVendors"
+                            @click="menuItemClick">Vendors</el-menu-item>
 
                         <!-- <el-menu-item
                             :route="{ name: 'acts-product-artist-list' }"

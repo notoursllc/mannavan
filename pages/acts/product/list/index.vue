@@ -33,7 +33,7 @@ export default {
     methods: {
         async fetchProducts() {
             try {
-                this.products = await this.getAdminProducts({
+                this.products = await this.$api.products.list({
                     // where: ['is_available', '=', true],
                     // whereRaw: ['sub_type & ? > 0', [productTypeId]],
                     // andWhere: [

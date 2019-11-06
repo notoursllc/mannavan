@@ -1,4 +1,6 @@
 import MasterTypes from '@/api/master_types';
+import Products from '@/api/products';
+import Vendors from '@/api/vendors';
 
 export default ({$axios}, inject) => {
     $axios.defaults.auth = {
@@ -9,6 +11,8 @@ export default ({$axios}, inject) => {
     // Initialize API repositories
     const repositories = {
         masterTypes: MasterTypes($axios),
+        products: Products($axios),
+        vendors: Vendors($axios),
     };
 
     inject('api', repositories);
