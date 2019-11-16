@@ -69,13 +69,15 @@ export default{
     },
 
     watch: {
-        'value' (to, from) {
-            if(isObject(to) && to.hasOwnProperty('data')) {
-                this.newdata = cloneDeep(to.data);
-            }
-            console.log("value watch", to, this.newdata)
+        value: {
+            handler(newVal) {
+                if(isObject(newVal) && newVal.hasOwnProperty('data')) {
+                    this.newdata = cloneDeep(newVal.data);
+                }
+            },
+            immediate: true,
         }
-    },
+    }
 }
 </script>
 
