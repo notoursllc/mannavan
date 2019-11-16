@@ -19,7 +19,6 @@ export default {
 
     methods: {
         emitInput() {
-            console.log("EMIT INPTU", this.attrs)
             if(!this.attrs.length) {
                 this.$emit('input', null);
                 return;
@@ -72,23 +71,21 @@ export default {
             this.attrs.push(
                 { label: labels[0] || null }
             );
-            console.log("Added new")
 
             this.emitInput();
         }
     },
 
-    created() {
-        this.addNewItem();
-    },
-
     watch: {
-        'value' (to, from) {
-            if(isObject(to) && to.hasOwnProperty('data')) {
-                this.attrs = cloneDeep(to.data);
-            }
+        value: {
+            handler(newVal) {
+                if(isObject(newVal) && newVal.hasOwnProperty('data')) {
+                    this.attrs = cloneDeep(newVal.data);
+                }
+            },
+            immediate: true,
         }
-    },
+    }
 }
 </script>
 
@@ -112,6 +109,7 @@ export default {
         <div class="mtm">
             <el-button
                 @click="addNewItem"
+                type="primary"
                 size="small">New Option</el-button>
         </div>
     </div>
