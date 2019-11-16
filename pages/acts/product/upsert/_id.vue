@@ -28,7 +28,8 @@ export default {
         CountrySelect: () => import('@/components/CountrySelect'),
         MetaDataBuilder: () => import('@/components/admin/MetaDataBuilder'),
         AttributeBuilder: () => import('@/components/product/admin/AttributeBuilder'),
-        ImageManager: () => import('@/components/product/admin/ImageManager')
+        ImageManager: () => import('@/components/product/admin/ImageManager'),
+        SeoPreview: () => import('@/components/product/admin/SeoPreview')
     },
 
     mixins: [
@@ -407,6 +408,14 @@ export default {
                     show-word-limit>
                     <template slot="prepend">https://{{ domainName }}/p/</template>
                 </el-input>
+            </div>
+
+            <div class="pvl" v-show="product.seo_page_title">
+                <div class="fs11 colorGray mbs">Preview:</div>
+                <seo-preview
+                    :title="product.seo_page_title"
+                    :description="product.seo_page_desc"
+                    :uri="product.seo_uri" />
             </div>
         </text-card>
 
