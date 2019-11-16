@@ -40,8 +40,10 @@ export default {
         return {
             product: {},
             productHasOptions: false,
+            productHasMetaData: false,
             domainName: process.env.DOMAIN_NAME,
             imageManagerValue: [],
+            imageManagerMaxImages: process.env.IMAGE_MANAGER_MAX_IMAGES || 8,
             videoPlayerModal: {
                 isActive: false,
                 videoId: null,
@@ -60,6 +62,7 @@ export default {
                 }
 
                 this.productHasOptions = product.attributes ? true : false;
+                this.productHasMetaData = product.metadata ? true : false;
                 this.product = product;
 
                 if(isObject(this.product.images) && Array.isArray(this.product.images.data)) {
@@ -171,6 +174,10 @@ export default {
                     this.product.attributes = null;
                 }
 
+                if(!this.productHasMetaData) {
+                    this.product.metadata = null;
+                }
+
                 await this.upsertImages();
 
                 const p = await this.$api.products.upsert(this.product);
@@ -246,20 +253,28 @@ export default {
 
 <template>
     <div>
-        <div class="tar mbm" v-if="product.id">
+        <!-- <div class="tar mbm" v-if="product.id">
             <el-button @click="goToStore(product.seo_uri)">
                 <icon-new-window icon-name="new_window" width="15px" />
                 &nbsp;&nbsp;VIEW PRODUCT IN STORE
             </el-button>
+        </div> -->
+
+        <!-- published-->
+        <div class="mbl">
+            <el-checkbox
+                v-model="product.published"
+                border>{{ $t('This product is available for purchase') }}</el-checkbox>
         </div>
 
+
         <text-card class="mbl">
-            <div slot="header">Organization</div>
+            <div slot="header">{{ $t('Organization') }}</div>
 
             <div class="inputGroupContainer">
                 <!-- type -->
                 <div class="inputGroup mrl mbm">
-                    <label>Product type:</label>
+                    <label>{{ $t('Product type') }}</label>
                     <master-type-select
                         v-model="product.type"
                         object="product_type" />
@@ -267,7 +282,7 @@ export default {
 
                 <!-- sub_type -->
                 <div class="inputGroup mrl mbm">
-                    <label>Product sub-type:</label>
+                    <label>{{ $t('Product sub-type') }}</label>
                     <master-type-select
                         v-model="product.sub_type"
                         object="product_sub_type" />
@@ -275,7 +290,7 @@ export default {
 
                 <!-- fit type -->
                 <div class="inputGroup mrl mbm">
-                    <label>Fit type:</label>
+                    <label>{{ $t('Fit type') }}</label>
                     <master-type-select
                         v-model="product.fit_type"
                         object="product_fit_type" />
@@ -283,7 +298,7 @@ export default {
 
                 <!-- sales channel -->
                 <div class="inputGroup mrl mbm">
-                    <label>Sales channel:</label>
+                    <label>{{ $t('Sales channel') }}</label>
                     <master-type-select
                         v-model="product.sales_channel_type"
                         object="product_sales_channel_type" />
@@ -291,23 +306,20 @@ export default {
 
                 <!-- vendor -->
                 <div class="inputGroup mrl mbm">
-                    <label>Vendor:</label>
+                    <label>{{ $t('Vendor') }}</label>
                     <vendor-select v-model="product.vendor_id" />
                 </div>
             </div>
         </text-card>
 
 
-        <!-- General -->
+        <!-- Details -->
         <text-card class="mbl">
-            <!-- published-->
-            <div class="inputGroup mrl mbm">
-                <el-checkbox v-model="product.published">Published</el-checkbox>
-            </div>
+            <div slot="header">{{ $t('Details') }}</div>
 
             <!-- page title -->
             <div class="inputGroup mrl mbm">
-                <label>Title</label>
+                <label>{{ $t('Title') }}</label>
                 <el-input
                     v-model="product.title"
                     maxlength="70"
@@ -316,7 +328,7 @@ export default {
 
             <!-- caption -->
             <div class="inputGroup mrl mbm">
-                <label>Caption</label>
+                <label>{{ $t('Caption') }}</label>
                 <el-input
                     v-model="product.caption"
                     maxlength="70"
@@ -325,7 +337,7 @@ export default {
 
             <!-- description -->
             <div class="inputGroup mrl mbm">
-                <label>Description</label>
+                <label>{{ $t('Description') }}</label>
                 <el-input
                     v-model="product.description"
                     type="textarea"
@@ -338,14 +350,19 @@ export default {
 
         <!-- Images -->
         <text-card class="mbl">
-            <div slot="header">Images</div>
-            <image-manager v-model="imageManagerValue" />
+            <div slot="header">
+                {{ $t('Images') }}
+                <span class="fs11 plm">{{ $t('You can add up to num images', {number: imageManagerMaxImages}) }}</span>
+            </div>
+            <image-manager
+                v-model="imageManagerValue"
+                :max-num-images="parseInt(imageManagerMaxImages, 10)" />
         </text-card>
 
 
         <!-- Options -->
         <text-card class="mbl">
-            <div slot="header">Options</div>
+            <div slot="header">{{ $t('Options') }}</div>
 
             <div class="inputGroup mrl mbm">
                 <el-checkbox v-model="productHasOptions">This product has multiple options, like different sizes or colors</el-checkbox>
@@ -359,11 +376,11 @@ export default {
 
         <!-- SEO -->
         <text-card class="mbl">
-            <div slot="header">Search engine listing</div>
+            <div slot="header">{{ $t('Search engine listing') }}</div>
 
             <!-- page title -->
             <div class="inputGroup mrl mbm">
-                <label>Page title</label>
+                <label>{{ $t('Page title') }}</label>
                 <el-input
                     v-model="product.seo_page_title"
                     maxlength="70"
@@ -372,7 +389,7 @@ export default {
 
             <!-- description -->
             <div class="inputGroup mrl mbm">
-                <label>Description</label>
+                <label>{{ $t('Description') }}</label>
                 <el-input
                     v-model="product.seo_page_desc"
                     type="textarea"
@@ -383,7 +400,7 @@ export default {
 
             <!-- URI -->
             <div class="inputGroup mrl mbm">
-                <label>URL and handle</label>
+                <label>{{ $t('URL and handle') }}</label>
                 <el-input
                     v-model="product.seo_uri"
                     maxlength="50"
@@ -426,8 +443,15 @@ export default {
 
         <!-- Metadata -->
         <text-card class="mbl">
-            <div slot="header">Metadata</div>
-            <meta-data-builder v-model="product.metadata" />
+            <div slot="header">{{ $t('Metadata') }}</div>
+
+            <div class="inputGroup mrl mbm">
+                <el-checkbox v-model="productHasMetaData">{{ $t('Metadata_description') }}</el-checkbox>
+            </div>
+
+            <div v-if="productHasMetaData">
+                <meta-data-builder v-model="product.metadata" />
+            </div>
         </text-card>
 
 
@@ -458,7 +482,7 @@ export default {
         </text-card> -->
 
         <div class="mtl">
-            <el-button type="primary" @click="upsert">Save</el-button>
+            <el-button type="primary" @click="upsert">{{ $t('Save') }}</el-button>
         </div>
     </div>
 </template>

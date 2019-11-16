@@ -44,6 +44,7 @@ module.exports = {
         DOMAIN_NAME: process.env.DOMAIN_NAME,
         EMAIL_INFO: process.env.EMAIL_INFO,
         GLOBAL_TYPES: globalTypes,
+        IMAGE_MANAGER_MAX_IMAGES: process.env.IMAGE_MANAGER_MAX_IMAGES,
         NODE_ENV: process.env.NODE_ENV,
         SHIPPING_ADDRESS_FROM_COMPANY: process.env.SHIPPING_ADDRESS_FROM_COMPANY,
         SHIPPING_ADDRESS_FROM_ADDRESS1: process.env.SHIPPING_ADDRESS_FROM_ADDRESS1,

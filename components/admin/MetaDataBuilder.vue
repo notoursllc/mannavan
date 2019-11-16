@@ -36,25 +36,15 @@ export default{
             }
         },
 
-        addIfEmpty() {
-            if(!this.newdata.length) {
-                this.addNewItem();
-            }
-        },
-
         onInputChange() {
-            console.log("onInputChange");
             this.sanitize();
             this.emitInput();
-            this.addIfEmpty();
         },
 
         onClickDeleteRow(index) {
             this.newdata.splice(index, 1);
-
             this.sanitize();
             this.emitInput();
-            this.addIfEmpty();
         },
 
         addNewItem() {
@@ -62,10 +52,6 @@ export default{
                 { property: null, value: null }
             )
         }
-    },
-
-    created() {
-        this.addNewItem();
     },
 
     watch: {
@@ -104,14 +90,17 @@ export default{
                             @click="onClickDeleteRow(index)"
                             class="mlm"
                             size="small"
-                            type="text">Delete</el-button>
+                            type="text">{{ $t('Delete') }}</el-button>
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="metaDataFooter">
-            <el-button @click="addNewItem" size="small">New Item</el-button>
+            <el-button
+                type="primary"
+                @click="addNewItem"
+                size="small">{{ $t('New item') }}</el-button>
         </div>
     </div>
 </template>

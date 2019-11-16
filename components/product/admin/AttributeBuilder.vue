@@ -38,28 +38,23 @@ export default {
             }
         },
 
-        addIfEmpty() {
-            if(!this.attrs.length) {
-                this.addNewItem();
-            }
-        },
-
         onInputChange() {
             this.sanitize();
-            this.addIfEmpty();
             this.emitInput();
         },
 
         onClickDeleteRow(index) {
             this.attrs.splice(index, 1);
-
             this.sanitize();
-            this.addIfEmpty();
             this.emitInput();
         },
 
         addNewItem() {
-            let labels = ['Size', 'Color', 'Material'];
+            let labels = [
+                this.$t('Size'),
+                this.$t('Color'),
+                this.$t('Material')
+            ];
 
             let i = this.attrs.length;
             while (i--) {
@@ -103,14 +98,14 @@ export default {
                 @click="onClickDeleteRow(index)"
                 type="text"
                 class="mlm"
-                size="small">Delete</el-button>
+                size="small">{{ $t('Delete') }}</el-button>
         </div>
 
         <div class="mtm">
             <el-button
                 @click="addNewItem"
                 type="primary"
-                size="small">New Option</el-button>
+                size="small">{{ $t('New option') }}</el-button>
         </div>
     </div>
 </template>

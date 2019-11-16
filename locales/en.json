@@ -26,6 +26,7 @@
     "Billing address": "Billing address",
 
     "cancel": "cancel",
+    "Caption": "Caption",
     "card_expiration_hint": "MM/YY",
     "card_expiration_year_hint": "YY",
     "card_expiration_month_hint": "MM",
@@ -45,6 +46,7 @@
     "CHOOSE": "CHOOSE",
     "Choose a delivery option": "Choose a delivery option",
     "Choose a payment method": "Choose a payment method",
+    "Color": "Color",
     "COMPANY NAME": "COMPANY NAME",
     "Company name": "Company name",
     "Complete Order": "Complete Order",
@@ -65,6 +67,8 @@
 
     "day_days": "day | days",
     "Delete": "Delete",
+    "Description": "Description",
+    "Details": "Details",
     "digits_text": "digit | digits",
 
     "Email address": "Email address",
@@ -73,6 +77,7 @@
     "Estimated tax": "Estimated tax",
     "Expiration date": "Expiration date",
 
+    "Fit type": "Fit type",
     "footer_cart_secure": "Our cart is protected by 256-bit encrypted connection and we never store your card details.",
     "fill_out_form_warning": "Please fill out the form completely before continuing. Thanks!",
     "Finding your security code": "Finding your security code",
@@ -90,6 +95,8 @@
     "hip_measurement_description": "The hip is measured around the circumference of the body, at the bottom of the shirt.",
     "Home Delivery": "Home Delivery",
 
+    "Image_alt_text_description": "Write a brief description of this image to improve search engine optimization (SEO) and accessibility for visually impaired customers.",
+    "Images": "Images",
     "In inches": "In inches",
     "Introducing Breadvan": "Introducing Breadvan",
     "items": "item | items",
@@ -104,17 +111,23 @@
     "LOGOUT": "LOGOUT",
 
     "Make sure your address is correct": "Make sure your address is correct",
+    "Material": "Material",
     "MATERIAL_TYPE_COTTON": "Cotton",
     "MATERIAL_TYPE_TRI_BLEND": "Tri-Blend",
+    "Metadata": "Metadata",
+    "Metadata_description": "This product has additional meta data that you can use for your own purposes",
 
     "n_in_stock": "{numInventory} in stock",
     "n_in_stock_for_n_variants": "{numInventory} in stock for {numVariants} variant | {numInventory} in stock for {numVariants} variants",
+    "New item": "New item",
+    "New option": "New option",
     "No matching values": "No matching values",
     "No results": "No results",
 
     "only_num_left": "Only {qty} left!",
     "Oops we could not find the order you are looking for.": "Oops we could not find the order you are looking for.",
     "optional": "optional",
+    "Options": "Options",
     "OR": "OR",
     "Order": "Order",
     "Order Details": "Order Details",
@@ -123,8 +136,10 @@
     "Order summary": "Order summary",
     "Order total": "Order total",
     "Ordered on": "Ordered on",
+    "Organization": "Organization",
 
     "Package": "Package",
+    "Page title": "Page title",
     "Pay with PAYPAL": "Pay with PAYPAL",
     "PAYMENT": "PAYMENT",
     "Payment method": "Payment method",
@@ -150,6 +165,8 @@
     "Privacy Notice": "Privacy Notice",
     "Processing": "Processing",
     "Product quick view": "Product quick view",
+    "Product sub-type": "Product sub-type",
+    "Product type": "Product type",
     "PRODUCT_SUBTYPE_HAT": "Hats",
     "PRODUCT_SUBTYPE_SOCK": "Socks",
     "PRODUCT_SUBTYPE_TOP": "Tops",
@@ -171,11 +188,15 @@
     "Returns / Exchanges": "Returns / Exchanges",
     "returns_help": "For help with Exchanging or Returning an item, please contact us at",
 
+    "Sales channel": "Sales channel",
     "Same as shipping address": "Same as shipping address",
+    "Save": "Save",
     "SAVE": "SAVE",
+    "Search engine listing": "Search engine listing",
     "SECURE": "SECURE",
     "Secure Checkout": "Secure Checkout",
     "Secure Payment": "Secure Payment",
+    "Select file": "Select file",
     "Ship to": "Ship to",
     "SHIPPING": "SHIPPING",
     "Shipping": "Shipping",
@@ -221,15 +242,19 @@
     "The address you provided does not seem to be a valid mailing adddress.": "The address you provided does not seem to be a valid mailing adddress.",
     "There was an error setting up the payment client!": "There was an error setting up the payment client!",
     "There was an error tokenizing PayPal!": "There was an error tokenizing PayPal!",
+    "This product is available for purchase": "This product is available for purchase",
     "Tips for entering addresses": "Tips for entering addresses",
+    "Title": "Title",
     "TOPS": "TOPS",
     "Total": "Total",
     "Total before tax": "Total before tax",
 
     "Unable to initialize PayPal flow. Are your options correct?": "Unable to initialize PayPal flow. Are your options correct?",
+    "URL and handle": "URL and handle",
     "Use a different billing address": "Use a different billing address",
     "Use of Cookies": "Use of Cookies",
 
+    "Vendor": "Vendor",
     "Victory!": "Victory!",
     "View": "View",
     "View My Order": "View My Order",
@@ -245,6 +270,7 @@
     "Your order": "Your order",
     "Your PayPal transaction will be completed on the next page": "Your PayPal transaction will be completed on the next page",
     "Your shopping cart does not contain any items.": "Your shopping cart does not contain any items.",
+    "You can add up to num images": "You can add up to {number} images",
 
     "shipping": {
         "fedex_express_saver": {

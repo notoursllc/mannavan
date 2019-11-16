@@ -63,26 +63,21 @@ export default {
         },
 
         onFileChange(files) {
-            // var files = e.target.files || e.dataTransfer.files;
-
             if (!files.length) {
                 return;
             }
-
-            console.log("FILES", files)
 
             if(!this.filesAreAcceptedTypes(files)) {
                 throw new Error('File type not allowed')
             }
 
-            // this.createTempImage(files[0]);
             this.createTempImages(files);
         },
 
 
         createTempImages(files) {
+            this.loading = true;
             let numFiles = files.length <= this.numRemainingUploads ? files.length : this.numRemainingUploads;
-            console.log('numFiles', numFiles)
 
             for(let i=0; i<numFiles; i++) {
                 let reader = new FileReader();
@@ -92,7 +87,9 @@ export default {
                         url: e.target.result,
                         altText: null,
                         raw: files[i]
-                    })
+                    });
+
+                    this.loading = false;
                 };
                 reader.readAsDataURL(files[i]);
             }
@@ -133,18 +130,18 @@ export default {
             </div>
 
             <div class="image-row-input">
-                <div>
+                <div class="phm">
                     <el-input
                         v-model="obj.altText"
                         class="widthAll"
                         placeholder="Image alt text" />
-                    <div class="input-tip">Write a brief description of this image to improve search engine optimization (SEO) and accessibility for visually impaired customers.</div>
+                    <div class="input-tip">{{ $t('Image_alt_text_description') }}</div>
                 </div>
 
                 <el-button
                     @click="deleteTempImage(index)"
                     class="mlm"
-                    type="text">Delete</el-button>
+                    type="text">{{ $t('Delete') }}</el-button>
             </div>
         </div>
 
@@ -153,14 +150,7 @@ export default {
                 :accept="accept"
                 :multiple="true"
                 :disabled="numRemainingUploads < 1"
-                @change="onFileChange">Select File</file-button>
-            <!-- <input
-                type="file"
-                multiple="multiple"
-                ref="file"
-                :accept="accept"
-                @change="onFileChange"
-                :disabled="numRemainingUploads < 1" />  {{ numRemainingUploads }} -->
+                @change="onFileChange">{{ $t('Select file') }}</file-button>
         </div>
 
         <app-dialog :visible.sync="dialogVisible">
