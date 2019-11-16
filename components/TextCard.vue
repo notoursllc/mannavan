@@ -6,7 +6,12 @@ export default {
 
 <template>
     <div class="textCard">
-        <slot></slot>
+        <div class="textCardHeader" v-if="$slots.header">
+            <slot name="header"></slot>
+        </div>
+        <div class="textCardContent">
+            <slot></slot>
+        </div>
     </div>
 </template>
 
@@ -22,12 +27,11 @@ export default {
         font-size: 13px;
         font-weight: 500;
         padding: 10px 20px;
-        border-bottom: 1px solid #EBEEF5;
     }
 
     .textCardHeader {
-        padding: 12px 20px;
-        border-bottom: 1px solid #EBEEF5;
+        padding: 5px 10px;
+        background: #f5f5f5;
         font-weight: 500;
     }
     .textCardContent {
