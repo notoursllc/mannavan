@@ -26,6 +26,7 @@
     "Billing address": "Billing address",
 
     "cancel": "cancel",
+    "Cancel": "Cancel",
     "Caption": "Caption",
     "card_expiration_hint": "MM/YY",
     "card_expiration_year_hint": "YY",
@@ -99,6 +100,7 @@
     "Images": "Images",
     "In inches": "In inches",
     "Introducing Breadvan": "Introducing Breadvan",
+    "Item not found": "Item not found",
     "items": "item | items",
 
     "LAST NAME": "LAST NAME",
@@ -126,6 +128,8 @@
 
     "only_num_left": "Only {qty} left!",
     "Oops we could not find the order you are looking for.": "Oops we could not find the order you are looking for.",
+    "Option set added successfully": "Option set added successfully",
+    "Option set updated successfully": "Option set updated successfully",
     "optional": "optional",
     "Options": "Options",
     "OR": "OR",

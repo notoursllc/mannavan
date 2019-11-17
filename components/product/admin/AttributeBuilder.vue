@@ -1,13 +1,22 @@
 <script>
 import isObject from 'lodash.isobject';
 import cloneDeep from 'lodash.clonedeep';
+import isString from 'lodash.isstring';
 
 export default {
     name: 'AttributeBuilder',
 
     props: {
         value: {
-            type: Object
+            type: Array
+        },
+
+        suggestions: {
+            type: Array
+        },
+
+        maxCount: {
+            type: Number
         }
     },
 
@@ -17,65 +26,86 @@ export default {
         }
     },
 
+    computed: {
+        reachedMaxCount() {
+            if(this.maxCount) {
+                return this.maxCount <= this.attrs.length;
+            }
+            return false;
+        }
+    },
+
     methods: {
         emitInput() {
-            if(!this.attrs.length) {
-                this.$emit('input', null);
-                return;
-            }
+            const attrs = [];
+            this.attrs.forEach((obj) => {
+                attrs.push(obj.label);
+            })
 
-            this.$emit('input', {
-                data: cloneDeep(this.attrs)
-            });
-        },
-
-        sanitize() {
-            let i = this.attrs.length;
-            while (i--) {
-                if(!this.attrs[i].label) {
-                    this.attrs.splice(i, 1);
-                }
-            }
+            this.$emit('input', attrs);
         },
 
         onInputChange() {
-            this.sanitize();
             this.emitInput();
         },
 
         onClickDeleteRow(index) {
             this.attrs.splice(index, 1);
-            this.sanitize();
             this.emitInput();
         },
 
         addNewItem() {
-            let labels = [
-                this.$t('Size'),
-                this.$t('Color'),
-                this.$t('Material')
-            ];
+            let suggestions = Array.isArray(this.suggestions) ? this.suggestions.slice(0) : [];  // copy the array
 
-            let i = this.attrs.length;
-            while (i--) {
-                if(labels.indexOf(this.attrs[i].label) > -1) {
-                    labels.splice(labels.indexOf(this.attrs[i].label), 1);
+            if(suggestions.length) {
+                let i = this.attrs.length;
+                while (i--) {
+                    if(suggestions.indexOf(this.attrs[i].label) > -1) {
+                        suggestions.splice(suggestions.indexOf(this.attrs[i].label), 1);
+                    }
                 }
-            }
 
-            this.attrs.push(
-                { label: labels[0] || null }
-            );
+                this.attrs.push(
+                    { label: suggestions[0] || null }
+                );
+            }
+            else {
+                this.attrs.push(
+                    { label: null }
+                );
+            }
 
             this.emitInput();
         }
     },
 
     watch: {
+        maxCount: {
+            handler(newVal) {
+                // if the new value is less than the current
+                // number of attributes, then we trim the array
+                let numAttrs = this.attrs.length;
+
+                if(newVal && numAttrs > newVal) {
+                    for(let i=numAttrs; i>newVal; i--) {
+                        this.attrs.splice(i-1, 1)
+                    }
+                    this.emitInput();
+                }
+            },
+            immediate: true,
+        },
+
         value: {
             handler(newVal) {
-                if(isObject(newVal) && newVal.hasOwnProperty('data')) {
-                    this.attrs = cloneDeep(newVal.data);
+                if(Array.isArray(newVal)) {
+                    const attrs = [];
+                    newVal.forEach((item) => {
+                        attrs.push({
+                            label: item
+                        })
+                    })
+                    this.attrs = attrs;
                 }
             },
             immediate: true,
@@ -87,21 +117,26 @@ export default {
 
 <template>
     <div>
-        <div class="optionRow" v-for="(obj, index) in attrs" :key="index">
-            <el-input
-                v-model="obj.label"
-                size="small"
-                placeholder="Option name"
-                @input="onInputChange" />
+        <div class="option-row" v-for="(obj, index) in attrs" :key="index">
+            <div class="option-row-input">
+                <el-input
+                    v-model="obj.label"
+                    size="small"
+                    placeholder="Option name"
+                    class="widthAll"
+                    @input="onInputChange" />
+            </div>
 
-            <el-button
-                @click="onClickDeleteRow(index)"
-                type="text"
-                class="mlm"
-                size="small">{{ $t('Delete') }}</el-button>
+            <div class="option-row-btn">
+                <el-button
+                    @click="onClickDeleteRow(index)"
+                    type="text"
+                    class="mlm"
+                    size="small">{{ $t('Delete') }}</el-button>
+            </div>
         </div>
 
-        <div class="mtm">
+        <div class="mtm" v-if="!reachedMaxCount">
             <el-button
                 @click="addNewItem"
                 type="primary"
@@ -111,10 +146,21 @@ export default {
 </template>
 
 <style lang="scss" scoped>
-.optionRow {
-    .el-input {
-        width: 200px;
-        margin-bottom: 5px;
+@import "~assets/css/components/_mixins.scss";
+
+.option-row {
+    @include flexbox();
+    @include flex-direction(row);
+
+    .option-row-input {
+        @include flex(1 1 auto);
+        @include align-items(flex-start);
+        padding: 2px 5px 2px 0;
+    }
+
+    .option-row-btn {
+        @include flex(0);
+        padding: 2px 5px 2px 0;
     }
 }
 </style>

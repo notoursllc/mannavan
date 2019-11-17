@@ -110,6 +110,11 @@ export default {
                             @click="menuItemClick">Fit Types</el-menu-item>
 
                         <el-menu-item
+                            :route="{ name: 'acts-product-option-sets' }"
+                            index="productOptionSets"
+                            @click="menuItemClick">Option Sets</el-menu-item>
+
+                        <el-menu-item
                             :route="{ name: 'acts-product-sales-channel-types' }"
                             index="productSalesChannelTypes"
                             @click="menuItemClick">Sales Channels</el-menu-item>
