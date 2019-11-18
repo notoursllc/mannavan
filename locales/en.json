@@ -47,6 +47,7 @@
     "CHOOSE": "CHOOSE",
     "Choose a delivery option": "Choose a delivery option",
     "Choose a payment method": "Choose a payment method",
+    "Collections": "Collections",
     "Color": "Color",
     "COMPANY NAME": "COMPANY NAME",
     "Company name": "Company name",
@@ -84,6 +85,7 @@
     "Finding your security code": "Finding your security code",
     "FIRST NAME": "FIRST NAME",
     "First name": "First name",
+    "Fit Types": "Fit Types",
     "FIT_TYPE_BOYS": "Boys",
     "FIT_TYPE_GIRLS": "Girls",
     "FIT_TYPE_MENS": "Mens",
@@ -130,6 +132,7 @@
     "Oops we could not find the order you are looking for.": "Oops we could not find the order you are looking for.",
     "Option set added successfully": "Option set added successfully",
     "Option set updated successfully": "Option set updated successfully",
+    "Option Sets": "Option Sets",
     "optional": "optional",
     "Options": "Options",
     "OR": "OR",
@@ -168,6 +171,7 @@
     "Privacy": "Privacy",
     "Privacy Notice": "Privacy Notice",
     "Processing": "Processing",
+    "Product organization": "Product organization",
     "Product quick view": "Product quick view",
     "Product sub-type": "Product sub-type",
     "Product type": "Product type",
@@ -193,6 +197,7 @@
     "returns_help": "For help with Exchanging or Returning an item, please contact us at",
 
     "Sales channel": "Sales channel",
+    "Sales Channels": "Sales Channels",
     "Same as shipping address": "Same as shipping address",
     "Save": "Save",
     "SAVE": "SAVE",
@@ -238,6 +243,7 @@
     "State/Province/Region": "State/Province/Region",
     "Stay in checkout": "Stay in checkout",
     "STREET ADDRESS": "STREET ADDRESS",
+    "Sub-Types": "Sub-Types",
     "Subtotal": "Subtotal",
 
     "Tax": "Tax",
@@ -252,6 +258,7 @@
     "TOPS": "TOPS",
     "Total": "Total",
     "Total before tax": "Total before tax",
+    "Types": "Types",
 
     "Unable to initialize PayPal flow. Are your options correct?": "Unable to initialize PayPal flow. Are your options correct?",
     "URL and handle": "URL and handle",
@@ -259,6 +266,7 @@
     "Use of Cookies": "Use of Cookies",
 
     "Vendor": "Vendor",
+    "Vendors": "Vendors",
     "Victory!": "Victory!",
     "View": "View",
     "View My Order": "View My Order",

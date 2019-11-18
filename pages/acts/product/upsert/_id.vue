@@ -66,8 +66,8 @@ export default {
                 this.productHasMetaData = product.metadata ? true : false;
                 this.product = product;
 
-                if(isObject(this.product.images) && Array.isArray(this.product.images.data)) {
-                    this.product.images.data.forEach((arr) => {
+                if(Array.isArray(this.product.images)) {
+                    this.product.images.forEach((arr) => {
                         this.imageManagerValue.push(arr[0]);
                     })
                 }
@@ -92,10 +92,10 @@ export default {
                 let newImageUrls = this.imageManagerValue.map(obj => obj.url);
                 let toDelete = [];
 
-                let i = Array.isArray(this.product.images.data) ? this.product.images.data.length : 0;
+                let i = Array.isArray(this.product.images) ? this.product.images.length : 0;
                 while (i--) {
                     let hasUrl = false;
-                    let arr = this.product.images.data[i];
+                    let arr = this.product.images[i];
 
                     arr.forEach((obj) => {
                         if(newImageUrls.indexOf(obj.url) > -1) {
@@ -107,7 +107,7 @@ export default {
                         // spread the array members (objects) into toDelete
                         // instead of the array itself:
                         toDelete.push(...arr);
-                        this.product.images.data.splice(i, 1);
+                        this.product.images.splice(i, 1);
                     }
                 }
 
@@ -149,13 +149,12 @@ export default {
                 // imageUploadResult only contains the new images that were added (not the pre-existing ones)
                 // so if there are pre-existing images, we just concat the new ones to the list
                 // otherwise we set the images data to the imageUploadResult
-                if(isObject(this.product.images)) {
-                    this.product.images.data = this.product.images.data.concat(imageUploadResult)
+
+                if(Array.isArray(this.product.images)) {
+                    this.product.images = this.product.images.concat(imageUploadResult)
                 }
                 else {
-                    this.product.images = {
-                        data: imageUploadResult
-                    }
+                    this.product.images = imageUploadResult;
                 }
             }
         },
@@ -370,7 +369,13 @@ export default {
             </div>
 
             <div v-if="productHasOptions">
-                <attribute-builder v-model="product.attributes" />
+                <attribute-builder
+                    v-model="product.attributes"
+                    :suggestions="[
+                        this.$t('Size'),
+                        this.$t('Color'),
+                        this.$t('Material')
+                    ]" />
             </div>
         </text-card>
 
