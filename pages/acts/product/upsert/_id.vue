@@ -268,7 +268,7 @@ export default {
         </div>
 
 
-        <text-card class="mbl">
+        <text-card>
             <div slot="header">{{ $t('Organization') }}</div>
 
             <div class="inputGroupContainer">
@@ -314,7 +314,7 @@ export default {
 
 
         <!-- Details -->
-        <text-card class="mbl">
+        <text-card>
             <div slot="header">{{ $t('Details') }}</div>
 
             <!-- page title -->
@@ -349,7 +349,7 @@ export default {
 
 
         <!-- Images -->
-        <text-card class="mbl">
+        <text-card>
             <div slot="header">
                 {{ $t('Images') }}
                 <span class="fs11 plm">{{ $t('You can add up to num images', {number: imageManagerMaxImages}) }}</span>
@@ -361,7 +361,7 @@ export default {
 
 
         <!-- Options -->
-        <text-card class="mbl">
+        <text-card>
             <div slot="header">{{ $t('Options') }}</div>
 
             <div class="inputGroup mrl mbm">
@@ -381,7 +381,7 @@ export default {
 
 
         <!-- SEO -->
-        <text-card class="mbl">
+        <text-card>
             <div slot="header">{{ $t('Search engine listing') }}</div>
 
             <!-- page title -->
@@ -426,7 +426,7 @@ export default {
 
 
         <!-- Shipping -->
-        <!-- <text-card class="box-card mbl">
+        <!-- <text-card>
             <div class="textCardHeader">Shipping</div>
             <div class="textCardContent">
 
@@ -434,7 +434,7 @@ export default {
                     <el-checkbox v-model="product.is_good">This is a physical product</el-checkbox>
                 </div>
 
-                <text-card-section class="mbl">
+                <text-card-section >
                     <h4 slot="header">CUSTOMS INFORMATION</h4>
 
                     <template slot="description">
@@ -456,7 +456,7 @@ export default {
 
 
         <!-- Metadata -->
-        <text-card class="mbl">
+        <text-card>
             <div slot="header">{{ $t('Metadata') }}</div>
 
             <div class="inputGroup mrl mbm">
@@ -470,7 +470,7 @@ export default {
 
 
         <!-- Pricing -->
-        <!-- <text-card class="box-card mbl">
+        <!-- <text-card>
             <div class="textCardHeader">Pricing</div>
             <div class="textCardContent">
                 <div class="inputGroupContainer">
@@ -486,7 +486,7 @@ export default {
 
 
         <!-- Inventory -->
-        <!-- <text-card class="box-card mbl">
+        <!-- <text-card>
             <div class="textCardHeader">Inventory</div>
             <div class="textCardContent">
                 <div class="inputGroupContainer">
@@ -505,6 +505,10 @@ export default {
 <style lang="scss">
     @import "~assets/css/components/_table.scss";
     @import "~assets/css/components/_formRow.scss";
+
+    .textCard {
+        margin-bottom: 30px;
+    }
 
     .prodPic {
         width: 400px;
