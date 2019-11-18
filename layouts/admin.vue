@@ -68,66 +68,54 @@ export default {
                     text-color="#fff"
                     active-text-color="#ffd04b">
 
-                    <el-submenu index="categories_menu">
-                        <template slot="title">
-                            <span>Categories</span>
-                        </template>
-
-                        <el-menu-item
-                            :route="{ name: 'acts-categories-material-types' }"
-                            index="fitTypes"
-                            @click="menuItemClick">Material Types</el-menu-item>
-                    </el-submenu>
-
                     <el-submenu index="1">
                         <template slot="title">
-                            <span>Product</span>
+                            <span>{{ $t('Products') }}</span>
                         </template>
 
                         <el-menu-item
                             :route="{ name: 'acts-product-list' }"
                             index="/products"
-                            @click="menuItemClick">List</el-menu-item>
-
-                        <el-menu-item
-                            :route="{ name: 'acts-product-collections' }"
-                            index="productCollections"
-                            @click="menuItemClick">Collections</el-menu-item>
-
-                        <el-menu-item
-                            :route="{ name: 'acts-product-types' }"
-                            index="productTypes"
-                            @click="menuItemClick">Types</el-menu-item>
-
-                        <el-menu-item
-                            :route="{ name: 'acts-product-sub-types' }"
-                            index="productSubTypes"
-                            @click="menuItemClick">Sub-Types</el-menu-item>
-
-                        <el-menu-item
-                            :route="{ name: 'acts-product-fit-types' }"
-                            index="productFitTypes"
-                            @click="menuItemClick">Fit Types</el-menu-item>
+                            @click="menuItemClick">{{ $t('All products') }}</el-menu-item>
 
                         <el-menu-item
                             :route="{ name: 'acts-product-option-sets' }"
                             index="productOptionSets"
-                            @click="menuItemClick">Option Sets</el-menu-item>
+                            @click="menuItemClick">{{ $t('Option Sets') }}</el-menu-item>
 
-                        <el-menu-item
-                            :route="{ name: 'acts-product-sales-channel-types' }"
-                            index="productSalesChannelTypes"
-                            @click="menuItemClick">Sales Channels</el-menu-item>
 
-                        <el-menu-item
-                            :route="{ name: 'acts-product-vendors' }"
-                            index="productVendors"
-                            @click="menuItemClick">Vendors</el-menu-item>
+                        <el-submenu index="submenuOrganization">
+                            <template slot="title">{{ $t('Product organization') }}</template>
+                            <el-menu-item
+                                :route="{ name: 'acts-product-collections' }"
+                                index="productCollections"
+                                @click="menuItemClick">{{ $t('Collections') }}</el-menu-item>
 
-                        <!-- <el-menu-item
-                            :route="{ name: 'acts-product-artist-list' }"
-                            index="/product-artists"
-                            @click="menuItemClick">Artists</el-menu-item> -->
+                            <el-menu-item
+                                :route="{ name: 'acts-product-types' }"
+                                index="productTypes"
+                                @click="menuItemClick">{{ $t('Types') }}</el-menu-item>
+
+                            <el-menu-item
+                                :route="{ name: 'acts-product-sub-types' }"
+                                index="productSubTypes"
+                                @click="menuItemClick">{{ $t('Sub-Types') }}</el-menu-item>
+
+                            <el-menu-item
+                                :route="{ name: 'acts-product-fit-types' }"
+                                index="productFitTypes"
+                                @click="menuItemClick">{{ $t('Fit Types') }}</el-menu-item>
+
+                            <el-menu-item
+                                :route="{ name: 'acts-product-sales-channel-types' }"
+                                index="productSalesChannelTypes"
+                                @click="menuItemClick">{{ $t('Sales Channels') }}</el-menu-item>
+
+                            <el-menu-item
+                                :route="{ name: 'acts-product-vendors' }"
+                                index="productVendors"
+                                @click="menuItemClick">{{ $t('Vendors') }}</el-menu-item>
+                        </el-submenu>
                     </el-submenu>
 
                     <el-menu-item
