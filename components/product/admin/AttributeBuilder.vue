@@ -1,7 +1,6 @@
 <script>
 import isObject from 'lodash.isobject';
 import cloneDeep from 'lodash.clonedeep';
-import isString from 'lodash.isstring';
 
 export default {
     name: 'AttributeBuilder',
