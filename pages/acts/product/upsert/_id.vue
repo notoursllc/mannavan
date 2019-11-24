@@ -27,9 +27,9 @@ export default {
         InputMoney: () => import('@/components/admin/InputMoney'),
         CountrySelect: () => import('@/components/CountrySelect'),
         MetaDataBuilder: () => import('@/components/admin/MetaDataBuilder'),
-        AttributeBuilder: () => import('@/components/product/admin/AttributeBuilder'),
         ImageManager: () => import('@/components/product/admin/ImageManager'),
-        SeoPreview: () => import('@/components/product/admin/SeoPreview')
+        SeoPreview: () => import('@/components/product/admin/SeoPreview'),
+        SkuBuilder: () => import('@/components/product/admin/SkuBuilder'),
     },
 
     mixins: [
@@ -369,13 +369,13 @@ export default {
             </div>
 
             <div v-if="productHasOptions">
-                <attribute-builder
-                    v-model="product.attributes"
+                <sku-builder
+                    :max-count="3"
                     :suggestions="[
                         this.$t('Size'),
                         this.$t('Color'),
                         this.$t('Material')
-                    ]" />
+                    ]"/>
             </div>
         </text-card>
 
