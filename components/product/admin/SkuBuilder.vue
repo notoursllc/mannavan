@@ -1,6 +1,7 @@
 <script>
 import isObject from 'lodash.isobject';
 import cloneDeep from 'lodash.clonedeep';
+import uuid from 'uuid/v4';
 
 
 /**
@@ -47,6 +48,7 @@ function makeVariants(arr, currentIndex, allArrays) {
 
 
 
+
 export default {
     name: 'SkuBuilder',
 
@@ -71,7 +73,8 @@ export default {
 
     data: function() {
         return {
-            options: []
+            options: [],
+            variantData: []
         }
     },
 
@@ -89,8 +92,45 @@ export default {
                 }
             });
 
-            return makeVariants(allValues[0], 0, allValues)
+            const groups = makeVariants(allValues[0], 0, allValues);
+            const response = [];
 
+            // groups.forEach((arr) => {
+            //     response.push({
+            //         values: arr,
+            //         price: null,
+            //         quantity: null,
+            //         // sku: '',
+            //         barcode: null,
+            //         published: true,
+            //         id: uuid()
+            //     })
+            // });
+
+            // return response;
+
+            this.variantData = [];
+            let data = [];
+
+            groups.forEach((arr) => {
+                data.push({
+                    values: arr,
+                    price: null,
+                    quantity: null,
+                    sku: null,
+                    barcode: null,
+                    published: true,
+                    id: uuid()
+                })
+            });
+
+            // TODO:  need to add/remove values from this.variantData
+            // instead of setting this.variantData = []
+            // because doing so wipes out existing form values
+
+            this.variantData = cloneDeep(data);
+
+            return this.variantData;
         },
 
         // variants() {
@@ -145,7 +185,8 @@ export default {
                     {
                         label: suggestions[0] || null,
                         values: [],
-                        type: 'OPTION_TYPE_SELECT_ONE'
+                        type: 'OPTION_TYPE_SELECT_ONE',
+                        id: uuid()
                     }
                 );
             }
@@ -154,7 +195,8 @@ export default {
                     {
                         label: null,
                         values: [],
-                        type: 'OPTION_TYPE_SELECT_ONE'
+                        type: 'OPTION_TYPE_SELECT_ONE',
+                        id: uuid()
                     }
                 );
             }
@@ -165,6 +207,23 @@ export default {
             this.emitInput();
         }
     },
+
+    // watch: {
+    //     variants: {
+    //         handler: function(newVal) {
+    //             console.log("VARIANT WATCH", newVal)
+    //         },
+    //         immediate: true
+    //     }
+    // }
+    // watch: {
+    //     options: {
+    //         handler: function(newVal) {
+    //             console.log("OPTIONS WATCH", newVal)
+    //         },
+    //         immediate: true
+    //     }
+    // }
 }
 </script>
 
@@ -177,7 +236,7 @@ export default {
                 <th>{{ $t('Values') }}</th>
                 <th></th>
             </tr>
-
+{{ options }}
             <tr v-for="(obj, index) in options" :key="index">
                 <td class="vat option-row-option">
                     <el-input
@@ -220,17 +279,37 @@ export default {
                     <th>{{ $t('Barcode') }}</th>
                     <th></th>
                 </tr>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                <tr v-for="variant in variants" :key="variant.id">
+                    <!-- label -->
+                    <td class="variant-label">{{ variant.values.join(' / ') }}</td>
+
+                    <!-- price -->
+                    <td>
+                        <!-- <el-input v-model="variant.price" /> -->
+                        <el-input v-model="variant.price" />
+                    </td>
+
+                    <!-- quantity -->
+                    <td>
+                        <el-input v-model="variant.quantity" />
+                    </td>
+
+                    <!-- sku -->
+                    <td>
+                        <el-input v-model="variant.sku" />
+                    </td>
+
+                    <!-- barcode -->
+                    <td>
+                        <el-input v-model="variant.barcode" />
+                    </td>
+
+                    <!-- actions -->
                     <td></td>
                 </tr>
             </table>
 
-            {{ variants }}
+            {{ variantData }}
         </div>
 
     </div>
@@ -243,6 +322,12 @@ export default {
 
     h4 {
         font-weight: 500;
+    }
+
+    .variant-label {
+        word-wrap: break-word;
+        word-break: break-word;
+        overflow-wrap: break-word;
     }
 }
 </style>

@@ -24,6 +24,7 @@
     "Artist": "Artist",
     "A server error occurred while setting the shipping address": "A server error occurred while setting the shipping address",
 
+    "Barcode": "Barcode",
     "Billing address": "Billing address",
 
     "cancel": "cancel",
@@ -237,6 +238,7 @@
     "SIZE_YOUTH_L": "Youth L",
     "SIZE_YOUTH_XL": "Youth XL",
     "Sizing": "Sizing",
+    "SKU": "SKU",
     "Sleeve": "Sleeve",
     "Sleeve measurement": "Sleeve measurement",
     "sleeve_measurement_description": "The sleeve length is measured from the shoulder seam to the end of the sleeve.",
@@ -269,6 +271,7 @@
     "Use of Cookies": "Use of Cookies",
 
     "Values": "Values",
+    "Variant": "Variant",
     "Vendor": "Vendor",
     "Vendors": "Vendors",
     "Victory!": "Victory!",

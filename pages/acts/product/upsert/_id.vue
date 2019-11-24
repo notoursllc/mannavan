@@ -3,7 +3,6 @@ import forEach from 'lodash.foreach';
 import isObject from 'lodash.isobject';
 import product_mixin from '@/mixins/product_mixin';
 import shipping_mixin from '@/mixins/shipping_mixin';
-import uuid from 'uuid/v4';
 
 
 export default {
