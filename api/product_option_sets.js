@@ -4,23 +4,23 @@ import cloneDeep from 'lodash.clonedeep';
 export default ($axios) => ({
 
     async list(object) {
-        const { data } = await $axios.$get('/product_option_sets', {
+        const response = await $axios.$get('/product_option_sets', {
             params: {
-                object
+                ...object
             }
         });
-        return data;
+        return response;
     },
 
 
     async get(id) {
-        const response = await $axios.$get('/product_option_set', {
+        const { data } = await $axios.$get('/product_option_set', {
             params: {
                 id
             }
         });
 
-        return response.data;
+        return data;
     },
 
 
@@ -52,12 +52,12 @@ export default ($axios) => ({
 
 
     async delete(id) {
-        const response = await $axios.$delete('/product_option_set', {
+        const { data } = await $axios.$delete('/product_option_set', {
             params: {
                 id
             }
         });
 
-        return response.data;
+        return data;
     }
 })

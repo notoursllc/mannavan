@@ -15,7 +15,8 @@ export default {
         AppDialog: () => import('@/components/AppDialog'),
         Fab: () => import('@/components/Fab'),
         OperationsDropdown: () => import('@/components/OperationsDropdown'),
-        AttributeBuilder: () => import('@/components/product/admin/AttributeBuilder'),
+        TagsInput: () => import('@/components/admin/TagsInput'),
+        PaginationBar: () => import('@/components/admin/PaginationBar'),
     },
 
     mixins: [
@@ -27,13 +28,16 @@ export default {
             showDialog: false,
             optionSets: [],
             form: {},
+            pagination: {}
         }
     },
 
     methods: {
         async fetchData() {
             try {
-                this.optionSets = await this.$api.product_option_sets.list();
+                let response = await this.$api.product_option_sets.list();
+                this.optionSets = response.data;
+                this.pagination = response.pagination;
             }
             catch(e) {
                 this.$errorMessage(
@@ -142,6 +146,9 @@ export default {
     <div>
         <fab type="add" @click="onUpsertClick" />
 
+        <pagination-bar
+            :total="pagination.total" />
+
         <el-table
             :data="optionSets"
             class="widthAll">
@@ -165,6 +172,14 @@ export default {
                 </template>
             </el-table-column>
 
+            <!-- values -->
+            <el-table-column
+                label="Values">
+                <template slot-scope="scope">
+                    {{ Array.isArray(scope.row.option_values) ? scope.row.option_values.join((', ')) : '' }}
+                </template>
+            </el-table-column>
+
             <!-- type -->
             <el-table-column
                 prop="option_type"
@@ -172,14 +187,6 @@ export default {
                 <template slot-scope="scope">
                     <!-- TODO: translate ? -->
                     {{ scope.row.option_type }}
-                </template>
-            </el-table-column>
-
-            <!-- values -->
-            <el-table-column
-                label="Values">
-                <template slot-scope="scope">
-                    {{ Array.isArray(scope.row.option_values) ? scope.row.option_values.join((', ')) : '' }}
                 </template>
             </el-table-column>
         </el-table>
@@ -215,9 +222,7 @@ export default {
             <div class="inputRow">
                 <label>Values:</label>
                 <span>
-                    <attribute-builder
-                        v-model="form.option_values"
-                        :max-count="50" />
+                    <tags-input v-model="form.option_values" />
                 </span>
             </div>
 
