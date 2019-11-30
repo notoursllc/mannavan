@@ -86,10 +86,6 @@ export default {
 
                         <el-submenu index="submenuOrganization">
                             <template slot="title">{{ $t('Product organization') }}</template>
-                            <el-menu-item
-                                :route="{ name: 'acts-product-collections' }"
-                                index="productCollections"
-                                @click="menuItemClick">{{ $t('Collections') }}</el-menu-item>
 
                             <el-menu-item
                                 :route="{ name: 'acts-product-types' }"
@@ -115,6 +111,11 @@ export default {
                                 :route="{ name: 'acts-product-vendors' }"
                                 index="productVendors"
                                 @click="menuItemClick">{{ $t('Vendors') }}</el-menu-item>
+
+                            <el-menu-item
+                                :route="{ name: 'acts-product-collections' }"
+                                index="productCollections"
+                                @click="menuItemClick">{{ $t('Collections') }}</el-menu-item>
                         </el-submenu>
                     </el-submenu>
 
