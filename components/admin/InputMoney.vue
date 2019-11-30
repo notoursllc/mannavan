@@ -51,7 +51,14 @@ export default{
         v-model="selectedPrice"
         v-money="money"
         @input="emitInput"
-        placeholder="0.00">
+        placeholder="0.00"
+        class="input-money">
         <template slot="prepend">$</template>
     </el-input>
 </template>
+
+<style lang="scss">
+.input-money > .el-input-group__prepend {
+    padding: 0 10px;
+}
+</style>

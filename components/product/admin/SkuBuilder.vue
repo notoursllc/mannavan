@@ -12,40 +12,52 @@ import uuid from 'uuid/v4';
  * [ { "label": "Size", "values": [ "a" ] }, { "label": "Color", "values": [ "b", "c" ] }, { "label": "Material", "values": [ "e" ] } ]
  *
  * Into this:
- * [ [ "a", "b", "e" ], [ "a", "c", "e" ] ]
+ * [
+ *     [ {objectId: IdForSize, value: "a"}, {objectId: IdForColor, value: "b"},  {objectId: IdForMaterial, value: "e"} ],
+ *     [ {objectId: IdForSize, value: "a"}, {objectId: IdForColor, value: "c"},  {objectId: IdForMaterial, value: "e"} ],
+ * ]
  */
-function makeVariants(arr, currentIndex, allArrays) {
-    let arr2 = allArrays[currentIndex + 1];
+function makeVariants(currentIndex, allOptions, collection) {
+    let thisOption = allOptions[currentIndex];
+    let newCollection = [];
+    collection = Array.isArray(collection) ? collection : [];
 
-    // turn all arr values into an array
-    let cleanArr = [];
-    if(Array.isArray(arr)) {
-        // all of the array values need to be arrays
-        arr.forEach((val, index) => {
-            cleanArr[index] = !Array.isArray(val) ? [val] : val;
-        });
+    if(thisOption && Array.isArray(thisOption.values)) {
+        if(!collection.length) {
+            // the collection is empty so we don't need to combine
+            // the values with any previous values: we can push them
+            // directly onto newCollection:
+            thisOption.values.forEach((val) => {
+                newCollection.push([
+                    {
+                        optionId: thisOption.optionId,
+                        value: val
+                    }
+                ])
+            })
+        }
+        else {
+            // for each option value, combine it with the previous collection values
+            thisOption.values.forEach((val) => {
+                collection.forEach((arr) => {
+                    let newArray = cloneDeep(arr);
+                    newArray.push({
+                        optionId: thisOption.optionId,
+                        value: val
+                    });
 
-        if(Array.isArray(arr2)) {
-            let mappings = [];
-
-            cleanArr.forEach((arr1Value) => {
-                let group = [];
-                let v = !Array.isArray(arr1Value) ? [arr1Value] : arr1Value;
-
-                arr2.map((val) => {
-                    let fresh = [].concat(v);
-                    fresh.push(val);
-                    mappings.push(fresh)
+                    newCollection.push(newArray)
                 })
-            });
-
-            return makeVariants(mappings, currentIndex + 1, allArrays);
+            })
         }
     }
 
-    return cleanArr;
-}
+    if(allOptions[currentIndex + 1]) {
+        return makeVariants(currentIndex + 1, allOptions, newCollection)
+    }
 
+    return newCollection;
+}
 
 
 
@@ -68,7 +80,8 @@ export default {
     },
 
     components: {
-        ProductOptionValueSelect: () => import('@/components/product/admin/ProductOptionValueSelect')
+        ProductOptionValueSelect: () => import('@/components/product/admin/ProductOptionValueSelect'),
+        InputMoney: () => import('@/components/admin/InputMoney')
     },
 
     data: function() {
@@ -81,33 +94,37 @@ export default {
     computed: {
         canAddOption() {
             return this.options.length < this.maxCount;
-        },
+        }
+    },
 
-        variants() {
-            let allValues = [];
+    methods: {
+        emitInput() {
+            const attrs = [];
 
             this.options.forEach((obj) => {
+                attrs.push(obj.label);
+            })
+
+            this.$emit('input', attrs);
+        },
+
+        buildVariants(index) {
+            let allValues = [];
+
+            // Collecting the array of values from each of the options:
+            this.options.forEach((obj) => {
                 if(Array.isArray(obj.values) && obj.values.length) {
-                    allValues.push( obj.values );
+                    // allValues.push( obj.values );
+                    allValues.push( {
+                        optionId: obj.id,
+                        values: obj.values
+                    } );
                 }
             });
 
-            const groups = makeVariants(allValues[0], 0, allValues);
-            const response = [];
+            // console.log("buildVariants - allValues", allValues)
 
-            // groups.forEach((arr) => {
-            //     response.push({
-            //         values: arr,
-            //         price: null,
-            //         quantity: null,
-            //         // sku: '',
-            //         barcode: null,
-            //         published: true,
-            //         id: uuid()
-            //     })
-            // });
-
-            // return response;
+            const groups = makeVariants(0, allValues);
 
             this.variantData = [];
             let data = [];
@@ -129,41 +146,7 @@ export default {
             // because doing so wipes out existing form values
 
             this.variantData = cloneDeep(data);
-
-            return this.variantData;
-        },
-
-        // variants() {
-        //     let allValues = this.options.map(obj => obj.values);
-
-        //     function mapArrays(arr, currentIndex) {
-        //         let arr2 = allValues[currentIndex + 1];
-
-        //         if(Array.isArray(arr) && Array.isArray(arr2)) {
-        //             let mappings = [];
-
-        //             arr.forEach((arr1Value) => {
-        //                  mappings = mappings.concat(arr2.map(val => arr1Value + '-' + val))
-        //             });
-
-        //             return mapArrays(mappings, currentIndex + 1);
-        //         }
-
-        //         return arr;
-        //     }
-
-        //     return mapArrays(allValues[0], 0)
-        // }
-    },
-
-    methods: {
-        emitInput() {
-            const attrs = [];
-            this.options.forEach((obj) => {
-                attrs.push(obj.label);
-            })
-
-            this.$emit('input', attrs);
+            // return this.variantData;
         },
 
         onInputChange() {
@@ -204,26 +187,26 @@ export default {
 
         onClickDeleteRow(index) {
             this.options.splice(index, 1);
+            this.buildVariants(index);
             this.emitInput();
-        }
-    },
+        },
 
-    // watch: {
-    //     variants: {
-    //         handler: function(newVal) {
-    //             console.log("VARIANT WATCH", newVal)
-    //         },
-    //         immediate: true
-    //     }
-    // }
-    // watch: {
-    //     options: {
-    //         handler: function(newVal) {
-    //             console.log("OPTIONS WATCH", newVal)
-    //         },
-    //         immediate: true
-    //     }
-    // }
+        onOptionValueChange(val, index) {
+            this.buildVariants(index);
+        },
+
+        getVariantOptionValue(optionId, variant) {
+            let val = null;
+
+            variant.values.forEach((obj) => {
+                if(obj.optionId === optionId) {
+                    val = obj.value;
+                }
+            });
+
+            return val;
+        }
+    }
 }
 </script>
 
@@ -236,7 +219,7 @@ export default {
                 <th>{{ $t('Values') }}</th>
                 <th></th>
             </tr>
-{{ options }}
+
             <tr v-for="(obj, index) in options" :key="index">
                 <td class="vat option-row-option">
                     <el-input
@@ -248,6 +231,7 @@ export default {
                 <td class="vat">
                     <product-option-value-select
                         v-model="obj.values"
+                        @input="onOptionValueChange(obj.values, index)"
                         :key="index" />
                 </td>
 
@@ -267,49 +251,60 @@ export default {
                 @click="onAddOptionClick">{{ $t('Add Option') }}</el-button>
         </div>
 
+        <div class="pvm"><hr/></div>
+
         <div class="sku-preview" v-show="options.length">
             <h4>{{ $t('Preview') }}</h4>
 
-            <table class="table mtm">
-                <tr>
-                    <th>{{ $t('Variant') }}</th>
-                    <th>{{ $t('Price') }}</th>
-                    <th>{{ $t('Quantity') }}</th>
-                    <th>{{ $t('SKU') }}</th>
-                    <th>{{ $t('Barcode') }}</th>
-                    <th></th>
-                </tr>
-                <tr v-for="variant in variants" :key="variant.id">
-                    <!-- label -->
-                    <td class="variant-label">{{ variant.values.join(' / ') }}</td>
+            <el-table
+                :data="variantData"
+                class="widthAll">
 
-                    <!-- price -->
-                    <td>
-                        <!-- <el-input v-model="variant.price" /> -->
-                        <el-input v-model="variant.price" />
-                    </td>
+                <el-table-column
+                    v-for="(obj, index) in options" :key="index">
+                    <template slot="header" slot-scope="scope">
+                        {{ obj.label }}
+                    </template>
+                    <template slot-scope="scope">
+                        {{ getVariantOptionValue(obj.id, scope.row) }}
+                    </template>
+                </el-table-column>
 
-                    <!-- quantity -->
-                    <td>
-                        <el-input v-model="variant.quantity" />
-                    </td>
+                <!-- price -->
+                <el-table-column :label="$t('Price')">
+                    <template slot-scope="scope">
+                        <input-money
+                            v-model="scope.row.price"
+                            class="width125" />
+                    </template>
+                </el-table-column>
 
-                    <!-- sku -->
-                    <td>
-                        <el-input v-model="variant.sku" />
-                    </td>
+                <!-- quantity -->
+                <el-table-column :label="$t('Quantity')">
+                    <template slot-scope="scope">
+                        <el-input-number
+                            v-model="scope.row.quantity"
+                            :step="1"
+                            step-strictly
+                            class="input-number" />
+                    </template>
+                </el-table-column>
 
-                    <!-- barcode -->
-                    <td>
-                        <el-input v-model="variant.barcode" />
-                    </td>
+                <!-- sku -->
+                <el-table-column :label="$t('SKU')">
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.sku" />
+                    </template>
+                </el-table-column>
 
-                    <!-- actions -->
-                    <td></td>
-                </tr>
-            </table>
+                <!-- sku -->
+                <el-table-column :label="$t('Barcode')">
+                    <template slot-scope="scope">
+                        <el-input v-model="scope.row.barcode" />
+                    </template>
+                </el-table-column>
+            </el-table>
 
-            {{ variantData }}
         </div>
 
     </div>
@@ -329,5 +324,9 @@ export default {
         word-break: break-word;
         overflow-wrap: break-word;
     }
+}
+
+.input-number {
+    width: 140px;
 }
 </style>
