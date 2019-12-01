@@ -130,6 +130,7 @@
     "No matching values": "No matching values",
     "No results": "No results",
 
+    "OK": "OK",
     "only_num_left": "Only {qty} left!",
     "Oops we could not find the order you are looking for.": "Oops we could not find the order you are looking for.",
     "Option set added successfully": "Option set added successfully",
@@ -162,6 +163,7 @@
     "PLACE YOUR ORDER": "PLACE YOUR ORDER",
     "Place your order": "Place your order",
     "Please allow a few minutes for email delivery.": "Please allow a few minutes for email delivery.",
+    "Please confirm": "Please confirm",
     "Please select a quantity": "Please select a quantity",
     "Please select a size": "Please select a size",
     "Please enter a valid email address.": "Please enter a valid email address.",
@@ -279,6 +281,7 @@
     "View My Order": "View My Order",
     "Vintage. Racing.": "Vintage. Racing.",
 
+    "warning_message_remove_product_option_tag": "Removing option values will also remove the SKU(s) associated with the values.<br/>Continue?",
     "We have a winner!": "We have a winner!",
     "We have received your order.": "We have received your order.",
     "We want to hear from you!": "We want to hear from you!",

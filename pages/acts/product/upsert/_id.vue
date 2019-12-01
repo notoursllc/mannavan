@@ -38,7 +38,9 @@ export default {
 
     data() {
         return {
-            product: {},
+            product: {
+                attributes: []
+            },
             productHasOptions: false,
             productHasMetaData: false,
             domainName: process.env.DOMAIN_NAME,
@@ -373,14 +375,14 @@ export default {
 
             <div v-if="productHasOptions">
                 <sku-builder
+                    @optionsInput="onSkuBuilderOptionsChange"
+                    :option-data="product.attributes"
                     :max-count="3"
                     :suggestions="[
                         this.$t('Size'),
                         this.$t('Color'),
                         this.$t('Material')
-                    ]"
-                    @optionsInput="onSkuBuilderOptionsChange"
-                    :option-data="product.attributes" />
+                    ]" />
             </div>
         </text-card>
 

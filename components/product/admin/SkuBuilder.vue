@@ -2,6 +2,7 @@
 import isObject from 'lodash.isobject';
 import cloneDeep from 'lodash.clonedeep';
 import uuid from 'uuid/v4';
+import { stripTags, arrayDiff } from '../../../utils/common';
 
 
 /**
@@ -116,7 +117,6 @@ export default {
             // Collecting the array of values from each of the options:
             this.options.forEach((obj) => {
                 if(Array.isArray(obj.values) && obj.values.length) {
-                    // allValues.push( obj.values );
                     allValues.push( {
                         optionId: obj.id,
                         values: obj.values
@@ -168,6 +168,7 @@ export default {
                     {
                         label: suggestions[0] || null,
                         values: [],
+                        tempValues: [],
                         type: 'OPTION_TYPE_SELECT_ONE',
                         id: uuid()
                     }
@@ -178,6 +179,7 @@ export default {
                     {
                         label: null,
                         values: [],
+                        tempValues: [],
                         type: 'OPTION_TYPE_SELECT_ONE',
                         id: uuid()
                     }
@@ -190,9 +192,60 @@ export default {
             this.emitOptionsInput();
         },
 
-        onOptionsChange() {
+
+        async optionValueConfirm(index) {
+            let diff = arrayDiff(this.options[index].values, this.options[index].tempValues);
+
+            if(this.options[index].tempValues.length < this.options[index].values.length && diff.length) {
+                try {
+                    await this.$confirm(
+                        this.$t('warning_message_remove_product_option_tag'),
+                        this.$t('Please confirm'),
+                        {
+                            center: true,
+                            confirmButtonText: this.$t('OK'),
+                            cancelButtonText: this.$t('Cancel'),
+                            dangerouslyUseHTMLString: true,
+                            type: 'warning',
+                            lockScroll: false
+                        }
+                    );
+
+                    this.options[index].values = cloneDeep(this.options[index].tempValues);
+                }
+                catch(err) {
+                    this.options[index].tempValues = cloneDeep(this.options[index].values);
+                }
+            }
+            else {
+                this.options[index].values = cloneDeep(this.options[index].tempValues);
+            }
+
             this.emitOptionsInput();
         },
+
+
+        onOptionValueMenuVisible(index, isVisible) {
+            if(isVisible) {
+                return;
+            }
+
+            return this.optionValueConfirm(index);
+        },
+
+
+        onOptionValueRemoveTag(index, tag) {
+            return this.optionValueConfirm(index);
+        },
+
+
+        async onOptionsChange(index, val) {
+            this.options.forEach((obj) => {
+                obj.values = cloneDeep(obj.tempValues)
+            })
+            this.emitOptionsInput();
+        },
+
 
         getVariantOptionValue(optionId, variant) {
             let val = null;
@@ -210,8 +263,15 @@ export default {
     watch: {
         optionData: {
             handler(newVal) {
-                this.options = newVal;
-                this.buildVariants();
+                if(Array.isArray(newVal)) {
+                    this.options = newVal;
+
+                    this.options.forEach((obj) => {
+                        obj.tempValues = cloneDeep(obj.values)
+                    });
+
+                    this.buildVariants();
+                }
             },
             immediate: true
         },
@@ -235,13 +295,14 @@ export default {
                     <el-input
                         v-model="obj.label"
                         placeholder="Option name"
-                        @input="onOptionsChange()" />
+                        @input="onOptionsChange" />
                 </td>
 
                 <td class="vat">
                     <product-option-value-select
-                        v-model="obj.values"
-                        @input="onOptionsChange()"
+                        v-model="obj.tempValues"
+                        @visible-change="(isVisible) => { onOptionValueMenuVisible(index, isVisible) }"
+                        @remove-tag="(tag) => { onOptionValueRemoveTag(index, tag) }"
                         :key="index" />
                 </td>
 

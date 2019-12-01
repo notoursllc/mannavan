@@ -74,6 +74,7 @@ export default {
     <el-select
         v-model="selectedOptions"
         @change="emitInput"
+        v-on="$listeners"
         multiple
         filterable
         allow-create
