@@ -76,7 +76,11 @@ export default {
         maxCount: {
             type: Number,
             default: 3
-        }
+        },
+
+        optionData: {
+            type: Array
+        },
     },
 
     components: {
@@ -94,21 +98,19 @@ export default {
     computed: {
         canAddOption() {
             return this.options.length < this.maxCount;
+        },
+
+        tableColumnLabels() {
+            return this.options.map(obj => obj.label);
         }
     },
 
     methods: {
-        emitInput() {
-            const attrs = [];
-
-            this.options.forEach((obj) => {
-                attrs.push(obj.label);
-            })
-
-            this.$emit('input', attrs);
+        emitOptionsInput() {
+            this.$emit('optionsInput', cloneDeep(this.options));
         },
 
-        buildVariants(index) {
+        buildVariants() {
             let allValues = [];
 
             // Collecting the array of values from each of the options:
@@ -121,8 +123,6 @@ export default {
                     } );
                 }
             });
-
-            // console.log("buildVariants - allValues", allValues)
 
             const groups = makeVariants(0, allValues);
 
@@ -147,10 +147,6 @@ export default {
 
             this.variantData = cloneDeep(data);
             // return this.variantData;
-        },
-
-        onInputChange() {
-            this.emitInput();
         },
 
         onAddOptionClick() {
@@ -187,12 +183,13 @@ export default {
 
         onClickDeleteRow(index) {
             this.options.splice(index, 1);
-            this.buildVariants(index);
-            this.emitInput();
+            this.buildVariants();
+            this.emitOptionsInput();
         },
 
-        onOptionValueChange(val, index) {
-            this.buildVariants(index);
+        onOptionValueChange() {
+            this.buildVariants();
+            this.emitOptionsInput();
         },
 
         getVariantOptionValue(optionId, variant) {
@@ -206,6 +203,16 @@ export default {
 
             return val;
         }
+    },
+
+    watch: {
+        optionData: {
+            handler(newVal) {
+                this.options = newVal;
+                this.buildVariants();
+            },
+            immediate: true
+        },
     }
 }
 </script>
@@ -225,21 +232,20 @@ export default {
                     <el-input
                         v-model="obj.label"
                         placeholder="Option name"
-                        @input="onInputChange" />
+                        @input="onOptionValueChange()" />
                 </td>
 
                 <td class="vat">
                     <product-option-value-select
                         v-model="obj.values"
-                        @input="onOptionValueChange(obj.values, index)"
+                        @input="onOptionValueChange()"
                         :key="index" />
                 </td>
 
                 <td class="vat tar">
-                    <el-button
-                        @click="onClickDeleteRow(index)"
-                        size="small"
-                        type="text">{{ $t('Remove') }}</el-button>
+                    <i @click="onClickDeleteRow(index)"
+                        class="el-icon-delete option-delete-icon"
+                        :alt="$t('Remove')" />
                 </td>
             </tr>
         </table>
@@ -251,60 +257,54 @@ export default {
                 @click="onAddOptionClick">{{ $t('Add Option') }}</el-button>
         </div>
 
-        <div class="pvm"><hr/></div>
-
         <div class="sku-preview" v-show="options.length">
+            <div class="pvm"><hr/></div>
+
             <h4>{{ $t('Preview') }}</h4>
 
-            <el-table
-                :data="variantData"
-                class="widthAll">
+            <table class="table">
+            <tr>
+                <th v-for="(label, index) in tableColumnLabels" :key="index">
+                    {{ label }}
+                </th>
+                <th>{{ $t('Price') }}</th>
+                <th>{{ $t('Quantity') }}</th>
+                <th>{{ $t('SKU') }}</th>
+                <th>{{ $t('Barcode') }}</th>
+            </tr>
 
-                <el-table-column
-                    v-for="(obj, index) in options" :key="index">
-                    <template slot="header" slot-scope="scope">
-                        {{ obj.label }}
-                    </template>
-                    <template slot-scope="scope">
-                        {{ getVariantOptionValue(obj.id, scope.row) }}
-                    </template>
-                </el-table-column>
+            <tr v-for="variant in variantData" :key="variant.id">
+                <td v-for="(obj, index) in options" :key="index" class="fs14">
+                    {{ getVariantOptionValue(obj.id, variant) }}
+                </td>
 
                 <!-- price -->
-                <el-table-column :label="$t('Price')">
-                    <template slot-scope="scope">
-                        <input-money
-                            v-model="scope.row.price"
-                            class="width125" />
-                    </template>
-                </el-table-column>
+                <td>
+                    <input-money
+                        v-model="variant.price"
+                        class="width125" />
+                </td>
 
                 <!-- quantity -->
-                <el-table-column :label="$t('Quantity')">
-                    <template slot-scope="scope">
-                        <el-input-number
-                            v-model="scope.row.quantity"
-                            :step="1"
-                            step-strictly
-                            class="input-number" />
-                    </template>
-                </el-table-column>
+                <td>
+                    <el-input-number
+                        v-model="variant.quantity"
+                        :step="1"
+                        step-strictly
+                        class="input-number" />
+                </td>
 
                 <!-- sku -->
-                <el-table-column :label="$t('SKU')">
-                    <template slot-scope="scope">
-                        <el-input v-model="scope.row.sku" />
-                    </template>
-                </el-table-column>
+                <td>
+                    <el-input v-model="variant.sku" />
+                </td>
 
-                <!-- sku -->
-                <el-table-column :label="$t('Barcode')">
-                    <template slot-scope="scope">
-                        <el-input v-model="scope.row.barcode" />
-                    </template>
-                </el-table-column>
-            </el-table>
-
+                <!-- barcode -->
+                <td>
+                    <el-input v-model="variant.barcode" />
+                </td>
+            </tr>
+            </table>
         </div>
 
     </div>
@@ -312,6 +312,12 @@ export default {
 
 
 <style lang="scss">
+.option-delete-icon {
+    cursor: pointer;
+    line-height: 40px;
+    font-size: 20px;
+}
+
 .sku-preview {
     margin-top: 20px;
 

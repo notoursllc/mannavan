@@ -197,6 +197,10 @@ export default {
             }
         },
 
+        onSkuBuilderOptionsChange(options) {
+            this.product.attributes = options;
+        },
+
         goToStore(seoUri) {
             let routeData = this.$router.resolve({
                 name: 'p-seouri',
@@ -374,7 +378,9 @@ export default {
                         this.$t('Size'),
                         this.$t('Color'),
                         this.$t('Material')
-                    ]"/>
+                    ]"
+                    @optionsInput="onSkuBuilderOptionsChange"
+                    :option-data="product.attributes" />
             </div>
         </text-card>
 
