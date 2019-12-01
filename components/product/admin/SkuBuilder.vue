@@ -125,28 +125,32 @@ export default {
             });
 
             const groups = makeVariants(0, allValues);
-
-            this.variantData = [];
             let data = [];
 
             groups.forEach((arr) => {
-                data.push({
-                    values: arr,
-                    price: null,
-                    quantity: null,
-                    sku: null,
-                    barcode: null,
-                    published: true,
-                    id: uuid()
-                })
+                // if this set of values already exists in this.variantData then copy the object
+                // instead of creating a new one, otherwise any previous user-entered values will be wiped out
+                let valueString = JSON.stringify(arr);
+                let matched = null;
+
+                this.variantData.forEach((obj) => {
+                    if(valueString === JSON.stringify(obj.values)) {
+                        matched = obj;
+                    }
+                });
+
+                if(matched) {
+                    data.push(matched);
+                }
+                else {
+                    data.push({
+                        values: arr
+                        // id: uuid()
+                    })
+                }
             });
 
-            // TODO:  need to add/remove values from this.variantData
-            // instead of setting this.variantData = []
-            // because doing so wipes out existing form values
-
             this.variantData = cloneDeep(data);
-            // return this.variantData;
         },
 
         onAddOptionClick() {
@@ -183,12 +187,10 @@ export default {
 
         onClickDeleteRow(index) {
             this.options.splice(index, 1);
-            this.buildVariants();
             this.emitOptionsInput();
         },
 
-        onOptionValueChange() {
-            this.buildVariants();
+        onOptionsChange() {
             this.emitOptionsInput();
         },
 
@@ -220,6 +222,7 @@ export default {
 
 <template>
     <div>
+
         <table class="table">
             <tr>
                 <th>{{ $t('Options') }}</th>
@@ -232,13 +235,13 @@ export default {
                     <el-input
                         v-model="obj.label"
                         placeholder="Option name"
-                        @input="onOptionValueChange()" />
+                        @input="onOptionsChange()" />
                 </td>
 
                 <td class="vat">
                     <product-option-value-select
                         v-model="obj.values"
-                        @input="onOptionValueChange()"
+                        @input="onOptionsChange()"
                         :key="index" />
                 </td>
 
@@ -289,6 +292,7 @@ export default {
                 <td>
                     <el-input-number
                         v-model="variant.quantity"
+                        :min="1"
                         :step="1"
                         step-strictly
                         class="input-number" />
