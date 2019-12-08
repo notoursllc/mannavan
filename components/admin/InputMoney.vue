@@ -1,17 +1,15 @@
 <script>
 import Vue from 'vue';
-import {VMoney} from 'v-money';
+import { Money } from 'v-money';
 import accounting from 'accounting';
+import { isNumeric } from '../../utils/common';
 
 // register directive v-money and component <money>
 // Vue.use(money, {precision: 2})
 
 export default{
     props: {
-        value: {
-            type: Number,
-            default: null
-        },
+        value: {},
 
         maxlength: {
             type: Number,
@@ -19,22 +17,23 @@ export default{
         }
     },
 
+    components: {
+        Money
+    },
+
+
     data: function() {
         return {
             selectedPrice: null,
             money: {
                 decimal: '.',
                 thousands: ',',
-                prefix: '',
+                prefix: '$  ',
                 suffix: '',
                 precision: 2,
                 masked: false
             }
         }
-    },
-
-    directives: {
-        money: VMoney
     },
 
     methods: {
@@ -46,28 +45,26 @@ export default{
     },
 
     watch: {
-        'value' (to, from) {
-            this.selectedPrice = to > 0 ? to/100 : 0;
-        }
-    },
+        value: {
+            handler(newVal) {
+                let val = parseInt(newVal);
+                let cleanVal = isNumeric(val) ? val : 0;
+                console.log("MONEY WATCH", newVal,val,cleanVal)
+                this.selectedPrice = cleanVal > 0 ? cleanVal/100 : 0;
+            },
+            immediate: true
+        },
+    }
 }
 </script>
 
 
 <template>
-    <el-input
-        v-model.lazy="selectedPrice"
-        v-money="money"
-        @input="emitInput"
-        placeholder="0.00"
-        :maxlength="maxlength"
-        class="input-money">
-        <template slot="prepend">$</template>
-    </el-input>
+    <div class="el-input">
+        <money v-model="selectedPrice"
+            v-bind="money"
+            @input="emitInput"
+            class="el-input__inner"
+            :maxlength="maxlength"></money>
+    </div>
 </template>
-
-<style lang="scss">
-.input-money > .el-input-group__prepend {
-    padding: 0 10px;
-}
-</style>
