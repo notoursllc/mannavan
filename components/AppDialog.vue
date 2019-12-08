@@ -26,6 +26,7 @@ export default {
     <el-dialog
         :destroy-on-close="destroyOnClose"
         :close-on-click-modal="closeOnClickModal"
+        :lock-scroll="true"
         :width="width"
         :top="top"
         v-on="$listeners"
