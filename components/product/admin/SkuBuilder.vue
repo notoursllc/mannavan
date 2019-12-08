@@ -66,10 +66,6 @@ export default {
     name: 'SkuBuilder',
 
     props: {
-        value: {
-            type: Array
-        },
-
         product: {
             type: Object
         },
@@ -81,11 +77,7 @@ export default {
         maxCount: {
             type: Number,
             default: 3
-        },
-
-        optionData: {
-            type: Array
-        },
+        }
     },
 
     components: {
@@ -106,8 +98,13 @@ export default {
     },
 
     methods: {
-        emitOptionsInput() {
-            this.$emit('optionsInput', cloneDeep(this.options));
+        setProductAttributes() {
+            let attrs = cloneDeep(this.options);
+            attrs.forEach((obj) => {
+                delete obj.tempValues;
+            });
+
+            this.product.attributes = attrs;
         },
 
         buildVariants() {
@@ -190,7 +187,7 @@ export default {
 
         onClickDeleteRow(index) {
             this.options.splice(index, 1);
-            this.emitOptionsInput();
+            this.setProductAttributes();
         },
 
 
@@ -222,7 +219,7 @@ export default {
                 this.options[index].values = cloneDeep(this.options[index].tempValues);
             }
 
-            this.emitOptionsInput();
+            this.setProductAttributes();
         },
 
 
@@ -244,12 +241,12 @@ export default {
             this.options.forEach((obj) => {
                 obj.values = cloneDeep(obj.tempValues)
             })
-            this.emitOptionsInput();
+            this.setProductAttributes();
         }
     },
 
     watch: {
-        optionData: {
+        'product.attributes': {
             handler(newVal) {
                 if(Array.isArray(newVal)) {
                     this.options = newVal;
@@ -270,7 +267,6 @@ export default {
 
 <template>
     <div>
-
         <table class="table">
             <tr>
                 <th>{{ $t('Options') }}</th>
@@ -308,17 +304,6 @@ export default {
                 size="small"
                 @click="onAddOptionClick">{{ $t('Add Option') }}</el-button>
         </div>
-
-        <div class="sku-preview" v-show="options.length">
-            <div class="pvm"><hr/></div>
-
-            <h4>{{ $t('Variants') }}</h4>
-
-            <sku-manager
-                :product="product"
-                :details-view="true" />
-        </div>
-
     </div>
 </template>
 
@@ -328,23 +313,5 @@ export default {
     cursor: pointer;
     line-height: 40px;
     font-size: 20px;
-}
-
-.sku-preview {
-    margin-top: 20px;
-
-    h4 {
-        font-weight: 500;
-    }
-
-    .variant-label {
-        word-wrap: break-word;
-        word-break: break-word;
-        overflow-wrap: break-word;
-    }
-}
-
-.input-number {
-    width: 105px;
 }
 </style>

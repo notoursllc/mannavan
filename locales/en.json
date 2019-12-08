@@ -291,6 +291,7 @@
     "Values": "Values",
     "Variant": "Variant",
     "Variants": "Variants",
+    "VARIANTS": "VARIANTS",
     "Vendor": "Vendor",
     "Vendors": "Vendors",
     "Victory!": "Victory!",
@@ -298,7 +299,7 @@
     "View My Order": "View My Order",
     "Vintage. Racing.": "Vintage. Racing.",
 
-    "warning_message_remove_product_option_tag": "Removing option values will also remove the SKU(s) associated with the values.<br/>Continue?",
+    "warning_message_remove_product_option_tag": "Removing option values will also remove the Variants associated with the values.<br/>Continue?",
     "We have a winner!": "We have a winner!",
     "We have received your order.": "We have received your order.",
     "We want to hear from you!": "We want to hear from you!",

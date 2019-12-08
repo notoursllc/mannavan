@@ -42,19 +42,11 @@ export default {
     },
 
     methods: {
-        showSkuDialog(skuId) {
-            let sku = null;
-            let dialogTitle = null;
+        showSkuDialog(index) {
+            let sku = this.product.skus[index];
 
-            this.product.skus.forEach((obj) => {
-                if(obj.id === skuId) {
-                    sku = obj;
-                    dialogTitle = obj.attributes.map(obj => obj.value).join(' / ');
-                }
-            })
-
-            this.skuDialog.title = dialogTitle;
             this.skuDialog.sku = sku;
+            this.skuDialog.title = sku.attributes.map(obj => obj.value).join(' / ');
             this.skuDialog.show = true;
         },
 
@@ -87,23 +79,6 @@ export default {
                 console.error(err)
             }
         }
-    },
-
-    watch: {
-        product: {
-            handler(newVal) {
-                if(Array.isArray(newVal)) {
-                    this.options = newVal;
-
-                    this.options.forEach((obj) => {
-                        obj.tempValues = cloneDeep(obj.values)
-                    });
-
-                    this.buildVariants();
-                }
-            },
-            immediate: true
-        },
     }
 }
 </script>
@@ -121,9 +96,9 @@ export default {
                     :key="index"
                     width="110px">
                     <template slot-scope="scope" v-if="scope.row.attributes[index]">
-                        <template v-if="detailsView">
+                        <span v-if="detailsView" class="variant-label">
                             {{ scope.row.attributes[index].value }}
-                        </template>
+                        </span>
                         <template v-else>
                             <el-input
                                 v-model="scope.row.attributes[index].value" />
@@ -169,7 +144,7 @@ export default {
             <el-table-column>
                 <template slot-scope="scope">
                     <el-button-group>
-                        <el-button icon="el-icon-edit" @click="showSkuDialog(scope.row.id)"></el-button>
+                        <el-button icon="el-icon-edit" @click="showSkuDialog(scope.$index)"></el-button>
 
                         <el-popconfirm
                             v-if="!detailsView"
@@ -178,7 +153,6 @@ export default {
                             :cancelButtonText="$t('cancel')"
                             @onConfirm="deleteSku(scope.row.id)">
                             <el-button slot="reference" icon="el-icon-delete"></el-button>
-                            <!-- <el-button slot="reference" icon="el-icon-delete" @click="deleteSku(scope.row.id)"></el-button> -->
                         </el-popconfirm>
                     </el-button-group>
                 </template>
@@ -245,7 +219,6 @@ export default {
                     <el-checkbox
                         v-model="skuDialog.sku.is_taxable" >{{ $t('Charge tax on this product') }}</el-checkbox>
                 </div>
-
             </text-card>
 
             <!-- inventory -->
@@ -359,5 +332,11 @@ export default {
 
 .input-number {
     width: 105px;
+}
+
+.variant-label {
+    word-wrap: break-word;
+    word-break: break-word;
+    overflow-wrap: break-word;
 }
 </style>

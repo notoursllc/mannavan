@@ -207,10 +207,6 @@ export default {
             }
         },
 
-        onSkuBuilderOptionsChange(options) {
-            this.product.attributes = options;
-        },
-
         onOptionsMutated() {
             this.fetchProduct();
         },
@@ -396,14 +392,23 @@ export default {
                 <div v-if="productHasOptions">
                     <sku-builder
                         :product="product"
-                        @optionsInput="onSkuBuilderOptionsChange"
-                        :option-data="product.attributes"
                         :max-count="3"
                         :suggestions="[
                             this.$t('Size'),
                             this.$t('Color'),
                             this.$t('Material')
                         ]" />
+
+                    <!-- test -->
+                    <div class="sku-preview" v-show="product.attributes.length">
+                        <div class="pvm"><hr/></div>
+
+                        <h4>{{ $t('VARIANTS') }}</h4>
+
+                        <sku-manager
+                            :product="product"
+                            :details-view="true" />
+                    </div>
                 </div>
             </template>
         </text-card>
