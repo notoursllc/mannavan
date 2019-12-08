@@ -179,16 +179,6 @@ export default {
                     {{ Array.isArray(scope.row.option_values) ? scope.row.option_values.join((', ')) : '' }}
                 </template>
             </el-table-column>
-
-            <!-- type -->
-            <el-table-column
-                prop="option_type"
-                label="Type">
-                <template slot-scope="scope">
-                    <!-- TODO: translate ? -->
-                    {{ scope.row.option_type }}
-                </template>
-            </el-table-column>
         </el-table>
 
 
@@ -202,19 +192,6 @@ export default {
                 <label>Name:</label>
                 <span>
                     <el-input v-model="form.internal_name" />
-                </span>
-            </div>
-
-            <!-- Value -->
-            <div class="inputRow">
-                <label>Type:</label>
-                <span>
-                    <el-select
-                        v-model="form.option_type"
-                        class="widthAll">
-                        <el-option label="OPTION_TYPE_SELECT_SINGLE" value="OPTION_TYPE_SELECT_SINGLE"></el-option>
-                        <el-option label="OPTION_TYPE_SELECT_MULTIPLE" value="OPTION_TYPE_SELECT_MULTIPLE"></el-option>
-                    </el-select>
                 </span>
             </div>
 
