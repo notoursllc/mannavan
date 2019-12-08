@@ -9,7 +9,7 @@ function stripRelations(productJson) {
     // delete productJson.tax;
     // delete productJson.variations;
     // delete productJson.package_type;
-    delete productJson.skus;
+    // delete productJson.skus;
 
     // also strip uneditable values:
     delete productJson.created_at;
@@ -88,16 +88,12 @@ export default ($axios) => ({
 
     // was deleteProduct
     async delete(id) {
-        const { data } = await this.$axios.$delete(`/product`, {
+        const { data } = await $axios.$delete(`/product`, {
             params: {
                 id
             }
         });
         return data;
     },
-
-
-
-
 
 });
