@@ -29,6 +29,7 @@ export default {
         ImageManager: () => import('@/components/product/admin/ImageManager'),
         SeoPreview: () => import('@/components/product/admin/SeoPreview'),
         SkuBuilder: () => import('@/components/product/admin/SkuBuilder'),
+        SkuManager: () => import('@/components/product/admin/SkuManager')
     },
 
     mixins: [
@@ -38,8 +39,10 @@ export default {
 
     data() {
         return {
+            loading: false,
             product: {
-                attributes: []
+                attributes: [],
+                skus: []
             },
             productHasOptions: false,
             productHasMetaData: false,
@@ -55,7 +58,10 @@ export default {
     },
 
     methods: {
-        async fetchProduct(id) {
+        async fetchProduct() {
+            let id = this.$route.params.id;
+            this.loading = true;
+
             try {
                 const product = await this.$api.products.get(id, { viewAllRelated: true });
 
@@ -79,6 +85,8 @@ export default {
                     { closeOthers: true }
                 )
             }
+
+            this.loading = false;
         },
 
 
@@ -203,6 +211,10 @@ export default {
             this.product.attributes = options;
         },
 
+        onOptionsMutated() {
+            this.fetchProduct();
+        },
+
         goToStore(seoUri) {
             let routeData = this.$router.resolve({
                 name: 'p-seouri',
@@ -238,7 +250,7 @@ export default {
     mounted() {
         try {
             if(this.$route.params.id) {
-                this.fetchProduct(this.$route.params.id);
+                this.fetchProduct();
             }
             else {
                 // setting some defaults:
@@ -257,7 +269,7 @@ export default {
 
 
 <template>
-    <div>
+    <div v-loading="loading">
         <!-- <div class="tar mbm" v-if="product.id">
             <el-button @click="goToStore(product.seo_uri)">
                 <icon-new-window icon-name="new_window" width="15px" />
@@ -367,23 +379,33 @@ export default {
 
         <!-- Options -->
         <text-card>
-            <div slot="header">{{ $t('Options') }}</div>
+            <div slot="header">{{ product.id ? $t('Variants') : $t('Options')  }}</div>
 
-            <div class="inputGroup mrl mbm">
-                <el-checkbox v-model="productHasOptions">This product has multiple options, like different sizes or colors</el-checkbox>
-            </div>
+            <template v-if="product.id">
+                <sku-manager
+                    :product="product"
+                    @optionUpdated="onOptionsMutated"
+                    @optionDeleted="onOptionsMutated" />
+            </template>
 
-            <div v-if="productHasOptions">
-                <sku-builder
-                    @optionsInput="onSkuBuilderOptionsChange"
-                    :option-data="product.attributes"
-                    :max-count="3"
-                    :suggestions="[
-                        this.$t('Size'),
-                        this.$t('Color'),
-                        this.$t('Material')
-                    ]" />
-            </div>
+            <template v-else>
+                <div class="inputGroup mrl mbm">
+                    <el-checkbox v-model="productHasOptions">This product has multiple options, like different sizes or colors</el-checkbox>
+                </div>
+
+                <div v-if="productHasOptions">
+                    <sku-builder
+                        :product="product"
+                        @optionsInput="onSkuBuilderOptionsChange"
+                        :option-data="product.attributes"
+                        :max-count="3"
+                        :suggestions="[
+                            this.$t('Size'),
+                            this.$t('Color'),
+                            this.$t('Material')
+                        ]" />
+                </div>
+            </template>
         </text-card>
 
 

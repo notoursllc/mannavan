@@ -69,3 +69,8 @@ export const arrayDiff = (a1, a2) => {
 
     return diff;
 }
+
+
+export const isNumeric = (n) => {
+    return !isNaN(parseFloat(n)) && isFinite(n);
+}

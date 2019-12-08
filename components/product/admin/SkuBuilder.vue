@@ -70,6 +70,10 @@ export default {
             type: Array
         },
 
+        product: {
+            type: Object
+        },
+
         suggestions: {
             type: Array
         },
@@ -86,23 +90,18 @@ export default {
 
     components: {
         ProductOptionValueSelect: () => import('@/components/product/admin/ProductOptionValueSelect'),
-        InputMoney: () => import('@/components/admin/InputMoney')
+        SkuManager: () => import('@/components/product/admin/SkuManager')
     },
 
     data: function() {
         return {
-            options: [],
-            variantData: []
+            options: []
         }
     },
 
     computed: {
         canAddOption() {
             return this.options.length < this.maxCount;
-        },
-
-        tableColumnLabels() {
-            return this.options.map(obj => obj.label);
         }
     },
 
@@ -133,8 +132,8 @@ export default {
                 let valueString = JSON.stringify(arr);
                 let matched = null;
 
-                this.variantData.forEach((obj) => {
-                    if(valueString === JSON.stringify(obj.values)) {
+                this.product.skus.forEach((obj) => {
+                    if(valueString === JSON.stringify(obj.attributes)) {
                         matched = obj;
                     }
                 });
@@ -144,14 +143,15 @@ export default {
                 }
                 else {
                     data.push({
-                        values: arr
-                        // id: uuid()
-                    })
+                        // id: uuid(),
+                        attributes: arr
+                    });
                 }
             });
 
-            this.variantData = cloneDeep(data);
+            this.product.skus = cloneDeep(data);
         },
+
 
         onAddOptionClick() {
             let suggestions = Array.isArray(this.suggestions) ? this.suggestions.slice(0) : [];  // copy the array
@@ -186,6 +186,7 @@ export default {
                 );
             }
         },
+
 
         onClickDeleteRow(index) {
             this.options.splice(index, 1);
@@ -244,19 +245,6 @@ export default {
                 obj.values = cloneDeep(obj.tempValues)
             })
             this.emitOptionsInput();
-        },
-
-
-        getVariantOptionValue(optionId, variant) {
-            let val = null;
-
-            variant.values.forEach((obj) => {
-                if(obj.optionId === optionId) {
-                    val = obj.value;
-                }
-            });
-
-            return val;
         }
     },
 
@@ -324,52 +312,11 @@ export default {
         <div class="sku-preview" v-show="options.length">
             <div class="pvm"><hr/></div>
 
-            <h4>{{ $t('Preview') }}</h4>
+            <h4>{{ $t('Variants') }}</h4>
 
-            <table class="table">
-            <tr>
-                <th v-for="(label, index) in tableColumnLabels" :key="index">
-                    {{ label }}
-                </th>
-                <th>{{ $t('Price') }}</th>
-                <th>{{ $t('Quantity') }}</th>
-                <th>{{ $t('SKU') }}</th>
-                <th>{{ $t('Barcode') }}</th>
-            </tr>
-
-            <tr v-for="variant in variantData" :key="variant.id">
-                <td v-for="(obj, index) in options" :key="index" class="fs14">
-                    {{ getVariantOptionValue(obj.id, variant) }}
-                </td>
-
-                <!-- price -->
-                <td>
-                    <input-money
-                        v-model="variant.price"
-                        class="width125" />
-                </td>
-
-                <!-- quantity -->
-                <td>
-                    <el-input-number
-                        v-model="variant.quantity"
-                        :min="1"
-                        :step="1"
-                        step-strictly
-                        class="input-number" />
-                </td>
-
-                <!-- sku -->
-                <td>
-                    <el-input v-model="variant.sku" />
-                </td>
-
-                <!-- barcode -->
-                <td>
-                    <el-input v-model="variant.barcode" />
-                </td>
-            </tr>
-            </table>
+            <sku-manager
+                :product="product"
+                :details-view="true" />
         </div>
 
     </div>
@@ -398,6 +345,6 @@ export default {
 }
 
 .input-number {
-    width: 140px;
+    width: 105px;
 }
 </style>
