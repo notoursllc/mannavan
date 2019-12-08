@@ -215,34 +215,13 @@
 
     export default{
         props: {
+            value: {
+                type: String
+            },
+
             placeholder: {
                 type: String,
                 default: ''
-            },
-
-            // this allows using the `value` prop for a different purpose
-            initValue: {
-                type: String
-            }
-        },
-
-        created() {
-            this.selectedCountry = this.initValue;
-        },
-
-        methods: {
-            emitChange(val) {
-                this.$emit('change', val)
-            },
-
-            emitVisibleChange(val) {
-               this.$emit('visible-change', val)
-            }
-        },
-
-        watch: {
-            'initValue' (to, from) {
-                this.selectedCountry = to;
             }
         },
 
@@ -251,26 +230,50 @@
                 selectedCountry: null,
                 countryList: countries
             }
+        },
+
+        methods: {
+            emitChange(val) {
+                this.selectedCountry = val;
+                this.$emit('input', val)
+            },
+
+            emitVisibleChange(isVisible) {
+                this.$emit('visible-change', isVisible)
+            },
+
+            onClear() {
+                this.selectedCountry = null;
+            }
+        },
+
+        watch: {
+            value: {
+                handler(newVal) {
+                    this.selectedCountry = newVal;
+                },
+                immediate: true
+            },
         }
     }
 </script>
 
 
 <template>
-    <el-select v-model="selectedCountry"
-               filterable
-               :placeholder="placeholder"
-               :no-match-text="$t('No matching values')"
-               :clearable="true"
-               @change="emitChange"
-               @visible-change="emitVisibleChange"
-               @clear="() => { selectedCountry = null }"
-               class="widthAll">
+    <el-select
+        v-model="selectedCountry"
+        filterable
+        :placeholder="placeholder"
+        :no-match-text="$t('No matching values')"
+        :clearable="true"
+        @change="emitChange"
+        @visible-change="emitVisibleChange"
+        @clear="onClear"
+        class="widthAll">
         <el-option
-                v-for="obj in countryList"
-                :key="obj.alpha2"
-                :label="$t(obj.name)"
-                :value="obj.alpha2">
-        </el-option>
+            v-for="obj in countryList"
+            :key="obj.alpha2"
+            :label="$t(obj.name)"
+            :value="obj.alpha2" />
     </el-select>
 </template>
