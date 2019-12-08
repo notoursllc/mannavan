@@ -24,6 +24,7 @@ import {
     Message,
     MessageBox,
     Option,
+    Popconfirm,
     Popover,
     Radio,
     RadioGroup,
@@ -59,6 +60,7 @@ export default ({ store }) => {
     Vue.use(Menu);
     Vue.use(MenuItem);
     Vue.use(Option);
+    Vue.use(Popconfirm);
     Vue.use(Popover);
     Vue.use(Radio);
     Vue.use(RadioGroup);
