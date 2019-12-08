@@ -26,7 +26,7 @@ export default {
     h4 {
         font-size: 13px;
         font-weight: 500;
-        padding: 10px 20px;
+        padding-bottom: 10px;
     }
 
     .textCardHeader {
