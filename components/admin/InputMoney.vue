@@ -49,7 +49,6 @@ export default{
             handler(newVal) {
                 let val = parseInt(newVal);
                 let cleanVal = isNumeric(val) ? val : 0;
-                console.log("MONEY WATCH", newVal,val,cleanVal)
                 this.selectedPrice = cleanVal > 0 ? cleanVal/100 : 0;
             },
             immediate: true

@@ -6,6 +6,7 @@
     "accept_privacy_and_tos": "By placing your order, you agree to our {linkPrivacy} and {linkTos}.",
     "Add Option": "Add Option",
     "Add To Your Order": "Add To Your Order",
+    "Add variant": "Add variant",
     "Address_or_PO_Box": "Address (or PO Box)",
     "Added To Your Order": "Added To Your Order",
     "ADDRESS LINE 1": "ADDRESS LINE 1",
@@ -80,6 +81,7 @@
 
     "day_days": "day | days",
     "Delete": "Delete",
+    "Delete this option?": "Delete this option?",
     "Description": "Description",
     "Details": "Details",
     "digits_text": "digit | digits",
@@ -134,6 +136,7 @@
     "MATERIAL_TYPE_TRI_BLEND": "Tri-Blend",
     "Metadata": "Metadata",
     "Metadata_description": "This product has additional meta data that you can use for your own purposes",
+    "more": "more",
 
     "n_in_stock": "{numInventory} in stock",
     "n_in_stock_for_n_variants": "{numInventory} in stock for {numVariants} variant | {numInventory} in stock for {numVariants} variants",

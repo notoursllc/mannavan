@@ -1,4 +1,6 @@
 <script>
+import isObject from 'lodash.isobject';
+
 export default {
     name: 'SkuManager',
 
@@ -38,6 +40,10 @@ export default {
                 return this.product.attributes.map(obj => obj.label);
             }
             return [];
+        },
+
+        showAddVariantButton() {
+            return isObject(this.product) && this.product.id;
         }
     },
 
@@ -78,7 +84,23 @@ export default {
                 this.$errorMessage(this.$t('An error occurred'));
                 console.error(err)
             }
-        }
+        },
+
+        onClickAddVariant() {
+            let sku = {
+                attributes: [],
+                product_id: this.product.id
+            };
+
+            this.tableColumnLabels.forEach((label, index) => {
+                sku.attributes[index] = { value: '' }
+            });
+
+            // https://vuejs.org/v2/guide/reactivity.html#Change-Detection-Caveats
+            this.skuDialog.sku = Object.assign({}, sku);
+            this.skuDialog.title = this.$t('Add variant');
+            this.skuDialog.show = true;
+        },
     }
 }
 </script>
@@ -86,6 +108,12 @@ export default {
 
 <template>
     <div style="overflow-x: scroll">
+        <div class="tar" v-if="showAddVariantButton">
+            <el-button
+                @click="onClickAddVariant"
+                size="mini">{{ $t('Add variant')}}</el-button>
+        </div>
+
         <el-table
             :data="product.skus"
             class="widthAll">
@@ -144,7 +172,7 @@ export default {
             <el-table-column>
                 <template slot-scope="scope">
                     <el-button-group>
-                        <el-button icon="el-icon-edit" @click="showSkuDialog(scope.$index)"></el-button>
+                        <el-button @click="showSkuDialog(scope.$index)">{{ $t('more') }}</el-button>
 
                         <el-popconfirm
                             v-if="!detailsView"
@@ -163,7 +191,6 @@ export default {
         <app-dialog
             :title="skuDialog.title"
             :visible.sync="skuDialog.show">
-            {{ skuDialog.sku }}
 
             <!-- options -->
             <text-card>

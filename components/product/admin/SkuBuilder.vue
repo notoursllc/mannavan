@@ -291,9 +291,10 @@ export default {
                 </td>
 
                 <td class="vat tar">
-                    <i @click="onClickDeleteRow(index)"
-                        class="el-icon-delete option-delete-icon"
-                        :alt="$t('Remove')" />
+                    <el-button
+                         @click="onClickDeleteRow(index)"
+                         icon="el-icon-delete"
+                         :alt="$t('Remove')"></el-button>
                 </td>
             </tr>
         </table>
@@ -309,9 +310,5 @@ export default {
 
 
 <style lang="scss">
-.option-delete-icon {
-    cursor: pointer;
-    line-height: 40px;
-    font-size: 20px;
-}
+
 </style>
