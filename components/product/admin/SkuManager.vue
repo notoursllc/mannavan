@@ -1,5 +1,6 @@
 <script>
 import isObject from 'lodash.isobject';
+import storage_mixin from '@/mixins/storage_mixin';
 
 export default {
     name: 'SkuManager',
@@ -20,7 +21,12 @@ export default {
         AppDialog: () => import('@/components/AppDialog'),
         TextCard: () => import('@/components/TextCard'),
         CountrySelect: () => import('@/components/CountrySelect'),
+        ImageManager: () => import('@/components/product/admin/ImageManager'),
     },
+
+    mixins: [
+        storage_mixin
+    ],
 
     data: function() {
         return {
@@ -30,7 +36,9 @@ export default {
                 sku: {
                     attributes: []
                 }
-            }
+            },
+            imageManagerValue: [],
+            imageManagerMaxImages: process.env.IMAGE_MANAGER_MAX_IMAGES || 8,
         }
     },
 
@@ -52,16 +60,51 @@ export default {
             let sku = this.product.skus[index];
 
             this.skuDialog.sku = sku;
+
+            if(!this.skuDialog.sku.hasOwnProperty('imagesTmp')) {
+                this.skuDialog.sku.imagesTmp = [];
+            }
+
             this.skuDialog.title = sku.attributes.map(obj => obj.value).join(' / ');
             this.skuDialog.show = true;
+
+            console.log("showSkuDialog SKU", this.skuDialog.sku)
         },
 
         onClickDone() {
             this.skuDialog.show = false;
+            console.log("DONE", this.product)
+        },
+
+        async upsertImages() {
+            if(Array.isArray(this.imageManagerValue)) {
+                const result = this.storagemix_uploadImages(this.imageManagerValue);
+
+                // 'result' only contains the new images that were added (not the pre-existing ones)
+                // so if there are pre-existing images, we just concat the new ones to the list
+                // otherwise we set the images data to the imageUploadResult
+
+                if(Array.isArray(this.skuDialog.sku.images)) {
+                    this.skuDialog.sku.images = this.skuDialog.sku.images.concat(result)
+                }
+                else {
+                    this.skuDialog.sku.images = result;
+                }
+            }
         },
 
         async saveSku() {
+            // Delete the unused images
             try {
+                await this.storagemix_deleteProductImages(this.imageManagerValue, this.skuDialog.sku.images);
+            }
+            catch(err) {
+                console.error(err);
+                this.$bugsnag.notify(err);
+            }
+
+            try {
+                await this.upsertImages();
                 await this.$api.skus.upsert(this.skuDialog.sku);
                 this.$successMessage(this.$t('Option saved successfully'));
                 this.skuDialog.show = false;
@@ -214,6 +257,7 @@ export default {
                 </div>
             </text-card>
 
+
             <!-- pricing -->
             <text-card>
                 <div slot="header">{{ $t('Pricing') }}</div>
@@ -247,6 +291,7 @@ export default {
                         v-model="skuDialog.sku.is_taxable" >{{ $t('Charge tax on this product') }}</el-checkbox>
                 </div>
             </text-card>
+
 
             <!-- inventory -->
             <text-card>
@@ -293,6 +338,22 @@ export default {
                 </div>
             </text-card>
 
+
+            <!-- Images -->
+            <text-card>
+                <div slot="header">
+                    {{ $t('Images') }}
+                    <span class="fs11 plm">{{ $t('You can add up to num images', {number: imageManagerMaxImages}) }}</span>
+                </div>
+                <image-manager
+                    v-model="skuDialog.sku.imagesTmp"
+                    :max-num-images="parseInt(imageManagerMaxImages, 10)" />
+                <!-- <image-manager
+                    v-model="imageManagerValue"
+                    :max-num-images="parseInt(imageManagerMaxImages, 10)" /> -->
+            </text-card>
+
+
             <!-- shipping -->
             <text-card>
                 <div slot="header">{{ $t('Shipping') }}</div>
@@ -333,6 +394,7 @@ export default {
                     </div>
                 </div>
             </text-card>
+
 
             <div class="mtl tac">
                 <el-button

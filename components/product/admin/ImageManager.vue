@@ -91,6 +91,7 @@ export default {
 
                     this.loading = false;
                 };
+
                 reader.readAsDataURL(files[i]);
             }
         },
@@ -150,7 +151,7 @@ export default {
                 :accept="accept"
                 :multiple="true"
                 :disabled="numRemainingUploads < 1"
-                @change="onFileChange">{{ $t('Select file') }}</file-button>
+                @change="onFileChange">{{ fileList.length ? $t('Choose another file') : $t('Choose file') }}</file-button>
         </div>
 
         <app-dialog :visible.sync="dialogVisible">

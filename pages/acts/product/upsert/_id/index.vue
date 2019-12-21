@@ -1,8 +1,10 @@
 <script>
 import forEach from 'lodash.foreach';
 import isObject from 'lodash.isobject';
+import cloneDeep from 'lodash.clonedeep';
 import product_mixin from '@/mixins/product_mixin';
 import shipping_mixin from '@/mixins/shipping_mixin';
+import storage_mixin from '@/mixins/storage_mixin';
 
 
 export default {
@@ -34,7 +36,8 @@ export default {
 
     mixins: [
         product_mixin,
-        shipping_mixin
+        shipping_mixin,
+        storage_mixin
     ],
 
     data() {
@@ -42,12 +45,12 @@ export default {
             loading: false,
             product: {
                 attributes: [],
-                skus: []
+                skus: [],
+                imagesTmp: []
             },
             productHasOptions: false,
             productHasMetaData: false,
             domainName: process.env.DOMAIN_NAME,
-            imageManagerValue: [],
             imageManagerMaxImages: process.env.IMAGE_MANAGER_MAX_IMAGES || 8,
             videoPlayerModal: {
                 isActive: false,
@@ -72,12 +75,29 @@ export default {
                 this.productHasOptions = product.attributes ? true : false;
                 this.productHasMetaData = product.metadata ? true : false;
                 this.product = product;
+                this.product.imagesTmp = [];
 
+                // copy the product images into the tmp array so they display in the image manager
                 if(Array.isArray(this.product.images)) {
                     this.product.images.forEach((arr) => {
-                        this.imageManagerValue.push(arr[0]);
-                    })
+                        this.product.imagesTmp.push(arr[0]);
+                    });
                 }
+
+                // copy the product sku images into the tmp array so they display in the image manager
+                if(Array.isArray(this.product.skus)) {
+                    this.product.skus.forEach((obj) => {
+                        obj.imagesTmp = [];
+
+                        if(Array.isArray(obj.images)) {
+                            obj.images.forEach((arr) => {
+                                obj.imagesTmp.push(arr[0]);
+                            });
+                        }
+                    });
+                }
+
+                console.log("FETCH PRODUCT DONE", this.product)
             }
             catch(e) {
                 this.$errorMessage(
@@ -90,93 +110,69 @@ export default {
         },
 
 
-        /**
-         * Removes objects from product.images that are no longer used,
-         * and also deletes the images from storage
-         *
-         * @returns Promise
-         */
-        deleteImages() {
-            if(Array.isArray(this.imageManagerValue) && isObject(this.product.images)) {
-                let newImageUrls = this.imageManagerValue.map(obj => obj.url);
-                let toDelete = [];
+        async upsertSkuImages() {
+            if(Array.isArray(this.product.skus)) {
+                for(let i=0, len=this.product.skus.length; i<len; i++) {
+                    let obj = this.product.skus[i];
+                    let copy = cloneDeep(obj.imagesTmp);
+                    delete obj.imagesTmp;
 
-                let i = Array.isArray(this.product.images) ? this.product.images.length : 0;
-                while (i--) {
-                    let hasUrl = false;
-                    let arr = this.product.images[i];
+                    if(Array.isArray(copy)) {
+                        let result = await this.storagemix_uploadImages(copy);
+                        console.log("upsertSKUImages", copy, result)
 
-                    arr.forEach((obj) => {
-                        if(newImageUrls.indexOf(obj.url) > -1) {
-                            hasUrl = true;
-                        }
-                    });
-
-                    if(!hasUrl) {
-                        // spread the array members (objects) into toDelete
-                        // instead of the array itself:
-                        toDelete.push(...arr);
-                        this.product.images.splice(i, 1);
+                        // 'result' only contains the new images that were added (not the pre-existing ones)
+                        // so if there are pre-existing images, we just concat the new ones to the list
+                        // otherwise we set the images data to the result
+                        obj.images = Array.isArray(obj.images) ? obj.images.concat(result) : result;
                     }
                 }
-
-                const imageDeletePromises = [];
-                toDelete.forEach((obj) => {
-                    imageDeletePromises.push(
-                        this.$api.storage.deleteImage(obj.url)
-                    )
-                });
-
-                return Promise.all(imageDeletePromises);
             }
+
+            console.log("upsertSKUImages DONE", this.product.skus)
         },
 
 
-        async upsertImages() {
-            if(Array.isArray(this.imageManagerValue)) {
-                const newImages = this.imageManagerValue.filter((obj) => { return obj.hasOwnProperty('raw') });
-
-                // upload the new images:
-                const newImagePromises = [];
-                newImages.forEach((obj) => {
-                    let formData = new FormData();
-                    formData.append('file', obj.raw)
-                    newImagePromises.push(
-                        this.$api.storage.addImage(formData)
-                    );
-                });
-
-                const imageUploadResult = await Promise.all(newImagePromises);
-
-                // adding the alt text to each upload result
-                newImages.forEach((obj, index) => {
-                    imageUploadResult[index].forEach((imgObject) => {
-                        imgObject.altText = obj.altText;
-                    });
-                })
-
-                // imageUploadResult only contains the new images that were added (not the pre-existing ones)
-                // so if there are pre-existing images, we just concat the new ones to the list
-                // otherwise we set the images data to the imageUploadResult
-
-                if(Array.isArray(this.product.images)) {
-                    this.product.images = this.product.images.concat(imageUploadResult)
-                }
-                else {
-                    this.product.images = imageUploadResult;
+        async deleteOldSkuImages() {
+            if(Array.isArray(this.product.skus)) {
+                for(let i=0, len=this.product.skus.length; i<len; i++) {
+                    let obj = this.product.skus[i];
+                    let copy = cloneDeep(obj.imagesTmp);
+                    await this.storagemix_deleteProductImages(obj.imagesTmp, obj.images);
                 }
             }
         },
 
 
-        async upsert() {
+        async upsertProductImages() {
+            let copy = cloneDeep(this.product.imagesTmp);
+            delete this.product.imagesTmp;
+
+            if(Array.isArray(copy)) {
+                const result = await this.storagemix_uploadImages(copy);
+                console.log("upsertProductImages", copy, result)
+                this.product.images = Array.isArray(this.product.images) ? this.product.images.concat(result) : result;
+            }
+
+            console.log("upsertProductImages DONE", this.product.images)
+        },
+
+
+        async onSaveClick() {
             // Delete the unused images
             try {
-                await this.deleteImages();
+                await Promise.all([
+                    this.deleteOldSkuImages(),
+                    this.storagemix_deleteProductImages(this.product.imagesTmp, this.product.images)
+                ]);
             }
-            catch(e) {
+            catch(err) {
+                console.error(err)
                 this.$bugsnag.notify(err);
             }
+            return;
+
+            console.log("ON SAVE", this.product);
 
             try {
                 if(!this.productHasOptions) {
@@ -187,7 +183,12 @@ export default {
                     this.product.metadata = null;
                 }
 
-                await this.upsertImages();
+                await Promise.all([
+                    this.upsertProductImages(),
+                    this.upsertSkuImages()
+                ]);
+
+                console.log("BEFORE SAVE", this.product)
 
                 const p = await this.$api.products.upsert(this.product);
 
@@ -368,7 +369,7 @@ export default {
                 <span class="fs11 plm">{{ $t('You can add up to num images', {number: imageManagerMaxImages}) }}</span>
             </div>
             <image-manager
-                v-model="imageManagerValue"
+                v-model="product.imagesTmp"
                 :max-num-images="parseInt(imageManagerMaxImages, 10)" />
         </text-card>
 
@@ -530,7 +531,7 @@ export default {
         </text-card> -->
 
         <div class="mtl">
-            <el-button type="primary" @click="upsert">{{ $t('Save') }}</el-button>
+            <el-button type="primary" @click="onSaveClick">{{ $t('Save') }}</el-button>
         </div>
     </div>
 </template>
