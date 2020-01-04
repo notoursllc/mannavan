@@ -34,6 +34,8 @@ export default ($axios) => ({
     async upsert(sku) {
         let response;
 
+        delete sku.tmp;
+
         if(sku.id) {
             response = await $axios.$put('/sku', sku);
         }
@@ -52,6 +54,11 @@ export default ($axios) => ({
             }
         });
         return data;
+    },
+
+
+    async uploadImages(sku) {
+
     }
 
 });

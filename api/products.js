@@ -2,7 +2,7 @@ import queryString from 'query-string';
 import isObject from 'lodash.isobject';
 
 
-function stripRelations(productJson) {
+function stripRelations(FormData) {
     // delete productJson.artist;
     // delete productJson.sizes;
     // delete productJson.pics;
@@ -12,12 +12,12 @@ function stripRelations(productJson) {
     // delete productJson.skus;
 
     // also strip uneditable values:
-    delete productJson.created_at;
-    delete productJson.updated_at;
+    FormData.delete('created_at');
+    FormData.delete('updated_at');
+    FormData.delete('deleted_at');
+    FormData.delete('total_inventory_count');
+    FormData.delete('skus');
     // delete productJson.display_price;
-    delete productJson.total_inventory_count;
-
-    return productJson;
 }
 
 
@@ -71,15 +71,15 @@ export default ($axios) => ({
 
 
     // was upsertProduct
-    async upsert(product) {
+    async upsert(FormData) {
         let response;
-        let cleanProduct = stripRelations(product);
+        stripRelations(FormData);
 
-        if(product.id) {
-            response = await $axios.$put('/product', cleanProduct);
+        if(FormData.get('id')) {
+            response = await $axios.$put('/product', FormData);
         }
         else {
-            response = await $axios.$post('/product', cleanProduct);
+            response = await $axios.$post('/product', FormData);
         }
 
         return response.data;
@@ -89,6 +89,22 @@ export default ($axios) => ({
     // was deleteProduct
     async delete(id) {
         const { data } = await $axios.$delete(`/product`, {
+            params: {
+                id
+            }
+        });
+        return data;
+    },
+
+
+    async uploadImage(formData) {
+        const { data } = await $axios.$post('/product/image/upload', formData);
+        return data;
+    },
+
+
+    async deleteImage(id) {
+        const { data } = await $axios.$delete(`/product/image`, {
             params: {
                 id
             }

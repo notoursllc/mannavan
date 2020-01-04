@@ -43,10 +43,11 @@ export default {
     data() {
         return {
             loading: false,
+            loadingProductImages: false,
             product: {
                 attributes: [],
                 skus: [],
-                imagesTmp: []
+                images: []
             },
             productHasOptions: false,
             productHasMetaData: false,
@@ -74,29 +75,12 @@ export default {
 
                 this.productHasOptions = product.attributes ? true : false;
                 this.productHasMetaData = product.metadata ? true : false;
+
+                if(!Array.isArray(product.images)) {
+                    product.images = [];
+                }
+
                 this.product = product;
-                this.product.imagesTmp = [];
-
-                // copy the product images into the tmp array so they display in the image manager
-                if(Array.isArray(this.product.images)) {
-                    this.product.images.forEach((arr) => {
-                        this.product.imagesTmp.push(arr[0]);
-                    });
-                }
-
-                // copy the product sku images into the tmp array so they display in the image manager
-                if(Array.isArray(this.product.skus)) {
-                    this.product.skus.forEach((obj) => {
-                        obj.imagesTmp = [];
-
-                        if(Array.isArray(obj.images)) {
-                            obj.images.forEach((arr) => {
-                                obj.imagesTmp.push(arr[0]);
-                            });
-                        }
-                    });
-                }
-
                 console.log("FETCH PRODUCT DONE", this.product)
             }
             catch(e) {
@@ -110,16 +94,29 @@ export default {
         },
 
 
+        async onProductImageDelete(id) {
+            try {
+                this.loadingProductImages = true;
+                await this.$api.products.deleteImage(id);
+            }
+            catch(e) {
+                this.$errorMessage(
+                    e.message,
+                    { closeOthers: true }
+                )
+            }
+
+            this.loadingProductImages = false;
+        },
+
+
         async upsertSkuImages() {
             if(Array.isArray(this.product.skus)) {
                 for(let i=0, len=this.product.skus.length; i<len; i++) {
                     let obj = this.product.skus[i];
-                    let copy = cloneDeep(obj.imagesTmp);
-                    delete obj.imagesTmp;
 
-                    if(Array.isArray(copy)) {
-                        let result = await this.storagemix_uploadImages(copy);
-                        console.log("upsertSKUImages", copy, result)
+                    if(Array.isArray(obj.images)) {
+                        let result = await this.storagemix_uploadImages(obj.images);
 
                         // 'result' only contains the new images that were added (not the pre-existing ones)
                         // so if there are pre-existing images, we just concat the new ones to the list
@@ -128,8 +125,6 @@ export default {
                     }
                 }
             }
-
-            console.log("upsertSKUImages DONE", this.product.skus)
         },
 
 
@@ -137,60 +132,101 @@ export default {
             if(Array.isArray(this.product.skus)) {
                 for(let i=0, len=this.product.skus.length; i<len; i++) {
                     let obj = this.product.skus[i];
-                    let copy = cloneDeep(obj.imagesTmp);
-                    await this.storagemix_deleteProductImages(obj.imagesTmp, obj.images);
+                    let copy = cloneDeep(obj.images);
+                    await this.storagemix_deleteProductImages(obj.images, obj.images);
                 }
             }
         },
 
 
         async upsertProductImages() {
-            let copy = cloneDeep(this.product.imagesTmp);
-            delete this.product.imagesTmp;
+                const newImages = this.product.images.filter((obj) => { return obj.hasOwnProperty('raw') });
+                console.log("NEW IMAGES", newImages)
+                // upload the new images:
+                const newImagePromises = [];
+                newImages.forEach((obj) => {
+                    let formData = new FormData();
+                    formData.append('file', obj.raw);
+                    formData.append('alt_text', obj.alt_text);
+                    newImagePromises.push(
+                        this.$api.products.uploadImage(formData)
+                        // this.$api.storage.addImage(formData)
+                    );
+                });
 
-            if(Array.isArray(copy)) {
-                const result = await this.storagemix_uploadImages(copy);
-                console.log("upsertProductImages", copy, result)
-                this.product.images = Array.isArray(this.product.images) ? this.product.images.concat(result) : result;
-            }
+                return Promise.all(newImagePromises);
 
-            console.log("upsertProductImages DONE", this.product.images)
+            // testing just one image for now:
+            // const images = await this.$api.products.uploadImage(this.product.images[0].raw);
+            // console.log("RESULTS - upsertProductImages", images)
+
+            // const result = await this.storagemix_uploadImages(this.product.images);
+            // this.product.images = Array.isArray(this.product.images) ? this.product.images.concat(images) : images;
         },
 
 
         async onSaveClick() {
             // Delete the unused images
-            try {
-                await Promise.all([
-                    this.deleteOldSkuImages(),
-                    this.storagemix_deleteProductImages(this.product.imagesTmp, this.product.images)
-                ]);
-            }
-            catch(err) {
-                console.error(err)
-                this.$bugsnag.notify(err);
-            }
-            return;
+            // try {
+            //     await Promise.all([
+            //         this.deleteOldSkuImages(),
+            //         this.storagemix_deleteProductImages(this.product.tmp.images, this.product.images)
+            //     ]);
+            // }
+            // catch(err) {
+            //     console.error(err)
+            //     this.$bugsnag.notify(err);
+            // }
 
             console.log("ON SAVE", this.product);
 
             try {
-                if(!this.productHasOptions) {
-                    this.product.attributes = null;
-                }
+                // if(!this.productHasOptions) {
+                //     this.product.attributes = null;
+                // }
 
-                if(!this.productHasMetaData) {
-                    this.product.metadata = null;
-                }
+                // if(!this.productHasMetaData) {
+                //     this.product.metadata = null;
+                // }
 
-                await Promise.all([
-                    this.upsertProductImages(),
-                    this.upsertSkuImages()
-                ]);
+                // await Promise.all([
+                //     this.upsertProductImages(),
+                //     // this.upsertSkuImages()
+                // ]);
 
-                console.log("BEFORE SAVE", this.product)
+                // delete the tmp values
+                // delete this.product.tmp;
+                // this.product.skus.forEach((sku) => {
+                //     delete sku.tmp;
+                // });
 
-                const p = await this.$api.products.upsert(this.product);
+                const formData = new FormData();
+
+                Object.keys(this.product).forEach((key) => {
+                    switch(key) {
+                        case 'images':
+                            const newImages = this.product.images.filter((obj) => { return obj.hasOwnProperty('raw') });
+                            newImages.forEach((obj) => {
+                                formData.append('images', obj.raw);
+                                formData.append('alt_text', obj.alt_text);
+                            });
+                            break;
+
+                        case 'attributes':
+                        case 'metadata':
+                            formData.append(key, Array.isArray(this.product[key]) ? JSON.stringify(this.product[key]) : '');
+                            break;
+
+                        case 'skus':
+                            formData.append(key, (Array.isArray(this.product[key]) && this.product[key].length) ? JSON.stringify(this.product[key]) : '');
+                            break;
+
+                        default:
+                            formData.append(key, this.product[key] || '');
+                    }
+                })
+
+                const p = await this.$api.products.upsert(formData);
 
                 if(!p) {
                     throw new Error('Error updating product');
@@ -282,6 +318,7 @@ export default {
         </div>
 
 
+        <!-- Organization -->
         <text-card>
             <div slot="header">{{ $t('Organization') }}</div>
 
@@ -369,8 +406,10 @@ export default {
                 <span class="fs11 plm">{{ $t('You can add up to num images', {number: imageManagerMaxImages}) }}</span>
             </div>
             <image-manager
-                v-model="product.imagesTmp"
-                :max-num-images="parseInt(imageManagerMaxImages, 10)" />
+                v-loading="loadingProductImages"
+                v-model="product.images"
+                :max-num-images="parseInt(imageManagerMaxImages, 10)"
+                @delete="onProductImageDelete" />
         </text-card>
 
 
@@ -380,9 +419,7 @@ export default {
 
             <template v-if="product.id">
                 <sku-manager
-                    :product="product"
-                    @optionUpdated="onOptionsMutated"
-                    @optionDeleted="onOptionsMutated" />
+                    :product="product" />
             </template>
 
             <template v-else>

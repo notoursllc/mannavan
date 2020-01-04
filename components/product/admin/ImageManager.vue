@@ -1,6 +1,8 @@
 <script>
 import Vue from 'vue';
 import { Tooltip } from 'element-ui';
+import isObject from 'lodash.isobject';
+
 Vue.use(Tooltip);
 
 export default {
@@ -35,7 +37,11 @@ export default {
 
     computed: {
         numRemainingUploads() {
-            return this.maxNumImages - this.fileList.length;
+            return this.maxNumImages - this.visibleFileList.length;
+        },
+
+        visibleFileList() {
+            return this.fileList.filter(obj => isObject(obj) && obj.toDelete !== 1);
         }
     },
 
@@ -72,33 +78,45 @@ export default {
             }
 
             this.createTempImages(files);
+            this.emitChange();
         },
-
 
         createTempImages(files) {
             this.loading = true;
-            let numFiles = files.length <= this.numRemainingUploads ? files.length : this.numRemainingUploads;
 
-            for(let i=0; i<numFiles; i++) {
-                let reader = new FileReader();
+            if(files) {
+                // https://stackoverflow.com/a/40902462
+                Array.prototype.forEach.call(files, (file) => {
+                    let reader = new FileReader();
 
-                reader.onload = (e) => {
-                    this.fileList.push({
-                        url: e.target.result,
-                        altText: null,
-                        raw: files[i]
-                    });
+                    reader.onload = (e) => {
+                        this.fileList.push({
+                            image_url: e.target.result,
+                            alt_text: null,
+                            raw: file
+                        });
+                        // console.log("ADDING TO FILELIST", file.name)
+                    };
 
-                    this.loading = false;
-                };
-
-                reader.readAsDataURL(files[i]);
+                    reader.readAsDataURL(file);
+                });
             }
+
+            this.loading = false;
         },
 
+        async onDeleteImage(obj, index) {
+            if(obj.hasOwnProperty('id')) {
+                // this.loading = true;
+                this.$emit('delete', obj.id);
+                // await this.$api.storage.deleteImage(obj.image_url);
+                // this.loading = false;
+            }
 
-        deleteTempImage(index) {
+            // If this is a newly uploaded image then all we need to do
+            // is splice it from the fileList
             this.fileList.splice(index, 1);
+            this.emitChange();
         }
     },
 
@@ -107,6 +125,7 @@ export default {
             handler(newVal) {
                 if(Array.isArray(newVal)) {
                     this.fileList = newVal;
+                    console.log("this.fileList", this.fileList)
                 }
             },
             immediate: true,
@@ -121,28 +140,34 @@ export default {
         v-loading="loading"
         class="widthAll">
 
-        <div class="image-row" v-for="(obj, index) in fileList" :key="index">
+        <div class="image-row" v-for="(obj, index) in visibleFileList" :key="index">
             <div class="image-row-pic">
                 <img
                     class="cursorPointer"
-                    :src="obj.url"
+                    :src="obj.image_url"
                     alt=""
-                    @click="onPreview(obj.url)" />
+                    @click="onPreview(obj.image_url)" />
             </div>
 
             <div class="image-row-input">
                 <div class="phm">
                     <el-input
-                        v-model="obj.altText"
+                        v-model="obj.alt_text"
                         class="widthAll"
                         placeholder="Image alt text" />
                     <div class="input-tip">{{ $t('Image_alt_text_description') }}</div>
                 </div>
 
-                <el-button
-                    @click="deleteTempImage(index)"
-                    class="mlm"
-                    type="text">{{ $t('Delete') }}</el-button>
+                <el-popconfirm
+                    :hideIcon="true"
+                    :title="$t('Delete this item?')"
+                    :confirmButtonText="$t('OK')"
+                    :cancelButtonText="$t('cancel')"
+                    @onConfirm="onDeleteImage(obj, index)">
+                    <el-button
+                        slot="reference"
+                        icon="el-icon-delete-solid" />
+                </el-popconfirm>
             </div>
         </div>
 

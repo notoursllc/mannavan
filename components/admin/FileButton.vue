@@ -46,7 +46,11 @@ export default {
 
     methods: {
         onFileChange(e) {
-            this.$emit('change', e.target.files || e.dataTransfer.files)
+            this.$emit('change', e.target.files || e.dataTransfer.files);
+
+            // resetting the value so the same file can be uploaded sequentially if desired
+            // (without this, the change event wont trigger the second time)
+            this.$refs.myFiles.value = '';
         }
     }
 }
@@ -59,11 +63,12 @@ export default {
             <slot>Select File</slot>
         </div>
         <input
+            ref="myFiles"
             type="file"
             :multiple="multiple"
             :accept="accept"
             :disabled="disabled"
-            @change="onFileChange"/>
+            @change="onFileChange" />
     </label>
 </template>
 
