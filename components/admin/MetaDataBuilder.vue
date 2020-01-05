@@ -22,9 +22,7 @@ export default{
                 return;
             }
 
-            this.$emit('input', {
-                data: cloneDeep(this.newdata)
-            });
+            this.$emit('input', this.newdata);
         },
 
         sanitize() {
@@ -57,9 +55,7 @@ export default{
     watch: {
         value: {
             handler(newVal) {
-                if(isObject(newVal) && newVal.hasOwnProperty('data')) {
-                    this.newdata = cloneDeep(newVal.data);
-                }
+                this.newdata = isObject(newVal) ? newVal : [];
             },
             immediate: true,
         }
@@ -76,21 +72,18 @@ export default{
                     <div class="meta-row-property">
                         <el-input
                             v-model="obj.property"
-                            size="small"
                             @input="onInputChange" />
                     </div>
 
                     <div class="meta-row-value">
                         <el-input
                             v-model="obj.value"
-                            size="small"
                             @input="onInputChange" />
 
                         <el-button
                             @click="onClickDeleteRow(index)"
                             class="mlm"
-                            size="small"
-                            type="text">{{ $t('Delete') }}</el-button>
+                            icon="el-icon-delete" />
                     </div>
                 </div>
             </div>

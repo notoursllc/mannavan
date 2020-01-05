@@ -16,7 +16,6 @@ function stripRelations(FormData) {
     FormData.delete('updated_at');
     FormData.delete('deleted_at');
     FormData.delete('total_inventory_count');
-    FormData.delete('skus');
     // delete productJson.display_price;
 }
 

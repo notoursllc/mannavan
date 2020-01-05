@@ -91,6 +91,7 @@ export default {
 
                     reader.onload = (e) => {
                         this.fileList.push({
+                            id: null,
                             image_url: e.target.result,
                             alt_text: null,
                             raw: file
@@ -154,7 +155,8 @@ export default {
                     <el-input
                         v-model="obj.alt_text"
                         class="widthAll"
-                        placeholder="Image alt text" />
+                        placeholder="Image alt text"
+                        @input="emitChange" />
                     <div class="input-tip">{{ $t('Image_alt_text_description') }}</div>
                 </div>
 
@@ -166,7 +168,7 @@ export default {
                     @onConfirm="onDeleteImage(obj, index)">
                     <el-button
                         slot="reference"
-                        icon="el-icon-delete-solid" />
+                        icon="el-icon-delete" />
                 </el-popconfirm>
             </div>
         </div>

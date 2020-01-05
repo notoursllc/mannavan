@@ -95,6 +95,7 @@ export default {
                         newVal.images = [];
                     }
 
+                    //TODO: delete this right?
                     if(!newVal.hasOwnProperty('tmp')) {
                         // https://vuejs.org/v2/guide/reactivity.html
                         this.$set(newVal, 'tmp', {
@@ -116,7 +117,7 @@ export default {
 
 <template>
     <div>
-
+sku: {{ sku }}
         <!-- options -->
         <text-card>
             <div slot="header">{{ $t('Options') }}</div>
@@ -128,7 +129,7 @@ export default {
                     <label>{{ label }}</label>
                     <div v-if="sku.attributes[index]">
                         <span
-                            v-if="!sku.id"
+                            v-if="sku.id"
                             class="fwb">{{ sku.attributes[index].value }}</span>
 
                         <el-input

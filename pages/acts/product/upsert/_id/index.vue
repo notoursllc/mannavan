@@ -204,25 +204,36 @@ export default {
 
                 Object.keys(this.product).forEach((key) => {
                     switch(key) {
+                        // case 'images':
+                        //     const newImages = this.product.images.filter((obj) => { return obj.hasOwnProperty('raw') });
+                        //     newImages.forEach((obj) => {
+                        //         formData.append('images', obj.raw);
+                        //         formData.append('alt_text', obj.alt_text);
+                        //     });
+                        //     break;
                         case 'images':
-                            const newImages = this.product.images.filter((obj) => { return obj.hasOwnProperty('raw') });
-                            newImages.forEach((obj) => {
-                                formData.append('images', obj.raw);
+                            this.product.images.forEach((obj) => {
+                                formData.append('image_id', obj.id || null);
+                                formData.append('images', obj.raw || null);
                                 formData.append('alt_text', obj.alt_text);
                             });
                             break;
 
                         case 'attributes':
                         case 'metadata':
-                            formData.append(key, Array.isArray(this.product[key]) ? JSON.stringify(this.product[key]) : '');
+                            formData.set(key, Array.isArray(this.product[key]) ? JSON.stringify(this.product[key]) : '');
                             break;
 
                         case 'skus':
                             formData.append(key, (Array.isArray(this.product[key]) && this.product[key].length) ? JSON.stringify(this.product[key]) : '');
+                            // formData.set(key, Array.isArray(this.product[key]) ? JSON.stringify(this.product[key]) : 'foo');
+                            // formData.set('skus2', 'foo'); // worked
+                            // formData.set('skus', JSON.stringify(this.product.skus)); // didnt work
+                            // formData.set('skus', 'foo');
                             break;
 
                         default:
-                            formData.append(key, this.product[key] || '');
+                            formData.set(key, this.product[key] || '');
                     }
                 })
 
@@ -413,7 +424,7 @@ export default {
         </text-card>
 
 
-        <!-- Options -->
+        <!-- Variants / Options -->
         <text-card>
             <div slot="header">{{ product.id ? $t('Variants') : $t('Options')  }}</div>
 
