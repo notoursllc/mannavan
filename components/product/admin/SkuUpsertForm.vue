@@ -45,46 +45,7 @@ export default {
     methods: {
         onClickDone() {
             this.$emit('done')
-        },
-
-        // async upsertImages() {
-        //     if(Array.isArray(this.sku.tmp.images)) {
-        //         const result = this.storagemix_uploadImages(this.sku.tmp.images);
-        //         delete this.sku.tmp.images;
-
-        //         // 'result' only contains the new images that were added (not the pre-existing ones)
-        //         // so if there are pre-existing images, we just concat the new ones to the list
-        //         // otherwise we set the images data to the imageUploadResult
-
-        //         if(Array.isArray(this.sku.images)) {
-        //             this.sku.images = this.sku.images.concat(result)
-        //         }
-        //         else {
-        //             this.sku.images = result;
-        //         }
-        //     }
-        // },
-
-        // async saveSku() {
-        //     // Delete the unused images
-        //     try {
-        //         await this.storagemix_deleteProductImages(this.sku.tmp.images, this.sku.images);
-        //     }
-        //     catch(err) {
-        //         console.error(err);
-        //         this.$bugsnag.notify(err);
-        //     }
-
-        //     try {
-        //         await this.upsertImages();
-        //         await this.$api.skus.upsert(this.sku);
-        //         this.$emit('skuUpdated');
-        //     }
-        //     catch(err) {
-        //         this.$errorMessage(this.$t('An error occurred'));
-        //         console.error(err)
-        //     }
-        // }
+        }
     },
 
     watch: {
@@ -93,18 +54,6 @@ export default {
                 if(isObject(newVal)) {
                     if(!Array.isArray(newVal.images)) {
                         newVal.images = [];
-                    }
-
-                    //TODO: delete this right?
-                    if(!newVal.hasOwnProperty('tmp')) {
-                        // https://vuejs.org/v2/guide/reactivity.html
-                        this.$set(newVal, 'tmp', {
-                            images: []
-                        });
-                    }
-
-                    if(!newVal.tmp.hasOwnProperty('images')) {
-                        newVal.tmp.images = [];
                     }
                 }
             },
@@ -117,7 +66,6 @@ export default {
 
 <template>
     <div>
-sku: {{ sku }}
         <!-- options -->
         <text-card>
             <div slot="header">{{ $t('Options') }}</div>

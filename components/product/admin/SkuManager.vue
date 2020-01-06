@@ -1,5 +1,6 @@
 <script>
 import isObject from 'lodash.isobject';
+import cloneDeep from 'lodash.clonedeep';
 import storage_mixin from '@/mixins/storage_mixin';
 
 export default {
@@ -30,6 +31,7 @@ export default {
         return {
             skuDialog: {
                 show: false,
+                action: 'append', // add / append
                 sku: {
                     attributes: []
                 }
@@ -51,21 +53,13 @@ export default {
     },
 
     methods: {
-        showSkuDialog(index) {
+        onClickMoreSkuInfo(index) {
             let sku = this.product.skus[index];
 
             this.skuDialog.sku = sku;
             this.skuDialog.title = sku.attributes.map(obj => obj.value).join(' / ');
+            this.skuDialog.action = 'append';
             this.skuDialog.show = true;
-        },
-
-        onSkuUpsertDone() {
-            this.skuDialog.show = false;
-            console.log("DONE", this.product)
-        },
-
-        async deleteSku(id) {
-            //TODO
         },
 
         onClickAddVariant() {
@@ -81,7 +75,32 @@ export default {
             // https://vuejs.org/v2/guide/reactivity.html#Change-Detection-Caveats
             this.skuDialog.sku = Object.assign({}, sku);
             this.skuDialog.title = this.$t('Add variant');
+            this.skuDialog.action = 'add';
             this.skuDialog.show = true;
+        },
+
+        onSkuUpsertDone() {
+            if(this.skuDialog.action === 'add') {
+                this.product.skus.push(
+                    cloneDeep(this.skuDialog.sku)
+                );
+            }
+
+            this.resetSkuDialog();
+            console.log("DONE", this.product)
+        },
+
+        resetSkuDialog() {
+            this.skuDialog.sku = {
+                attributes: []
+            };
+            this.skuDialog.title = null;
+            this.skuDialog.action = 'append';
+            this.skuDialog.show = false;
+        },
+
+        async deleteSku(id) {
+            //TODO
         }
     },
 
@@ -171,7 +190,7 @@ export default {
             <el-table-column>
                 <template slot-scope="scope">
                     <el-button-group>
-                        <el-button @click="showSkuDialog(scope.$index)">{{ $t('more') }}</el-button>
+                        <el-button @click="onClickMoreSkuInfo(scope.$index)">{{ $t('more') }}</el-button>
 
                         <el-popconfirm
                             v-if="!detailsView"

@@ -165,6 +165,45 @@ export default {
         },
 
 
+        saveSkus(productId) {
+            const promises = [];
+
+            if(Array.isArray(this.product.skus)) {
+                this.product.skus.forEach((obj) => {
+                    const formData = new FormData();
+
+                    Object.keys(obj).forEach((key) => {
+                        switch(key) {
+                            case 'images':
+                                obj.images.forEach((imageObj) => {
+                                    formData.append('image_id', imageObj.id || null);
+                                    formData.append('images', imageObj.raw || null);
+                                    formData.append('alt_text', imageObj.alt_text);
+                                });
+                                break;
+
+                            case 'attributes':
+                            case 'metadata':
+                                formData.set(key, Array.isArray(obj[key]) ? JSON.stringify(obj[key]) : '');
+                                break;
+
+                            default:
+                                formData.set(key, obj[key] || '');
+                        }
+                    });
+
+                    formData.set('product_id', productId)
+
+                    promises.push(
+                        this.$api.products.upsertSku(formData)
+                    );
+                });
+            }
+
+            return Promise.all(promises);
+        },
+
+
         async onSaveClick() {
             // Delete the unused images
             // try {
@@ -181,25 +220,6 @@ export default {
             console.log("ON SAVE", this.product);
 
             try {
-                // if(!this.productHasOptions) {
-                //     this.product.attributes = null;
-                // }
-
-                // if(!this.productHasMetaData) {
-                //     this.product.metadata = null;
-                // }
-
-                // await Promise.all([
-                //     this.upsertProductImages(),
-                //     // this.upsertSkuImages()
-                // ]);
-
-                // delete the tmp values
-                // delete this.product.tmp;
-                // this.product.skus.forEach((sku) => {
-                //     delete sku.tmp;
-                // });
-
                 const formData = new FormData();
 
                 Object.keys(this.product).forEach((key) => {
@@ -225,11 +245,7 @@ export default {
                             break;
 
                         case 'skus':
-                            formData.append(key, (Array.isArray(this.product[key]) && this.product[key].length) ? JSON.stringify(this.product[key]) : '');
-                            // formData.set(key, Array.isArray(this.product[key]) ? JSON.stringify(this.product[key]) : 'foo');
-                            // formData.set('skus2', 'foo'); // worked
-                            // formData.set('skus', JSON.stringify(this.product.skus)); // didnt work
-                            // formData.set('skus', 'foo');
+                            // skus should not be included
                             break;
 
                         default:
@@ -242,6 +258,9 @@ export default {
                 if(!p) {
                     throw new Error('Error updating product');
                 }
+
+                // Saving the SKUs separately
+                await this.saveSkus(p.id);
 
                 let title = p.id ? 'Product updated successfully' : 'Product added successfully';
                 this.$successMessage(`${title}: ${p.title}`)

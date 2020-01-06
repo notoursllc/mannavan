@@ -96,6 +96,24 @@ export default ($axios) => ({
     },
 
 
+    async upsertSku(FormData) {
+        FormData.delete('created_at');
+        FormData.delete('updated_at');
+        FormData.delete('deleted_at');
+
+        let response;
+
+        if(FormData.get('id')) {
+            response = await $axios.$put('/product/sku', FormData);
+        }
+        else {
+            response = await $axios.$post('/product/sku', FormData);
+        }
+
+        return response.data;
+    },
+
+
     async uploadImage(formData) {
         const { data } = await $axios.$post('/product/image/upload', formData);
         return data;
