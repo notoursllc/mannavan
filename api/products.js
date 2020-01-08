@@ -114,6 +114,16 @@ export default ($axios) => ({
     },
 
 
+    async deleteSku(id) {
+        const { data } = await $axios.$delete(`/product/sku`, {
+            params: {
+                id
+            }
+        });
+        return data;
+    },
+
+
     async uploadImage(formData) {
         const { data } = await $axios.$post('/product/image/upload', formData);
         return data;
@@ -122,6 +132,15 @@ export default ($axios) => ({
 
     async deleteImage(id) {
         const { data } = await $axios.$delete(`/product/image`, {
+            params: {
+                id
+            }
+        });
+        return data;
+    },
+
+    async deleteSkuImage(id) {
+        const { data } = await $axios.$delete(`/product/sku/image`, {
             params: {
                 id
             }

@@ -29,6 +29,7 @@ export default {
 
     data: function() {
         return {
+
             skuDialog: {
                 show: false,
                 action: 'append', // add / append
@@ -90,6 +91,8 @@ export default {
             console.log("DONE", this.product)
         },
 
+
+
         resetSkuDialog() {
             this.skuDialog.sku = {
                 attributes: []
@@ -99,8 +102,25 @@ export default {
             this.skuDialog.show = false;
         },
 
+
         async deleteSku(id) {
-            //TODO
+            try {
+                await this.$api.products.deleteSku(id);
+
+                this.product.skus.forEach((sku, index) => {
+                    if(sku.id === id) {
+                        this.product.skus.splice(index, 1);
+                    }
+                });
+
+                this.$successMessage(this.$t('Variant deleted successfully'));
+            }
+            catch(e) {
+                this.$errorMessage(
+                    e.message,
+                    { closeOthers: true }
+                )
+            }
         }
     },
 
@@ -194,7 +214,7 @@ export default {
 
                         <el-popconfirm
                             v-if="!detailsView"
-                            :title="$t('Delete this option?')"
+                            :title="$t('Delete this item?')"
                             :confirmButtonText="$t('OK')"
                             :cancelButtonText="$t('cancel')"
                             @onConfirm="deleteSku(scope.row.id)">

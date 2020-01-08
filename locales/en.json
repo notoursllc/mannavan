@@ -84,7 +84,6 @@
     "day_days": "day | days",
     "Delete": "Delete",
     "Delete this item?": "Delete this item?",
-    "Delete this option?": "Delete this option?",
     "Description": "Description",
     "Details": "Details",
     "digits_text": "digit | digits",
@@ -116,6 +115,7 @@
     "Home Delivery": "Home Delivery",
     "HS (Harmonized System) code": "HS (Harmonized System) code",
 
+    "Image deleted successfully": "Image deleted successfully",
     "Image_alt_text_description": "Write a brief description of this image to improve search engine optimization (SEO) and accessibility for visually impaired customers.",
     "Images": "Images",
     "In inches": "In inches",
@@ -296,6 +296,7 @@
 
     "Values": "Values",
     "Variant": "Variant",
+    "Variant deleted successfully": "Variant deleted successfully",
     "Variants": "Variants",
     "VARIANTS": "VARIANTS",
     "Vendor": "Vendor",

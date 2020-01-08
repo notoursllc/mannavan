@@ -30,6 +30,7 @@ export default {
     data: function() {
         return {
             imageManagerMaxImages: process.env.IMAGE_MANAGER_MAX_IMAGES || 8,
+            loadingImages: false,
         }
     },
 
@@ -45,7 +46,23 @@ export default {
     methods: {
         onClickDone() {
             this.$emit('done')
-        }
+        },
+
+        async onDeleteSkuImage(id) {
+            try {
+                this.loadingImages = true;
+                await this.$api.products.deleteSkuImage(id);
+                this.$successMessage(this.$t('Image deleted successfully'));
+            }
+            catch(e) {
+                this.$errorMessage(
+                    e.message,
+                    { closeOthers: true }
+                )
+            }
+
+            this.loadingImages = false;
+        },
     },
 
     watch: {
@@ -176,9 +193,11 @@ export default {
                 {{ $t('Images') }}
                 <span class="fs11 plm">{{ $t('You can add up to num images', {number: imageManagerMaxImages}) }}</span>
             </div>
-            <!-- <image-manager
+            <image-manager
+                v-loading="loadingImages"
                 v-model="sku.images"
-                :max-num-images="parseInt(imageManagerMaxImages, 10)" /> -->
+                @delete="onDeleteSkuImage"
+                :max-num-images="parseInt(imageManagerMaxImages, 10)" />
         </text-card>
 
 

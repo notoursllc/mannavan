@@ -4,7 +4,6 @@ import isObject from 'lodash.isobject';
 import cloneDeep from 'lodash.clonedeep';
 import product_mixin from '@/mixins/product_mixin';
 import shipping_mixin from '@/mixins/shipping_mixin';
-import storage_mixin from '@/mixins/storage_mixin';
 
 
 export default {
@@ -17,10 +16,8 @@ export default {
         MasterTypeSelect: () => import('@/components/admin/MasterTypeSelect'),
         VendorSelect: () => import('@/components/product/admin/VendorSelect'),
         // MaterialTypeSelect: () => import('@/components/product/admin/MaterialTypeSelect'),
-        // ProductPicturesAdmin: () => import('@/components/product/admin/ProductPicturesAdmin'),
         IconNewWindow: () => import('@/components/icons/IconNewWindow'),
         IconPlayVideo: () => import('@/components/icons/IconPlayVideo'),
-        // VariationList: () => import('@/components/product/admin/variation/VariationList'),
         TaxSelect: () => import('@/components/tax/TaxSelect'),
         ShippingPackageTypeSelect: () => import('@/components/shipping/ShippingPackageTypeSelect'),
         Fab: () => import('@/components/Fab'),
@@ -36,8 +33,7 @@ export default {
 
     mixins: [
         product_mixin,
-        shipping_mixin,
-        storage_mixin
+        shipping_mixin
     ],
 
     data() {
@@ -81,7 +77,6 @@ export default {
                 }
 
                 this.product = product;
-                console.log("FETCH PRODUCT DONE", this.product)
             }
             catch(e) {
                 this.$errorMessage(
@@ -94,10 +89,11 @@ export default {
         },
 
 
-        async onProductImageDelete(id) {
+        async onDeleteProductImage(id) {
             try {
                 this.loadingProductImages = true;
                 await this.$api.products.deleteImage(id);
+                this.$successMessage(this.$t('Image deleted successfully'));
             }
             catch(e) {
                 this.$errorMessage(
@@ -110,58 +106,21 @@ export default {
         },
 
 
-        async upsertSkuImages() {
-            if(Array.isArray(this.product.skus)) {
-                for(let i=0, len=this.product.skus.length; i<len; i++) {
-                    let obj = this.product.skus[i];
-
-                    if(Array.isArray(obj.images)) {
-                        let result = await this.storagemix_uploadImages(obj.images);
-
-                        // 'result' only contains the new images that were added (not the pre-existing ones)
-                        // so if there are pre-existing images, we just concat the new ones to the list
-                        // otherwise we set the images data to the result
-                        obj.images = Array.isArray(obj.images) ? obj.images.concat(result) : result;
-                    }
-                }
-            }
-        },
-
-
-        async deleteOldSkuImages() {
-            if(Array.isArray(this.product.skus)) {
-                for(let i=0, len=this.product.skus.length; i<len; i++) {
-                    let obj = this.product.skus[i];
-                    let copy = cloneDeep(obj.images);
-                    await this.storagemix_deleteProductImages(obj.images, obj.images);
-                }
-            }
-        },
-
-
         async upsertProductImages() {
                 const newImages = this.product.images.filter((obj) => { return obj.hasOwnProperty('raw') });
-                console.log("NEW IMAGES", newImages)
-                // upload the new images:
                 const newImagePromises = [];
+
+                // upload the new images:
                 newImages.forEach((obj) => {
                     let formData = new FormData();
                     formData.append('file', obj.raw);
                     formData.append('alt_text', obj.alt_text);
                     newImagePromises.push(
                         this.$api.products.uploadImage(formData)
-                        // this.$api.storage.addImage(formData)
                     );
                 });
 
                 return Promise.all(newImagePromises);
-
-            // testing just one image for now:
-            // const images = await this.$api.products.uploadImage(this.product.images[0].raw);
-            // console.log("RESULTS - upsertProductImages", images)
-
-            // const result = await this.storagemix_uploadImages(this.product.images);
-            // this.product.images = Array.isArray(this.product.images) ? this.product.images.concat(images) : images;
         },
 
 
@@ -205,32 +164,13 @@ export default {
 
 
         async onSaveClick() {
-            // Delete the unused images
-            // try {
-            //     await Promise.all([
-            //         this.deleteOldSkuImages(),
-            //         this.storagemix_deleteProductImages(this.product.tmp.images, this.product.images)
-            //     ]);
-            // }
-            // catch(err) {
-            //     console.error(err)
-            //     this.$bugsnag.notify(err);
-            // }
-
-            console.log("ON SAVE", this.product);
-
             try {
+                this.loading = true;
+
                 const formData = new FormData();
 
                 Object.keys(this.product).forEach((key) => {
                     switch(key) {
-                        // case 'images':
-                        //     const newImages = this.product.images.filter((obj) => { return obj.hasOwnProperty('raw') });
-                        //     newImages.forEach((obj) => {
-                        //         formData.append('images', obj.raw);
-                        //         formData.append('alt_text', obj.alt_text);
-                        //     });
-                        //     break;
                         case 'images':
                             this.product.images.forEach((obj) => {
                                 formData.append('image_id', obj.id || null);
@@ -272,11 +212,10 @@ export default {
                     { closeOthers: true }
                 )
             }
+
+            this.loading = false;
         },
 
-        onOptionsMutated() {
-            this.fetchProduct();
-        },
 
         goToStore(seoUri) {
             let routeData = this.$router.resolve({
@@ -287,6 +226,7 @@ export default {
             // this opens the page in a new tab
             window.open(routeData.href, '_blank');
         },
+
 
         playVideo(url) {
             let id = this.$youtube.getIdFromURL(url);
@@ -299,11 +239,13 @@ export default {
             }
         },
 
+
         modalClosed() {
             if(this.videoPlayerModal.player) {
                 this.videoPlayerModal.player.stopVideo();
             }
         },
+
 
         videoPlaying(player) {
             this.videoPlayerModal.player = player;
@@ -439,7 +381,7 @@ export default {
                 v-loading="loadingProductImages"
                 v-model="product.images"
                 :max-num-images="parseInt(imageManagerMaxImages, 10)"
-                @delete="onProductImageDelete" />
+                @delete="onDeleteProductImage" />
         </text-card>
 
 
