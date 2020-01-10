@@ -137,7 +137,8 @@ export default {
                                 obj.images.forEach((imageObj) => {
                                     formData.append('image_id', imageObj.id || null);
                                     formData.append('images', imageObj.raw || null);
-                                    formData.append('alt_text', imageObj.alt_text);
+                                    formData.append('image_alt_text', imageObj.alt_text);
+                                    formData.append('image_ordinal', imageObj.ordinal);
                                 });
                                 break;
 
@@ -175,7 +176,8 @@ export default {
                             this.product.images.forEach((obj) => {
                                 formData.append('image_id', obj.id || null);
                                 formData.append('images', obj.raw || null);
-                                formData.append('alt_text', obj.alt_text);
+                                formData.append('image_alt_text', obj.alt_text);
+                                formData.append('image_ordinal', obj.ordinal);
                             });
                             break;
 

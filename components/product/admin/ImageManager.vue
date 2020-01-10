@@ -22,7 +22,9 @@ export default {
 
     components: {
         AppDialog: () => import('@/components/AppDialog'),
-        FileButton: () => import('@/components/admin/FileButton')
+        FileButton: () => import('@/components/admin/FileButton'),
+        IconDragHandle: () => import('@/components/icons/IconDragHandle'),
+        draggable: () => import('vuedraggable'),
     },
 
     data() {
@@ -37,11 +39,7 @@ export default {
 
     computed: {
         numRemainingUploads() {
-            return this.maxNumImages - this.visibleFileList.length;
-        },
-
-        visibleFileList() {
-            return this.fileList.filter(obj => isObject(obj) && obj.toDelete !== 1);
+            return this.maxNumImages - this.fileList.length;
         }
     },
 
@@ -94,13 +92,16 @@ export default {
                             id: null,
                             image_url: e.target.result,
                             alt_text: null,
-                            raw: file
+                            raw: file,
+                            ordinal: this.fileList.length
                         });
                         // console.log("ADDING TO FILELIST", file.name)
                     };
 
                     reader.readAsDataURL(file);
                 });
+
+                this.setOrdinals();
             }
 
             this.loading = false;
@@ -117,7 +118,15 @@ export default {
             // If this is a newly uploaded image then all we need to do
             // is splice it from the fileList
             this.fileList.splice(index, 1);
+            this.setOrdinals();
             this.emitChange();
+        },
+
+        setOrdinals() {
+            this.fileList.forEach((obj, index) => {
+                obj.ordinal = index;
+            });
+            console.log("SET ORDINALS UPDATE", this.fileList)
         }
     },
 
@@ -126,7 +135,6 @@ export default {
             handler(newVal) {
                 if(Array.isArray(newVal)) {
                     this.fileList = newVal;
-                    console.log("this.fileList", this.fileList)
                 }
             },
             immediate: true,
@@ -141,37 +149,54 @@ export default {
         v-loading="loading"
         class="widthAll">
 
-        <div class="image-row" v-for="(obj, index) in visibleFileList" :key="index">
-            <div class="image-row-pic">
-                <img
-                    class="cursorPointer"
-                    :src="obj.image_url"
-                    alt=""
-                    @click="onPreview(obj.image_url)" />
-            </div>
+        <draggable
+            v-model="fileList"
+            ghost-class="ghost"
+            handle=".handle"
+            @update="setOrdinals">
 
-            <div class="image-row-input">
-                <div class="phm">
-                    <el-input
-                        v-model="obj.alt_text"
-                        class="widthAll"
-                        placeholder="Image alt text"
-                        @input="emitChange" />
-                    <div class="input-tip">{{ $t('Image_alt_text_description') }}</div>
+            <div class="image-row" v-for="(obj, index) in fileList" :key="index">
+                <div class="image-row-handle">
+                    <i class="handle">
+                        <icon-drag-handle
+                            icon-name="drag-handle"
+                            width="15px"
+                            class-name="fillGrayLight" />
+                    </i>
                 </div>
 
-                <el-popconfirm
-                    :hideIcon="true"
-                    :title="$t('Delete this item?')"
-                    :confirmButtonText="$t('OK')"
-                    :cancelButtonText="$t('cancel')"
-                    @onConfirm="onDeleteImage(obj, index)">
-                    <el-button
-                        slot="reference"
-                        icon="el-icon-delete" />
-                </el-popconfirm>
+                <div class="image-row-pic">
+                    <img
+                        class="cursorPointer"
+                        :src="obj.image_url"
+                        alt=""
+                        @click="onPreview(obj.image_url)" />
+                </div>
+
+                <div class="image-row-input">
+                    <div class="phm">
+                        <el-input
+                            v-model="obj.alt_text"
+                            class="widthAll"
+                            placeholder="Image alt text"
+                            @input="emitChange" />
+                        <div class="input-tip">{{ $t('Image_alt_text_description') }}</div>
+                    </div>
+
+                    <el-popconfirm
+                        :hideIcon="true"
+                        :title="$t('Delete this item?')"
+                        :confirmButtonText="$t('OK')"
+                        :cancelButtonText="$t('cancel')"
+                        @onConfirm="onDeleteImage(obj, index)">
+                        <el-button
+                            slot="reference"
+                            icon="el-icon-delete" />
+                    </el-popconfirm>
+                </div>
             </div>
-        </div>
+
+        </draggable>
 
         <div class="mtm">
             <file-button
@@ -198,8 +223,24 @@ export default {
     height: auto;
 }
 
+
+.ghost {
+    opacity: 0.5;
+    background: #c8ebfb;
+}
+
 .image-row {
     @include flexbox();
+}
+.image-row-handle {
+    @include flexbox();
+    @include align-items(center);
+    @include flex(0 0 30px);
+    padding: 2px 5px 2px 0;
+
+    svg {
+        cursor: grab;
+    }
 }
 .image-row-pic {
     @include flex(0 0 120px);

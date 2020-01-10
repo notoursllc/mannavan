@@ -11,7 +11,6 @@ export default {
     layout: 'admin',
 
     components: {
-        ProductDetailsJsonView: () => import('@/components/product/admin/ProductDetailsJsonView'),
         OperationsDropdown: () => import('@/components/OperationsDropdown'),
         Fab: () => import('@/components/Fab')
     },
@@ -122,12 +121,6 @@ export default {
             :data="products"
             class="widthAll"
             @sort-change="sortChanged">
-
-            <el-table-column type="expand">
-                <template slot-scope="scope">
-                    <product-details-json-view :product="scope.row"></product-details-json-view>
-                </template>
-            </el-table-column>
 
             <!-- featured image -->
             <el-table-column
