@@ -156,43 +156,45 @@ export default {
             @update="setOrdinals">
 
             <div class="image-row" v-for="(obj, index) in fileList" :key="index">
-                <div class="image-row-handle">
-                    <i class="handle">
-                        <icon-drag-handle
-                            icon-name="drag-handle"
-                            width="15px"
-                            class-name="fillGrayLight" />
-                    </i>
-                </div>
-
-                <div class="image-row-pic">
-                    <img
-                        class="cursorPointer"
-                        :src="obj.image_url"
-                        alt=""
-                        @click="onPreview(obj.image_url)" />
-                </div>
-
-                <div class="image-row-input">
-                    <div class="phm">
-                        <el-input
-                            v-model="obj.alt_text"
-                            class="widthAll"
-                            placeholder="Image alt text"
-                            @input="emitChange" />
-                        <div class="input-tip">{{ $t('Image_alt_text_description') }}</div>
+                <div class="image-row-fields">
+                    <div class="image-row-handle">
+                        <i class="handle">
+                            <icon-drag-handle
+                                icon-name="drag-handle"
+                                width="15px"
+                                class-name="fillGrayLight" />
+                        </i>
                     </div>
 
-                    <el-popconfirm
-                        :hideIcon="true"
-                        :title="$t('Delete this item?')"
-                        :confirmButtonText="$t('OK')"
-                        :cancelButtonText="$t('cancel')"
-                        @onConfirm="onDeleteImage(obj, index)">
-                        <el-button
-                            slot="reference"
-                            icon="el-icon-delete" />
-                    </el-popconfirm>
+                    <div class="image-row-pic">
+                        <img
+                            class="cursorPointer"
+                            :src="obj.image_url"
+                            alt=""
+                            @click="onPreview(obj.image_url)" />
+                    </div>
+
+                    <div class="image-row-input">
+                        <div class="phm widthAll">
+                            <el-input
+                                v-model="obj.alt_text"
+                                class="widthAll"
+                                placeholder="Image alt text"
+                                @input="emitChange" />
+                            <div class="input-tip">{{ $t('Image_alt_text_description') }}</div>
+                        </div>
+
+                        <el-popconfirm
+                            :hideIcon="true"
+                            :title="$t('Delete this item?')"
+                            :confirmButtonText="$t('OK')"
+                            :cancelButtonText="$t('cancel')"
+                            @onConfirm="onDeleteImage(obj, index)">
+                            <el-button
+                                slot="reference"
+                                icon="el-icon-delete" />
+                        </el-popconfirm>
+                    </div>
                 </div>
             </div>
 
@@ -230,6 +232,10 @@ export default {
 }
 
 .image-row {
+    @include flexbox();
+    @include flex-direction(column);
+}
+.image-row-fields {
     @include flexbox();
 }
 .image-row-handle {
