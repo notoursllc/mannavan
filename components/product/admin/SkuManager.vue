@@ -1,6 +1,8 @@
 <script>
 import isObject from 'lodash.isobject';
 import cloneDeep from 'lodash.clonedeep';
+// import draggable from 'vuedraggable';
+import uuid from 'uuid/v4';
 import storage_mixin from '@/mixins/storage_mixin';
 
 export default {
@@ -14,6 +16,15 @@ export default {
         detailsView: {
             type: Boolean,
             default: false
+        },
+
+        attributeSuggestions: {
+            type: Array
+        },
+
+        maxNumCustomAttributes: {
+            type: Number,
+            default: 3
         }
     },
 
@@ -21,6 +32,8 @@ export default {
         InputMoney: () => import('@/components/admin/InputMoney'),
         AppDialog: () => import('@/components/AppDialog'),
         SkuUpsertForm: () => import('@/components/product/admin/SkuUpsertForm'),
+        draggable: () => import('vuedraggable'),
+        IconDragHandle: () => import('@/components/icons/IconDragHandle'),
     },
 
     mixins: [
@@ -29,7 +42,6 @@ export default {
 
     data: function() {
         return {
-
             skuDialog: {
                 show: false,
                 action: 'append', // add / append
@@ -41,15 +53,16 @@ export default {
     },
 
     computed: {
-        tableColumnLabels() {
-            if(this.product && Array.isArray(this.product.attributes)) {
-                return this.product.attributes.map(obj => obj.label);
-            }
-            return [];
-        },
-
         showAddVariantButton() {
             return isObject(this.product) && this.product.id;
+        },
+
+        canAddColumn() {
+            return Array.isArray(this.product.attributes) && (this.product.attributes.length < this.maxNumCustomAttributes);
+        },
+
+        canShowGrabHandles() {
+            return Array.isArray(this.product.skus) && this.product.skus.length > 1;
         }
     },
 
@@ -63,22 +76,24 @@ export default {
             this.skuDialog.show = true;
         },
 
-        onClickAddVariant() {
-            let sku = {
-                attributes: [],
-                product_id: this.product.id
-            };
 
-            this.tableColumnLabels.forEach((label, index) => {
-                sku.attributes[index] = { value: '' }
-            });
+//         onClickAddVariant() {
+//             let sku = {
+//                 attributes: [],
+//                 product_id: this.product.id
+//             };
 
-            // https://vuejs.org/v2/guide/reactivity.html#Change-Detection-Caveats
-            this.skuDialog.sku = Object.assign({}, sku);
-            this.skuDialog.title = this.$t('Add variant');
-            this.skuDialog.action = 'add';
-            this.skuDialog.show = true;
-        },
+// //TODO - I removed tableColumnLables.  THis needs refactoring
+//             // this.tableColumnLabels.forEach((label, index) => {
+//             //     sku.attributes[index] = { value: '' }
+//             // });
+
+//             // https://vuejs.org/v2/guide/reactivity.html#Change-Detection-Caveats
+//             this.skuDialog.sku = Object.assign({}, sku);
+//             this.skuDialog.title = this.$t('Add variant');
+//             this.skuDialog.action = 'add';
+//             this.skuDialog.show = true;
+//         },
 
         onSkuUpsertDone() {
             if(this.skuDialog.action === 'add') {
@@ -88,7 +103,7 @@ export default {
             }
 
             this.resetSkuDialog();
-            console.log("DONE", this.product)
+            // console.log("DONE", this.product)
         },
 
 
@@ -121,109 +136,246 @@ export default {
                     { closeOthers: true }
                 )
             }
-        }
-    },
+        },
 
-    // watch: {
-    //     product: {
-    //         handler(newVal) {
-    //             // adding the 'tmp' property to the product
-    //             if(isObject(newVal)) {
-    //                 if(!newVal.hasOwnProperty('tmp')) {
-    //                     // https://vuejs.org/v2/guide/reactivity.html
-    //                     this.$set(newVal, 'tmp', {
-    //                         deletedSkus: []
-    //                     });
-    //                 }
-    //             }
-    //         },
-    //         immediate: true
-    //     }
-    // }
+
+        onColumnMove(index, moveLeft) {
+            const new_index = moveLeft ? index - 1 : index + 1;
+
+            const removedAttrs = this.product.attributes.splice(index, 1);
+            this.product.attributes.splice(new_index, 0, removedAttrs[0]);
+
+            // the attributes in each sku need to be rearranged too:
+            if(Array.isArray(this.product.skus)) {
+                this.product.skus.forEach((sku) => {
+                    let removed = sku.attributes.splice(index, 1);
+                    sku.attributes.splice(new_index, 0, removed[0]);
+                });
+            }
+        },
+
+
+        onClickAddColumn() {
+            const newAttribute = {
+                label: null,
+                id: uuid()
+            };
+
+            const suggestions = Array.isArray(this.attributeSuggestions) ? this.attributeSuggestions.slice(0) : [];  // copy the array
+
+            // loop over all of the suggestions, and remove the ones that are already used
+            if(suggestions.length) {
+                let i = this.product.attributes.length;
+
+                while (i--) {
+                    // If this suggestion is already being used then remove it.
+                    if(suggestions.indexOf(this.product.attributes[i].label) > -1) {
+                        suggestions.splice(suggestions.indexOf(this.product.attributes[i].label), 1);
+                    }
+                }
+
+                // Use the first suggestion that is still unused.
+                newAttribute.label = suggestions[0] || null
+            }
+
+
+            this.product.attributes.push(newAttribute);
+
+            // The product skus need to be updated as well with the new sku (variant)
+            if(Array.isArray(this.product.skus)) {
+                this.product.skus.forEach((sku) => {
+                    sku.attributes.push({
+                        optionId: newAttribute.id,
+                        value: null
+                    });
+                });
+            }
+        },
+
+
+        onClickDeleteColumn(index) {
+            // const deletingAttribute = this.product.attributes[index];
+
+            // Remove from device attributes
+            const deletedAttributes = this.product.attributes.splice(index, 1);
+            console.log("deletedAttributes", deletedAttributes);
+
+            // The respective attribute needs to be removed from each sku as well:
+            this.product.skus.forEach((sku) => {
+                let i = sku.attributes.length;
+
+                while (i--) {
+                    if(sku.attributes[i].optionId === deletedAttributes[0].id) {
+                        sku.attributes.splice(i, 1);
+                    }
+                }
+            });
+        },
+
+
+        canShowLeftIcon(index) {
+            return this.product.attributes[index - 1];
+        },
+
+
+        canShowRightIcon(index) {
+            return this.product.attributes[index + 1];
+        },
+
+
+        addEmptySku() {
+            // each new sku needs to have it's attributes array pre-populated with the
+            // existing attributes needed for the form
+            const newSku = {
+                attributes: [],
+                product_id: this.product.id
+            };
+
+            if(Array.isArray(this.product.attributes)) {
+                this.product.attributes.forEach((obj) => {
+                    newSku.attributes.push({
+                        optionId: obj.id,
+                        value: null
+                    })
+                })
+            }
+
+            this.product.skus.push(newSku);
+        }
+    }
 }
 </script>
 
 
 <template>
     <div style="overflow-x: scroll">
-        <div class="tar" v-if="showAddVariantButton">
-            <el-button
+        <div>
+            <!-- <el-button
                 @click="onClickAddVariant"
-                size="mini">{{ $t('Add variant')}}</el-button>
+                size="mini">{{ $t('Add variant')}}</el-button> -->
+
+            <el-button
+                v-if="canAddColumn"
+                @click="onClickAddColumn"
+                size="mini">{{ $t('Add column') }}</el-button>
         </div>
 
-        <el-table
-            :data="product.skus"
-            class="widthAll">
+<div>product.skus: {{ product.skus }}</div>
+<div>product.attribtues:{{ product.attributes }}</div>
 
-            <template v-for="(label, index) in tableColumnLabels">
-                <el-table-column
-                    :label="label"
-                    :key="index"
-                    width="110px">
-                    <template slot-scope="scope" v-if="scope.row.attributes[index]">
-                        <span v-if="detailsView" class="variant-label">
-                            {{ scope.row.attributes[index].value }}
-                        </span>
-                        <template v-else>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="width50" v-show="canShowGrabHandles"></th>
+
+                    <template v-if="Array.isArray(product.attributes)">
+                        <th
+                            v-for="(obj, index) in product.attributes"
+                            :key="index"
+                            class="width125">
+                            <div class="delete-icon">
+                                <el-popconfirm
+                                    :title="$t('Delete this column?')"
+                                    :confirmButtonText="$t('OK')"
+                                    :cancelButtonText="$t('cancel')"
+                                    @onConfirm="onClickDeleteColumn(index)">
+                                    <i slot="reference" class="el-icon-delete"/>
+                                </el-popconfirm>
+                            </div>
+
                             <el-input
-                                v-model="scope.row.attributes[index].value" />
-                        </template>
+                                v-model="product.attributes[index].label"
+                                size="mini"
+                                placeholder="Add column"
+                                class="header-input">
+                                <i slot="prepend"
+                                    class="el-icon-back"
+                                    v-if="canShowLeftIcon(index)"
+                                    @click="onColumnMove(index, true)" />
+
+                                <i slot="append"
+                                    class="el-icon-right"
+                                    v-if="canShowRightIcon(index)"
+                                    @click="onColumnMove(index, false)" />
+                            </el-input>
+                        </th>
                     </template>
-                </el-table-column>
-            </template>
 
-            <!-- Price -->
-            <el-table-column
-                :label="$t('Price')"
-                width="150px">
-                <template slot-scope="scope">
-                    <input-money
-                        v-model="scope.row.base_price" />
-                </template>
-            </el-table-column>
+                    <th class="vabtm">{{ $t('Price') }}</th>
+                    <th class="vabtm input-number">{{ $t('Qty') }}</th>
+                    <th class="vabtm">{{ $t('Sku') }}</th>
+                    <th class="vabtm"></th>
+                </tr>
+            </thead>
 
-            <!-- Qty -->
-            <el-table-column
-                :label="$t('Quantity')"
-                width="125px">
-                <template slot-scope="scope">
-                    <el-input-number
-                        v-model="scope.row.inventory_count"
-                        :min="1"
-                        :step="1"
-                        controls-position="right"
-                        step-strictly
-                        class="input-number" />
-                </template>
-            </el-table-column>
+            <draggable
+                v-model="product.skus"
+                handle=".handle"
+                ghost-class="ghost"
+                tag="tbody">
+                <tr v-for="(obj, idx) in product.skus" :key="obj.id">
+                    <!-- drag handle -->
+                    <td v-show="canShowGrabHandles">
+                        <i class="handle cursorGrab" >
+                            <icon-drag-handle
+                                icon-name="drag-handle"
+                                width="15px"
+                                class-name="fillGrayLight" />
+                        </i>
+                    </td>
 
-            <!-- SKU -->
-            <el-table-column
-                :label="$t('SKU')"
-                width="150px">
-                <template slot-scope="scope">
-                    <el-input v-model="scope.row.sku" />
-                </template>
-            </el-table-column>
+                    <!-- custom attributes -->
+                    <td v-for="attr in obj.attributes" :key="attr.optionId">
+                        <el-input
+                            v-model="attr.value" />
+                    </td>
 
-            <el-table-column>
-                <template slot-scope="scope">
-                    <el-button-group>
-                        <el-button @click="onClickMoreSkuInfo(scope.$index)">{{ $t('more') }}</el-button>
+                    <!-- Price -->
+                    <td>
+                        <input-money v-model="obj.base_price" />
+                    </td>
 
-                        <el-popconfirm
-                            v-if="!detailsView"
-                            :title="$t('Delete this item?')"
-                            :confirmButtonText="$t('OK')"
-                            :cancelButtonText="$t('cancel')"
-                            @onConfirm="deleteSku(scope.row.id)">
-                            <el-button slot="reference" icon="el-icon-delete"></el-button>
-                        </el-popconfirm>
-                    </el-button-group>
-                </template>
-            </el-table-column>
-        </el-table>
+                    <!-- Qty -->
+                    <td>
+                        <el-input-number
+                            v-model="obj.inventory_count"
+                            :min="1"
+                            :step="1"
+                            controls-position="right"
+                            step-strictly />
+                    </td>
+
+                    <!-- Sku -->
+                    <td>
+                        <el-input v-model="obj.sku" />
+                    </td>
+
+                    <td>
+                        <el-button-group>
+                            <el-button @click="onClickMoreSkuInfo(idx)">{{ $t('more') }}</el-button>
+
+                            <el-popconfirm
+                                v-if="!detailsView"
+                                :title="$t('Delete this item?')"
+                                :confirmButtonText="$t('OK')"
+                                :cancelButtonText="$t('cancel')"
+                                @onConfirm="deleteSku(obj.id)">
+                                <el-button slot="reference" icon="el-icon-delete"></el-button>
+                            </el-popconfirm>
+                        </el-button-group>
+                    </td>
+                </tr>
+            </draggable>
+        </table>
+
+
+        <div class="ptl">
+            <el-button
+                type="primary"
+                @click="addEmptySku"
+                size="mini">{{ $t('Add row')}}</el-button>
+        </div>
+
 
         <app-dialog
             :title="skuDialog.title"
@@ -239,6 +391,7 @@ export default {
 
 <style lang="scss">
 @import "~assets/css/components/_formRow.scss";
+@import "~assets/css/components/_mixins.scss";
 
 .el-popconfirm__action {
     margin-top: 10px;
@@ -248,9 +401,33 @@ export default {
     width: 105px;
 }
 
+.vertAlignBottom {
+    vertical-align: bottom;
+}
+
+.ghost {
+    opacity: 0.5;
+    background: #c8ebfb;
+}
+
 .variant-label {
     word-wrap: break-word;
     word-break: break-word;
     overflow-wrap: break-word;
+}
+
+.header-input {
+    .el-input-group__prepend,
+    .el-input-group__append {
+        padding: 0 3px;
+        cursor: pointer;
+    }
+}
+
+.delete-icon {
+    text-align: center;
+    margin-bottom: 3px;
+    font-size: 16px;
+    cursor: pointer;
 }
 </style>

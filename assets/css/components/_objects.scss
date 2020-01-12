@@ -9,7 +9,8 @@
 .colorRed { color: $colorRed !important }
 .colorOrange { color: $colorOrange !important }
 .colorWhite { color: #fff !important }
-.cursorPointer { cursor:pointer }
+.cursorGrab { cursor: grab }
+.cursorPointer { cursor: pointer }
 
 .displayTable { display: table }
 .displayTableCell { display: table-cell }
@@ -92,6 +93,7 @@
 .underlineDotted:hover { text-decoration: none !important; border-bottom: 0!important; }
 
 .vab { vertical-align: baseline !important }
+.vabtm { vertical-align: bottom !important }
 .vam { vertical-align: middle !important }
 .vat { vertical-align: top !important }
 

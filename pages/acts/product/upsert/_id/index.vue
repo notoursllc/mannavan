@@ -389,7 +389,7 @@ export default {
 
         <!-- Variants / Options -->
         <text-card>
-            <div slot="header">{{ product.id ? $t('Variants') : $t('Options')  }}</div>
+            <div slot="header">{{ $t('Variants') }}</div>
 
             <template v-if="product.id">
                 <sku-manager
@@ -398,28 +398,31 @@ export default {
 
             <template v-else>
                 <div class="inputGroup mrl mbm">
-                    <el-checkbox v-model="productHasOptions">This product has multiple options, like different sizes or colors</el-checkbox>
+                    <el-checkbox v-model="productHasOptions">{{ $t('product_variant_description') }} </el-checkbox>
                 </div>
 
-                <div v-if="productHasOptions">
-                    <sku-builder
+                <div v-if="productHasOptions" class="ptl">
+                    <!-- <sku-builder
                         :product="product"
                         :max-count="3"
                         :suggestions="[
                             this.$t('Size'),
                             this.$t('Color'),
                             this.$t('Material')
-                        ]" />
+                        ]" /> -->
 
                     <!-- test -->
-                    <div class="sku-preview" v-show="product.attributes.length">
-                        <div class="pvm"><hr/></div>
-
-                        <h4>{{ $t('VARIANTS') }}</h4>
-
+                    <!-- <div class="sku-preview" v-show="product.attributes.length"> -->
+                    <div class="sku-preview">
                         <sku-manager
                             :product="product"
-                            :details-view="true" />
+                            :details-view="true"
+                            :max-count="3"
+                            :attribute-suggestions="[
+                                this.$t('Size'),
+                                this.$t('Color'),
+                                this.$t('Material')
+                            ]" />
                     </div>
                 </div>
             </template>
