@@ -401,7 +401,7 @@ export default {
                     <el-checkbox v-model="productHasOptions">{{ $t('product_variant_description') }} </el-checkbox>
                 </div>
 
-                <div v-if="productHasOptions" class="ptl">
+                <div v-if="productHasOptions">
                     <!-- <sku-builder
                         :product="product"
                         :max-count="3"

@@ -77,24 +77,6 @@ export default {
         },
 
 
-//         onClickAddVariant() {
-//             let sku = {
-//                 attributes: [],
-//                 product_id: this.product.id
-//             };
-
-// //TODO - I removed tableColumnLables.  THis needs refactoring
-//             // this.tableColumnLabels.forEach((label, index) => {
-//             //     sku.attributes[index] = { value: '' }
-//             // });
-
-//             // https://vuejs.org/v2/guide/reactivity.html#Change-Detection-Caveats
-//             this.skuDialog.sku = Object.assign({}, sku);
-//             this.skuDialog.title = this.$t('Add variant');
-//             this.skuDialog.action = 'add';
-//             this.skuDialog.show = true;
-//         },
-
         onSkuUpsertDone() {
             if(this.skuDialog.action === 'add') {
                 this.product.skus.push(
@@ -107,7 +89,6 @@ export default {
         },
 
 
-
         resetSkuDialog() {
             this.skuDialog.sku = {
                 attributes: []
@@ -118,17 +99,20 @@ export default {
         },
 
 
-        async deleteSku(id) {
+        async deleteSku(index) {
             try {
-                await this.$api.products.deleteSku(id);
+                const sku = this.product.skus[index];
 
-                this.product.skus.forEach((sku, index) => {
-                    if(sku.id === id) {
-                        this.product.skus.splice(index, 1);
-                    }
-                });
+                // Only delete the skus that are persisted in the DB (which have an id)
+                if(sku.id) {
+                    await this.$api.products.deleteSku(sku.id);
+                }
 
-                this.$successMessage(this.$t('Variant deleted successfully'));
+                this.product.skus.splice(index, 1);
+
+                if(sku.id) {
+                    this.$successMessage(this.$t('Variant deleted successfully'));
+                }
             }
             catch(e) {
                 this.$errorMessage(
@@ -194,11 +178,8 @@ export default {
 
 
         onClickDeleteColumn(index) {
-            // const deletingAttribute = this.product.attributes[index];
-
             // Remove from device attributes
             const deletedAttributes = this.product.attributes.splice(index, 1);
-            console.log("deletedAttributes", deletedAttributes);
 
             // The respective attribute needs to be removed from each sku as well:
             this.product.skus.forEach((sku) => {
@@ -242,6 +223,17 @@ export default {
 
             this.product.skus.push(newSku);
         }
+    },
+
+    watch: {
+        'product.skus': {
+            handler(newVal) {
+                if(Array.isArray(newVal) && !newVal.length) {
+                    this.addEmptySku();
+                }
+            },
+            immediate: true,
+        }
     }
 }
 </script>
@@ -249,24 +241,24 @@ export default {
 
 <template>
     <div style="overflow-x: scroll">
-        <div>
-            <!-- <el-button
-                @click="onClickAddVariant"
-                size="mini">{{ $t('Add variant')}}</el-button> -->
-
-            <el-button
-                v-if="canAddColumn"
-                @click="onClickAddColumn"
-                size="mini">{{ $t('Add column') }}</el-button>
-        </div>
-
-<div>product.skus: {{ product.skus }}</div>
-<div>product.attribtues:{{ product.attributes }}</div>
+<!-- <div>product.skus: {{ product.skus }}</div>
+<div>product.attribtues:{{ product.attributes }}</div> -->
 
         <table class="table">
             <thead>
                 <tr>
-                    <th class="width50" v-show="canShowGrabHandles"></th>
+                    <th class="vabtm" :class="{'width50': canAddColumn || canShowGrabHandles}">
+                        <el-tooltip
+                            v-if="canAddColumn"
+                            effect="dark"
+                            :content="$t('Add column')"
+                            placement="top-start">
+                            <el-button
+                                @click="onClickAddColumn"
+                                size="mini"
+                                icon="el-icon-plus"></el-button>
+                        </el-tooltip>
+                    </th>
 
                     <template v-if="Array.isArray(product.attributes)">
                         <th
@@ -302,8 +294,8 @@ export default {
                     </template>
 
                     <th class="vabtm">{{ $t('Price') }}</th>
-                    <th class="vabtm input-number">{{ $t('Qty') }}</th>
-                    <th class="vabtm">{{ $t('Sku') }}</th>
+                    <th class="vabtm input-number">{{ $t('Quantity') }}</th>
+                    <th class="vabtm">{{ $t('SKU') }}</th>
                     <th class="vabtm"></th>
                 </tr>
             </thead>
@@ -315,8 +307,8 @@ export default {
                 tag="tbody">
                 <tr v-for="(obj, idx) in product.skus" :key="obj.id">
                     <!-- drag handle -->
-                    <td v-show="canShowGrabHandles">
-                        <i class="handle cursorGrab" >
+                    <td>
+                        <i class="handle cursorGrab" v-show="canShowGrabHandles">
                             <icon-drag-handle
                                 icon-name="drag-handle"
                                 width="15px"
@@ -355,13 +347,21 @@ export default {
                             <el-button @click="onClickMoreSkuInfo(idx)">{{ $t('more') }}</el-button>
 
                             <el-popconfirm
+                                :title="$t('Delete this row?')"
+                                :confirmButtonText="$t('OK')"
+                                :cancelButtonText="$t('cancel')"
+                                @onConfirm="deleteSku(idx)">
+                                <el-button slot="reference" icon="el-icon-delete"></el-button>
+                            </el-popconfirm>
+
+                            <!-- <el-popconfirm
                                 v-if="!detailsView"
                                 :title="$t('Delete this item?')"
                                 :confirmButtonText="$t('OK')"
                                 :cancelButtonText="$t('cancel')"
                                 @onConfirm="deleteSku(obj.id)">
                                 <el-button slot="reference" icon="el-icon-delete"></el-button>
-                            </el-popconfirm>
+                            </el-popconfirm> -->
                         </el-button-group>
                     </td>
                 </tr>
@@ -369,7 +369,7 @@ export default {
         </table>
 
 
-        <div class="ptl">
+        <div class="pvl">
             <el-button
                 type="primary"
                 @click="addEmptySku"
