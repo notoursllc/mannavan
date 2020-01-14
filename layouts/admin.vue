@@ -78,11 +78,6 @@ export default {
                             index="/products"
                             @click="menuItemClick">{{ $t('All products') }}</el-menu-item>
 
-                        <el-menu-item
-                            :route="{ name: 'acts-product-option-sets' }"
-                            index="productOptionSets"
-                            @click="menuItemClick">{{ $t('Option Sets') }}</el-menu-item>
-
 
                         <el-submenu index="submenuOrganization">
                             <template slot="title">{{ $t('Product organization') }}</template>
