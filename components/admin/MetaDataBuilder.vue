@@ -1,11 +1,10 @@
 <script>
-import isObject from 'lodash.isobject';
 import cloneDeep from 'lodash.clonedeep';
 
 export default{
     props: {
         value: {
-            type: Object
+            type: Array
         }
     },
 
@@ -43,6 +42,10 @@ export default{
             this.newdata.splice(index, 1);
             this.sanitize();
             this.emitInput();
+
+            if(!this.newdata.length) {
+                this.addNewItem();
+            }
         },
 
         addNewItem() {
@@ -55,7 +58,11 @@ export default{
     watch: {
         value: {
             handler(newVal) {
-                this.newdata = isObject(newVal) ? newVal : [];
+                this.newdata = Array.isArray(newVal) ? newVal : [];
+
+                if(!this.newdata.length) {
+                    this.addNewItem();
+                }
             },
             immediate: true,
         }
