@@ -71,7 +71,6 @@ export default {
             let sku = this.product.skus[index];
 
             this.skuDialog.sku = sku;
-            this.skuDialog.title = sku.attributes.map(obj => obj.value).join(' / ');
             this.skuDialog.action = 'append';
             this.skuDialog.show = true;
         },
@@ -93,7 +92,6 @@ export default {
             this.skuDialog.sku = {
                 attributes: []
             };
-            this.skuDialog.title = null;
             this.skuDialog.action = 'append';
             this.skuDialog.show = false;
         },
@@ -377,9 +375,7 @@ export default {
         </div>
 
 
-        <app-dialog
-            :title="skuDialog.title"
-            :visible.sync="skuDialog.show">
+        <app-dialog :visible.sync="skuDialog.show">
             <sku-upsert-form
                 :sku="skuDialog.sku"
                 :product-attributes="product.attributes"
