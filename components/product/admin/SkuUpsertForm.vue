@@ -85,7 +85,7 @@ export default {
     <div>
         <!-- options -->
         <text-card>
-            <div slot="header">{{ $t('Options') }}</div>
+            <div slot="header">{{ $t('Attributes') }}</div>
 
             <div class="inputGroupContainer">
                 <div v-for="(label, index) in tableColumnLabels"

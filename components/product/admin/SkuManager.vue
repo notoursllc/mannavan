@@ -194,22 +194,13 @@ export default {
         },
 
 
-        canShowLeftIcon(index) {
-            return this.product.attributes[index - 1];
-        },
-
-
-        canShowRightIcon(index) {
-            return this.product.attributes[index + 1];
-        },
-
-
         addEmptySku() {
             // each new sku needs to have it's attributes array pre-populated with the
             // existing attributes needed for the form
             const newSku = {
                 attributes: [],
-                product_id: this.product.id
+                product_id: this.product.id,
+                ordinal: this.product.skus.length
             };
 
             if(Array.isArray(this.product.attributes)) {
@@ -222,7 +213,24 @@ export default {
             }
 
             this.product.skus.push(newSku);
-        }
+        },
+
+
+        setOrdinals() {
+            this.product.skus.forEach((obj, index) => {
+                obj.ordinal = index;
+            });
+        },
+
+
+        canShowLeftIcon(index) {
+            return this.product.attributes[index - 1];
+        },
+
+
+        canShowRightIcon(index) {
+            return this.product.attributes[index + 1];
+        },
     },
 
     watch: {
@@ -241,8 +249,8 @@ export default {
 
 <template>
     <div style="overflow-x: scroll">
-<!-- <div>product.skus: {{ product.skus }}</div>
-<div>product.attribtues:{{ product.attributes }}</div> -->
+<!-- <div>product.skus: {{ product.skus }}</div> -->
+<!-- <div>product.attribtues:{{ product.attributes }}</div> -->
 
         <table class="table">
             <thead>
@@ -303,6 +311,7 @@ export default {
             <draggable
                 v-model="product.skus"
                 handle=".handle"
+                @update="setOrdinals"
                 ghost-class="ghost"
                 tag="tbody">
                 <tr v-for="(obj, idx) in product.skus" :key="obj.id">
@@ -353,15 +362,6 @@ export default {
                                 @onConfirm="deleteSku(idx)">
                                 <el-button slot="reference" icon="el-icon-delete"></el-button>
                             </el-popconfirm>
-
-                            <!-- <el-popconfirm
-                                v-if="!detailsView"
-                                :title="$t('Delete this item?')"
-                                :confirmButtonText="$t('OK')"
-                                :cancelButtonText="$t('cancel')"
-                                @onConfirm="deleteSku(obj.id)">
-                                <el-button slot="reference" icon="el-icon-delete"></el-button>
-                            </el-popconfirm> -->
                         </el-button-group>
                     </td>
                 </tr>

@@ -2,6 +2,7 @@
 import forEach from 'lodash.foreach';
 import isObject from 'lodash.isobject';
 import cloneDeep from 'lodash.clonedeep';
+import isNil from 'lodash.isnil';
 import product_mixin from '@/mixins/product_mixin';
 import shipping_mixin from '@/mixins/shipping_mixin';
 
@@ -106,24 +107,6 @@ export default {
         },
 
 
-        async upsertProductImages() {
-                const newImages = this.product.images.filter((obj) => { return obj.hasOwnProperty('raw') });
-                const newImagePromises = [];
-
-                // upload the new images:
-                newImages.forEach((obj) => {
-                    let formData = new FormData();
-                    formData.append('file', obj.raw);
-                    formData.append('alt_text', obj.alt_text);
-                    newImagePromises.push(
-                        this.$api.products.uploadImage(formData)
-                    );
-                });
-
-                return Promise.all(newImagePromises);
-        },
-
-
         saveSkus(productId) {
             const promises = [];
 
@@ -148,7 +131,11 @@ export default {
                                 break;
 
                             default:
-                                formData.set(key, obj[key] || '');
+                                // null values are set as string "null" in FormData, so need to check for that
+                                formData.set(
+                                    key,
+                                    isNil(obj[key]) ? '' : obj[key]
+                                );
                         }
                     });
 
@@ -191,7 +178,11 @@ export default {
                             break;
 
                         default:
-                            formData.set(key, this.product[key] || '');
+                            // null values are set as string "null" in FormData, so need to check for that
+                            formData.set(
+                                key,
+                                isNil(this.product[key]) ? '' : this.product[key]
+                            );
                     }
                 })
 

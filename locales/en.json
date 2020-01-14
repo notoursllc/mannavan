@@ -1,6 +1,7 @@
 {
     "# items": "# items",
 
+    "A server error occurred while setting the shipping address": "A server error occurred while setting the shipping address",
     "About": "About",
     "About Billing and Shipping Addresses": "About Billing and Shipping Addresses",
     "accept_privacy_and_tos": "By placing your order, you agree to our {linkPrivacy} and {linkTos}.",
@@ -25,7 +26,8 @@
     "An error occurred while processing the PayPal transaction": "An error occurred while processing the PayPal transaction",
     "Are you sure you want to return to your Shopping Cart?": "Are you sure you want to return to your Shopping Cart?",
     "Artist": "Artist",
-    "A server error occurred while setting the shipping address": "A server error occurred while setting the shipping address",
+    "Attributes": "Attributes",
+
 
     "Barcode": "Barcode",
     "Barcode (ISBN, UPC, GTIN, etc.)": "Barcode (ISBN, UPC, GTIN, etc.)",
