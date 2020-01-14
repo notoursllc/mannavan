@@ -13,6 +13,11 @@ export default {
         options: {
             type: Array,
             required: true
+        },
+
+        multiple: {
+            type: Boolean,
+            default: true
         }
     },
 
@@ -38,6 +43,11 @@ export default {
         },
 
         setSelectedValue() {
+            if(!this.multiple) {
+                this.selectedVal = this.value;
+                return;
+            }
+
             let values = [];
 
             this.options.forEach((obj) => {
@@ -60,6 +70,7 @@ export default {
 
         options: {
             handler(newVal) {
+                console.log("OPTIONS", newVal)
                 this.setSelectedValue();
             },
             immediate: true,
@@ -71,7 +82,7 @@ export default {
 <template>
     <el-select
         v-model="selectedVal"
-        multiple
+        :multiple="multiple"
         :placeholder="placeholder"
         :clearable="true"
         @change="selectValueChanged"

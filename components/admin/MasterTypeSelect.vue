@@ -10,6 +10,11 @@ export default {
 
         value: {
             type: Number
+        },
+
+        multiple: {
+            type: Boolean,
+            default: true
         }
     },
 
@@ -67,5 +72,6 @@ export default {
     <bitwise-multi-select
         v-model="selectedVal"
         :options="selectOptions"
+        :multiple="multiple"
         @input="emitChange" />
 </template>

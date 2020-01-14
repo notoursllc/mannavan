@@ -15,7 +15,6 @@ export default {
     components: {
         ProductSizeAdmin: () => import('@/components/product/admin/ProductSizeAdmin'),
         MasterTypeSelect: () => import('@/components/admin/MasterTypeSelect'),
-        VendorSelect: () => import('@/components/product/admin/VendorSelect'),
         // MaterialTypeSelect: () => import('@/components/product/admin/MaterialTypeSelect'),
         IconNewWindow: () => import('@/components/icons/IconNewWindow'),
         IconPlayVideo: () => import('@/components/icons/IconPlayVideo'),
@@ -323,7 +322,10 @@ export default {
                 <!-- vendor -->
                 <div class="inputGroup mrl mbm">
                     <label>{{ $t('Vendor') }}</label>
-                    <vendor-select v-model="product.vendor_id" />
+                    <master-type-select
+                        v-model="product.vendor_type"
+                        object="product_vendor_type"
+                        :multiple="false" />
                 </div>
             </div>
         </text-card>
