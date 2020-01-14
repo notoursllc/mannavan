@@ -108,11 +108,8 @@ export default {
         },
 
         async onDeleteImage(obj, index) {
-            if(obj.hasOwnProperty('id')) {
-                // this.loading = true;
+            if(obj.id) {
                 this.$emit('delete', obj.id);
-                // await this.$api.storage.deleteImage(obj.image_url);
-                // this.loading = false;
             }
 
             // If this is a newly uploaded image then all we need to do
