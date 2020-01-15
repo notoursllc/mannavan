@@ -140,6 +140,7 @@
     "LOGOUT": "LOGOUT",
 
     "Make sure your address is correct": "Make sure your address is correct",
+    "Meta data": "Meta data",
     "Material": "Material",
     "MATERIAL_TYPE_COTTON": "Cotton",
     "MATERIAL_TYPE_TRI_BLEND": "Tri-Blend",
@@ -149,6 +150,7 @@
 
     "n_in_stock": "{numInventory} in stock",
     "n_in_stock_for_n_variants": "{numInventory} in stock for {numVariants} variant | {numInventory} in stock for {numVariants} variants",
+    "Name": "Name",
     "New item": "New item",
     "New option": "New option",
     "No matching values": "No matching values",
@@ -212,6 +214,7 @@
     "Product not found": "Product not found",
     "Products": "Products",
     "PRODUCTS": "PRODUCTS",
+    "Published": "Published",
 
     "quantity": "quantity",
     "Quantity": "Quantity",
@@ -270,6 +273,7 @@
     "Sleeve": "Sleeve",
     "Sleeve measurement": "Sleeve measurement",
     "sleeve_measurement_description": "The sleeve length is measured from the shoulder seam to the end of the sleeve.",
+    "Slug": "Slug",
     "Sorry this item does not have any sizes available": "Sorry this item does not have any sizes available",
     "Standard": "Standard",
     "STATE/PROVINCE/REGION": "STATE/PROVINCE/REGION",
@@ -299,6 +303,7 @@
     "Use a different billing address": "Use a different billing address",
     "Use of Cookies": "Use of Cookies",
 
+    "Value": "Value",
     "Values": "Values",
     "Variant": "Variant",
     "Variant deleted successfully": "Variant deleted successfully",
@@ -317,6 +322,7 @@
     "We were unable to get shipping rates because of a server error": "We were unable to get shipping rates because of a server error",
     "We'll get back to you within 1 business day.": "We'll get back to you within 1 business day.",
     "Weight (oz)": "Weight (oz)",
+
     "Your billing info": "Your billing info",
     "Your order": "Your order",
     "Your PayPal transaction will be completed on the next page": "Your PayPal transaction will be completed on the next page",

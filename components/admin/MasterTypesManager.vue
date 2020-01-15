@@ -27,6 +27,7 @@ export default {
                 name: null,
                 slug: null,
                 published: true,
+                description: null,
                 metadata: null
             },
             types: []
@@ -221,7 +222,7 @@ export default {
 
                 <!-- Available -->
                 <div class="formRow">
-                    <label class="width100">Published:</label>
+                    <label class="width100">{{ $t('Published') }}:</label>
                     <span>
                         <el-checkbox v-model="form.published" />
                     </span>
@@ -229,7 +230,7 @@ export default {
 
                 <!-- Name -->
                 <div class="formRow">
-                    <label>Name:</label>
+                    <label>{{ $t('Name') }}:</label>
                     <span>
                         <el-input v-model="form.name" />
                     </span>
@@ -237,7 +238,7 @@ export default {
 
                 <!-- Slug -->
                 <div class="formRow">
-                    <label>Slug:</label>
+                    <label>{{ $t('Slug') }}:</label>
                     <span>
                         <el-input v-model="form.slug" />
                         <div class="fs12" v-show="slugIdea">
@@ -248,13 +249,24 @@ export default {
 
                 <!-- Value -->
                 <div class="formRow">
-                    <label>Value:</label>
+                    <label>{{ $t('Value') }}:</label>
                     <span> {{ form.value }}</span>
+                </div>
+
+                <!-- Description -->
+                <div class="formRow">
+                    <label>{{ $t('Description') }}:</label>
+                    <span>
+                        <el-input
+                            v-model="form.description"
+                            type="textarea"
+                            :rows="2" />
+                    </span>
                 </div>
 
                 <!-- Meta data -->
                 <div class="formRow">
-                    <label>Meta data:</label>
+                    <label>{{ $t('Meta data') }}:</label>
                     <span>
                         <meta-data-builder v-model="form.metadata" />
                     </span>
@@ -266,10 +278,10 @@ export default {
                     <span class="ptl">
                         <el-button
                             type="primary"
-                            @click="onUpsertFormSave">Save</el-button>
+                            @click="onUpsertFormSave">{{ $t('Save') }}</el-button>
 
                         <el-button
-                            @click="onUpsertFormCancel">Cancel</el-button>
+                            @click="onUpsertFormCancel">{{ $t('Cancel') }}</el-button>
                     </span>
                 </div>
 
