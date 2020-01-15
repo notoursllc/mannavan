@@ -141,6 +141,20 @@ export default {
         </text-card>
 
 
+        <!-- Images -->
+        <text-card>
+            <div slot="header">
+                {{ $t('Images') }}
+                <span class="fs11 plm">{{ $t('You can add up to num images', {number: imageManagerMaxImages}) }}</span>
+            </div>
+            <image-manager
+                v-loading="loadingImages"
+                v-model="sku.images"
+                @delete="onDeleteSkuImage"
+                :max-num-images="parseInt(imageManagerMaxImages, 10)" />
+        </text-card>
+
+
         <!-- inventory -->
         <text-card>
             <div slot="header">{{ $t('Inventory') }}</div>
@@ -184,20 +198,6 @@ export default {
                 <el-checkbox
                     v-model="sku.visible_if_out_of_stock" >{{ $t('Continue selling when out of stock') }}</el-checkbox>
             </div>
-        </text-card>
-
-
-        <!-- Images -->
-        <text-card>
-            <div slot="header">
-                {{ $t('Images') }}
-                <span class="fs11 plm">{{ $t('You can add up to num images', {number: imageManagerMaxImages}) }}</span>
-            </div>
-            <image-manager
-                v-loading="loadingImages"
-                v-model="sku.images"
-                @delete="onDeleteSkuImage"
-                :max-num-images="parseInt(imageManagerMaxImages, 10)" />
         </text-card>
 
 
@@ -247,16 +247,6 @@ export default {
             <el-button
                 type="primary"
                 @click="onClickDone">{{ $t('Done') }}</el-button>
-
-            <!-- <el-button
-                v-if="!sku.id"
-                type="primary"
-                @click="onClickDone">{{ $t('Done') }}</el-button>
-
-            <el-button
-                v-else
-                type="primary"
-                @click="saveSku">{{ $t('Save') }}</el-button> -->
         </div>
     </div>
 </template>

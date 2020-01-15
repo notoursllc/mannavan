@@ -27,7 +27,6 @@ export default {
         MetaDataBuilder: () => import('@/components/admin/MetaDataBuilder'),
         ImageManager: () => import('@/components/product/admin/ImageManager'),
         SeoPreview: () => import('@/components/product/admin/SeoPreview'),
-        SkuBuilder: () => import('@/components/product/admin/SkuBuilder'),
         SkuManager: () => import('@/components/product/admin/SkuManager')
     },
 
@@ -395,17 +394,6 @@ export default {
                 </div>
 
                 <div v-if="productHasOptions">
-                    <!-- <sku-builder
-                        :product="product"
-                        :max-count="3"
-                        :suggestions="[
-                            this.$t('Size'),
-                            this.$t('Color'),
-                            this.$t('Material')
-                        ]" /> -->
-
-                    <!-- test -->
-                    <!-- <div class="sku-preview" v-show="product.attributes.length"> -->
                     <div class="sku-preview">
                         <sku-manager
                             :product="product"
@@ -467,36 +455,6 @@ export default {
         </text-card>
 
 
-        <!-- Shipping -->
-        <!-- <text-card>
-            <div class="textCardHeader">Shipping</div>
-            <div class="textCardContent">
-
-                <div class="inputGroup mrl mbm">
-                    <el-checkbox v-model="product.is_good">This is a physical product</el-checkbox>
-                </div>
-
-                <text-card-section >
-                    <h4 slot="header">CUSTOMS INFORMATION</h4>
-
-                    <template slot="description">
-                        Used by border officers to calculate duties when shipping internationally. Shown on customs forms you print during fulfillment.
-                    </template>
-
-                    <slot>
-                        <div class="inputGroupContainer">
-
-                            <div class="inputGroup mrl mbm">
-                                <label>Country of origin</label>
-                                <country-select v-model="product.foo" />
-                            </div>
-                        </div>
-                    </slot>
-                </text-card-section>
-            </div>
-        </text-card> -->
-
-
         <!-- Metadata -->
         <text-card>
             <div slot="header">{{ $t('Metadata') }}</div>
@@ -510,32 +468,6 @@ export default {
             </div>
         </text-card>
 
-
-        <!-- Pricing -->
-        <!-- <text-card>
-            <div class="textCardHeader">Pricing</div>
-            <div class="textCardContent">
-                <div class="inputGroupContainer">
-
-                    <div class="inputGroup mrl mbm">
-                        <label>Price</label>
-                        <input-money v-model="product.price" />
-                    </div>
-
-                </div>
-            </div>
-        </text-card> -->
-
-
-        <!-- Inventory -->
-        <!-- <text-card>
-            <div class="textCardHeader">Inventory</div>
-            <div class="textCardContent">
-                <div class="inputGroupContainer">
-
-                </div>
-            </div>
-        </text-card> -->
 
         <div class="mtl">
             <el-button type="primary" @click="onSaveClick">{{ $t('Save') }}</el-button>
