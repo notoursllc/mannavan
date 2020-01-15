@@ -30,6 +30,7 @@ export default {
                 description: null,
                 metadata: null
             },
+            formHasMetaData: false,
             types: []
         }
     },
@@ -95,6 +96,8 @@ export default {
                     Object.keys(type).forEach((key) => {
                         this.form[key] = type[key];
                     });
+
+                    this.formHasMetaData = Array.isArray(this.form.metadata);
                 }
                 else {
                     const types = await this.$api.masterTypes.list(this.object);
@@ -123,6 +126,11 @@ export default {
         async onUpsertFormSave() {
             try {
                 this.form.object = this.object;
+
+                if(!this.formHasMetaData) {
+                    this.form.metadata = null;
+                }
+
                 const mt = await this.$api.masterTypes.upsert(this.form);
 
                 if(!mt) {
@@ -268,7 +276,12 @@ export default {
                 <div class="formRow">
                     <label>{{ $t('Meta data') }}:</label>
                     <span>
-                        <meta-data-builder v-model="form.metadata" />
+                        <el-checkbox
+                            v-model="formHasMetaData">{{ $t('This item has additional meta data') }}</el-checkbox>
+
+                        <div class="mtm" v-show="formHasMetaData">
+                            <meta-data-builder v-model="form.metadata" />
+                        </div>
                     </span>
                 </div>
 
