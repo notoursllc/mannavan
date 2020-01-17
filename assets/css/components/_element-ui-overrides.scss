@@ -65,6 +65,16 @@
 .el-dialog--small {
     width: 80%;
 }
+@media #{$medium-and-down} {
+    .el-dialog {
+        width: 70% !important;
+    }
+}
+@media #{$small-and-down} {
+    .el-dialog {
+        width: 90% !important;
+    }
+}
 
 .el-button:not(.nogrow) {
     @include grow()

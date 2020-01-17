@@ -1,6 +1,5 @@
 <script>
 import isObject from 'lodash.isobject';
-import product_collection_mixin from '@/mixins/product_collection_mixin';
 import { getNextAvailableTypeValue } from '@/utils/common';
 
 export default {
@@ -13,30 +12,27 @@ export default {
     components: {
         AppDialog: () => import('@/components/AppDialog'),
         Fab: () => import('@/components/Fab'),
+        TextCard: () => import('@/components/TextCard'),
+        OperationsDropdown: () => import('@/components/OperationsDropdown'),
+        BooleanTag: () => import('@/components/admin/BooleanTag')
     },
-
-    mixins: [
-        product_collection_mixin
-    ],
 
     data() {
         return {
-            dialog: {
-                show: false,
-                type: {}
-            },
+            showDialog: false,
             collections: [],
             form: {
                 name: null,
-                slug: null
+                value: null
             },
+            domainName: process.env.DOMAIN_NAME
         }
     },
 
     methods: {
-        async fetchTypes() {
+        async fetchCollections() {
             try {
-                this.collections = await this.prodCollMix_list();
+                this.collections = await this.$api.products.listProductCollections();
             }
             catch(e) {
                 this.$errorMessage(
@@ -46,23 +42,24 @@ export default {
             }
         },
 
-        async onTypeDelete(data) {
+        async onDeleteCollection(data) {
             try {
-                await this.$confirm(`Delete "${ data.name }"?`, 'Please confirm', {
-                    confirmButtonText: 'OK',
-                    cancelButtonText: 'Cancel',
+                await this.$confirm(this.$t('delete_name?', {'name': data.name}), this.$t('Please confirm'), {
+                    confirmButtonText: this.$t('OK'),
+                    cancelButtonText: this.$t('Cancel'),
                     type: 'warning'
                 });
 
                 try {
-                    const typeJson = await this.prodCollMix_delete(data.id);
+                    const collection = await this.$api.products.deleteProductCollection(data.id);
 
-                    if(!typeJson) {
+                    if(!collection) {
                         throw new Error(this.$t('Collection not found'));
                     }
 
-                    this.fetchTypes();
-                    this.$successMessage(`Deleted: ${data.name}`)
+                    this.fetchCollections();
+                    this.$successMessage(this.$t('deleted_name', {'name':data.name}));
+                    this.resetForm();
                 }
                 catch(e) {
                     this.$errorMessage(
@@ -76,26 +73,24 @@ export default {
             }
         },
 
-        async onUpsertClick(data) {
+        async onClickAdd() {
+            const collections = await this.$api.products.listProductCollections();
+            this.form.published = true;
+            this.form.value = getNextAvailableTypeValue(collections);
+            this.showDialog = true;
+        },
+
+
+        async onUpsertClick(id) {
             try {
-                if(isObject(data) && data.id) {
-                    const type = await this.prodCollMix_get(data.id);
+                const collection = await this.$api.products.getProductCollection(id);
 
-                    if(!type) {
-                        throw new Error(this.$t('Collection not found'));
-                    }
-
-                    this.dialog.type = type;
-                }
-                else {
-                    const types = await this.prodCollMix_list();
-                    this.dialog.type = {
-                        published: true,
-                        value: getNextAvailableTypeValue(types)
-                    };
+                if(!collection) {
+                    throw new Error(this.$t('Collection not found'));
                 }
 
-                this.dialog.show = true;
+                this.form = collection;
+                this.showDialog = true;
             }
             catch(e) {
                 this.$errorMessage(
@@ -105,20 +100,20 @@ export default {
             }
         },
 
-        async onUpsertFormSave(type) {
+        async onFormSave() {
             try {
-                const p = await this.prodCollMix_upsert(type);
+                const collection = await this.$api.products.upsertProductCollection(this.form);
 
-                if(!p) {
+                if(!collection) {
                     throw new Error(this.$t('Error updating Collection'));
                 }
 
-                let title = type.id ? 'Collection updated successfully' : 'Collection successfully';
-                this.$successMessage(`${title}: ${p.name}`);
+                let title = collection.id ? this.$t('Collection updated successfully') : this.$t('Collection added successfully');
+                this.$successMessage(`${title}: ${collection.name}`);
 
-                this.dialog.show = false;
-                this.dialog.type = {};
-                this.fetchTypes();
+                this.showDialog = false;
+                this.fetchCollections();
+                this.resetForm();
             }
             catch(e) {
                 this.$errorMessage(
@@ -128,26 +123,21 @@ export default {
             }
         },
 
-        onUpsertCancel() {
-            this.dialog.show = false;
-            this.dialog.type = {};
-        },
-
         onFormCancel() {
-            // this.$emit('cancel')
+            this.showDialog = false;
+            this.resetForm();
         },
 
-        onFormSave() {
-            // this.$emit('save', this.form)
-        },
-
-        onUseSlugSuggestion() {
-            this.form.slug = this.slugIdea;
+        resetForm() {
+            this.form = {
+                name: null,
+                value: null
+            }
         }
     },
 
     created() {
-        this.fetchTypes();
+        this.fetchCollections();
     }
 }
 </script>
@@ -155,27 +145,15 @@ export default {
 
 <template>
     <div>
-        <fab type="add" @click="onUpsertClick" />
+        <fab type="add" @click="onClickAdd" />
 
         <el-table
-            :data="types"
+            :data="collections"
             class="widthAll">
 
             <el-table-column type="expand">
                 <template slot-scope="scope">
                     <pre style="overflow-x:scroll">{{ scope.row | formatJson }}</pre>
-                </template>
-            </el-table-column>
-
-            <!-- image -->
-            <el-table-column
-                width="100">
-                <template slot-scope="scope">
-                    <template v-if="scope.row.image_url">
-                        <img :src="scope.row.image_url"
-                            alt="Image"
-                            style="width: 70px;" />
-                    </template>
                 </template>
             </el-table-column>
 
@@ -187,8 +165,8 @@ export default {
                     {{ scope.row.name }}
                     <operations-dropdown
                         :show-view="false"
-                        @edit="onEditClick(scope.row)"
-                        @delete="onDeleteClick(scope.row)" />
+                        @edit="onUpsertClick(scope.row.id)"
+                        @delete="onDeleteCollection(scope.row)" />
                 </template>
             </el-table-column>
 
@@ -206,53 +184,59 @@ export default {
 
         <app-dialog
             title="Edit Collection"
-            :visible.sync="dialog.show"
-            width="450px">
+            :visible.sync="showDialog"
+            width="40%">
 
-                <!-- Available -->
-                <div class="formRow">
-                    <label>Published:</label>
-                    <span>
-                        <el-checkbox v-model="form.published" />
-                    </span>
-                </div>
+            <!-- Available -->
+            <div class="inputRow">
+                <span>
+                    <el-checkbox
+                        v-model="form.published"
+                        label="Published"
+                        border />
+                </span>
+            </div>
 
-                <!-- Name -->
+            <!-- Name -->
+            <div class="inputRow">
+                <label>{{ $t('Name') }}:</label>
+                <span>
+                    <el-input v-model="form.name" />
+                </span>
+            </div>
+
+            <!-- Description -->
+            <div class="inputRow">
+                <label>{{ $t('Description') }}:</label>
+                <span>
+                    <el-input
+                        v-model="form.description"
+                        type="textarea"
+                        :rows="2" />
+                </span>
+            </div>
+
+            <!-- Value -->
+            <div class="inputRow">
+                <label>{{ $t('Value') }}:</label>
+                <span> {{ form.value }}</span>
+            </div>
+
+            <!-- SEO -->
+            <text-card>
+                <div slot="header">{{ $t('Search engine listing') }}</div>
+
+                <!-- page title -->
                 <div class="inputRow">
-                    <label>Name:</label>
-                    <span>
-                        <el-input v-model="form.name" />
-                    </span>
-                </div>
-
-                <!-- Value -->
-                <div class="inputRow">
-                    <label>Value:</label>
-                    <span> {{ form.value }}</span>
-                </div>
-
-                <!-- Description -->
-                <div class="inputRow">
-                    <label>Description:</label>
-                    <span>
-                        <el-input
-                            v-model="form.name"
-                            type="textarea"
-                            :rows="2" />
-                    </span>
-                </div>
-
-                <!-- SEO page title -->
-                <div class="inputRow">
-                    <label>SEO page title:</label>
+                    <label>{{ $t('Page title') }}:</label>
                     <span>
                         <el-input v-model="form.seo_page_title" />
                     </span>
                 </div>
 
-                <!-- SEO page description -->
+                <!-- description -->
                 <div class="inputRow">
-                    <label>SEO page description:</label>
+                    <label>{{ $t('Description') }}:</label>
                     <span>
                         <el-input
                             v-model="form.seo_page_desc"
@@ -261,32 +245,29 @@ export default {
                     </span>
                 </div>
 
-                <!-- SEO URI -->
+                <!-- URI -->
                 <div class="inputRow">
-                    <label>SEO URI:</label>
+                    <label>{{ $t('URL and handle') }}:</label>
                     <span>
-                        <el-input v-model="form.seo_uri" />
+                        <el-input
+                            v-model="form.seo_uri"
+                            maxlength="50"
+                            show-word-limit>
+                            <template slot="prepend">https://{{ domainName }}/p/</template>
+                        </el-input>
                     </span>
                 </div>
+            </text-card>
 
-                <!-- Sales Channel Type -->
-                <div class="inputRow">
-                    <label>Sales Channel Type:</label>
-                    <span>
-                        TODO: need SC type selector
-                    </span>
-                </div>
+            <!-- buttons -->
+            <div class="ptl">
+                <el-button
+                    type="primary"
+                    @click="onFormSave">{{ $t('Save') }}</el-button>
 
-                <!-- buttons -->
-                <div class="ptl">
-                    <el-button
-                        type="primary"
-                        @click="onFormSave">Save</el-button>
-
-                    <el-button
-                        @click="onFormCancel">Cancel</el-button>
-                </div>
-
+                <el-button
+                    @click="onFormCancel">{{ $t('Cancel') }}</el-button>
+            </div>
         </app-dialog>
     </div>
 </template>

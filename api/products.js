@@ -26,7 +26,7 @@ export default ($axios) => ({
     async list(params) {
         let paramString = queryString.stringify(params, {arrayFormat: 'bracket'});
 
-        // const response = await this.$axios.$get(`/products?${paramString}`); // TODO: is there a XSS issue here?
+        // const response = await $axios.$get(`/products?${paramString}`); // TODO: is there a XSS issue here?
         const { data } = await $axios.$get(`/products?${paramString}`); // TODO: is there a XSS issue here?
         return data;
     },
@@ -96,6 +96,25 @@ export default ($axios) => ({
     },
 
 
+    async uploadImage(formData) {
+        const { data } = await $axios.$post('/product/image/upload', formData);
+        return data;
+    },
+
+
+    async deleteImage(id) {
+        const { data } = await $axios.$delete(`/product/image`, {
+            params: {
+                id
+            }
+        });
+        return data;
+    },
+
+
+    //////////////////
+    // SKUs
+    //////////////////
     async upsertSku(FormData) {
         FormData.delete('created_at');
         FormData.delete('updated_at');
@@ -124,21 +143,6 @@ export default ($axios) => ({
     },
 
 
-    async uploadImage(formData) {
-        const { data } = await $axios.$post('/product/image/upload', formData);
-        return data;
-    },
-
-
-    async deleteImage(id) {
-        const { data } = await $axios.$delete(`/product/image`, {
-            params: {
-                id
-            }
-        });
-        return data;
-    },
-
     async deleteSkuImage(id) {
         const { data } = await $axios.$delete(`/product/sku/image`, {
             params: {
@@ -147,5 +151,50 @@ export default ($axios) => ({
         });
         return data;
     },
+
+
+    //////////////////
+    // Collections
+    //////////////////
+    async listProductCollections() {
+        const { data } = await $axios.$get('/collections');
+        return data;
+    },
+
+
+    async getProductCollection(id) {
+        const { data }  = await $axios.$get('/collection', {
+            params: {
+                id
+            }
+        });
+
+        return data;
+    },
+
+
+    async upsertProductCollection(data) {
+        let response;
+
+        if(data.hasOwnProperty('id')) {
+            response = await $axios.$put('/collection', data);
+        }
+        else {
+            response = await $axios.$post('/collection', data);
+        }
+
+        return response.data;
+    },
+
+
+    async deleteProductCollection(id) {
+        const { data } = await $axios.$delete('/collection', {
+            params: {
+                id
+            }
+        });
+
+        return data;
+    }
 
 });

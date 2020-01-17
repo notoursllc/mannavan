@@ -1,6 +1,5 @@
 <script>
 import isObject from 'lodash.isobject';
-import product_collection_mixin from '@/mixins/product_collection_mixin';
 import { getNextAvailableTypeValue } from '@/utils/common';
 
 export default {
@@ -14,10 +13,6 @@ export default {
         AppDialog: () => import('@/components/AppDialog'),
         Fab: () => import('@/components/Fab'),
     },
-
-    mixins: [
-        product_collection_mixin
-    ],
 
     data() {
         return {
@@ -36,7 +31,7 @@ export default {
     methods: {
         async fetchTypes() {
             try {
-                this.collections = await this.prodCollMix_list();
+                this.collections = await this.$api.products.listProductCollections();
             }
             catch(e) {
                 this.$errorMessage(
@@ -55,7 +50,7 @@ export default {
                 });
 
                 try {
-                    const typeJson = await this.prodCollMix_delete(data.id);
+                    const typeJson = await this.$api.products.deleteProductCollection(data.id);
 
                     if(!typeJson) {
                         throw new Error(this.$t('Collection not found'));
@@ -79,7 +74,7 @@ export default {
         async onUpsertClick(data) {
             try {
                 if(isObject(data) && data.id) {
-                    const type = await this.prodCollMix_get(data.id);
+                    const type = await this.$api.products.getProductCollection(data.id);
 
                     if(!type) {
                         throw new Error(this.$t('Collection not found'));
@@ -88,7 +83,7 @@ export default {
                     this.dialog.type = type;
                 }
                 else {
-                    const types = await this.prodCollMix_list();
+                    const types = await this.$api.products.listProductCollections();
                     this.dialog.type = {
                         published: true,
                         value: getNextAvailableTypeValue(types)
@@ -107,7 +102,7 @@ export default {
 
         async onUpsertFormSave(type) {
             try {
-                const p = await this.prodCollMix_upsert(type);
+                const p = await this.$api.products.upsertProductCollection(type);
 
                 if(!p) {
                     throw new Error(this.$t('Error updating Collection'));
