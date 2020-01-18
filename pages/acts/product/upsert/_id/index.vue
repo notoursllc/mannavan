@@ -13,12 +13,9 @@ export default {
     layout: 'admin',
 
     components: {
-        ProductSizeAdmin: () => import('@/components/product/admin/ProductSizeAdmin'),
         MasterTypeSelect: () => import('@/components/admin/MasterTypeSelect'),
-        // MaterialTypeSelect: () => import('@/components/product/admin/MaterialTypeSelect'),
         IconNewWindow: () => import('@/components/icons/IconNewWindow'),
         IconPlayVideo: () => import('@/components/icons/IconPlayVideo'),
-        TaxSelect: () => import('@/components/tax/TaxSelect'),
         ShippingPackageTypeSelect: () => import('@/components/shipping/ShippingPackageTypeSelect'),
         Fab: () => import('@/components/Fab'),
         TextCard: () => import('@/components/TextCard'),
