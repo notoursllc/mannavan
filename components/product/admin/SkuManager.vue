@@ -13,11 +13,6 @@ export default {
             type: Object
         },
 
-        detailsView: {
-            type: Boolean,
-            default: false
-        },
-
         attributeSuggestions: {
             type: Array
         },

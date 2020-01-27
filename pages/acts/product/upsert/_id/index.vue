@@ -41,7 +41,6 @@ export default {
                 skus: [],
                 images: []
             },
-            productHasOptions: false,
             productHasMetaData: false,
             domainName: process.env.DOMAIN_NAME,
             imageManagerMaxImages: process.env.IMAGE_MANAGER_MAX_IMAGES || 8,
@@ -65,7 +64,6 @@ export default {
                     throw new Error(this.$t('Product not found'));
                 }
 
-                this.productHasOptions = product.attributes ? true : false;
                 this.productHasMetaData = product.metadata ? true : false;
 
                 if(!Array.isArray(product.images)) {
@@ -373,30 +371,14 @@ export default {
         <text-card>
             <div slot="header">{{ $t('Variants') }}</div>
 
-            <template v-if="product.id">
-                <sku-manager
-                    :product="product" />
-            </template>
-
-            <template v-else>
-                <div class="inputGroup mrl mbm">
-                    <el-checkbox v-model="productHasOptions">{{ $t('product_variant_description') }} </el-checkbox>
-                </div>
-
-                <div v-if="productHasOptions">
-                    <div class="sku-preview">
-                        <sku-manager
-                            :product="product"
-                            :details-view="true"
-                            :max-count="3"
-                            :attribute-suggestions="[
-                                this.$t('Size'),
-                                this.$t('Color'),
-                                this.$t('Material')
-                            ]" />
-                    </div>
-                </div>
-            </template>
+            <sku-manager
+                :product="product"
+                :max-count="3"
+                :attribute-suggestions="[
+                    this.$t('Size'),
+                    this.$t('Color'),
+                    this.$t('Material')
+                ]" />
         </text-card>
 
 
