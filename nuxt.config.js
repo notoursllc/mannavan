@@ -56,6 +56,7 @@ module.exports = {
         SQUARE_APP_ID: isProduction ? process.env.SQUARE_PRODUCTION_APP_ID : process.env.SQUARE_SANDBOX_APP_ID,
         SQUARE_ACCESS_TOKEN: isProduction ? process.env.SQUARE_PRODUCTION_ACCESS_TOKEN : process.env.SQUARE_SANDBOX_ACCESS_TOKEN,
         SQUARE_LOCATION_ID: isProduction ? process.env.SQUARE_PRODUCTION_LOCATION_ID : process.env.SQUARE_SANDBOX_LOCATION_ID,
+        TENANT_ID: '7403f879fc1cec848b8068d4459225ef753064abefef0e9776fd2ab63ece3a27'
     },
 
     /*

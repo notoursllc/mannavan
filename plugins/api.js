@@ -8,6 +8,10 @@ export default ({$axios}, inject) => {
         password: process.env.API_PASSWORD
     };
 
+    $axios.defaults.headers.common = {
+        'X-Tenant': process.env.TENANT_ID
+    };
+
     // Initialize API repositories
     const repositories = {
         masterTypes: MasterTypes($axios),
