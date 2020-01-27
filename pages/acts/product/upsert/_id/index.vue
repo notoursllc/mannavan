@@ -102,95 +102,88 @@ export default {
         },
 
 
-        saveSkus(productId) {
-            const promises = [];
+        async saveSkus(productId) {
+            try {
+                const product = cloneDeep(this.product);
+                const p = await this.$api.products.upsert(product);
 
-            if(Array.isArray(this.product.skus)) {
-                this.product.skus.forEach((obj) => {
-                    const formData = new FormData();
+                if(!p) {
+                    throw new Error('Error updating product');
+                }
 
-                    Object.keys(obj).forEach((key) => {
-                        switch(key) {
-                            case 'images':
-                                obj.images.forEach((imageObj) => {
-                                    formData.append('image_id', imageObj.id || null);
-                                    formData.append('images', imageObj.raw || null);
-                                    formData.append('image_alt_text', imageObj.alt_text);
-                                    formData.append('image_ordinal', imageObj.ordinal);
-                                });
-                                break;
+                await this.saveImages(p.id);
+                await this.saveSkus(p.id);
 
-                            case 'attributes':
-                            case 'metadata':
-                                formData.set(key, Array.isArray(obj[key]) ? JSON.stringify(obj[key]) : '');
-                                break;
-
-                            default:
-                                // null values are set as string "null" in FormData, so need to check for that
-                                formData.set(
-                                    key,
-                                    isNil(obj[key]) ? '' : obj[key]
-                                );
-                        }
-                    });
-
-                    formData.set('product_id', productId)
-
-                    promises.push(
-                        this.$api.products.upsertSku(formData)
-                    );
-                });
+                let title = p.id ? 'Product updated successfully' : 'Product added successfully';
+                this.$successMessage(`${title}: ${p.title}`)
+                this.goToAdminProductList();
             }
-
-            return Promise.all(promises);
+            catch(e) {
+                this.$errorMessage(
+                    e.message,
+                    { closeOthers: true }
+                )
+            }
         },
 
 
         async onSaveClick() {
             try {
                 this.loading = true;
-
-                const formData = new FormData();
-
-                Object.keys(this.product).forEach((key) => {
-                    switch(key) {
-                        case 'images':
-                            this.product.images.forEach((obj) => {
-                                formData.append('image_id', obj.id || null);
-                                formData.append('images', obj.raw || null);
-                                formData.append('image_alt_text', obj.alt_text);
-                                formData.append('image_ordinal', obj.ordinal);
-                            });
-                            break;
-
-                        case 'attributes':
-                        case 'metadata':
-                            formData.set(key, Array.isArray(this.product[key]) ? JSON.stringify(this.product[key]) : '');
-                            break;
-
-                        case 'skus':
-                            // skus should not be included
-                            break;
-
-                        default:
-                            // null values are set as string "null" in FormData, so need to check for that
-                            formData.set(
-                                key,
-                                isNil(this.product[key]) ? '' : this.product[key]
-                            );
-                    }
-                })
-
-                const p = await this.$api.products.upsert(formData);
+                const p = await this.$api.products.upsert(this.product);
 
                 if(!p) {
                     throw new Error('Error updating product');
                 }
 
-                // Saving the SKUs separately
-                await this.saveSkus(p.id);
+                const promises = [];
 
-                let title = p.id ? 'Product updated successfully' : 'Product added successfully';
+                // save product images
+                const formData = new FormData();
+                formData.append('product_id', p.id);
+
+                this.product.images.forEach((obj) => {
+                    formData.append('id', obj.id || '');
+                    formData.append('image', obj.raw || '');
+                    formData.append('alt_text', obj.alt_text || '');
+                    formData.append('ordinal', obj.ordinal);
+                });
+
+                promises.push(
+                    this.$api.products.upsertImage(formData)
+                );
+
+
+                // save product skus
+                if(Array.isArray(this.product.skus)) {
+                    this.product.skus.forEach(async (sku) => {
+                        sku.product_id = p.id;
+                        const s = await this.$api.products.upsertSku(sku);
+
+                        if(!s) {
+                            throw new Error('Error updating product SKU');
+                        }
+
+                        // save sku images
+                        const formData = new FormData();
+                        formData.append('product_sku_id', s.id);
+
+                        sku.images.forEach((obj) => {
+                            formData.append('id', obj.id || '');
+                            formData.append('image', obj.raw || '');
+                            formData.append('alt_text', obj.alt_text || '');
+                            formData.append('ordinal', obj.ordinal);
+                        });
+
+                        promises.push(
+                            this.$api.products.upsertSkuImage(formData)
+                        );
+                    });
+                }
+
+                await Promise.all(promises);
+
+                let title = p.id ? this.$t('Product updated successfully') : this.$t('Product added successfully');
                 this.$successMessage(`${title}: ${p.title}`)
                 this.goToAdminProductList();
             }

@@ -31,7 +31,14 @@ export default {
 
     methods: {
         emitChange(val) {
-            this.$emit('input', val)
+            // when the select clear button is clicked then the val changes to "0",
+            // but we want null instead:
+            if(!val) {
+                this.$emit('input', null)
+            }
+            else {
+                this.$emit('input', val)
+            }
         },
 
         async createOptions() {

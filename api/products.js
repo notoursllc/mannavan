@@ -1,22 +1,15 @@
 import queryString from 'query-string';
 import isObject from 'lodash.isobject';
+import cloneDeep from 'lodash.clonedeep';
 
 
-function stripRelations(FormData) {
-    // delete productJson.artist;
-    // delete productJson.sizes;
-    // delete productJson.pics;
-    // delete productJson.tax;
-    // delete productJson.variations;
-    // delete productJson.package_type;
-    // delete productJson.skus;
-
-    // also strip uneditable values:
-    FormData.delete('created_at');
-    FormData.delete('updated_at');
-    FormData.delete('deleted_at');
-    FormData.delete('total_inventory_count');
-    // delete productJson.display_price;
+function stripRelations(data) {
+    delete data.skus;
+    delete data.images;
+    delete data.created_at;
+    delete data.updated_at;
+    delete data.deleted_at;
+    delete data.total_inventory_count;
 }
 
 
@@ -69,16 +62,17 @@ export default ($axios) => ({
     },
 
 
-    // was upsertProduct
-    async upsert(FormData) {
+    async upsert(data) {
         let response;
-        stripRelations(FormData);
+        let prod = cloneDeep(data);
 
-        if(FormData.get('id')) {
-            response = await $axios.$put('/product', FormData);
+        stripRelations(prod);
+
+        if(prod.id) {
+            response = await $axios.$put('/product', prod);
         }
         else {
-            response = await $axios.$post('/product', FormData);
+            response = await $axios.$post('/product', prod);
         }
 
         return response.data;
@@ -96,8 +90,8 @@ export default ($axios) => ({
     },
 
 
-    async uploadImage(formData) {
-        const { data } = await $axios.$post('/product/image/upload', formData);
+    async upsertImage(formData) {
+        const { data } = await $axios.$post('/product/image', formData);
         return data;
     },
 
@@ -115,18 +109,17 @@ export default ($axios) => ({
     //////////////////
     // SKUs
     //////////////////
-    async upsertSku(FormData) {
-        FormData.delete('created_at');
-        FormData.delete('updated_at');
-        FormData.delete('deleted_at');
-
+    async upsertSku(data) {
         let response;
+        let sku = cloneDeep(data);
 
-        if(FormData.get('id')) {
-            response = await $axios.$put('/product/sku', FormData);
+        stripRelations(sku);
+
+        if(sku.id) {
+            response = await $axios.$put('/product/sku', sku);
         }
         else {
-            response = await $axios.$post('/product/sku', FormData);
+            response = await $axios.$post('/product/sku', sku);
         }
 
         return response.data;
@@ -139,6 +132,12 @@ export default ($axios) => ({
                 id
             }
         });
+        return data;
+    },
+
+
+    async upsertSkuImage(imgData) {
+        const { data } = await $axios.$post('/product/sku/image', imgData);
         return data;
     },
 
