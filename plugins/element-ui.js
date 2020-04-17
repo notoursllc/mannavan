@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import Element from 'element-ui/lib/element-ui.common';
 import locale from 'element-ui/lib/locale/lang/en';
-import isObject from 'lodash.isobject'
 
 import {
     Alert,
@@ -78,24 +77,24 @@ export default ({ store }) => {
 
 
     Vue.prototype.$successMessage = function(message, config) {
-        let cfg = Object.assign({
+        const cfg = Object.assign({
             message: message,
             showClose: false,
             duration: 5000
         }, config);
 
         openMessage('success', cfg);
-    }
+    };
 
     Vue.prototype.$errorMessage = function(message, config) {
-        let cfg = Object.assign({
+        const cfg = Object.assign({
             message: message,
             showClose: true,
             duration: 0
         }, config);
 
         openMessage('error', cfg);
-    }
+    };
 
 
     async function openMessage(type, config) {
@@ -108,10 +107,10 @@ export default ({ store }) => {
             delete config.closeOthers;
         }
 
-        let messageInstance = Message[type](config);
+        const messageInstance = Message[type](config);
 
         if(config.duration === 0) {
             store.dispatch('ui/ADD_MESSAGE_INSTANCE', messageInstance);
         }
     }
-}
+};

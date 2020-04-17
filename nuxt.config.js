@@ -1,6 +1,8 @@
-// require('dotenv').config();  // TODO: not sure if this works here
-const pkg = require('./package');
-const globalTypes = require('./shopBac/server/global_types');
+// Even though we are using @nuxt/dotenv module, we need to require dotenv here because
+// we need the env variables for the nuxt build (in plugins/api.js)
+// https://github.com/nuxt-community/dotenv-module#using-env-file-in-nuxtconfigjs
+require('dotenv').config();
+
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -12,6 +14,12 @@ module.exports = {
     ** Common headers are already provided by @nuxtjs/pwa preset
     */
     head: {
+        title: process.env.npm_package_name || '',
+        meta: [
+            { charset: 'utf-8' },
+            { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+            { hid: 'description', name: 'description', content: process.env.npm_package_description || '' }
+        ],
         link: [
             { rel: 'icon', type: 'image/x-icon', href: '/images/favicon.ico' }
         ],
@@ -33,30 +41,6 @@ module.exports = {
     meta: {
         name: 'BreadVan',
         theme_color: '#e66d17'
-    },
-
-    env: {
-        API_USERNAME: process.env.API_USERNAME,
-        API_PASSWORD: process.env.API_PASSWORD,
-        AUTH0_CLIENT_ID: process.env.AUTH0_CLIENT_ID,
-        AUTH0_DOMAIN: process.env.AUTH0_DOMAIN,
-        BUG_SNAG_API_KEY: process.env.BUG_SNAG_API_KEY,
-        DOMAIN_NAME: process.env.DOMAIN_NAME,
-        EMAIL_INFO: process.env.EMAIL_INFO,
-        GLOBAL_TYPES: globalTypes,
-        IMAGE_MANAGER_MAX_IMAGES: process.env.IMAGE_MANAGER_MAX_IMAGES,
-        NODE_ENV: process.env.NODE_ENV,
-        SHIPPING_ADDRESS_FROM_COMPANY: process.env.SHIPPING_ADDRESS_FROM_COMPANY,
-        SHIPPING_ADDRESS_FROM_ADDRESS1: process.env.SHIPPING_ADDRESS_FROM_ADDRESS1,
-        SHIPPING_ADDRESS_FROM_CITY: process.env.SHIPPING_ADDRESS_FROM_CITY,
-        SHIPPING_ADDRESS_FROM_STATE: process.env.SHIPPING_ADDRESS_FROM_STATE,
-        SHIPPING_ADDRESS_FROM_ZIP: process.env.SHIPPING_ADDRESS_FROM_ZIP,
-        SHIPPING_ADDRESS_FROM_COUNTRY_CODE: process.env.SHIPPING_ADDRESS_FROM_COUNTRY_CODE,
-        SHIPPING_ADDRESS_FROM_PHONE: process.env.SHIPPING_ADDRESS_FROM_PHONE,
-        SQUARE_APP_ID: isProduction ? process.env.SQUARE_PRODUCTION_APP_ID : process.env.SQUARE_SANDBOX_APP_ID,
-        SQUARE_ACCESS_TOKEN: isProduction ? process.env.SQUARE_PRODUCTION_ACCESS_TOKEN : process.env.SQUARE_SANDBOX_ACCESS_TOKEN,
-        SQUARE_LOCATION_ID: isProduction ? process.env.SQUARE_PRODUCTION_LOCATION_ID : process.env.SQUARE_SANDBOX_LOCATION_ID,
-        TENANT_ID: '7403f879fc1cec848b8068d4459225ef753064abefef0e9776fd2ab63ece3a27'
     },
 
     /*
@@ -95,7 +79,6 @@ module.exports = {
 
     router: {
         middleware: [
-            'check-auth',
             'in-checkout'
         ]
     },
@@ -104,8 +87,10 @@ module.exports = {
     ** Nuxt.js modules
     */
     modules: [
+        // Doc: https://axios.nuxtjs.org/usage
         '@nuxtjs/axios',
-        '@nuxtjs/proxy',
+        // Doc: https://github.com/nuxt-community/dotenv-module
+        '@nuxtjs/dotenv',
         ['@nuxtjs/pwa', { oneSignal: false }]
     ],
 
@@ -114,20 +99,11 @@ module.exports = {
     *  See https://github.com/nuxt-community/axios-module#options
     */
     axios: {
-        // proxy: true,
-        // baseURL: process.env.NODE_ENV === 'production' ? 'https://www.gobreadvan.com:3000' : 'http://localhost:3000',
-        // prefix: '/api/v1',
         debug: false,
-        https: process.env.API_USE_HTTPS,
+        https: process.env.API_USE_HTTPS === 'true',
         retry: { retries: 3 },
         progress: true
     },
-
-    // proxy: {
-    //     // '/api/': { target: process.env.API_URL, pathRewrite: {'^/api/': ''} }
-    //     '/products': 'foo'
-    //     // '/api/': 'https://www.gobreadvan.com:3000/api/v1'
-    // },
 
     /**
      *  Build configuration
@@ -139,17 +115,8 @@ module.exports = {
         /*
         ** You can extend webpack config here
         */
-        // extend(config, ctx) {
-        //     // Run ESLint on save
-        //     if (ctx.isDev && ctx.isClient) {
-        //         config.module.rules.push({
-        //             enforce: 'pre',
-        //             test: /\.(js|vue)$/,
-        //             loader: 'eslint-loader',
-        //             exclude: /(node_modules)/
-        //         })
-        //     }
-        // }
+        extend (config, ctx) {
+        }
     },
 
     pageTransition: {

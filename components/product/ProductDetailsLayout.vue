@@ -16,13 +16,11 @@ export default {
 <template>
     <div>
         <div class="prod-container">
-            <div class="is-half">
-                <div class="prod-image">
-                    <slot name="pics"></slot>
-                </div>
+            <div class="photo-container">
+                <slot name="pics"></slot>
             </div>
 
-            <div class="is-half prod-info">
+            <div class="details-container">
                 <slot name="info"></slot>
             </div>
         </div>
@@ -64,33 +62,39 @@ export default {
 @import '~assets/css/components/_variables.scss';
 @import "~assets/css/components/_mixins.scss";
 
-.prod-image {
-    position: relative;
-}
-
 .prod-container {
     @include flexbox();
-    @include flex-wrap(wrap);
+    // @include flex-wrap(wrap);
+
 }
-.is-half {
-    @include flex(none);
-    width: 50%;
+.photo-container {
+    // @include flex(none);
+    // width: 50%;
+    @include flexbox();
+    flex-grow: 3;
+    flex-shrink: 1;
+    flex-basis: 0%;
+    border: 1px solid red;
+}
+.details-container {
+    // @include flex(none);
+    // width: 33.33333%;
+    // padding: 0 30px;
+    // @include flexbox();
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: 0%;
+    padding: 10px 20px;
+    border: 1px solid green;
 }
 
-.prod-info {
-    padding: 0 30px;
-}
 
 @media #{$medium-and-down} {
-    .prod-container {
+    .prod-container, .photo-container, .details-container  {
         display: block;
     }
-    .is-half {
-        @include flex(1 0 auto);
-        width: 100%;
-    }
 
-    .prod-info {
+    .details-container {
         padding: 0 5px;
     }
 }

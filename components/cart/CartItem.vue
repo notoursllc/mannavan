@@ -30,10 +30,10 @@ export default {
 
     components: {
         ProductPrice: () => import('@/components/product/ProductPrice'),
-        ProductDetailsLayout: () => import('@/components/product/details/ProductDetailsLayout'),
+        ProductDetailsLayout: () => import('@/components/product/ProductDetailsLayout'),
         ProductImageCarousel: () => import('@/components/product/ProductImageCarousel'),
-        NumberInput: () => import('@/components/NumberInput'),
         ProductQuantityWarning: () => import('@/components/product/ProductQuantityWarning'),
+        NumberInput: () => import('@/components/NumberInput'),
         IconTimesSquare
     },
 

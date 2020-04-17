@@ -1,8 +1,6 @@
 <script>
 import product_mixin from '@/mixins/product_type_mixin';
 
-const globalTypes = process.env.GLOBAL_TYPES;
-
 
 export default {
     mixins: [

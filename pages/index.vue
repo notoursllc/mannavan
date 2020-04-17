@@ -26,7 +26,7 @@ export default {
         return {
             products: {},
             bgImage: null
-        }
+        };
     },
 
     async asyncData({ params, store, app }) {
@@ -35,9 +35,10 @@ export default {
         const randomInt = randomIntFromInterval(0, (bgImages.length - 1));
         const randomImage = `/images/backgrounds/${ bgImages[randomInt] }`;
 
+
         try {
             let searchConfig = {
-                where: ['is_available', '=', true],
+                where: ['published', '=', true],
                 // andWhere: [
                 //     ['total_inventory_count', '>', 0]  // doesn't work because 'total_inventory_count' is a virtual attribute
                 // ],
@@ -45,13 +46,11 @@ export default {
                 orderDir: 'DESC'
             };
 
-            const products = await product_mixin.methods.getProducts.call(
-                app,
-                searchConfig
-            );
+            const products = await app.$api.products.list(searchConfig);
+            console.log("PRODS", products)
 
             return {
-                products: products,
+                products: products.data,
                 bgImage: randomImage
             }
         }

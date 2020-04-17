@@ -1,3 +1,4 @@
+
 export default ($axios) => ({
 
     async addImage(FormData) {
@@ -6,7 +7,7 @@ export default ($axios) => ({
     },
 
     async deleteImage(url) {
-        let { data } = await $axios.$delete('/storage/image', {
+        const { data } = await $axios.$delete('/storage/image', {
             params: {
                 url
             }
@@ -15,4 +16,4 @@ export default ($axios) => ({
         return data;
     }
 
-})
+});

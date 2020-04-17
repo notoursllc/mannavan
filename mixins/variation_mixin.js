@@ -64,19 +64,5 @@ export default {
                 return variation.pics[0].url;
             }
         }
-
-
-        // varimix_goToList() {
-        //     this.$router.push({
-        //         name: 'acts-tax-list'
-        //     });
-        // },
-
-        // varimix_goToUpsert(id) {
-        //     this.$router.push({
-        //         name: 'acts-tax-upsert-id',
-        //         params: { id: id }
-        //     });
-        // },
     }
 }

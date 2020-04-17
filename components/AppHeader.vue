@@ -49,7 +49,7 @@ export default {
 
 <template>
     <headroom :disabled="inCheckoutFlow" :zIndex="10">
-        <header role="banner" :class="{'white': inCheckoutFlow, 'dark': !inCheckoutFlow}">
+        <header role="banner" class="white">
             <div class="header-inner">
 
                 <!-- common header -->
@@ -62,7 +62,7 @@ export default {
                             :to="{ name: 'index' }"
                             tag="span"
                             class="cursorPointer">
-                            <icon-victory icon-name="logo" class-name="fillWhite" class="vam" />
+                            <icon-victory icon-name="logo" class="vam" />
                         </nuxt-link>
                     </div>
 
@@ -137,7 +137,7 @@ export default {
 @import "~assets/css/components/_variables.scss";
 @import "~assets/css/components/_mixins.scss";
 
-$header-height: 55px;
+$header-height: 65px;
 $header-height-small: 46px;
 
 header {
@@ -156,7 +156,7 @@ header.dark {
 
 header.white {
     background: #fff;
-    border-bottom: 1px solid #ece9e9;
+    border-bottom: 1px solid #dcdada;
 }
 
 header:after {

@@ -1,3 +1,4 @@
+
 export default ($axios) => ({
 
     async list(object) {

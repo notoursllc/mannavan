@@ -1,9 +1,9 @@
 <script>
-import isObject from 'lodash.isobject'
+import isObject from 'lodash.isobject';
 
 export default {
     props: {
-        product: {
+        sku: {
             type: Object,
             required: true
         },
@@ -16,29 +16,30 @@ export default {
         stacked: {
             type: Boolean,
             default: false
-        },
+        }
     },
 
     computed: {
         basePrice: function() {
-            if (isObject(this.product) && this.product.base_price) {
-                return this.$n(this.product.base_price, 'currency');
+            console.log("PROD", this.sku)
+            if (isObject(this.sku) && this.sku.base_price) {
+                return this.$n(this.sku.base_price, 'currency');
             }
 
             return 0;
         },
 
         salePrice: function() {
-            if (isObject(this.product)
-                && this.product.is_on_sale
-                && this.product.sale_price) {
-                    return this.$n(this.product.sale_price, 'currency');
+            if (isObject(this.sku)
+                && this.sku.is_on_sale
+                && this.sku.sale_price) {
+                return this.$n(this.sku.sale_price, 'currency');
             }
 
             return 0;
         }
     }
-}
+};
 </script>
 
 

@@ -37,7 +37,7 @@ export default {
 
 
             let searchConfig = {
-                where: ['is_available', '=', true],
+                where: ['published', '=', true],
                 // andWhere: [
                 //     ['total_inventory_count', '>', 0]  // doesn't work because 'total_inventory_count' is a virtual attribute
                 // ],

@@ -7,10 +7,6 @@ export default {
     props: {
         products: {
             type: Array
-        },
-
-        type: {
-            type: String
         }
     },
 
@@ -19,50 +15,15 @@ export default {
     ],
 
     components: {
-        ProductCard: () => import('@/components/product/ProductCard'),
-        ProductDetails: () => import('@/components/product/details/ProductDetails'),
+        ProductCard: () => import('@/components/product/ProductCard')
     },
 
     data: function() {
         return {
-            productDialog: {
-                visible: false,
-                product: null
-            }
         }
     },
 
     methods: {
-        async showProduct(seouri) {
-            this.productDialog.product = await this.getProductBySeoUri(seouri);
-
-            if(!this.productDialog.product) {
-                this.$errorMessage(
-                    this.$t('Product not found'),
-                    { closeOthers: true }
-                );
-                return;
-            }
-
-            this.productDialog.visible = true;
-        },
-
-        onProductDialogClose() {
-            this.$store.dispatch('ui/CLOSE_MESSAGE_INSTANCES');
-        }
-    },
-
-    created() {
-        const onProductAddedToCart = (product) => {
-            this.productDialog.visible = false;
-            this.onProductDialogClose();
-        };
-
-        this.$nuxt.$on('PRODUCT_ADDED_TO_CART', onProductAddedToCart)
-
-        this.$once("hook:beforeDestroy", () => {
-            this.$nuxt.$off('PRODUCT_ADDED_TO_CART', onProductAddedToCart);
-        });
     }
 }
 </script>
@@ -75,23 +36,11 @@ export default {
                 style="padding:0"
                 v-for="product in products"
                 :key="product.id">
-                <span @click="showProduct(product.seo_uri)">
+                <span @click="goToProductDetails(product.seo_uri)">
                     <product-card :product="product" />
                 </span>
             </div>
         </div>
-
-        <!-- product dialog -->
-        <el-dialog
-            title=""
-            :visible.sync="productDialog.visible"
-            :append-to-body="true"
-            :key="new Date().getTime()"
-            @close="onProductDialogClose"
-            top="5vh"
-            width="95%">
-            <product-details :product="productDialog.product" />
-        </el-dialog>
     </div>
 </template>
 

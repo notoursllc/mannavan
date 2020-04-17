@@ -15,13 +15,9 @@ function stripRelations(data) {
 
 export default ($axios) => ({
 
-    // was getProducts
-    async list(params) {
-        let paramString = queryString.stringify(params, {arrayFormat: 'bracket'});
-
-        // const response = await $axios.$get(`/products?${paramString}`); // TODO: is there a XSS issue here?
-        const { data } = await $axios.$get(`/products?${paramString}`); // TODO: is there a XSS issue here?
-        return data;
+    list(params) {
+        const paramString = queryString.stringify(params, {arrayFormat: 'bracket'});
+        return $axios.$get(`/products?${paramString}`); // TODO: is there a XSS issue here?
     },
 
 
@@ -64,7 +60,7 @@ export default ($axios) => ({
 
     async upsert(data) {
         let response;
-        let prod = cloneDeep(data);
+        const prod = cloneDeep(data);
 
         stripRelations(prod);
 
@@ -81,7 +77,7 @@ export default ($axios) => ({
 
     // was deleteProduct
     async delete(id) {
-        const { data } = await $axios.$delete(`/product`, {
+        const { data } = await $axios.$delete('/product', {
             params: {
                 id
             }
@@ -97,7 +93,7 @@ export default ($axios) => ({
 
 
     async deleteImage(id) {
-        const { data } = await $axios.$delete(`/product/image`, {
+        const { data } = await $axios.$delete('/product/image', {
             params: {
                 id
             }
@@ -106,12 +102,12 @@ export default ($axios) => ({
     },
 
 
-    //////////////////
-    // SKUs
-    //////////////////
+    /*
+    * SKUs
+    */
     async upsertSku(data) {
         let response;
-        let sku = cloneDeep(data);
+        const sku = cloneDeep(data);
 
         stripRelations(sku);
 
@@ -127,7 +123,7 @@ export default ($axios) => ({
 
 
     async deleteSku(id) {
-        const { data } = await $axios.$delete(`/product/sku`, {
+        const { data } = await $axios.$delete('/product/sku', {
             params: {
                 id
             }
@@ -143,7 +139,7 @@ export default ($axios) => ({
 
 
     async deleteSkuImage(id) {
-        const { data } = await $axios.$delete(`/product/sku/image`, {
+        const { data } = await $axios.$delete('/product/sku/image', {
             params: {
                 id
             }
@@ -152,9 +148,9 @@ export default ($axios) => ({
     },
 
 
-    //////////////////
-    // Collections
-    //////////////////
+    /*
+    * Collections
+    */
     async listProductCollections() {
         const { data } = await $axios.$get('/collections');
         return data;
@@ -162,7 +158,7 @@ export default ($axios) => ({
 
 
     async getProductCollection(id) {
-        const { data }  = await $axios.$get('/collection', {
+        const { data } = await $axios.$get('/collection', {
             params: {
                 id
             }

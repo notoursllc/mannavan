@@ -1,9 +1,6 @@
-'use strict';
-
 import queryString from 'query-string';
 import _forEach from 'lodash.foreach';
 import isObject from 'lodash.isobject';
-import Promise from 'bluebird';
 
 
 function stripRelations(productJson) {
@@ -26,168 +23,6 @@ function stripRelations(productJson) {
 
 export default {
     methods: {
-        async getProducts(params) {
-            let paramString = queryString.stringify(params, {arrayFormat: 'bracket'});
-
-            // const response = await this.$axios.$get(`/products?${paramString}`); // TODO: is there a XSS issue here?
-            const response = await this.$axios.$get(`/products?${paramString}`); // TODO: is there a XSS issue here?
-            return response.data;
-        },
-
-
-        async getAdminProducts(params) {
-            let paramString = queryString.stringify(params, {arrayFormat: 'bracket'});
-
-            // const response = await this.$axios.$get(`/products?${paramString}`); // TODO: is there a XSS issue here?
-            const response = await this.$axios.$get(`/admin/products?${paramString}`); // TODO: is there a XSS issue here?
-            return response.data;
-        },
-
-
-        async getProductInfo() {
-            const response = await this.$axios.$get('/product/info');
-            return response.data;
-        },
-
-
-        async getProductBySeoUri(str) {
-            const response = await this.$axios.$get('/product/seo', {
-                params: {
-                    id: str
-                }
-            });
-            return response.data;
-        },
-
-
-        async getProductById(id, options) {
-            let params = {};
-
-            if(isObject(options)) {
-                params = {
-                    ...options
-                };
-            }
-
-            params.id = id;
-
-            const response = await this.$axios.$get('/product', {
-                params
-            });
-            return response.data;
-        },
-
-
-        async deleteProduct(id) {
-            const response = await this.$axios.$delete(`/product`, {
-                params: {
-                    id
-                }
-            });
-            return response.data;
-        },
-
-
-        async getProductArtists(params) {
-            let paramString = queryString.stringify(params, {arrayFormat: 'bracket'});
-
-            const response = await this.$axios.$get(`/artists?${paramString}`); // TODO: is there a XSS issue here?
-            return response.data;
-        },
-
-
-        async getProductArtistById(artistId) {
-            const response = await this.$axios.$get('/artist', {
-                params: {
-                    id: artistId
-                }
-            });
-
-            return response.data;
-        },
-
-        async upsertProductArtist(artist) {
-            let response;
-
-            if(artist.id) {
-                response = await this.$axios.$put('/artist', artist);
-            }
-            else {
-                response = await this.$axios.$post('/artist', artist);
-            }
-
-            return response.data;
-        },
-
-        async deleteProductArtist(artistId) {
-            const response = await this.$axios.$delete('/artist', {
-                params: {
-                    id: artistId
-                }
-            });
-
-            return response.data;
-        },
-
-
-        async getProductsForArtist(artistId) {
-            const response = await this.$axios.$get('/artist/products', {
-                params: {
-                    id: artistId
-                }
-            });
-
-            return response;
-        },
-
-
-        async prodmix_variations(product_id) {
-            const response = await this.$axios.$get('/product/variations', {
-                params: {
-                    product_id
-                }
-            });
-
-            return response.data;
-        },
-
-
-
-        /******************************
-         * Product Sub Types
-         ******************************/
-
-        getProductSubTypes(onlyAvailable) {
-            const subTypes = Object.assign({}, this.$store.state.product.subTypes);
-
-            Object.keys(subTypes).forEach((key) => {
-                if(onlyAvailable && !subTypes[key].is_available) {
-                    delete subTypes[key];
-                }
-            });
-
-            return subTypes;
-        },
-
-        prodmix_getSubTypeLabel(value) {
-            const subTypes = this.getProductSubTypes(true);
-            const values = [];
-
-            Object.keys(subTypes).forEach((key) => {
-                if(value & subTypes[key].value) {
-                    values.push(
-                        this.$t(subTypes[key].name)
-                    );
-                }
-            });
-
-            return values.join(', ');
-        },
-
-
-        /******************************
-         * Navigation
-         ******************************/
 
         goToProductDetails(seo_uri) {
             this.$router.push({
@@ -197,133 +32,39 @@ export default {
         },
 
 
-        goToAdminProductDetails(id) {
-            this.$router.push({
-                name: 'acts-product-id',
-                params: { id }
-            });
-        },
-
-
-        goToAdminProductUpsert(productId) {
-            this.$router.push({
-                name: 'acts-product-upsert-id',
-                params: { id: productId }
-            });
-        },
-
-
-        goToAdminProductAdd() {
-            this.$router.push({
-                name: 'acts-product-upsert-id'
-            });
-        },
-
-
-        goToAdminProductList() {
-            this.$router.push({
-                name: 'acts-product-list'
-            });
-        },
-
-
-        goToProductArtistList() {
-            this.$router.push({
-                name: 'acts-product-artist-list',
-            });
-        },
-
-
-        goToProductArtistUpsert(id) {
-            this.$router.push({
-                name: 'acts-product-artist-upsert-id',
-                params: { id: id }
-            });
-        },
-
-
         featuredProductPic(product) {
             let pic = null;
 
-            if(Array.isArray(product.variations)) {
-                product.variations.forEach((variation) => {
-                    if(variation.published && Array.isArray(variation.pics)) {
-                        let len = variation.pics.length;
-
-                        // The related pics for a product variant are ordered by sort order (ASC)
-                        // so the first 'is_visible' pic will be the featured pic
-                        for(let i=0; i<len; i++) {
-                            if(variation.pics[i].is_visible) {
-                                pic = variation.pics[i].url;
-                                break;
-                            }
-                        }
+            if(Array.isArray(product.images)) {
+                for(let i=0, len=product.images.length; i<len; i++) {
+                    if(product.images[i].published) {
+                        pic = product.images[i].image_url;
+                        break;
                     }
-                })
+                }
             }
 
             return pic;
         },
 
 
-        async upsertProduct(product) {
-            let response;
-            let cleanProduct = stripRelations(product);
+        /*
+        * Looking for a property called 'showSizeChart' in the product subtype's meta data
+        */
+        metaShowSizeChart(subTypeId) {
+            let showChart = false;
 
-            if(product.id) {
-                response = await this.$axios.$put('/product', cleanProduct);
-            }
-            else {
-                response = await this.$axios.$post('/product', cleanProduct);
-            }
-
-            return response.data;
-        },
-
-
-        buildPictures(product) {
-            let sortObj = {};
-            let added = [];
-
-            function add(sortOrder, val) {
-                let order = sortOrder || 100;
-
-                if(added.indexOf(val) === -1) {
-                    added.push(val);
-
-                    if(!sortObj.hasOwnProperty(order)) {
-                        sortObj[order] = [];
-                    }
-
-                    sortObj[order].push(val);
-                }
-            }
-
-            function getSortedArray(sortObj) {
-                let vals = [];
-
-                _forEach(sortObj, (arr) => {
-                    if(Array.isArray(arr)) {
-                        arr.forEach((val) => {
-                            vals.push(val);
-                        })
-                    }
-                });
-
-                return vals;
-            }
-
-            return new Promise((resolve, reject) => {
-                if (Array.isArray(product.pics)) {
-                    product.pics.forEach((obj) => {
-                        if (obj.is_visible && obj.url) {
-                            add(obj.sort_order, obj.url)
+            this.$store.state.product.subTypes.forEach((obj) => {
+                if(obj.value === subTypeId && Array.isArray(obj.metadata)) {
+                    obj.metadata.forEach((metaObj) => {
+                        if(metaObj.hasOwnProperty('showSizeChart')) {
+                            showChart = !!parseInt(metaObj.showSizeChart, 10);
                         }
-                    });
+                    })
                 }
-
-                resolve(getSortedArray(sortObj));
             });
+
+            return showChart;
         },
 
 
@@ -393,57 +134,6 @@ export default {
             }
 
             return inventoryCount;
-        },
-
-
-        async upsertProductSize(size) {
-            let uri = '/product/size/create' ;
-
-            if(size.id) {
-                uri = '/product/size/update';
-            }
-
-            delete size.updated_at;
-            delete size.created_at;
-
-            const response = await this.$axios.$post(uri, size);
-            return response.data;
-        },
-
-
-
-
-        async deleteProductSize(id) {
-            const response = await this.$axios.$delete(`/product/size`, {
-                params: {
-                    id
-                }
-            });
-            return response.data;
-        },
-
-
-        /******************************
-         * Product Pictures
-         ******************************/
-
-        async upsertProductPicture(formData) {
-            const response = await this.$axios.$post(
-                '/product/pic',
-                formData,
-                { headers: { 'Content-Type': 'multipart/form-data' } }
-            )
-            return response.data;
-        },
-
-
-        async deleteProductPicture(id) {
-            const response = await this.$axios.$delete(`/product/pic`, {
-                params: {
-                    id
-                }
-            });
-            return response.data;
         }
 
     }

@@ -1,8 +1,8 @@
 'use strict';
 
 export const state = () => ({
-    types: {},
-    subTypes: {}
+    types: [],
+    subTypes: []
 })
 
 
