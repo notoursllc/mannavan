@@ -1,9 +1,12 @@
 <script>
-import forEach from 'lodash.foreach'
-
 export default {
     props: {
-        value: {},
+        value: {
+            type: Object,
+            default: () => {
+                return {};
+            }
+        },
 
         placeholder: {
             type: String,
@@ -24,6 +27,22 @@ export default {
     data: function() {
         return {
             selectedVal: []
+        };
+    },
+
+    watch: {
+        value: {
+            handler(newVal) {
+                this.setSelectedValue();
+            },
+            immediate: true
+        },
+
+        options: {
+            handler(newVal) {
+                this.setSelectedValue();
+            },
+            immediate: true
         }
     },
 
@@ -35,11 +54,11 @@ export default {
                 valueArray = [valueArray];
             }
 
-            let val = valueArray.forEach(function(val) {
+            valueArray.forEach((val) => {
                 total += val;
-            })
+            });
 
-            this.$emit('input', total)
+            this.$emit('input', total);
         },
 
         setSelectedValue() {
@@ -48,7 +67,7 @@ export default {
                 return;
             }
 
-            let values = [];
+            const values = [];
 
             this.options.forEach((obj) => {
                 if(obj.value & this.value) {
@@ -58,25 +77,8 @@ export default {
 
             this.selectedVal = values;
         }
-    },
-
-    watch: {
-        value: {
-            handler(newVal) {
-                this.setSelectedValue();
-            },
-            immediate: true,
-        },
-
-        options: {
-            handler(newVal) {
-                console.log("OPTIONS", newVal)
-                this.setSelectedValue();
-            },
-            immediate: true,
-        }
     }
-}
+};
 </script>
 
 <template>
