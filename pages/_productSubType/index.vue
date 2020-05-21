@@ -49,10 +49,11 @@ export default {
                 searchConfig.whereRaw = ['sub_type & ? > 0', [subTypeData.value]];
             }
 
-            const products = await product_mixin.methods.getProducts.call(
-                app,
-                searchConfig
-            );
+            // const products = await product_mixin.methods.getProducts.call(
+            //     app,
+            //     searchConfig
+            // );
+            let products = [];
 
             return {
                 products: products,

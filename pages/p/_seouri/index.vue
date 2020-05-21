@@ -2,6 +2,7 @@
 import isObject from 'lodash.isobject';
 import product_mixin from '@/mixins/product_mixin';
 import shopping_cart_mixin from '@/mixins/shopping_cart_mixin';
+import { arraysAreEqual } from '@/utils/common';
 
 
 export default {
@@ -13,7 +14,8 @@ export default {
         ProductSizeButtons: () => import('@/components/product/ProductSizeButtons'),
         ProductAttributeSelector: () => import('@/components/product/ProductAttributeSelector'),
         TshirtSizeChart: () => import('@/components/product/TshirtSizeChart'),
-        NumberInput: () => import('@/components/NumberInput')
+        NumberInput: () => import('@/components/NumberInput'),
+        QuantityButton: () => import('@/components/product/QuantityButton')
     },
 
     mixins: [
@@ -25,13 +27,18 @@ export default {
         return {
             product: {},
             skuOptions: {},
+            selectedAttributes: {},
+            selectedAttributesAreValid: false,
+            userSelectedSku: null,
+
             selectedSize: null,
             selectedQty: 1,
             productQuantityMaxValue: 30,
             isLoading: false,
             siteUrl: this.$store.state.ui.siteUrlLong,
             pageUrl: `${this.$store.state.ui.siteUrlLong}${this.$route.fullPath}`,
-            twitterUser: this.$store.state.ui.twitterUser
+            twitterUser: this.$store.state.ui.twitterUser,
+            selectedQty: 1
         };
     },
 
@@ -85,6 +92,34 @@ export default {
         }
     },
 
+    computed: {
+
+        /**
+         * Checks to see if the selected attributes reporesent a sku
+         */
+        // selectedAttributesAreValid() {
+        //     let isMatch = false;
+        //     const selectedValues = [];
+
+        //     for(let key in this.selectedAttributes) {
+        //         selectedValues.push(this.selectedAttributes[key]);
+        //     }
+
+        //     // all of the selected values need to exist in a sku
+        //     // in order the the selection to be valid
+        //     this.product.skus.forEach((sku) => {
+        //         const skuAttributeValues = sku.attributes.map(obj => obj.value);
+
+        //         if(arraysAreEqual(skuAttributeValues.sort(), selectedValues.sort())) {
+        //             isMatch = true;
+        //         }
+        //         console.log("match?", skuAttributeValues, selectedValues, isMatch)
+        //     });
+
+        //     return isMatch;
+        // }
+    },
+
     created() {
         if(!this.product) {
             this.$errorMessage(
@@ -111,6 +146,10 @@ export default {
 
     methods: {
         addToCart: async function() {
+            //test
+            console.log("addToCart");
+            return;
+
             if (!this.selectedSize) {
                 this.$errorMessage(
                     this.$t('Please select a size'),
@@ -168,6 +207,30 @@ export default {
                     this.selectedQty = this.productQuantityMaxValue;
                 }
             }
+        },
+
+
+        onAttributeChange(attribute, value) {
+            // TODO: display pics of the selected sku
+            this.selectedAttributes[attribute.id] = attribute.value;
+
+            let selected = null;
+            const selectedValues = [];
+
+            for(let key in this.selectedAttributes) {
+                selectedValues.push(this.selectedAttributes[key]);
+            }
+
+            // all of the selected values need to exist in a sku
+            // in order the the selection to be valid
+            this.product.skus.forEach((sku) => {
+                const skuAttributeValues = sku.attributes.map(obj => obj.value);
+                if(arraysAreEqual(skuAttributeValues.sort(), selectedValues.sort())) {
+                    selected = sku;
+                }
+            });
+
+            this.userSelectedSku = selected;
         }
     }
 };
@@ -185,28 +248,40 @@ export default {
 
             <template slot="info">
                 <!-- title -->
-                <div class="fs20 pbm">{{ product.title }}</div>
-
-                <!-- description -->
-                <div class="fs16 wordBreakBreakWord">{{ product.description }}</div>
+                <div class="prod-title">{{ product.title }}</div>
 
                 <!-- price -->
-                <div class="mtl fs20">
+                <div class="mtm mbm fs20">
+                    price goes here
                     <!-- <product-price :product="product"></product-price> -->
                 </div>
 
-                <hr/>
-
                 <!-- TODO -->
                 <div v-for="(attr, index) in product.attributes" :key="index" class="mbm">
-                    <label>{{ attr.label }}:</label>
+                    <label class="fs12">{{ attr.label }}:</label>
                     <div>
                         <product-attribute-selector
                             v-model="attr.value"
                             :attribute="attr"
-                            :skus="product.skus" />
+                            :skus="product.skus"
+                            @input="(val) => { onAttributeChange(attr, val) }" />
                     </div>
                 </div>
+
+                <div e-else class="tac ptl">
+                    <div v-if="!userSelectedSku">Unavailable</div>
+                    <template v-else>
+                        <template v-if="!userSelectedSku.inventory_count">{{ $t('Out of stock') }}</template>
+                        <quantity-button
+                            v-else
+                            v-model="selectedQty"
+                            @click="addToCart"
+                            :loading="isLoading">{{ $t('Add To Your Order') }}</quantity-button>
+                    </template>
+                </div>
+
+                <!-- description -->
+                <div class="fs16 wordBreakBreakWord mtxl">{{ product.description }}</div>
 
                 <!-- size -->
                 <!-- <div class="mbl">
@@ -230,15 +305,7 @@ export default {
                 </div> -->
 
                 <!-- add to cart button -->
-                <div class="tac ptxl">
-                    <!-- <el-button
-                        type="primary"
-                        @click="addToCart"
-                        :loading="isLoading"
-                        :disabled="!sizeOptions.length"
-                        round
-                        class="is-huge">{{ $t('Add To Your Order') }}</el-button> -->
-                </div>
+
             </template>
 
             <!-- size chart -->
@@ -254,4 +321,11 @@ export default {
         </product-details-layout>
     </div>
 </template>
+
+<style lang="scss">
+.prod-title {
+    font-size: 24px;
+    font-weight: 500;
+}
+</style>
 

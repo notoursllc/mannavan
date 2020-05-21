@@ -31,12 +31,68 @@ export default {
             });
         },
 
+        getSkusWithAttribute(product, attributeLabel) {
+            let id = null;
+            const skus = [];
+
+            if(isObject(product)
+                && Array.isArray(product.attributes)
+                && Array.isArray(product.skus)) {
+
+                // find the id of the attribute with a label that matches attributeLabel
+                product.attributes.forEach((obj) => {
+                    if(obj.label === attributeLabel) {
+                        id = obj.id;
+                    }
+                });
+
+                if(id) {
+                    // collect every product sku that contains an attribute with an optionId value of [id]
+                    product.skus.forEach((sku) => {
+                        if(Array.isArray(sku.attributes)) {
+                            sku.attributes.forEach((attr) => {
+                                if(attr.optionId === id) {
+                                    skus.push(sku);
+                                }
+                            });
+                        }
+                    });
+                }
+            }
+
+            return {
+                skus: skus,
+                attributeId: id
+            };
+
+        },
+
+
+        featuredProductSkuPic(product) {
+            let pic = null;
+
+            if(Array.isArray(product.skus)) {
+                product.skus.forEach((sku) => {
+                    if(sku.published && Array.isArray(sku.images)) {
+                        for(let i=0, len=sku.images.length; i<len; i++) {
+                            if(sku.images[i].published) {
+                                pic = sku.images[i].image_url;
+                                break;
+                            }
+                        }
+                    }
+                });
+            }
+
+            return pic;
+        },
+
 
         featuredProductPic(product) {
             let pic = null;
 
             if(Array.isArray(product.images)) {
-                for(let i=0, len=product.images.length; i<len; i++) {
+                for(let i = 0, len = product.images.length; i < len; i++) {
                     if(product.images[i].published) {
                         pic = product.images[i].image_url;
                         break;
@@ -60,7 +116,7 @@ export default {
                         if(metaObj.hasOwnProperty('showSizeChart')) {
                             showChart = !!parseInt(metaObj.showSizeChart, 10);
                         }
-                    })
+                    });
                 }
             });
 
@@ -74,7 +130,7 @@ export default {
 
         // TODO: refactor this to get size options from product variation
         buildSizeOptions(product) {
-            let sizeOpts = [];
+            const sizeOpts = [];
             let maxInventoryCount = 0;
 
             if (isObject(product) && Array.isArray(product.sizes)) {
@@ -103,8 +159,8 @@ export default {
                 throw new Error(this.$t('Product sizes not found'));
             }
 
-            let usedSizeIds = [];
-            let options = [];
+            const usedSizeIds = [];
+            const options = [];
 
             if(Array.isArray(sizes)) {
                 sizes.forEach((size) => {
@@ -128,7 +184,7 @@ export default {
             if(selectedSize && Array.isArray(product.sizes)) {
                 product.sizes.forEach((size) => {
                     if(selectedSize === size.size && size.hasOwnProperty('inventory_count')) {
-                        inventoryCount = size['inventory_count'];
+                        inventoryCount = size.inventory_count;
                     }
                 });
             }
@@ -137,4 +193,4 @@ export default {
         }
 
     }
-}
+};

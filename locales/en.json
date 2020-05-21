@@ -152,8 +152,8 @@
     "Metadata_description": "This product has additional meta data that you can use for your own purposes",
     "more": "more",
 
+    "n_colors": "{num} Color | {num} Colors",
     "n_in_stock": "{numInventory} in stock",
-    "n_in_stock_for_n_variants": "{numInventory} in stock for {numVariants} variant | {numInventory} in stock for {numVariants} variants",
     "Name": "Name",
     "New item": "New item",
     "New option": "New option",
@@ -177,6 +177,7 @@
     "Order total": "Order total",
     "Ordered on": "Ordered on",
     "Organization": "Organization",
+    "Out of stock": "Out of stock",
 
     "Package": "Package",
     "Page title": "Page title",
@@ -280,6 +281,7 @@
     "Sleeve measurement": "Sleeve measurement",
     "sleeve_measurement_description": "The sleeve length is measured from the shoulder seam to the end of the sleeve.",
     "Slug": "Slug",
+    "Sold out": "Sold out",
     "Sorry this item does not have any sizes available": "Sorry this item does not have any sizes available",
     "Standard": "Standard",
     "STATE/PROVINCE/REGION": "STATE/PROVINCE/REGION",
