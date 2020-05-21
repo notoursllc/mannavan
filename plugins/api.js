@@ -1,6 +1,7 @@
 import isObject from 'lodash.isobject';
 import MasterTypes from '@/api/master_types';
 import Products from '@/api/products';
+import ProductSkuOptions from '@/api/product_sku_options';
 import Storage from '@/api/storage';
 
 
@@ -61,6 +62,7 @@ export default async ({$axios, store}, inject) => {
     const repositories = {
         masterTypes: MasterTypes($axios),
         products: Products($axios),
+        productSkuOptions: ProductSkuOptions($axios),
         storage: Storage($axios)
     };
 
