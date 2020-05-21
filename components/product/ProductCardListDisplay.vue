@@ -4,28 +4,31 @@ import product_mixin from '@/mixins/product_mixin';
 export default {
     name: 'ProductCardListDisplay',
 
-    props: {
-        products: {
-            type: Array
-        }
+    components: {
+        ProductCard: () => import('@/components/product/ProductCard')
     },
 
     mixins: [
         product_mixin
     ],
 
-    components: {
-        ProductCard: () => import('@/components/product/ProductCard')
+    props: {
+        products: {
+            type: Array,
+            default: () => {
+                return [];
+            }
+        }
     },
 
     data: function() {
         return {
-        }
+        };
     },
 
     methods: {
     }
-}
+};
 </script>
 
 
@@ -33,9 +36,9 @@ export default {
     <div class="prod-card-container">
         <div class="flex-container" style="margin:0">
             <div class="flex-container-column"
-                style="padding:0"
-                v-for="product in products"
-                :key="product.id">
+                 style="padding:0 5px"
+                 v-for="product in products"
+                 :key="product.id">
                 <span @click="goToProductDetails(product.seo_uri)">
                     <product-card :product="product" />
                 </span>
@@ -69,11 +72,11 @@ export default {
 
 .pic-card {
     margin: 2px;
-    @include grow();
+    // @include grow();
 }
 .pic-card:hover {
     cursor: pointer;
-    @include growHover(1.01)
+    // @include growHover(1.01)
 }
 
 @media #{$medium-and-down} {
@@ -98,6 +101,5 @@ export default {
         width: 100%;
     }
 }
-
 </style>
 
