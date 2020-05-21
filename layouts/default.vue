@@ -10,16 +10,16 @@ export default {
         AppSidenav
     },
 
-    created() {
-        this.$store.dispatch('ui/closeSidebar')
-    },
-
     watch: {
         $route() {
             this.$store.dispatch('ui/CLOSE_MESSAGE_INSTANCES');
         }
+    },
+
+    created() {
+        this.$store.dispatch('ui/closeSidebar');
     }
-}
+};
 </script>
 
 
@@ -29,7 +29,7 @@ export default {
         <app-header />
 
         <main>
-            <nuxt/>
+            <nuxt />
         </main>
 
         <app-footer />

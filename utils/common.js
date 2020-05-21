@@ -38,7 +38,7 @@ export const getNextAvailableTypeValue = (allTypes) => {
 
 export const slugSuggestion = (name) => {
     if(name) {
-        return name.replace(/ /g,'_').toLowerCase().replace(/[^a-z_0-9]/g, "");
+        return name.replace(/ /g, '_').toLowerCase().replace(/[^a-z_0-9]/g, "");
     }
 };
 
@@ -65,7 +65,7 @@ export const arrayDiff = (a1, a2) => {
         }
     }
 
-    for (let k in a) {
+    for (const k in a) {
         diff.push(k);
     }
 
