@@ -15,15 +15,15 @@ export default {
         return {
             year: new Date().getFullYear(),
             siteName: this.$store.state.ui.siteName
-        }
+        };
     },
 
     computed: {
         productSubTypes() {
-            return this.$api.masterTypes.list("product_sub_type");
+            return this.$store.state.product.subTypes;
         }
     }
-}
+};
 </script>
 
 <template>

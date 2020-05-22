@@ -35,7 +35,7 @@ module.exports = {
                 body: true,
                 async: true
             }
-        ],
+        ]
     },
 
     meta: {
@@ -65,6 +65,8 @@ module.exports = {
     ** Plugins to load before mounting the App
     */
     plugins: [
+        { src: '@/plugins/tenantLogin.js', mode: 'server' },
+        '@/plugins/axios.js',
         '@/plugins/api.js',
         '@/plugins/i18n.js',
         '@/plugins/element-ui',
@@ -79,6 +81,7 @@ module.exports = {
 
     router: {
         middleware: [
+            'axios',
             'in-checkout'
         ]
     },
@@ -101,7 +104,7 @@ module.exports = {
     axios: {
         debug: false,
         https: process.env.API_USE_HTTPS === 'true',
-        retry: { retries: 3 },
+        // retry: { retries: 3 },
         progress: true
     },
 
@@ -123,4 +126,4 @@ module.exports = {
         name: 'fade',
         mode: 'out-in'
     }
-}
+};

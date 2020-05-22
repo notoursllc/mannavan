@@ -1,11 +1,9 @@
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters } from 'vuex';
 import product_mixin from '@/mixins/product_type_mixin';
 
 export default {
     components: {
-        IconCap: () => import('@/components/icons/IconCap'),
-        IconTshirt: () => import('@/components/icons/IconTshirt'),
         IconCart: () => import('@/components/icons/IconCart')
     },
 
@@ -15,11 +13,11 @@ export default {
 
     computed: {
         ...mapGetters({
-            numCartItems: 'shoppingcart/numItems',
+            numCartItems: 'shoppingcart/numItems'
         }),
 
         productSubTypes() {
-            return this.$api.masterTypes.list("product_sub_type");
+            return this.$store.state.product.subTypes;
         }
     },
 
@@ -28,7 +26,7 @@ export default {
             this.$store.dispatch('ui/closeSidebar');
         }
     }
-}
+};
 </script>
 
 <template>
