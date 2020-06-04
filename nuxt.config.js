@@ -94,6 +94,7 @@ module.exports = {
         '@nuxtjs/axios',
         // Doc: https://github.com/nuxt-community/dotenv-module
         '@nuxtjs/dotenv',
+        'cookie-universal-nuxt',
         ['@nuxtjs/pwa', { oneSignal: false }]
     ],
 

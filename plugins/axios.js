@@ -12,19 +12,25 @@ export default (context) => {
         if(code === 401 && !originalRequest._retry) {
             originalRequest._retry = true;
 
-            const { data } = await context.$axios.$post('tenant/refresh', {
-                id: process.env.TENANT_ID,
-                refresh_token: context.store.state.jwtRefreshToken
-            });
+            // console.log("REFRESH TOKEN", context.app.$cookies.get('token'));
 
-            context.store.dispatch('SET_JWT_TOKEN', data.authToken);
-            context.store.dispatch('SET_JWT_REFRESH_TOKEN', data.refreshToken);
+            // const { data } = await context.$axios.$post(
+            const response = await context.$axios.$post(
+                'tenant/refresh',
+                {
+                    id: process.env.TENANT_ID
+                },
+                {
+                    withCredentials: true
+                }
+            );
 
+            context.store.dispatch('SET_JWT_TOKEN', response.data.authToken);
 
             if(!isObject(originalRequest.headers)) {
                 originalRequest.headers = {};
             }
-            originalRequest.headers.Authorization = data.authToken;
+            originalRequest.headers.Authorization = response.data.authToken;
 
             // return originalRequest object with Axios.
             return context.$axios(originalRequest);
