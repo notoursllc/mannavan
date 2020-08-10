@@ -1,25 +1,4 @@
-import queryString from 'query-string';
-import _forEach from 'lodash.foreach';
 import isObject from 'lodash.isobject';
-
-
-function stripRelations(productJson) {
-    delete productJson.artist;
-    delete productJson.sizes;
-    delete productJson.pics;
-    delete productJson.tax;
-    delete productJson.variations;
-    delete productJson.package_type;
-
-    // also strip uneditable values:
-    delete productJson.created_at;
-    delete productJson.updated_at;
-    delete productJson.display_price;
-    delete productJson.total_inventory_count;
-
-    return productJson;
-}
-
 
 export default {
     methods: {
@@ -149,32 +128,6 @@ export default {
                 sizeOpts,
                 maxInventoryCount
             };
-        },
-
-
-        async buildMissingSizeOptions(sizes) {
-            const productInfo = await this.getProductInfo();
-
-            if(!productInfo) {
-                throw new Error(this.$t('Product sizes not found'));
-            }
-
-            const usedSizeIds = [];
-            const options = [];
-
-            if(Array.isArray(sizes)) {
-                sizes.forEach((size) => {
-                    usedSizeIds.push(size.size);
-                });
-            }
-
-            productInfo.sizes.forEach((id) => {
-                if(usedSizeIds.indexOf(id) === -1) {
-                    options.push(id);
-                }
-            });
-
-            return options;
         },
 
 

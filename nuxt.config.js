@@ -95,7 +95,8 @@ module.exports = {
         // Doc: https://github.com/nuxt-community/dotenv-module
         '@nuxtjs/dotenv',
         'cookie-universal-nuxt',
-        ['@nuxtjs/pwa', { oneSignal: false }]
+        ['@nuxtjs/pwa', { oneSignal: false }],
+        'bootstrap-vue/nuxt'
     ],
 
     /*
@@ -107,6 +108,81 @@ module.exports = {
         https: process.env.API_USE_HTTPS === 'true',
         // retry: { retries: 3 },
         progress: true
+    },
+
+
+    /*
+    * Disabling automatic inclusion of bootstrap's compiled CSS files
+    * so we can import the SCSS files ourselves in base.scss
+    * https://bootstrap-vue.org/docs
+    */
+    bootstrapVue: {
+        bootstrapCSS: false, // Or `css: false`
+        bootstrapVueCSS: false, // Or `bvCSS: false`
+
+        // https://bootstrap-vue.org/docs/reference/settings#default-configuration
+        // https://getbootstrap.com/docs/4.4/utilities/borders/
+        config: {
+            BModal: {
+                buttonSize: 'md',
+                bodyBgVariant: null,
+                // bodyTextVariant: 'secondary',
+                cancelVariant: 'outline-secondary',
+                centered: true,
+                footerBgVariant: 'light',
+                footerBorderVariant: '0',
+                footerClass: 'p-1',
+                footerTextVariant: null,
+                headerBgVariant: null,
+                headerBorderVariant: null,
+                headerCloseContent: '&times;',
+                headerTextVariant: null,
+                headerCloseVariant: null,
+                hideHeaderClose: false,
+                okVariant: 'primary',
+                size: 'md',
+                titleTag: 'h6'
+            }
+        },
+
+        // importing only the stuff we are using to reduce bundle size
+        components: [
+            // 'BBadge',
+            // 'BButton',
+            // 'BButtonGroup',
+            // 'BCollapse',
+            // 'BContainer',
+            // 'BRow',
+            // 'BCol',
+            // 'BDropdown',
+            // 'BDropdownForm',
+            // 'BDropdownItem',
+            // 'BDropdownItemButton',
+            // 'BFormCheckbox',
+            // 'BFormFile',
+            // 'BFormGroup',
+            // 'BFormInput',
+            // 'BFormRadio',
+            // 'BFormSelect',
+            // 'BFormSelectOption',
+            // 'BFormTextarea',
+            'BImg',
+            // 'BInputGroup',
+            // 'BInputGroupText',
+            // 'BInputGroupAppend',
+            // 'BModal',
+            // 'BOverlay',
+            // 'BPopover',
+            // 'BTable',
+            'BTooltip'
+        ],
+        componentPlugins: [
+            // 'TablePlugin',
+            // 'ToastPlugin',
+            'ModalPlugin',
+            'BVModalPlugin'
+        ],
+        // directives: ['VBModal', 'VBPopover', 'VBToggle', 'VBTooltip', 'VBScrollspy'],
     },
 
     /**

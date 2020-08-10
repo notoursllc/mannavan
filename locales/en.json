@@ -152,7 +152,7 @@
     "Metadata_description": "This product has additional meta data that you can use for your own purposes",
     "more": "more",
 
-    "n_colors": "{num} Color | {num} Colors",
+    "_num_ Variants": "{num} Variant | {num} Variants",
     "n_in_stock": "{numInventory} in stock",
     "Name": "Name",
     "New item": "New item",

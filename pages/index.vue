@@ -47,7 +47,7 @@ export default {
             };
 
             const products = await app.$api.products.list(searchConfig);
-            console.log("PRODS", products)
+            // console.log("PRODS", products)
 
             return {
                 products: products.data,

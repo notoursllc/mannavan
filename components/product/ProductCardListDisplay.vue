@@ -39,9 +39,7 @@ export default {
                  style="padding:0 5px"
                  v-for="product in products"
                  :key="product.id">
-                <span @click="goToProductDetails(product.seo_uri)">
-                    <product-card :product="product" />
-                </span>
+                <product-card :product="product" />
             </div>
         </div>
     </div>

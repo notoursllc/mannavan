@@ -6,7 +6,7 @@ export default {
 
     head() {
         return {
-            title: this.$t('Use of cookies'),
+            title: this.$t('Use of Cookies'),
             meta: [
                 { vmid: 'description', name: 'description', content: `Conditions of Use for ${this.$store.state.ui.siteName}` }
             ]

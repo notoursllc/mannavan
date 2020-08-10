@@ -11,6 +11,52 @@
 @import "components/minireset";
 
 
+// importing Bootstrap SCSS
+// Custom Bootstrap variable overrides go first
+$grid-breakpoints: (
+  xs: 0,
+  sm: 480px,
+  md: 640px,
+  lg: 992px,
+  xl: 1300px
+);
+$enable-rounded: true;
+
+
+// https://bootstrap-vue.org/docs/reference/color-variants#color-variants-and-css-class-mapping
+$white: #fff;
+$gray-100: #ebedef;
+$gray-200: #d8dbe0;
+$gray-300: #c4c9d0;
+$gray-400: #b1b7c1;
+$gray-500: #9da5b1;
+$gray-600: #8a93a2;
+$gray-700: #768192;
+$gray-800: #636f83;
+$gray-900: #4f5d73;
+$black: #000;
+
+$blue: #3399ff;
+$red: #e55353;
+$yellow: #f9b115;
+$green: #2eb85c;
+
+// Theme color default definitions
+$primary: $blue;
+$secondary: $gray-600;
+$success: $green;
+$info: $gray-500;
+$warning: $yellow;
+$danger: $red;
+$light: $gray-100;
+$dark: $gray-800;
+
+@import 'bootstrap/scss/bootstrap.scss';
+@import 'bootstrap-vue/src/index.scss';
+// @import "components/bootstrap-overrides";
+// end importing Bootstrap SCSS
+
+
 html {
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;

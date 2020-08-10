@@ -21,7 +21,7 @@ export default {
 
     computed: {
         basePrice: function() {
-            console.log("PROD", this.sku)
+            // console.log("PROD", this.sku)
             if (isObject(this.sku) && this.sku.base_price) {
                 return this.$n(this.sku.base_price, 'currency');
             }
