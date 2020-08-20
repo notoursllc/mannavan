@@ -9,7 +9,7 @@
 
 export default {
     name: 'ProductDetailsLayout'
-}
+};
 </script>
 
 
@@ -27,32 +27,6 @@ export default {
 
         <div>
             <slot name="under"></slot>
-        </div>
-
-        <div class="social">
-            <!-- <social-sharing :url="siteUrl + '/product/share?id=' + product.id" -->
-            <!-- <social-sharing :url="pageUrl"
-                            :title="product.title"
-                            :description="product.title"
-                            hashtags="breadVan"
-                            :twitter-user="twitterUser"
-                            :media="mediaPicture"
-                            inline-template>
-                <div>
-                    <network network="facebook">
-                        <icon-facebook icon-name="facebook" width="40px" height="40px" />
-                    </network>
-                    <network network="googleplus">
-                        <icon-google-plus icon-name="google-plus" width="40px" height="40px" />
-                    </network>
-                    <network network="pinterest">
-                        <icon-pinterest icon-name="google-plus" width="25px" />
-                    </network>
-                    <network network="twitter">
-                        <icon-twitter icon-name="google-plus" width="25px" />
-                    </network>
-                </div>
-            </social-sharing> -->
         </div>
     </div>
 </template>
@@ -96,18 +70,6 @@ export default {
 
     .details-container {
         padding: 0 5px;
-    }
-}
-
-.social {
-    margin-top: 40px;
-    text-align: center;
-}
-
-@media #{$medium-and-up} {
-    .social {
-        margin-top: 0;
-        text-align: right;
     }
 }
 </style>

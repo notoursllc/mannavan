@@ -1,7 +1,12 @@
 <script>
 import isObject from 'lodash.isobject';
+import product_mixin from '@/mixins/product_mixin';
 
 export default {
+    mixins: [
+        product_mixin
+    ],
+
     props: {
         product: {
             type: Object,
@@ -12,7 +17,7 @@ export default {
 
         maxVariantDisplay: {
             type: Number,
-            default: 3
+            default: 4
         }
     },
 
@@ -23,17 +28,20 @@ export default {
                 featuredImageUrl: null
             },
             showThumbs: false,
-            thumbs: {},
-            allFeaturedImagesCounter: 0
+            thumbs: {}
         };
     },
 
     computed: {
         thumbOverflowDisplay() {
-            if(this.allFeaturedImagesCounter > this.maxVariantDisplay) {
-                return `+${this.allFeaturedImagesCounter - this.maxVariantDisplay}`;
+            if(this.numProductSkus > this.maxVariantDisplay) {
+                return `+${this.numProductSkus - this.maxVariantDisplay}`;
             }
             return '';
+        },
+
+        numProductSkus() {
+            return this.product.skus.length;
         }
     },
 
@@ -58,24 +66,12 @@ export default {
 
     methods: {
         setVisibleSku(sku) {
-            if(isObject(sku)) {
-                this.visibleSku.sku = sku;
+            this.visibleSku.sku = isObject(sku) ? sku : null;
 
-                if(Array.isArray(sku.images)) {
-                    for(let i=0, l=sku.images.length; i<l; i++) {
-                        const img = sku.images[i];
+            const img = this.prodMix_getFeaturedImageForSku(sku);
 
-                        if(img.is_featured && img.media) {
-                            this.visibleSku.featuredImageUrl = img.media.url;
-                            break;
-                        }
-                    }
-                }
-            }
-            else {
-                this.visibleSku.sku = null;
-                this.visibleSku.featuredImageUrl = null;
-            }
+            // no need to get a variant, the main image (600px wide) should be good:
+            this.visibleSku.featuredImageUrl = isObject(img) && img.media ? img.media.url : null;
         },
 
         getSmallestMediaUrl(mediaObj) {
@@ -107,28 +103,21 @@ export default {
             }
 
             let counter = 0;
-            let allFeaturedCounter = 0;
 
             this.product.skus.forEach((sku) => {
-                if(Array.isArray(sku.images)) {
-                    sku.images.forEach((img) => {
-                        if(img.is_featured) {
-                            allFeaturedCounter++;
+                if(counter < this.maxVariantDisplay) {
+                    const img = this.prodMix_getFeaturedImageForSku(sku);
 
-                            if(counter < this.maxVariantDisplay) {
-                                this.thumbs.push({
-                                    smallestMediaUrl: this.getSmallestMediaUrl(img.media),
-                                    smallestImage: img,
-                                    sku: sku
-                                });
-                                counter++;
-                            }
-                        }
-                    });
+                    if(isObject(img) && img.media) {
+                        this.thumbs.push({
+                            smallestMediaUrl: this.getSmallestMediaUrl(img.media),
+                            smallestImage: img,
+                            sku: sku
+                        });
+                        counter++;
+                    }
                 }
             });
-
-            this.allFeaturedImagesCounter = allFeaturedCounter;
         },
 
         onThumbMouseOver(obj) {
@@ -137,17 +126,24 @@ export default {
 
         goToProductDetails(skuId) {
             const params = {
-                seouri: this.product.seo_uri
+                seouri: this.product.seo_uri,
+                id: this.product.id
             };
 
+            const query = {};
             if(skuId) {
-                params.sku = skuId;
+                query.sku = skuId;
             }
 
             this.$router.push({
-                name: 'p-seouri',
-                params
+                name: 'p-seouri-id',
+                params,
+                query
             });
+        },
+
+        onCardClick() {
+            this.goToProductDetails(this.visibleSku.sku.id);
         }
     }
 };
@@ -155,14 +151,13 @@ export default {
 
 
 <template>
-    <figure class="pic-card">
+    <figure class="pic-card" @click="onCardClick">
         <b-img
             :src="visibleSku.featuredImageUrl"
-            fluid-grow
-            alt="Fluid-grow image"></b-img>
+            fluid-grow></b-img>
 
         <div class="pic-card-content-wrapper">
-            <div @click="goToProductDetails">
+            <div>
                 <div class="pic-card-title">{{ product.title }}</div>
                 <div class="pic-card-subtitle">subtitle</div>
             </div>
@@ -172,9 +167,9 @@ export default {
                     <template v-if="showThumbs">
                         <div @mouseleave="showThumbs = false">
                             <div v-for="(obj, index) in thumbs"
-                                :key="index"
-                                class="media-thumb"
-                                @click="goToProductDetails(obj.sku.id)">
+                                 :key="index"
+                                 class="media-thumb"
+                                 @click="goToProductDetails(obj.sku.id)">
                                 <figure
                                     :id="`thumb_${index}`"
                                     :style="`background-image:url(${obj.smallestMediaUrl});`"
@@ -189,7 +184,7 @@ export default {
                     </template>
                     <template v-else>
                         <div @mouseover="showThumbs = true">
-                            {{ $tc('_num_ Variants', allFeaturedImagesCounter, { num: allFeaturedImagesCounter }) }}
+                            {{ $tc('_num_ Variants', numProductSkus, { num: numProductSkus }) }}
                         </div>
                     </template>
                 </div>

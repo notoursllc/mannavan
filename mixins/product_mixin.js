@@ -47,24 +47,37 @@ export default {
         },
 
 
-        featuredProductSkuPic(product) {
-            let pic = null;
+        prodMix_getFeaturedImageForSku(sku) {
+            let img = null;
 
-            if(Array.isArray(product.skus)) {
-                product.skus.forEach((sku) => {
-                    if(sku.published && Array.isArray(sku.images)) {
-                        for(let i=0, len=sku.images.length; i<len; i++) {
-                            if(sku.images[i].published) {
-                                pic = sku.images[i].image_url;
-                                break;
-                            }
-                        }
+            if(isObject(sku) && Array.isArray(sku.images)) {
+                for(let i=0, len=sku.images.length; i<len; i++) {
+                    if(sku.images[i].published && sku.images[i].is_featured) {
+                        img = sku.images[i];
+                        break;
                     }
-                });
+                }
             }
 
-            return pic;
+            return img;
         },
+
+        // prodMix_getFeaturedMediaForSku(sku) {
+        //     let media = null;
+
+        //     if(isObject(sku) && Array.isArray(sku.images)) {
+        //         for(let i=0, len=sku.images.length; i<len; i++) {
+        //             const img = sku.images[i];
+
+        //             if(img.published && img.is_featured && img.media) {
+        //                 media = img.media;
+        //                 break;
+        //             }
+        //         }
+        //     }
+
+        //     return media;
+        // },
 
 
         featuredProductPic(product) {

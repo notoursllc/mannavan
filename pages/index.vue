@@ -18,7 +18,7 @@ export default {
     components: {
         HeroMain: () => import('@/components/HeroMain'),
         HeroProductTypeNav: () => import('@/components/HeroProductTypeNav'),
-        ProductCardListDisplay: () => import('@/components/product/ProductCardListDisplay'),
+        ProductCardList: () => import('@/components/product/ProductCardList'),
         IconLogo: () => import('@/components/icons/IconLogo')
     },
 
@@ -85,7 +85,7 @@ export default {
             </div>
         </hero-main>
         <hero-product-type-nav />
-        <product-card-list-display :products="products" />
+        <product-card-list :products="products" />
     </div>
 </template>
 

@@ -6,7 +6,7 @@ export default {
 
     components: {
         HeroProductTypeNav: () => import('@/components/HeroProductTypeNav'),
-        ProductCardListDisplay: () => import('@/components/product/ProductCardListDisplay')
+        ProductCardList: () => import('@/components/product/ProductCardList')
     },
 
     mixins: [
@@ -87,7 +87,7 @@ export default {
     <div>
         <hero-product-type-nav />
 
-        <product-card-list-display
+        <product-card-list
             :products="products"
             :type="productSubType" />
     </div>

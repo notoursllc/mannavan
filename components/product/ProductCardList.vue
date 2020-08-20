@@ -2,7 +2,7 @@
 import product_mixin from '@/mixins/product_mixin';
 
 export default {
-    name: 'ProductCardListDisplay',
+    name: 'ProductCardList',
 
     components: {
         ProductCard: () => import('@/components/product/ProductCard')

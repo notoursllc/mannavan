@@ -7,9 +7,11 @@ export default async (context) => {
         password: process.env.TENANT_PASSWORD
     });
 
+    const [cookie] = response.headers['set-cookie'];
+
     context.app.$cookies.set(
         'bvrt',
-        context.app.$cookies.nodeCookie.parse(response.headers['set-cookie'][0]).bvrt,
+        context.app.$cookies.nodeCookie.parse(cookie).bvrt,
         {
             httpOnly: true,
             sameSite: false,

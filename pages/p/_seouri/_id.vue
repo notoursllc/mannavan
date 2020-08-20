@@ -46,7 +46,7 @@ export default {
         try {
             const data = {};
             // data.product = await product_mixin.methods.getProductBySeoUri.call(app, params.seouri);
-            data.product = await app.$api.products.getBySeoUri(params.seouri);
+            data.product = await app.$api.products.get(params.id);
 
             if(!data.product) {
                 return;
@@ -121,6 +121,7 @@ export default {
     },
 
     created() {
+        console.log("ROUTE", this.$route)
         if(!this.product) {
             this.$errorMessage(
                 this.$t('Product not found'),
@@ -244,6 +245,29 @@ export default {
             <!-- pics -->
             <template slot="pics">
                 <!-- <product-image-carousel :product="product" /> -->
+                <!-- <div class="d-flex align-content-stretch flex-wrap widthAll">
+                    <div class="w-50 p-2" style="border:1px solid blue">img</div>
+                    <div class="w-50 p-2" style="border:1px solid blue">img</div>
+                    <div class="w-50 p-2" style="border:1px solid blue">img</div>
+                    <div class="w-50 p-2" style="border:1px solid blue">img</div>
+                </div> -->
+
+                <div class="grid-image-container">
+                    <div class="grid-image">img</div>
+                    <div class="grid-image">img</div>
+                    <div class="grid-image">img</div>
+                    <div class="grid-image">img</div>
+                    <div class="grid-image">img</div>
+                </div>
+                <!-- <div class="container-fluid">
+                    <div class="row row-cols-md-2 row-cols-sm-1">
+                        <div class="" style="border:1px solid blue">img</div>
+                        <div class="" style="border:1px solid blue">img</div>
+                        <div class="" style="border:1px solid blue">img</div>
+                        <div class="" style="border:1px solid blue">img</div>
+                        <div class="" style="border:1px solid blue">img</div>
+                    </div>
+                </div> -->
             </template>
 
             <template slot="info">
@@ -323,6 +347,44 @@ export default {
 </template>
 
 <style lang="scss">
+@import '~assets/css/components/_variables.scss';
+@import "~assets/css/components/_mixins.scss";
+
+.grid-image-container {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+
+    .grid-image {
+        width: 49%;
+        background-color: #ccc;
+        display: inline-block;
+        margin: 0;
+        padding: 0;
+    }
+}
+
+@media #{$small-and-down} {
+    .grid-image-container {
+        .grid-image {
+            width: 100%;
+            // display: block;
+        }
+    }
+ }
+
+@media #{$medium-and-down} {
+    .prod-card-container {
+        padding: 20px;
+    }
+
+    .flex-container-column {
+        width: 50%;
+    }
+}
+
+
+
 .prod-title {
     font-size: 24px;
     font-weight: 500;
