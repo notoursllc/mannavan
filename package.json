@@ -42,7 +42,7 @@
     "auth0-lock": "^11.17.2",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-polyfill": "^6.26.0",
-    "bcrypt": "^3.0.6",
+    "bcrypt": "^5.0.0",
     "bluebird": "^3.5.5",
     "confidence": "^4.0.2",
     "cookie": "^0.4.0",
