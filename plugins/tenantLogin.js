@@ -24,6 +24,5 @@ export default async (context) => {
     const data = response.data.data;
 
     context.store.dispatch('SET_JWT_TOKEN', data.authToken);
-    context.store.dispatch('SET_JWT_REFRESH_TOKEN', data.refreshToken);
 
 };
