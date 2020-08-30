@@ -1,12 +1,7 @@
 <script>
-import app_mixin from '@/mixins/app_mixin'
+import app_mixin from '@/mixins/app_mixin';
 
 export default {
-    components: {
-        PageTitle: () => import('@/components/PageTitle'),
-        IconEnvelope: () => import('@/components/icons/IconEnvelope')
-    },
-
     mixins: [
         app_mixin
     ],
@@ -19,27 +14,23 @@ export default {
 
     head() {
         return {
-            title: this.$t('Contact Us!'),
+            title: this.$t('Contact BreadVan'),
             meta: [
-                { vmid: 'description', name: 'description', content: `Contact us` }
+                { vmid: 'description', name: 'description', content: 'Contact us' }
             ]
-        }
+        };
     }
-}
+};
 </script>
 
 
 <template>
-    <div>
-        <page-title>{{ $t('Contact Us!') }}</page-title>
-
-        <div class="pageContainerMax priv">
-            <div class="tac">
-                <icon-envelope icon-name="email" class-name="fillGrayLight" width="80px" />
-                <div class="mts fs24">{{ $t('We want to hear from you!') }}</div>
-                <div class="fs16">{{ $t("We'll get back to you within 1 business day.") }}</div>
-                <div class="fs20 mtm"><a :href="`mailto:${emailAddress}`">{{ emailAddress }}</a></div>
-            </div>
+    <div class="pageContainerMax priv">
+        <div class="tac">
+            <svg-icon icon="mail" stroke-width="1px" width="80" height="80" />
+            <div class="mts fs24">{{ $t('We want to hear from you!') }}</div>
+            <div class="fs16">{{ $t("We'll get back to you within 1 business day.") }}</div>
+            <div class="fs20 mtm"><a :href="`mailto:${emailAddress}`">{{ emailAddress }}</a></div>
         </div>
     </div>
 </template>

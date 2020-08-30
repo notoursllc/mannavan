@@ -1,9 +1,7 @@
 <script>
-import product_mixin from '@/mixins/product_mixin';
-
-let bgImages = [
+const bgImages = [
     'bg_silver_car.jpg',
-    'bg_black_5.jpg',
+    'bg_black_5.jpg'
     // 'bg_green_yellow_6.jpg'
 ];
 
@@ -17,9 +15,7 @@ export default {
 
     components: {
         HeroMain: () => import('@/components/HeroMain'),
-        HeroProductTypeNav: () => import('@/components/HeroProductTypeNav'),
-        ProductCardList: () => import('@/components/product/ProductCardList'),
-        IconLogo: () => import('@/components/icons/IconLogo')
+        ProductCardList: () => import('@/components/product/ProductCardList')
     },
 
     data() {
@@ -33,7 +29,7 @@ export default {
         // console.log("IN ASYNC DATA store", store.state.product)
         // console.log("IN ASYNC DATA", context.app.store)
         const randomInt = randomIntFromInterval(0, (bgImages.length - 1));
-        const randomImage = `/images/backgrounds/${ bgImages[randomInt] }`;
+        const randomImage = `/images/backgrounds/${bgImages[randomInt]}`;
 
 
         try {
@@ -52,10 +48,10 @@ export default {
             return {
                 products: products.data,
                 bgImage: randomImage
-            }
+            };
         }
         catch(err) {
-            console.error("Error getting products", err)
+            console.error('Error getting products', err);
         }
     },
 
@@ -63,11 +59,11 @@ export default {
         return {
             title: 'BreadVan',
             meta: [
-                { vmid: 'description', name: 'description', content: `Apparel inspired by the good ol days of auto racing.` }
+                { vmid: 'description', name: 'description', content: 'Apparel inspired by auto racing\'s glory days.' }
             ]
-        }
+        };
     }
-}
+};
 </script>
 
 
@@ -84,7 +80,6 @@ export default {
                 </div> -->
             </div>
         </hero-main>
-        <hero-product-type-nav />
         <product-card-list :products="products" />
     </div>
 </template>

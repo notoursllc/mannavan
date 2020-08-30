@@ -62,6 +62,33 @@ export default {
             return img;
         },
 
+
+        prodMix_getFeaturedSkuImagesForProduct(product) {
+            const images = [];
+
+            if(!Array.isArray(product.skus) || !product.skus.length) {
+                return;
+            }
+
+            product.skus.forEach((sku) => {
+                const img = this.prodMix_getFeaturedImageForSku(sku);
+
+                if(isObject(img) && img.media) {
+                    // images.push({
+                    //     smallestMediaUrl: this.getSmallestMediaUrl(img.media),
+                    //     smallestImage: img,
+                    //     sku: sku
+                    // });
+                    images.push({
+                        url: img.media.url,
+                        sku: sku
+                    });
+                }
+            });
+
+            return images;
+        },
+
         // prodMix_getFeaturedMediaForSku(sku) {
         //     let media = null;
 

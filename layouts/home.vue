@@ -1,35 +1,39 @@
 <script>
-import AppHeader from '@/components/AppHeader'
-import AppFooter from '@/components/AppFooter'
-import AppSidenav from '@/components/AppSidenav'
+import SvgSprite from '@/components/icons/SvgSprite';
+import AppHeader from '@/components/AppHeader';
+import AppFooter from '@/components/AppFooter';
+import AppSidenav from '@/components/AppSidenav';
 
 export default {
     components: {
+        SvgSprite,
         AppHeader,
         AppFooter,
         AppSidenav
-    },
-
-    created() {
-        this.$store.dispatch('ui/closeSidebar')
     },
 
     watch: {
         $route() {
             this.$store.dispatch('ui/CLOSE_MESSAGE_INSTANCES');
         }
+    },
+
+    created() {
+        this.$store.dispatch('ui/closeSidebar');
     }
-}
+};
 </script>
 
 
 <template>
     <div class="layoutContainer">
+        <svg-sprite />
+
         <app-sidenav />
         <app-header />
 
         <main>
-            <nuxt/>
+            <nuxt />
         </main>
 
         <app-footer />

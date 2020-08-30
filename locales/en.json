@@ -32,6 +32,7 @@
     "Barcode": "Barcode",
     "Barcode (ISBN, UPC, GTIN, etc.)": "Barcode (ISBN, UPC, GTIN, etc.)",
     "Billing address": "Billing address",
+    "BREADVAN": "BREADVAN",
 
     "cancel": "cancel",
     "Cancel": "Cancel",
@@ -69,7 +70,7 @@
     "Conditions": "Conditions",
     "Conditions of Use": "Conditions of Use",
     "CONFIRM": "CONFIRM",
-    "Contact Us!": "Contact Us!",
+    "Contact BreadVan": "Contact BreadVan",
     "CONTINUE": "CONTINUE",
     "Continue selling when out of stock": "Continue selling when out of stock",
     "Continue Shopping": "Continue Shopping",

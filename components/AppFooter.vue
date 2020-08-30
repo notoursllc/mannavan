@@ -4,7 +4,7 @@ import product_mixin from '@/mixins/product_type_mixin';
 export default {
     components: {
         IconLogo: () => import('@/components/icons/IconLogo'),
-        IconLock: () => import('@/components/icons/IconLock')
+        IconVictory: () => import('@/components/icons/IconVictory')
     },
 
     mixins: [
@@ -33,7 +33,9 @@ export default {
 
                 <nav class="nav-item">
                     <dl>
-                        <dt>{{ $t('PRODUCTS') }}</dt>
+                        <dt>
+                            <svg-icon icon="building-store" width="24" height="24" />
+                            {{ $t('PRODUCTS') }}</dt>
 
                         <dd v-for="(obj, type) in productSubTypes" :key="obj.id">
                             <nuxt-link
@@ -45,10 +47,14 @@ export default {
 
                 <nav class="nav-item">
                     <dl>
-                        <dt>{{ $t('TERMS') }}</dt>
+                        <dt>
+                            <svg-icon icon="checkbox" width="24" height="24" />
+                            {{ $t('TERMS') }}
+                        </dt>
 
                         <dd>
-                            <nuxt-link tag="a"
+                            <nuxt-link
+                                tag="a"
                                 class="underline"
                                 :to="{name: 'returns'}"
                                 data-testid="footer-link-returns">{{ $t('Returns / Exchanges') }}</nuxt-link>
@@ -71,42 +77,39 @@ export default {
                     </dl>
                 </nav>
 
+                <nav class="nav-item">
+                    <dl>
+                        <dt>
+                            <svg-icon icon="shield-check" width="24" height="24" />
+                            {{ $t('SECURE') }}
+                        </dt>
+
+                        <dd>{{ $t('footer_cart_secure') }}</dd>
+                    </dl>
+                </nav>
 
                 <nav class="nav-item">
                     <dl>
                         <dt>
-                            <icon-lock icon-name="secure" class-name="fillWhite" width="16px" />
-                            {{ $t('SECURE') }}
+                            <icon-victory icon-name="logo" class="vam" width="30" height="30" />
+                            {{ $t('BREADVAN') }}
                         </dt>
-
-                        <dd>
-                            {{ $t('footer_cart_secure')}}
-
-                        </dd>
-                    </dl>
-                </nav>
-
-                <nav class="nav-item">
-                    <dl>
-                        <!-- <dt>Company</dt> -->
                         <dd>
                             <nuxt-link
                                 :to="{name: 'contact-us'}"
-                                data-testid="footer-link-contactus">{{ $t('Contact Us!') }}</nuxt-link>
+                                data-testid="footer-link-contactus">{{ $t('Contact BreadVan') }}</nuxt-link>
                         </dd>
                     </dl>
                 </nav>
             </div>
-        </div>
 
-        <div class="sub-footer">
-            <nav class="nav-item">
-                <icon-logo icon-name="breadvan_vintage_racing_apparel" class-name="fillWhite" width="100px" />
-            </nav>
+            <div class="tac">
+                <icon-logo icon-name="breadvan_vintage_racing_apparel" width="100px" />
 
-            <nav class="nav-item fs12">
-                &#169; {{ year }} {{ siteName }}, {{ $t('All Rights Reserved') }}.
-            </nav>
+                <div class="ptm fs12">
+                    &#169; {{ year }} {{ siteName }}, {{ $t('All Rights Reserved') }}.
+                </div>
+            </div>
         </div>
     </footer>
 </template>
@@ -117,22 +120,19 @@ export default {
 @import "~assets/css/components/_mixins.scss";
 
 footer {
-    background-color: #267fad;
-    color: #fff;
+    border-top: 1px solid #e1e2e2;
+    background-color: #fff;
     font-size: 14px;
 
     .content {
-        color: #fff;
         padding: 10px 20px;
         max-width: 1230px;
         margin: 15px auto 0 auto;
     }
 
     a {
-        color: #fff;
         text-decoration: none !important;
     }
-
     a:hover {
         text-decoration: underline !important;
     }
@@ -150,7 +150,7 @@ footer {
             @include flex-basis(auto);
             @include flex-grow(1);
             max-width: 200px;
-            padding: 0 10px 40px 10px;
+            padding: 0 10px;
         }
     }
 
@@ -162,24 +162,11 @@ footer {
     dd {
         line-height: 25px;
     }
-
-    .sub-footer {
-        @include flexbox();
-        @include flex-direction(row);
-        @include justify-content(space-between);
-        @include align-items(flex-start);
-        @include flex-wrap(wrap);
-        background-color: rgba(0, 0, 0, 0.1);
-        color: #fff;
-        margin-top: 10px;
-        padding: 10px 40px;
-    }
 }
 
 @media #{$medium-and-down} {
     footer {
         margin-bottom: 0;
-
 
         #footer-logo {
             display: none;

@@ -1,10 +1,12 @@
 <script>
-import AppHeader from '@/components/AppHeader'
-import AppFooter from '@/components/AppFooter'
-import AppSidenav from '@/components/AppSidenav'
+import SvgSprite from '@/components/icons/SvgSprite';
+import AppHeader from '@/components/AppHeader';
+import AppFooter from '@/components/AppFooter';
+import AppSidenav from '@/components/AppSidenav';
 
 export default {
     components: {
+        SvgSprite,
         AppHeader,
         AppFooter,
         AppSidenav
@@ -25,6 +27,8 @@ export default {
 
 <template>
     <div class="layoutContainer">
+        <svg-sprite />
+
         <app-sidenav />
         <app-header />
 

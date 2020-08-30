@@ -93,6 +93,7 @@ module.exports = {
         '@/plugins/vuelidate',
         '@/plugins/format8601',
         '@/plugins/prettyJson',
+        '@/plugins/svgIcon.js',
         '@/plugins/piio/piio.js',
         // { src: '@/plugins/piio/piio.js', ssr: false },
         { src: '@/plugins/youtube', ssr: false },
@@ -126,7 +127,7 @@ module.exports = {
     */
     axios: {
         debug: false,
-        https: process.env.API_USE_HTTPS === 'true',
+        // https: process.env.API_USE_HTTPS === 'true',
         // retry: { retries: 3 },
         progress: true
     },

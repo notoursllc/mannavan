@@ -3,10 +3,6 @@ import { mapGetters } from 'vuex';
 import product_mixin from '@/mixins/product_type_mixin';
 
 export default {
-    components: {
-        IconCart: () => import('@/components/icons/IconCart')
-    },
-
     mixins: [
         product_mixin
     ],
@@ -62,7 +58,7 @@ export default {
                 index="cart-id"
                 @click="onMenuItemClick">
                 &nbsp;&nbsp;&nbsp;&nbsp;{{ $t('Cart') }}
-                <icon-cart icon-name="shopping_cart" class-name="fillWhite" width="25px" height="25px" />
+                <svg-icon icon="cart" width="30" height="30" stroke="#fff" />
                 <span v-if="numCartItems"
                     :class="{'badge-green': numCartItems}"
                     class="badge">{{ numCartItems }}</span>

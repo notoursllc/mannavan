@@ -10,15 +10,18 @@ export default {
             meta: [
                 { vmid: 'description', name: 'description', content: `Conditions of Use for ${this.$store.state.ui.siteName}` }
             ]
-        }
+        };
     }
-}
+};
 </script>
 
 
 <template>
     <div>
-        <page-title>{{ $t('Use of Cookies') }}</page-title>
+        <page-title>
+            <svg-icon icon="cookie" width="26" height="26" stroke-width="1px" />
+            {{ $t('Use of Cookies') }}
+        </page-title>
 
         <div class="pageContainerMax priv">
             <div class="priv">

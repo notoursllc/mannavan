@@ -24,7 +24,10 @@ export default {
 
 <template>
     <div>
-        <page-title>{{ $t('Returns / Exchanges') }}</page-title>
+        <page-title>
+            <svg-icon icon="arrow-back" width="26" height="26" stroke-width="1px" />
+            {{ $t('Returns / Exchanges') }}
+        </page-title>
 
         <div class="pageContainerMax">
             <!-- {{ this.$t('returns_help')}}: -->

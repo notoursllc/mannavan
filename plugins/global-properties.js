@@ -21,7 +21,7 @@ export default async (ctx) => {
         })
     ]);
 
-    ctx.store.dispatch('product/PRODUCT_TYPES', productTypes.data);
-    ctx.store.dispatch('product/PRODUCT_SUBTYPES', productSubTypes.data);
+    ctx.store.dispatch('product/PRODUCT_TYPES', productTypes);
+    ctx.store.dispatch('product/PRODUCT_SUBTYPES', productSubTypes);
 
 };

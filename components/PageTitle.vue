@@ -5,28 +5,36 @@ export default {
     props: {
         uppercase: {
             type: Boolean,
-            default: false,
+            default: false
         }
     },
 
     data: function() {
         return {
             siteName: this.uppercase ? this.$store.state.ui.siteName.toUpperCase() : this.$store.state.ui.siteName
-        }
+        };
     }
-}
+};
 </script>
 
 <template>
-    <h1 class="pageTitle"><slot></slot></h1>
+    <div class="pageTitle">
+        <h1><slot></slot></h1>
+    </div>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .pageTitle {
-    background-color: #fff;
-    font-size: 20px;
-    font-weight: 500;
-    padding: 7px 20px;
-    margin: 0;
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 20px 0;
+
+    h1 {
+        max-width: 1440px;
+        font-size: 20px;
+        font-weight: 500;
+        padding: 0;
+        margin: 0;
+    }
 }
 </style>

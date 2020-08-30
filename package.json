@@ -42,6 +42,7 @@
     "query-string": "^6.12.1",
     "sass-loader": "^7.1.0",
     "square-connect": "^2.20190925.0",
+    "svg-inline-loader": "^0.8.2",
     "swiper": "^5.4.1",
     "v-img": "^0.2.0",
     "v-money": "^0.8.1",

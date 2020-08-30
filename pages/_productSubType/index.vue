@@ -5,7 +5,6 @@ export default {
     layout: 'home',
 
     components: {
-        HeroProductTypeNav: () => import('@/components/HeroProductTypeNav'),
         ProductCardList: () => import('@/components/product/ProductCardList')
     },
 
@@ -17,10 +16,16 @@ export default {
         return {
             products: [],
             productSubType: null
+        };
+    },
+
+    computed: {
+        productTypeName() {
+            return this.$t(this.productSubType);
         }
     },
 
-    async asyncData({ params, store, app }) {
+    asyncData({ params, store, app }) {
         // console.log("IN ASYNC DATA store", store.state.product)
         // console.log("IN ASYNC DATA", context.app.store)
         try {
@@ -36,7 +41,7 @@ export default {
             }
 
 
-            let searchConfig = {
+            const searchConfig = {
                 where: ['published', '=', true],
                 // andWhere: [
                 //     ['total_inventory_count', '>', 0]  // doesn't work because 'total_inventory_count' is a virtual attribute
@@ -53,21 +58,15 @@ export default {
             //     app,
             //     searchConfig
             // );
-            let products = [];
+            const products = [];
 
             return {
                 products: products,
                 productSubType: subTypeData.name
-            }
+            };
         }
         catch(err) {
-            console.error("Error getting products", err)
-        }
-    },
-
-    computed: {
-        productTypeName() {
-            return this.$t(this.productSubType);
+            console.error('Error getting products', err)
         }
     },
 
@@ -77,18 +76,14 @@ export default {
             meta: [
                 { vmid: 'description', name: 'description', content: `${this.productTypeName} by ${this.$store.state.ui.brandName}` }
             ]
-        }
+        };
     }
-}
+};
 </script>
 
 
 <template>
-    <div>
-        <hero-product-type-nav />
-
-        <product-card-list
-            :products="products"
-            :type="productSubType" />
-    </div>
+    <product-card-list
+        :products="products"
+        :type="productSubType" />
 </template>

@@ -52,7 +52,7 @@ export default {
 
 .prod-card-container {
     background-color: #f4f4f4;
-    padding: 30px 30px 100px 30px;
+    padding: 30px 10px 100px 10px;
 }
 
 .flex-container {
@@ -79,7 +79,7 @@ export default {
 
 @media #{$medium-and-down} {
     .prod-card-container {
-        padding: 20px;
+        padding: 20px 10px 20px 10px;
     }
 
     .flex-container-column {

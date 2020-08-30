@@ -1,13 +1,12 @@
 <script>
 import { mapGetters } from 'vuex';
-import { headroom } from 'vue-headroom'
+import { headroom } from 'vue-headroom';
 import product_mixin from '@/mixins/product_mixin';
 
 export default {
     components: {
         IconVictory: () => import('@/components/icons/IconVictory'),
         IconLock: () => import('@/components/icons/IconLock'),
-        IconCart: () => import('@/components/icons/IconCart'),
         AppHeaderCheckoutPopover: () => import('@/components/AppHeaderCheckoutPopover'),
         headroom
     },
@@ -22,14 +21,18 @@ export default {
                 showPopover: false,
                 product: null
             }
-        }
+        };
     },
 
     computed: {
         ...mapGetters({
             numCartItems: 'shoppingcart/numItems',
             inCheckoutFlow: 'ui/inCheckoutFlow'
-        })
+        }),
+
+        productSubTypes() {
+            return this.$store.state.product.subTypes;
+        }
     },
 
     created() {
@@ -40,22 +43,101 @@ export default {
 
         this.$nuxt.$on('PRODUCT_ADDED_TO_CART', onProductAddedToCart)
 
-        this.$once("hook:beforeDestroy", () => {
+        this.$once('hook:beforeDestroy', () => {
             this.$nuxt.$off('PRODUCT_ADDED_TO_CART', onProductAddedToCart);
         });
     }
-}
+};
 </script>
 
 <template>
     <headroom :disabled="inCheckoutFlow" :zIndex="10">
         <header role="banner" class="white">
-            <div class="header-inner">
+            <div class="bv-header-inner">
 
                 <!-- common header -->
                 <template v-if="!inCheckoutFlow">
-                    <i class="el-icon-d-arrow-right header-hamburger cursorPointer"
-                    @click="$store.dispatch('ui/toggleSidebar')"></i>
+                    <ul class="bv-header-nav-list">
+                        <li class="bv-header-nav-item bv-header-breadvan">
+                            <icon-victory icon-name="logo" class="vam" />
+                        </li>
+
+                        <!-- <li v-for="(obj, type) in productSubTypes"
+                            :key="obj.id"
+                            class="bv-header-nav-item cursorPointer">
+                            <nuxt-link
+                                :to="{ name: 'productSubType', params: { productSubType: obj.slug } }"
+                                tag="li"
+                                active-class="active">{{ $t(type) }}</nuxt-link>
+                        </li> -->
+                        <nuxt-link
+                            v-for="(obj, type) in productSubTypes"
+                            :key="obj.id"
+                            :to="{ name: 'productSubType', params: { productSubType: obj.slug } }"
+                            tag="li"
+                            class="bv-header-nav-item cursorPointer"
+                            active-class="active">
+                                {{ $t(type) }}
+                                <div class="active-icon">
+                                    <svg-icon icon="chevron-up" width="14" height="14" stroke="#b9b8b8" />
+                                </div>
+                            </nuxt-link>
+
+                        <nuxt-link
+                            :to="{ name: 'index' }"
+                            tag="li"
+                            class="bv-header-nav-item cursorPointer"
+                            active-class="active"
+                            :exact="true">
+                                {{ $t('All') }}
+                                <div class="active-icon">
+                                    <svg-icon icon="chevron-up" width="14" height="14" stroke="#b9b8b8" />
+                                </div>
+                            </nuxt-link>
+
+                        <!-- <li class="bv-header-nav-item">item</li> -->
+
+                        <nuxt-link
+                            :to="{ name: 'cart-id' }"
+                            tag="li"
+                            class="bv-header-nav-item"
+                            :class="{'bounce': numCartItems}">
+
+                            <el-popover
+                                v-model="productAddedToCart.showPopover"
+                                placement="bottom"
+                                width="250"
+                                trigger="manual">
+                                <span slot="reference" class="cart-button">
+                                    <svg-icon icon="cart" width="30" height="30" stroke-width="1px" />
+                                    <span class="badge" :class="{'badge-green': numCartItems}">{{ numCartItems }}</span>
+                                </span>
+
+                                <div class="tac fw500 fs16 mbm">{{ $t('Added To Your Order') }}:</div>
+                                <div class="tac" v-if="productAddedToCart.product">
+                                    <div class="miniProductPic" :style="'background-image:url(' + featuredProductPic(productAddedToCart.product) + ');'"></div>
+
+                                    <div class="mtl tac">
+                                        <nuxt-link :to="{ name: 'cart-id' }" tag="span">
+                                            <el-button
+                                                type="primary"
+                                                size="small"
+                                                round>{{ $t('View My Order') }}</el-button>
+                                        </nuxt-link>
+
+                                        <el-button
+                                            size="small"
+                                            round
+                                            class="mlm"
+                                            @click="() => { productAddedToCart.showPopover = false }">{{ $t('Hide') }}</el-button>
+                                    </div>
+                                </div>
+                            </el-popover>
+                        </nuxt-link>
+                    </ul>
+
+                    <!-- <i class="el-icon-d-arrow-right header-hamburger cursorPointer"
+                       @click="$store.dispatch('ui/toggleSidebar')"></i>
 
                     <div class="header-logo-container">
                         <nuxt-link
@@ -67,6 +149,8 @@ export default {
                     </div>
 
                     <ul class="header-nav tar">
+                        <li class="header-label">test</li>
+
                         <nuxt-link
                             :to="{ name: 'cart-id' }"
                             tag="li"
@@ -104,7 +188,7 @@ export default {
                                 </div>
                             </el-popover>
                         </nuxt-link>
-                    </ul>
+                    </ul> -->
                 </template>
 
                 <!-- checkout header -->
@@ -137,7 +221,7 @@ export default {
 @import "~assets/css/components/_variables.scss";
 @import "~assets/css/components/_mixins.scss";
 
-$header-height: 65px;
+$header-height: 55px;
 $header-height-small: 46px;
 
 header {
@@ -169,28 +253,63 @@ header:after {
     top: 0;
 }
 
-.header-inner {
+.bv-header-inner {
     @include flexbox();
     @include flex-wrap(nowrap);
     @include flex-direction(row);
     @include align-items(center);
-    padding: 0 20px;
+    padding: 0;
     font-size: 15px;
     height: 100%;
-    font-weight: 600;
     margin: 0 auto;
     max-width: $header-max-width;
 
+    .bv-header-nav-list {
+        height: $header-height;
+        width: 100%;
+        @include flexbox();
+        @include justify-content(space-between);
+        list-style: none;
+        margin: 0;
+
+        .bv-header-nav-item {
+            box-sizing: border-box;
+            display: inline-block;
+            height: $header-height;
+            font-weight: normal;
+            // @include flex-grow(1);
+            padding-top: 1px;
+            text-align: center;
+            position: relative;
+            // border: 1px solid red;
+
+            .active-icon {
+                display: none;
+            }
+
+            &.active {
+                .active-icon {
+                    display: block;
+                    text-align: center;
+                    line-height: 10px;
+                    position: relative;
+                    top: -20px;
+                }
+            }
+
+            &.bv-header-breadvan {
+                width: 60px;
+                text-align: center;
+            }
+
+        }
+    }
     .header-hamburger {
         display: none;
     }
 
     .header-logo-container {
         @include flex-grow(0);
-
-        svg {
-            width: 65px;
-        }
     }
 
     .header-checkout-middle {
@@ -227,10 +346,6 @@ header:after {
         position: relative;
         top: 12px;
 
-        svg {
-            width: 40px !important;
-        }
-
         .badge {
             background-color: #a4a5a3;
             border-radius: 10px;
@@ -245,13 +360,17 @@ header:after {
             white-space: nowrap;
             position: absolute;
             top: -20px;
-            right: -10px;
+            right: -11px;
             letter-spacing: normal;
         }
 
         .badge-green {
             background-color: #55c120;
             color: #fff;
+        }
+
+        svg {
+            margin-top: -20px;
         }
     }
 }
@@ -270,9 +389,10 @@ header:after {
     header {
         height: $header-height-small;
 
-        .header-inner {
+        .bv-header-inner {
             padding: 0 10px;
             font-size: 14px;
+
 
             .header-hamburger {
                 font-size: 25px;

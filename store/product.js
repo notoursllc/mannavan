@@ -1,9 +1,7 @@
-'use strict';
-
 export const state = () => ({
-    types: [],
-    subTypes: []
-})
+    types: {},
+    subTypes: {}
+});
 
 
 export const mutations = {
@@ -11,7 +9,7 @@ export const mutations = {
         if(Array.isArray(productTypes)) {
             productTypes.forEach((obj) => {
                 state.types[obj.name] = obj;
-            })
+            });
         }
     },
 
@@ -22,22 +20,22 @@ export const mutations = {
             });
         }
     }
-}
+};
 
 
 export const actions = {
     PRODUCT_TYPES ({ commit }, productTypes) {
-        commit('PRODUCT_TYPES', productTypes)
+        commit('PRODUCT_TYPES', productTypes);
     },
 
     PRODUCT_SUBTYPES ({ commit }, subTypes) {
-        commit('PRODUCT_SUBTYPES', subTypes)
+        commit('PRODUCT_SUBTYPES', subTypes);
     }
-}
+};
 
 
 export const getters = {
     subTypes: (state) => {
         return state.subTypes;
     }
-}
+};

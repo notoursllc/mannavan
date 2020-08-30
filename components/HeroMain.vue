@@ -2,7 +2,8 @@
 export default {
     props: {
         bgImage: {
-            type: String
+            type: String,
+            default: ''
         }
     },
 
@@ -11,11 +12,12 @@ export default {
             if(this.bgImage) {
                 return {
                     'background-image': `linear-gradient(rgba(0, 0, 0, 0.1),rgba(0, 0, 0, 0.3)), url('${this.bgImage}')`
-                }
+                };
             }
+            return {};
         }
     }
-}
+};
 </script>
 
 
@@ -99,6 +101,7 @@ export default {
             mark {
                 color: #fff;
                 background-color: rgba(0,0,0,.3);
+                padding: 0;
             }
         }
 

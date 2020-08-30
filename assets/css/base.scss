@@ -71,7 +71,7 @@ body {
     height: 100%;
     padding: 0;
     margin: 0;
-    background-color: #fafafa;
+    background-color: #f7f6f6;
 }
 
 body {
@@ -160,7 +160,7 @@ ul.disc {
 }
 @media #{$only-screen-and-min-width-m}  {
     .pageContainerMax {
-        max-width: 1192px;
+        max-width: 1440px;
         margin-right: auto;
         margin-left: auto;
     }
