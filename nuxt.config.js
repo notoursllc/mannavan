@@ -3,8 +3,7 @@
 // https://github.com/nuxt-community/dotenv-module#using-env-file-in-nuxtconfigjs
 require('dotenv').config();
 
-
-const isProduction = process.env.NODE_ENV === 'production';
+const isDev = process.env.NODE_ENV === 'development';
 
 module.exports = {
     mode: 'universal',
@@ -37,7 +36,7 @@ module.exports = {
             // loads before the head() script is loaded.
             // Putting it here doesn't seem ideal, but it's safest.
             {
-                src: isProduction ? 'https://js.squareup.com/v2/paymentform' : 'https://js.squareupsandbox.com/v2/paymentform',
+                src: isDev ? 'https://js.squareupsandbox.com/v2/paymentform' : 'https://js.squareup.com/v2/paymentform',
                 body: true,
                 async: true
             },
@@ -101,6 +100,11 @@ module.exports = {
         { src: '@/plugins/paypal-button/paypal-button.js', ssr: false }
     ],
 
+    buildModules: [
+        // '@nuxtjs/eslint-module' // https://github.com/nuxt-community/eslint-module
+        ['@nuxtjs/dotenv', isDev ? null : { path: '/etc/secrets' }] // Doc: https://github.com/nuxt-community/dotenv-module
+    ],
+
     router: {
         middleware: [
             'axios',
@@ -114,8 +118,6 @@ module.exports = {
     modules: [
         // Doc: https://axios.nuxtjs.org/usage
         '@nuxtjs/axios',
-        // Doc: https://github.com/nuxt-community/dotenv-module
-        '@nuxtjs/dotenv',
         'cookie-universal-nuxt',
         ['@nuxtjs/pwa', { oneSignal: false }],
         'bootstrap-vue/nuxt'
@@ -127,7 +129,6 @@ module.exports = {
     */
     axios: {
         debug: false,
-        // https: process.env.API_USE_HTTPS === 'true',
         // retry: { retries: 3 },
         progress: true
     },

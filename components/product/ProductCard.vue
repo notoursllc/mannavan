@@ -27,8 +27,9 @@ export default {
                 sku: null,
                 featuredImageUrl: null
             },
-            showThumbs: false,
-            thumbs: {}
+            // showThumbs: false,
+            showThumbs: true,
+            thumbs: []
         };
     },
 
@@ -96,28 +97,8 @@ export default {
         },
 
         setFeaturedImages() {
-            this.thumbs = [];
-
-            if(!Array.isArray(this.product.skus) || !this.product.skus.length) {
-                return;
-            }
-
-            let counter = 0;
-
-            this.product.skus.forEach((sku) => {
-                if(counter < this.maxVariantDisplay) {
-                    const img = this.prodMix_getFeaturedImageForSku(sku);
-
-                    if(isObject(img) && img.media) {
-                        this.thumbs.push({
-                            smallestMediaUrl: this.getSmallestMediaUrl(img.media),
-                            smallestImage: img,
-                            sku: sku
-                        });
-                        counter++;
-                    }
-                }
-            });
+            const featuredImages = this.prodMix_getFeaturedSkuImagesForProduct(this.product);
+            this.thumbs = featuredImages.slice(0, this.maxVariantDisplay);
         },
 
         onThumbMouseOver(obj) {
@@ -152,9 +133,10 @@ export default {
 
 <template>
     <figure class="pic-card" @click="onCardClick">
-        <b-img
-            :src="visibleSku.featuredImageUrl"
-            fluid-grow></b-img>
+        <picture>
+            <PiioElement :path="visibleSku.featuredImageUrl" tag="source" media="(max-width:969px)" class="img-grow"></PiioElement>
+            <PiioElement :path="visibleSku.featuredImageUrl" tag="img" class="img-grow"></PiioElement>
+        </picture>
 
         <div class="pic-card-content-wrapper">
             <div>
@@ -165,15 +147,27 @@ export default {
             <div class="pic-card-count-wrapper">
                 <div v-if="thumbs.length > 1">
                     <template v-if="showThumbs">
-                        <div @mouseleave="showThumbs = false">
+                        <!-- <div @mouseleave="showThumbs = false"> -->
+                        <div>
                             <div v-for="(obj, index) in thumbs"
                                  :key="index"
                                  class="media-thumb"
                                  @click="goToProductDetails(obj.sku.id)">
-                                <figure
+
+                                <!-- <picture
                                     :id="`thumb_${index}`"
-                                    :style="`background-image:url(${obj.smallestMediaUrl});`"
-                                    @mouseover="onThumbMouseOver(obj)"></figure>
+                                    @mouseover="onThumbMouseOver(obj)">
+                                    <PiioElement :path="obj.url" tag="source" media="(max-width:45px)" class="thumbImg"></PiioElement>
+                                    <PiioElement :path="obj.url" tag="img" class="thumbImg"></PiioElement>
+                                </picture> -->
+
+                                <PiioElement
+                                    :path="obj.url"
+                                    tag="img"
+                                    :id="`thumb_${index}`"
+                                    class="thumbImg"
+                                    @mouseover="onThumbMouseOver(obj)"></PiioElement>
+
                                 <b-tooltip
                                     :disabled="obj.sku.inventory_count > 0"
                                     :target="`thumb_${index}`">{{ $t('Sold out') }}</b-tooltip>
@@ -257,15 +251,23 @@ export default {
         .media-thumb {
             margin: 0 3px;
             display: inline-block;
+            width: 45px;
+            height: 45px;
 
-            figure {
-                width: 45px;
-                height: 45px;
+            .thumbImg {
+                width: 100%;
+                height: 100%;
                 border-radius: 50px;
-                background-size: cover;
-                background-position: center;
-                display: inline-block;
             }
+
+            // .thumbImg {
+            //     width: 100%;
+            //     height: 100%;
+            //     border-radius: 50px;
+            //     background-size: cover;
+            //     background-position: center;
+            //     display: inline-block;
+            // }
         }
 
         .colorway-overflow {

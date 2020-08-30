@@ -26,6 +26,7 @@ export default {
     data() {
         return {
             product: {},
+            featuredImages: [],
             skuOptions: {},
             selectedAttributes: {},
             selectedAttributesAreValid: false,
@@ -51,6 +52,8 @@ export default {
             if(!data.product) {
                 return;
             }
+
+            data.featuredImages = product_mixin.methods.prodMix_getFeaturedSkuImagesForProduct(data.product);
 
             // const opts = product_mixin.methods.buildSizeOptions(data.product);
             // data.sizeOptions = opts.sizeOpts;
@@ -232,6 +235,11 @@ export default {
             });
 
             this.userSelectedSku = selected;
+        },
+
+        onThumbMouseOver(obj) {
+            // this.setVisibleSku(obj.sku);
+            console.log("THUMB MOUSE OVER", obj)
         }
     }
 };
@@ -239,7 +247,20 @@ export default {
 
 
 <template>
-    <div class="pageContainerMax">
+    <div class="pageContainerMax container-fluid px-xl-7 pt-5 pb-3 pb-lg-6">
+        <div class="row">
+            <div class="col-lg-6 col-xl-8 pt-4 order-2 order-lg-1 photoswipe-gallery">
+                <div class="grid-image">img</div>
+                <div class="grid-image">img</div>
+                <div class="grid-image">img</div>
+                <div class="grid-image">img</div>
+                <div class="grid-image">img</div>
+            </div>
+
+            <div class="col-lg-6 col-xl-4 pt-4 order-1 order-lg-2">right</div>
+        </div>
+
+
         {{ skuOptions }}
         <product-details-layout v-if="product">
             <!-- pics -->
@@ -252,13 +273,14 @@ export default {
                     <div class="w-50 p-2" style="border:1px solid blue">img</div>
                 </div> -->
 
-                <div class="grid-image-container">
+                <!-- <div class="grid-image-container">
                     <div class="grid-image">img</div>
                     <div class="grid-image">img</div>
                     <div class="grid-image">img</div>
                     <div class="grid-image">img</div>
                     <div class="grid-image">img</div>
-                </div>
+                </div> -->
+
                 <!-- <div class="container-fluid">
                     <div class="row row-cols-md-2 row-cols-sm-1">
                         <div class="" style="border:1px solid blue">img</div>
@@ -278,6 +300,22 @@ export default {
                 <div class="mtm mbm fs20">
                     price goes here
                     <!-- <product-price :product="product"></product-price> -->
+                </div>
+
+                <div v-for="(obj, index) in featuredImages"
+                     :key="index"
+                     class="media-thumb">
+
+                    <PiioElement
+                        :path="obj.url"
+                        tag="div"
+                        :id="`thumb_${index}`"
+                        class="thumbImg"
+                        @mouseover="onThumbMouseOver(obj)"></PiioElement>
+
+                    <!-- <b-tooltip
+                        :disabled="obj.sku.inventory_count > 0"
+                        :target="`thumb_${index}`">{{ $t('Sold out') }}</b-tooltip> -->
                 </div>
 
                 <!-- TODO -->
@@ -380,6 +418,22 @@ export default {
 
     .flex-container-column {
         width: 50%;
+    }
+}
+
+.media-thumb {
+    margin: 0 3px 3px 3px;
+    display: inline-block;
+    width: 70px;
+    height: 70px;
+
+    .thumbImg {
+        width: 100%;
+        height: 100%;
+        border-radius: 4px;
+        background-size: cover;
+        background-position: center;
+        display: inline-block;
     }
 }
 

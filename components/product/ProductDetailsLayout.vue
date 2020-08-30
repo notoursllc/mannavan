@@ -38,13 +38,14 @@ export default {
 
 .prod-container {
     @include flexbox();
+    max-width: 1440px;
+    margin: 0px auto;
+    border: 1px solid yellow;
     // @include flex-wrap(wrap);
 
 }
 .photo-container {
-    // @include flex(none);
-    // width: 50%;
-    @include flexbox();
+    // @include flexbox();
     flex-grow: 3;
     flex-shrink: 1;
     flex-basis: 0%;
@@ -59,7 +60,8 @@ export default {
     flex-shrink: 1;
     flex-basis: 0%;
     padding: 10px 20px;
-    border: 1px solid green;
+    width: 750px;
+    border: 1px solid aqua;
 }
 
 
