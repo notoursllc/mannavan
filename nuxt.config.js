@@ -79,6 +79,12 @@ module.exports = {
         '@/assets/css/base.scss'
     ],
 
+    server: {
+        port: isDev ? 3000 : 443, // default: 3000
+        host: isDev ? 'localhost' : 'gobreadvan-com', // default: localhost,
+        timing: false
+    },
+
     /*
     ** Plugins to load before mounting the App
     */
@@ -204,7 +210,7 @@ module.exports = {
             // 'ToastPlugin',
             'ModalPlugin',
             'BVModalPlugin'
-        ],
+        ]
         // directives: ['VBModal', 'VBPopover', 'VBToggle', 'VBTooltip', 'VBScrollspy'],
     },
 
