@@ -1,12 +1,7 @@
 <script>
 import { mapGetters } from 'vuex';
-import product_mixin from '@/mixins/product_type_mixin';
 
 export default {
-    mixins: [
-        product_mixin
-    ],
-
     computed: {
         ...mapGetters({
             numCartItems: 'shoppingcart/numItems'

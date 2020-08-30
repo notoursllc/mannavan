@@ -1,15 +1,9 @@
 <script>
-import product_mixin from '@/mixins/product_type_mixin';
-
 export default {
     components: {
         IconLogo: () => import('@/components/icons/IconLogo'),
         IconVictory: () => import('@/components/icons/IconVictory')
     },
-
-    mixins: [
-        product_mixin
-    ],
 
     data: function() {
         return {

@@ -1,12 +1,5 @@
 <script>
-import product_mixin from '@/mixins/product_type_mixin';
-
-
 export default {
-    mixins: [
-        product_mixin
-    ],
-
     computed: {
         productSubTypes() {
             return this.$store.state.product.subTypes;
