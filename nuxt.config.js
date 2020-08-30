@@ -80,7 +80,7 @@ module.exports = {
     ],
 
     server: {
-        // port: isDev ? 3000 : 8000, // default: 3000
+        port: 3000,
         host: isDev ? 'localhost' : 'gobreadvan.com', // default: localhost,
         timing: false
     },
