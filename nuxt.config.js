@@ -79,10 +79,10 @@ module.exports = {
         '@/assets/css/base.scss'
     ],
 
-    // server: {
-    //     port: isDev ? 3000 : 443,
-    //     host: isDev ? 'localhost' : 'gobreadvan-com.onrender.com'
-    // },
+    server: {
+        port: 3000
+        // host: isDev ? 'localhost' : 'gobreadvan-com.onrender.com'
+    },
 
     /*
     ** Plugins to load before mounting the App
