@@ -80,7 +80,7 @@ module.exports = {
     ],
 
     server: {
-        port: process.env.PORT || 3000,
+        port: isDev ? 3000 : 443,
         host: isDev ? 'localhost' : '0.0.0.0'
     },
 
