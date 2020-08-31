@@ -80,8 +80,8 @@ module.exports = {
     ],
 
     server: {
-        port: 10000
-        // host: isDev ? 'localhost' : 'gobreadvan-com.onrender.com'
+        port: 10000,
+        host: isDev ? 'localhost' : 'gobreadvan.com'
     },
 
     /*
