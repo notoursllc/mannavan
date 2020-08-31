@@ -80,8 +80,8 @@ module.exports = {
     ],
 
     server: {
-        port: 10000,
-        host: isDev ? 'localhost' : 'gobreadvan.com'
+        port: process.env.PORT,
+        host: process.env.HOST || 'localhost'
     },
 
     /*
