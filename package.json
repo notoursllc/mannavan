@@ -4,7 +4,8 @@
   "description": "Vintage. Racing. An apparel company",
   "author": "goBreadVan.com",
   "engines": {
-    "node": "12.14.1"
+    "node": "12.14.1",
+    "npm": "6.13.4"
   },
   "repository": {
     "type": "git",
