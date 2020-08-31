@@ -80,9 +80,8 @@ module.exports = {
     ],
 
     server: {
-        port: 3000,
-        host: 'localhost', // default: localhost,
-        timing: false
+        port: process.env.PORT || 3000,
+        host: isDev ? 'localhost' : '0.0.0.0'
     },
 
     /*
