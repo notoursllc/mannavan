@@ -3,8 +3,8 @@
 export default async (context) => {
 
     const response = await context.$axios.post('tenant/login', {
-        id: process.env.TENANT_ID,
-        password: process.env.TENANT_PASSWORD
+        id: context.$config.tenantId,
+        password: context.$config.tenantPassword
     });
 
     const [cookie] = response.headers['set-cookie'];
@@ -15,7 +15,7 @@ export default async (context) => {
         {
             httpOnly: true,
             sameSite: false,
-            secure: process.env.NODE_ENV === 'production',
+            secure: context.$config.nodeEnvIsProd,
             path: '/',
             maxAge: 60 * 60 * 24 // seconds
         }

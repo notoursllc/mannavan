@@ -188,15 +188,15 @@ export default{
                 this.labelForm.shipment.address_to.email = cart.shipping_email;
 
                 // Address From
-                this.labelForm.shipment.address_from.company = process.env.SHIPPING_ADDRESS_FROM_COMPANY;
-                this.labelForm.shipment.address_from.name = process.env.DOMAIN_NAME;
-                this.labelForm.shipment.address_from.street1 = process.env.SHIPPING_ADDRESS_FROM_ADDRESS1;
-                this.labelForm.shipment.address_from.city = process.env.SHIPPING_ADDRESS_FROM_CITY;
-                this.labelForm.shipment.address_from.state = process.env.SHIPPING_ADDRESS_FROM_STATE;
-                this.labelForm.shipment.address_from.zip = process.env.SHIPPING_ADDRESS_FROM_ZIP;
-                this.labelForm.shipment.address_from.country = process.env.SHIPPING_ADDRESS_FROM_COUNTRY_CODE;
-                this.labelForm.shipment.address_from.phone = process.env.SHIPPING_ADDRESS_FROM_PHONE;
-                this.labelForm.shipment.address_from.email = process.env.EMAIL_INFO;
+                this.labelForm.shipment.address_from.company = this.$config.shippingFromCompany;
+                this.labelForm.shipment.address_from.name = this.$config.domainName;
+                this.labelForm.shipment.address_from.street1 = this.$config.shippingFromAddress1;
+                this.labelForm.shipment.address_from.city = this.$config.shippingFromCity;
+                this.labelForm.shipment.address_from.state = this.$config.shippingFromState;
+                this.labelForm.shipment.address_from.zip = this.$config.shippingFromZip;
+                this.labelForm.shipment.address_from.country = this.$config.shippingFromCountryCode;
+                this.labelForm.shipment.address_from.phone = this.$config.shippingFromPhone;
+                this.labelForm.shipment.address_from.email = this.$config.emailInfo;
 
                 this.labelForm.carrier_account = cart.shipping_rate.carrier_account;
                 this.labelForm.servicelevel_token = cart.shipping_rate.servicelevel.token;

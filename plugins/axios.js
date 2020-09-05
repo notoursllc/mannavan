@@ -18,7 +18,7 @@ export default (context) => {
             const response = await context.$axios.$post(
                 'tenant/refresh',
                 {
-                    id: process.env.TENANT_ID
+                    id: context.$config.tenantId
                 },
                 {
                     withCredentials: true

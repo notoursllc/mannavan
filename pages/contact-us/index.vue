@@ -6,12 +6,6 @@ export default {
         app_mixin
     ],
 
-    computed: {
-        emailAddress() {
-            return process.env.EMAIL_INFO;
-        }
-    },
-
     head() {
         return {
             title: this.$t('Contact BreadVan'),
@@ -30,7 +24,7 @@ export default {
             <svg-icon icon="mail" stroke-width="1px" width="80" height="80" />
             <div class="mts fs24">{{ $t('We want to hear from you!') }}</div>
             <div class="fs16">{{ $t("We'll get back to you within 1 business day.") }}</div>
-            <div class="fs20 mtm"><a :href="`mailto:${emailAddress}`">{{ emailAddress }}</a></div>
+            <div class="fs20 mtm"><a :href="`mailto:${$config.emailInfo}`">{{ $config.emailInfo }}</a></div>
         </div>
     </div>
 </template>

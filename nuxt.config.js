@@ -1,12 +1,38 @@
-// Even though we are using @nuxt/dotenv module, we need to require dotenv here because
-// we need the env variables for the nuxt build (in plugins/api.js)
-// https://github.com/nuxt-community/dotenv-module#using-env-file-in-nuxtconfigjs
-require('dotenv').config();
-
 const isDev = process.env.NODE_ENV === 'development';
+
+if(isDev) {
+    require('dotenv').config();
+}
 
 module.exports = {
     mode: 'universal',
+
+    publicRuntimeConfig: {
+        axios: {
+            browserBaseURL: process.env.API_URL
+        },
+        cookieSecure: process.env.COOKIE_SECURE || false,
+        domainName: process.env.DOMAIN_NAME,
+        emailInfo: process.env.EMAIL_INFO,
+
+        nodeEnv: process.env.NODE_ENV,
+        nodeEnvIsDev: isDev,
+        nodeEnvIsProd: process.env.NODE_ENV === 'production',
+
+        shippingFromAddress1: process.env.SHIPPING_ADDRESS_FROM_ADDRESS1,
+        shippingFromCity: process.env.SHIPPING_ADDRESS_FROM_CITY,
+        shippingFromCompany: process.env.SHIPPING_ADDRESS_FROM_COMPANY,
+        shippingFromCountryCode: process.env.SHIPPING_ADDRESS_FROM_COUNTRY_CODE,
+        shippingFromPhone: process.env.SHIPPING_ADDRESS_FROM_PHONE,
+        shippingFromState: process.env.SHIPPING_ADDRESS_FROM_STATE,
+        shippingFromZip: process.env.SHIPPING_ADDRESS_FROM_ZIP
+    },
+
+    privateRuntimeConfig: {
+        bugSnagApiKey: process.env.BUG_SNAG_API_KEY,
+        tenantId: process.env.TENANT_ID,
+        tenantPassword: process.env.TENANT_PASSWORD
+    },
 
     /*
     ** Headers
@@ -79,16 +105,12 @@ module.exports = {
         '@/assets/css/base.scss'
     ],
 
-    server: {
-        port: process.env.PORT || 3000,
-        host: isDev ? 'localhost' : '0.0.0.0'
-    },
-
     /*
     ** Plugins to load before mounting the App
     */
     plugins: [
         { src: '@/plugins/tenantLogin.js', mode: 'server' },
+        { src: '@/plugins/bugsnag', mode: 'server' },
         '@/plugins/axios.js',
         '@/plugins/api.js',
         '@/plugins/i18n.js',
@@ -99,15 +121,14 @@ module.exports = {
         '@/plugins/prettyJson',
         '@/plugins/svgIcon.js',
         '@/plugins/piio/piio.js',
-        // { src: '@/plugins/piio/piio.js', ssr: false },
+        { src: '@/plugins/piio/piio.js', ssr: false },
         { src: '@/plugins/youtube', ssr: false },
-        { src: '@/plugins/bugsnag', ssr: false },
+
+        // { src: '@/plugins/bugsnag', ssr: false },
         { src: '@/plugins/paypal-button/paypal-button.js', ssr: false }
     ],
 
     buildModules: [
-        // '@nuxtjs/eslint-module' // https://github.com/nuxt-community/eslint-module
-        ['@nuxtjs/dotenv', isDev ? null : { path: '/etc/secrets' }] // Doc: https://github.com/nuxt-community/dotenv-module
     ],
 
     router: {
@@ -226,14 +247,6 @@ module.exports = {
         extend (config, ctx) {
         }
     },
-
-    // render: {
-    //     bundleRenderer: {
-    //         shouldPreload: (file, type) => {
-    //             return ['script', 'style', 'font'].includes(type);
-    //         }
-    //     }
-    // },
 
     pageTransition: {
         name: 'fade',

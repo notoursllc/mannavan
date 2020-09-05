@@ -1,12 +1,12 @@
 import * as Cookies from 'js-cookie'
 import shopping_cart_mixin from '@/mixins/shopping_cart_mixin';
 
-export default ({ $axios, store }) => {
+export default ({ $axios, $config, store }) => {
     // TODO: store.state.shoppingcart.token is not set on www.gobreadvan.com
     if(store.state.shoppingcart.token) {
-        let config = {
-            secure: process.env.COOKIE_SECURE || false
-        }
+        const config = {
+            secure: $config.cookieSecure
+        };
 
         Cookies.set(
             'cart-jwt',

@@ -50,17 +50,5 @@ export const getters = {
 
     loggedUser (state) {
         return state.user;
-    },
-
-    // https://www.npmjs.com/package/jsonwebtoken#jwtverifytoken-secretorpublickey-options-callback
-    jwtTokenIsValid(state) {
-        try {
-            const decoded = jwt.verify(state.jwtToken, process.env.JWT_TOKEN_SECRET);
-            return decoded;
-        }
-        catch(err) {
-            // https://www.npmjs.com/package/jsonwebtoken#errors--codes
-            return false;
-        }
     }
 };
