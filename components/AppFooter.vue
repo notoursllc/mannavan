@@ -36,6 +36,11 @@ export default {
                                 tag="a"
                                 :to="{ name: 'productSubType', params: { productSubType: obj.slug } }">{{ $t(type) }}</nuxt-link>
                         </dd>
+                        <dd>
+                            <nuxt-link
+                                :to="{ name: 'index' }"
+                                tag="a">{{ $t('All') }}</nuxt-link>
+                        </dd>
                     </dl>
                 </nav>
 

@@ -77,11 +77,11 @@ export default {
                             tag="li"
                             class="bv-header-nav-item cursorPointer"
                             active-class="active">
-                                {{ $t(type) }}
-                                <div class="active-icon">
-                                    <svg-icon icon="chevron-up" width="14" height="14" stroke="#b9b8b8" />
-                                </div>
-                            </nuxt-link>
+                            {{ $t(type) }}
+                            <div class="active-icon">
+                                <svg-icon icon="chevron-up" width="14" height="14" stroke="#b9b8b8" />
+                            </div>
+                        </nuxt-link>
 
                         <nuxt-link
                             :to="{ name: 'index' }"
@@ -89,11 +89,11 @@ export default {
                             class="bv-header-nav-item cursorPointer"
                             active-class="active"
                             :exact="true">
-                                {{ $t('All') }}
-                                <div class="active-icon">
-                                    <svg-icon icon="chevron-up" width="14" height="14" stroke="#b9b8b8" />
-                                </div>
-                            </nuxt-link>
+                            {{ $t('All') }}
+                            <div class="active-icon">
+                                <svg-icon icon="chevron-up" width="14" height="14" stroke="#b9b8b8" />
+                            </div>
+                        </nuxt-link>
 
                         <!-- <li class="bv-header-nav-item">item</li> -->
 
