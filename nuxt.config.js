@@ -7,6 +7,13 @@ if(isDev) {
 module.exports = {
     mode: 'universal',
 
+    vue: {
+        config: {
+            productionTip: true,
+            devtools: isDev
+        }
+    },
+
     publicRuntimeConfig: {
         axios: {
             browserBaseURL: process.env.API_URL
