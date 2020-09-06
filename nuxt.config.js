@@ -25,13 +25,15 @@ module.exports = {
         shippingFromCountryCode: process.env.SHIPPING_ADDRESS_FROM_COUNTRY_CODE,
         shippingFromPhone: process.env.SHIPPING_ADDRESS_FROM_PHONE,
         shippingFromState: process.env.SHIPPING_ADDRESS_FROM_STATE,
-        shippingFromZip: process.env.SHIPPING_ADDRESS_FROM_ZIP
+        shippingFromZip: process.env.SHIPPING_ADDRESS_FROM_ZIP,
+
+        // this needs to be public because it's used by axios plugin
+        tenantId: process.env.TENANT_ID,
+        tenantApiKey: process.env.TENANT_API_KEY
     },
 
     privateRuntimeConfig: {
-        bugSnagApiKey: process.env.BUG_SNAG_API_KEY,
-        tenantId: process.env.TENANT_ID,
-        tenantPassword: process.env.TENANT_PASSWORD
+        bugSnagApiKey: process.env.BUG_SNAG_API_KEY
     },
 
     /*
@@ -109,7 +111,6 @@ module.exports = {
     ** Plugins to load before mounting the App
     */
     plugins: [
-        { src: '@/plugins/tenantLogin.js', mode: 'server' },
         { src: '@/plugins/bugsnag', mode: 'server' },
         '@/plugins/axios.js',
         '@/plugins/api.js',
@@ -123,8 +124,6 @@ module.exports = {
         '@/plugins/piio/piio.js',
         { src: '@/plugins/piio/piio.js', ssr: false },
         { src: '@/plugins/youtube', ssr: false },
-
-        // { src: '@/plugins/bugsnag', ssr: false },
         { src: '@/plugins/paypal-button/paypal-button.js', ssr: false }
     ],
 
@@ -133,7 +132,6 @@ module.exports = {
 
     router: {
         middleware: [
-            'axios',
             'in-checkout'
         ]
     },
