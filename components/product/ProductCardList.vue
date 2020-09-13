@@ -1,16 +1,12 @@
 <script>
-import product_mixin from '@/mixins/product_mixin';
+import ProductCard from '@/components/product/ProductCard';
 
 export default {
     name: 'ProductCardList',
 
     components: {
-        ProductCard: () => import('@/components/product/ProductCard')
+        ProductCard
     },
-
-    mixins: [
-        product_mixin
-    ],
 
     props: {
         products: {
@@ -19,28 +15,17 @@ export default {
                 return [];
             }
         }
-    },
-
-    data: function() {
-        return {
-        };
-    },
-
-    methods: {
     }
 };
 </script>
 
 
 <template>
-    <div class="prod-card-container">
-        <div class="flex-container" style="margin:0">
-            <div class="flex-container-column"
-                 style="padding:0 5px"
-                 v-for="product in products"
-                 :key="product.id">
-                <product-card :product="product" />
-            </div>
+    <div class="flex-container" style="margin:0">
+        <div class="flex-container-column"
+             v-for="product in products"
+             :key="product.id">
+            <product-card :product="product" />
         </div>
     </div>
 </template>
@@ -50,53 +35,28 @@ export default {
 @import '~assets/css/components/_variables.scss';
 @import "~assets/css/components/_mixins.scss";
 
-.prod-card-container {
-    background-color: #f4f4f4;
-    padding: 30px 10px 100px 10px;
-}
-
 .flex-container {
-    @include flexbox();
-    @include flex-wrap(wrap);
-}
-.is-third {
-    @include flex(none);
-    width: 33.33333%;
+    display: block;
 }
 .flex-container-column {
-    @include flex(none);
-    width: 33.33333%;
+    @include flex(1 0 auto);
+    width: 100%;
+    padding-bottom: 20px;
 }
-
-.pic-card {
-    margin: 2px;
-    // @include grow();
-}
-.pic-card:hover {
-    cursor: pointer;
-    // @include growHover(1.01)
-}
-
-@media #{$medium-and-down} {
-    .prod-card-container {
-        padding: 20px 10px 20px 10px;
-    }
-
-    .flex-container-column {
-        width: 50%;
-    }
-}
-@media #{$small-and-down} {
-    .prod-card-container {
-        padding: 5px;
-    }
-
+@media #{$medium-and-up} {
     .flex-container {
-        display: block;
+        @include flexbox();
+        @include flex-wrap(wrap);
+        @include justify-content(space-between);
     }
     .flex-container-column {
-        @include flex(1 0 auto);
-        width: 100%;
+        @include flex(none);
+        width: 49%;
+    }
+}
+@media #{$large-and-up} {
+    .flex-container-column {
+        width: 32.5%;
     }
 }
 </style>

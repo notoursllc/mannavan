@@ -27,3 +27,5 @@ cloud_sql_proxy
 
 # Logs:
 *.log*
+
+.vscode/settings.json

@@ -22,9 +22,11 @@ export default {
 
 
 <template>
-    <div class="hero-main" :style="heroMainStyle">
-        <div class="hero-content">
-            <slot></slot>
+    <div class="content-wrap">
+        <div class="hero-main" :style="heroMainStyle">
+            <div class="hero-content">
+                <slot></slot>
+            </div>
         </div>
     </div>
 </template>
@@ -51,6 +53,7 @@ export default {
         position: relative;
         font-size: 16px;
         overflow: hidden;
+        border-radius: 0 0 3px 3px;
 
         .hero-content {
             // @include flex-basis(100%);
@@ -67,7 +70,6 @@ export default {
             max-width: $header-max-width;
             z-index: 2;
         }
-
 
         .home-copy-55 {
             @include flex-basis(55%);
@@ -104,8 +106,6 @@ export default {
                 padding: 0;
             }
         }
-
-
     }
 
     @media #{$medium-and-down} {

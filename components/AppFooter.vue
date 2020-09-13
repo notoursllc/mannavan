@@ -122,6 +122,7 @@ footer {
     border-top: 1px solid #e1e2e2;
     background-color: #fff;
     font-size: 14px;
+    margin-top: 100px;
 
     .content {
         padding: 10px 20px;

@@ -120,7 +120,8 @@ module.exports = {
     plugins: [
         { src: '@/plugins/bugsnag', mode: 'server' },
         '@/plugins/axios.js',
-        '@/plugins/api.js',
+        // '@/plugins/api.js',
+        { src: '@/plugins/api.js', ssr: true },
         '@/plugins/i18n.js',
         '@/plugins/element-ui',
         '@/plugins/global-properties',
@@ -129,6 +130,8 @@ module.exports = {
         '@/plugins/prettyJson',
         '@/plugins/svgIcon.js',
         '@/plugins/piio/piio.js',
+        // '@/plugins/vue-placeholders.js',
+        // '@/plugins/vue-observe-visibility.client.js',
         { src: '@/plugins/piio/piio.js', ssr: false },
         { src: '@/plugins/youtube', ssr: false },
         { src: '@/plugins/paypal-button/paypal-button.js', ssr: false }

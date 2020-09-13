@@ -351,7 +351,7 @@
 
     .inputError input,
     .inputError select {
-        border-color: $colorRed !important
+        border-color: $red !important
     }
 
     .formRow {

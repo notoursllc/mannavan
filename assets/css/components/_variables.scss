@@ -2,35 +2,44 @@
 $content-max-width: 1366px;
 
 // Media Query Ranges
-$small-screen-up: 601px !default;
-$medium-screen-up: 993px !default;
-$large-screen-up: 1201px !default;
-$small-screen: 600px !default;
-$medium-screen: 992px !default;
-$large-screen: 1200px !default;
+$small-screen-up: 481px !default;
+$medium-screen-up: 641px !default;
+$large-screen-up: 993px !default;
+$xlarge-screen-up: 1301px !default;
 
-$medium-and-up: "only screen and (min-width : #{$small-screen-up})" !default;
-$large-and-up: "only screen and (min-width : #{$medium-screen-up})" !default;
+$small-screen: 480px !default;
+$medium-screen: 640px !default;
+$large-screen: 992px !default;
+$xlarge-screen: 1300px !default;
+
+$small-and-up: "only screen and (min-width : #{$small-screen-up})" !default;
+$medium-and-up: "only screen and (min-width : #{$medium-screen-up})" !default;
+$large-and-up: "only screen and (min-width : #{$large-screen-up})" !default;
+$xlarge-and-up: "only screen and (min-width : #{$xlarge-screen-up})" !default;
+
 $small-and-down: "only screen and (max-width : #{$small-screen})" !default;
 $medium-and-down: "only screen and (max-width : #{$medium-screen})" !default;
 $medium-only: "only screen and (min-width : #{$small-screen-up}) and (max-width : #{$medium-screen})" !default;
 
 
-
-$xxs-screens: 320px !default;  /* Custom, iPhone Retina */
-$xs-screens: 480px !default;   /* Extra Small Devices, Phones */
-$s-screens: 768px !default;    /* Small Devices, Tablets */
-$m-screens: 992px !default;    /* Medium Devices, Desktops */
-$l-screens: 1200px !default;   /* Large Devices, Wide Screens */
-
-$only-screen-and-min-width-s: "only screen and (min-width: #{$s-screens})" !default;
-$only-screen-and-min-width-m: "only screen and (min-width: #{$m-screens})" !default;
-$only-screen-and-max-width-s: "only screen and (max-width : #{$s-screens})" !default;
-$only-screen-and-max-width-m: "only screen and (max-width : #{$m-screens})" !default;
-
 // Typography
-$family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif !default;
-$family-monospace: "Inconsolata", "Consolas", "Monaco", monospace !default;
+$font-family-sans-serif:      -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !default;
+$font-family-monospace:       SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !default;
+$font-family-base:            $font-family-sans-serif !default;
+
+$font-size-base:              1rem !default; // Assumes the browser default, typically `16px`
+$font-size-lg:                $font-size-base * 1.25 !default;
+$font-size-sm:                $font-size-base * .875 !default;
+
+$font-weight-lighter:         lighter !default;
+$font-weight-light:           300 !default;
+$font-weight-normal:          400 !default;
+$font-weight-bold:            700 !default;
+$font-weight-bolder:          bolder !default;
+
+$font-weight-base:            $font-weight-normal !default;
+$line-height-base:            1.5 !default;
+
 
 $weight-light: 300 !default;
 $weight-normal: 400 !default;
@@ -59,16 +68,37 @@ $element-bottom-margin: ($gutter-width*2)/3 !default;
 $bgGrayZebra: #f1f1f1;
 $borderColorGray: #dfdedf;
 
-$colorGreen: #6ea76b !default;
-$colorGreenMedium: #6bc552 !default;
-$colorPink: #ED198A !default;
-$colorGray: #676767 !default;
-$colorGrayLighter: #b0b0b0;
-$colorGrayDarker: #4D4D4D;
-$colorRed: #e33829;
-$colorBluePurple: #363e5d;
-$colorOrange: #e5681d;
 $colorBlue: #3083cc;
+
+$white:    #fff !default;
+$gray-100: #f8f9fa !default;
+$gray-200: #e9ecef !default;
+$gray-300: #dee2e6 !default;
+$gray-400: #ced4da !default;
+$gray-500: #adb5bd !default;
+$gray-600: #6c757d !default;
+$gray-700: #495057 !default;
+$gray-800: #343a40 !default;
+$gray-900: #212529 !default;
+$black:    #000 !default;
+
+
+$blue:   #3399ff !default;
+$red:    #e55353;
+$yellow: #f9b115;
+$green:  #2eb85c;
+// $indigo:  #6610f2 !default;
+// $purple:  #6f42c1 !default;
+// $pink:    #e83e8c !default;
+// $red:     #dc3545 !default;
+$orange:  #fd7e14 !default;
+// $yellow:  #ffc107 !default;
+// $green:   #28a745 !default;
+// $teal:    #20c997 !default;
+// $cyan:    #17a2b8 !default;
+
+$body-bg:    $white !default;
+$body-color: $gray-700 !default;
 
 
 $link: #0066c0;

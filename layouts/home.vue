@@ -33,6 +33,7 @@ export default {
         <app-header />
 
         <main>
+            <!-- <nuxt keep-alive /> -->
             <nuxt />
         </main>
 

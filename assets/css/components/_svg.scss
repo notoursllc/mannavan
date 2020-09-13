@@ -1,21 +1,13 @@
-.fillBlack {
-    fill: #000;
-}
-
-.fillBlue {
-    fill: $colorBlue;
-}
-
 .fillGray {
-    fill: $colorGray;
+    fill: $gray-700;
 }
 
 .fillGrayLight {
-    fill: $colorGrayLighter;
+    fill: $gray-500;
 }
 
 .fillRed {
-    fill: $colorRed;
+    fill: $red;
 }
 
 .fillWhite {
@@ -23,17 +15,5 @@
 }
 
 .fillGreen {
-    fill: $colorGreen
-}
-
-.fillBurntOrange {
-    fill: #9e0502;
-}
-
-.fillBlue {
-    fill: $colorBlue;
-}
-
-.fillDarkBlue {
-    fill: #2c4656;
+    fill: $green
 }

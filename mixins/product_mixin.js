@@ -63,6 +63,25 @@ export default {
         },
 
 
+        prodMix_getSkuImages(sku) {
+            console.log("GET SKI IMGES", sku)
+            const images = [];
+
+            if(isObject(sku) && Array.isArray(sku.images)) {
+                sku.images.forEach((obj) => {
+                    if(obj.published && obj.media.resource_type === 'IMAGE') {
+                        images.push({
+                            alt_text: obj.alt_text,
+                            url: obj.media.url
+                        });
+                    }
+                });
+            }
+
+            return images;
+        },
+
+
         prodMix_getFeaturedSkuImagesForProduct(product) {
             const images = [];
 

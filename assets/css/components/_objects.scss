@@ -1,13 +1,13 @@
 .bbGray { border-bottom: 1px solid $borderColorGray !important }
 .bgBlack { background-color: #000 !important }
-.borderRed { border-color: $colorRed !important }
+.borderRed { border-color: $red !important }
 
 .colorBlack { color: #000 !important }
-.colorGreen { color: $colorGreen !important }
-.colorGray { color: $colorGray !important }
-.colorGrayLighter { color: $colorGrayLighter !important }
-.colorRed { color: $colorRed !important }
-.colorOrange { color: $colorOrange !important }
+.colorGreen { color: $green !important }
+.colorGray { color: $gray-700 !important }
+.colorGrayLighter { color: $gray-500 !important }
+.colorRed { color: $red !important }
+.colorOrange { color: $orange !important }
 .colorWhite { color: #fff !important }
 .cursorGrab { cursor: grab }
 .cursorPointer { cursor: pointer }

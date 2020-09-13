@@ -139,7 +139,7 @@ export default {
         .item,
         .spacer {
             text-align: center;
-            color: $colorGrayLighter !important;
+            color: $gray-500 !important;
             vertical-align: middle;
         }
 
@@ -170,12 +170,12 @@ export default {
             &.active {
                 background-color: #effbee;
                 border: 3px solid #fff;
-                color: $colorGreen !important;
+                color: $green !important;
                 @include box-shadow(0, 10px, 30px, rgba(0, 0, 0, 0.1));
             }
 
             &.completed {
-                color: $colorGreen !important;
+                color: $green !important;
                 cursor: pointer;
 
                 &:hover {

@@ -52,8 +52,9 @@ export default {
 
 <template>
     <headroom :disabled="inCheckoutFlow" :zIndex="10">
-        <header role="banner" class="white">
-            <div class="bv-header-inner">
+
+        <header role="banner">
+            <div class="bv-header-inner content-wrap">
 
                 <!-- common header -->
                 <template v-if="!inCheckoutFlow">
@@ -75,7 +76,7 @@ export default {
                             :key="obj.id"
                             :to="{ name: 'productSubType', params: { productSubType: obj.slug } }"
                             tag="li"
-                            class="bv-header-nav-item cursorPointer"
+                            class="bv-header-nav-item cursorPointer fw600"
                             active-class="active">
                             {{ $t(type) }}
                             <div class="active-icon">
@@ -86,7 +87,7 @@ export default {
                         <nuxt-link
                             :to="{ name: 'index' }"
                             tag="li"
-                            class="bv-header-nav-item cursorPointer"
+                            class="bv-header-nav-item cursorPointer fw600"
                             active-class="active"
                             :exact="true">
                             {{ $t('All') }}
@@ -221,8 +222,8 @@ export default {
 @import "~assets/css/components/_variables.scss";
 @import "~assets/css/components/_mixins.scss";
 
-$header-height: 55px;
-$header-height-small: 46px;
+$header-height: 75px;
+$header-height-small: 55px;
 
 header {
     @include flex-basis(auto);
@@ -231,23 +232,16 @@ header {
     height: $header-height;
     line-height: $header-height;
     padding: 0;
-}
-
-header.dark {
-    background: #5a5a5a;
-    color: #fff;
-}
-
-header.white {
-    background: #fff;
+    background: rgba(255,255,255,0.95);
     border-bottom: 1px solid #dcdada;
 }
 
 header:after {
-    background: linear-gradient(to right, #e84f47 25%, #ffcd02 30%, #ffcd02 70%, #0792d8 75%);
+    // background: linear-gradient(to right, #e84f47 25%, #ffcd02 30%, #ffcd02 70%, #0792d8 75%);
+    background: linear-gradient(to right, #e84f47 30%, #ffcd02 33%, #ffcd02 66%, #0792d8 69%);
     position: absolute;
     content: '';
-    height: 4px;
+    height: 1px;
     right: 0;
     left: 0;
     top: 0;
@@ -261,8 +255,7 @@ header:after {
     padding: 0;
     font-size: 15px;
     height: 100%;
-    margin: 0 auto;
-    max-width: $header-max-width;
+    // max-width: $header-max-width;
 
     .bv-header-nav-list {
         height: $header-height;
@@ -271,6 +264,7 @@ header:after {
         @include justify-content(space-between);
         list-style: none;
         margin: 0;
+        padding: 0 10px;
 
         .bv-header-nav-item {
             box-sizing: border-box;
@@ -278,10 +272,8 @@ header:after {
             height: $header-height;
             font-weight: normal;
             // @include flex-grow(1);
-            padding-top: 1px;
             text-align: center;
             position: relative;
-            // border: 1px solid red;
 
             .active-icon {
                 display: none;
@@ -293,7 +285,7 @@ header:after {
                     text-align: center;
                     line-height: 10px;
                     position: relative;
-                    top: -20px;
+                    top: -30px;
                 }
             }
 

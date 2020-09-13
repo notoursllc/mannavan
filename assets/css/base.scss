@@ -1,60 +1,14 @@
 @charset "UTF-8";
 
+@import "components/variables";
 @import "components/normalize";
 @import "components/prefixer";
-@import "components/variables";
 @import "components/objects";
 @import "components/mixins";
 @import "components/element-ui-overrides";
 @import "components/animations";
 @import "components/svg";
-@import "components/minireset";
-
-
-// importing Bootstrap SCSS
-// Custom Bootstrap variable overrides go first
-$grid-breakpoints: (
-  xs: 0,
-  sm: 480px,
-  md: 640px,
-  lg: 992px,
-  xl: 1300px
-);
-$enable-rounded: true;
-
-
-// https://bootstrap-vue.org/docs/reference/color-variants#color-variants-and-css-class-mapping
-$white: #fff;
-$gray-100: #ebedef;
-$gray-200: #d8dbe0;
-$gray-300: #c4c9d0;
-$gray-400: #b1b7c1;
-$gray-500: #9da5b1;
-$gray-600: #8a93a2;
-$gray-700: #768192;
-$gray-800: #636f83;
-$gray-900: #4f5d73;
-$black: #000;
-
-$blue: #3399ff;
-$red: #e55353;
-$yellow: #f9b115;
-$green: #2eb85c;
-
-// Theme color default definitions
-$primary: $blue;
-$secondary: $gray-600;
-$success: $green;
-$info: $gray-500;
-$warning: $yellow;
-$danger: $red;
-$light: $gray-100;
-$dark: $gray-800;
-
-@import 'bootstrap/scss/bootstrap.scss';
-@import 'bootstrap-vue/src/index.scss';
-// @import "components/bootstrap-overrides";
-// end importing Bootstrap SCSS
+// @import "components/minireset";
 
 
 html {
@@ -71,34 +25,17 @@ body {
     height: 100%;
     padding: 0;
     margin: 0;
-    background-color: #f7f6f6;
+    // background-color: #f7f6f6;
+    background-color: #f8f9fa;
 }
 
-body {
-  color: $colorGrayDarker;
-  font-size: 16px;
-  font-weight: $weight-normal;
-  line-height: 1.5;
-}
-
-body,
-button,
-input,
-select,
-textarea {
-  font-family: $family-sans-serif
-}
-
-a {
-  color: $colorBlue;
-  cursor: pointer;
-  text-decoration: none;
-
-  &:hover {
-    color: $colorBlue;
-    text-decoration: underline;
-  }
-}
+// body,
+// button,
+// input,
+// select,
+// textarea {
+//   font-family: $font-family-base
+// }
 
 hr {
   background-color: hsl(0, 0%, 86%);
@@ -153,23 +90,40 @@ ul.disc {
     display: none
 }
 
-
 .pageContainerMax {
     padding: 20px 20px 100px 20px;
     width: 100%;
 }
-@media #{$only-screen-and-min-width-m}  {
+
+.content-wrap {
+    margin-left: 7px;
+    margin-right: 7px;
+}
+
+.pageContainerMax {
+    padding: 40px 10px;
+}
+
+@media #{$large-and-up}  {
+    .content-wrap {
+        margin-left: 30px;
+        margin-right: 30px;
+    }
+
     .pageContainerMax {
         max-width: 1440px;
         margin-right: auto;
         margin-left: auto;
     }
 }
-@media #{$only-screen-and-max-width-s}  {
-    .pageContainerMax {
-        padding: 20px 10px;
+
+@media #{$xlarge-and-up}  {
+    .content-wrap {
+        margin-left: 70px;
+        margin-right: 70px;
     }
 }
+
 
 .pageContainerMaxSkinny {
     max-width: 700px !important;
@@ -185,8 +139,6 @@ ul.disc {
     max-width: 100%;
     height: auto;
 }
-
-
 
 
 .player {
@@ -218,7 +170,7 @@ ul.disc {
 
 
 [role="alert"] {
-    color: $colorRed;
+    color: $red;
 }
 
 .g-spec,
@@ -292,7 +244,7 @@ ul.disc {
 
     .el-input__inner {
         font-size: 20px !important;
-        color: $colorGray !important;
+        color: $gray-700 !important;
         min-width: 200px;
     }
 
@@ -300,7 +252,7 @@ ul.disc {
         position: absolute;
         top: -9px;
         right: -8px;
-        color: $colorGreen;
+        color: $green;
         font-size: 16px;
     }
 }

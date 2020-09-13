@@ -1,8 +1,15 @@
 <script>
 import isObject from 'lodash.isobject';
 import product_mixin from '@/mixins/product_mixin';
+import ProductPrice from '@/components/product/ProductPrice';
+import ProductFeaturedImageThumbs from '@/components/product/ProductFeaturedImageThumbs';
 
 export default {
+    components: {
+        ProductPrice,
+        ProductFeaturedImageThumbs
+    },
+
     mixins: [
         product_mixin
     ],
@@ -24,12 +31,11 @@ export default {
     data() {
         return {
             visibleSku: {
-                sku: null,
+                sku: {},
                 featuredImageUrl: null
             },
-            // showThumbs: false,
-            showThumbs: true,
-            thumbs: []
+            showThumbs: false,
+            numVisibleThumbs: 0
         };
     },
 
@@ -48,26 +54,29 @@ export default {
 
     watch: {
         product: {
-            handler(newVal) {
-                if(isObject(newVal) && Array.isArray(newVal.skus)) {
-                    for(let i=0, l=newVal.skus.length; i<l; i++) {
-                        if(newVal.skus[i].published) {
-                            this.setVisibleSku(newVal.skus[i]);
-                            break;
-                        }
-                    }
-
-                    this.setFeaturedImages();
-                }
-
+            handler() {
+                this.init();
             },
             immediate: true
         }
     },
 
     methods: {
+        init() {
+            if(isObject(this.product) && Array.isArray(this.product.skus)) {
+                const skus = this.product.skus;
+
+                for(let i=0, l=skus.length; i<l; i++) {
+                    if(skus[i].published) {
+                        this.setVisibleSku(skus[i]);
+                        break;
+                    }
+                }
+            }
+        },
+
         setVisibleSku(sku) {
-            this.visibleSku.sku = isObject(sku) ? sku : null;
+            this.visibleSku.sku = isObject(sku) ? sku : {};
 
             const img = this.prodMix_getFeaturedImageForSku(sku);
 
@@ -96,15 +105,6 @@ export default {
             return smallestUrl;
         },
 
-        setFeaturedImages() {
-            const featuredImages = this.prodMix_getFeaturedSkuImagesForProduct(this.product);
-            this.thumbs = featuredImages.slice(0, this.maxVariantDisplay);
-        },
-
-        onThumbMouseOver(obj) {
-            this.setVisibleSku(obj.sku);
-        },
-
         goToProductDetails(skuId) {
             const params = {
                 seouri: this.product.seo_uri,
@@ -125,6 +125,14 @@ export default {
 
         onCardClick() {
             this.goToProductDetails(this.visibleSku.sku.id);
+        },
+
+        onCardMouseAction(isEnter) {
+            this.showThumbs = this.numVisibleThumbs ? !!isEnter : false;
+        },
+
+        setNumVisibleThumbs(num) {
+            this.numVisibleThumbs = num;
         }
     }
 };
@@ -132,120 +140,91 @@ export default {
 
 
 <template>
-    <figure class="pic-card" @click="onCardClick">
-        <picture>
-            <PiioElement :path="visibleSku.featuredImageUrl" tag="source" media="(max-width:969px)" class="img-grow"></PiioElement>
-            <PiioElement :path="visibleSku.featuredImageUrl" tag="img" class="img-grow"></PiioElement>
-        </picture>
+    <div class="pic-card-wrap"
+         @mouseenter="onCardMouseAction(true)"
+         @mouseleave="onCardMouseAction()">
 
-        <div class="pic-card-content-wrapper">
-            <div>
+        <figure
+            class="pic-card"
+            @click="onCardClick">
+
+            <picture v-if="visibleSku.featuredImageUrl">
+                <PiioElement :path="visibleSku.featuredImageUrl" tag="source" media="(max-width:969px)"></PiioElement>
+                <PiioElement :path="visibleSku.featuredImageUrl" tag="img"></PiioElement>
+            </picture>
+        </figure>
+
+        <div class="pic-card-info">
+            <product-featured-image-thumbs
+                v-show="showThumbs"
+                :product="product"
+                :width="45"
+                :limit="maxVariantDisplay"
+                @numdisplayed="setNumVisibleThumbs"
+                @mouseover="setVisibleSku"
+                @click="(sku) => goToProductDetails(sku.id)" />
+
+            <div v-show="!showThumbs">
                 <div class="pic-card-title">{{ product.title }}</div>
-                <div class="pic-card-subtitle">subtitle</div>
+                <div class="pic-card-caption">{{ product.caption }}</div>
             </div>
 
-            <div class="pic-card-count-wrapper">
-                <div v-if="thumbs.length > 1">
-                    <template v-if="showThumbs">
-                        <!-- <div @mouseleave="showThumbs = false"> -->
-                        <div>
-                            <div v-for="(obj, index) in thumbs"
-                                 :key="index"
-                                 class="media-thumb"
-                                 @click="goToProductDetails(obj.sku.id)">
-
-                                <!-- <picture
-                                    :id="`thumb_${index}`"
-                                    @mouseover="onThumbMouseOver(obj)">
-                                    <PiioElement :path="obj.url" tag="source" media="(max-width:45px)" class="thumbImg"></PiioElement>
-                                    <PiioElement :path="obj.url" tag="img" class="thumbImg"></PiioElement>
-                                </picture> -->
-
-                                <PiioElement
-                                    :path="obj.url"
-                                    tag="img"
-                                    :id="`thumb_${index}`"
-                                    class="thumbImg"
-                                    @mouseover="onThumbMouseOver(obj)"></PiioElement>
-
-                                <b-tooltip
-                                    :disabled="obj.sku.inventory_count > 0"
-                                    :target="`thumb_${index}`">{{ $t('Sold out') }}</b-tooltip>
-                            </div>
-
-                            <div class="colorway-overflow">{{ thumbOverflowDisplay }}</div>
-                        </div>
-                    </template>
-                    <template v-else>
-                        <div @mouseover="showThumbs = true">
-                            {{ $tc('_num_ Variants', numProductSkus, { num: numProductSkus }) }}
-                        </div>
-                    </template>
-                </div>
+            <div class="pic-card-price">
+                <product-price :sku="visibleSku.sku" />
             </div>
-
-            <div class="pic-card-price" @click="goToProductDetails">${{ visibleSku.sku.base_price }}</div>
         </div>
-    </figure>
+    </div>
 </template>
 
 
 <style lang="scss">
-    @import "~assets/css/components/_variables.scss";
+@import "~assets/css/components/_variables.scss";
+
+.pic-card-wrap {
+    cursor: pointer;
+    background-color: #fff;
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
 
     .pic-card {
-        // background-color: #fff;
         color: #000;
         transition: .3s;
         overflow: hidden;
         position: relative;
         display: block;
+        border-radius: 3px;
+        padding-bottom: 75%;
+        height: 0;
+        margin: 0;
+    }
 
-        .pic-card-img {
-            width: 40px;
-            height: 40px;
-            background-size: cover;
-            background-position: center;
-            display: inline-block;
-            margin: 0 3px;
+    .pic-card-info {
+        padding: 10px;
+        font-size: 16px;
+        font-weight: 500;
+        position: relative;
+        overflow: hidden;
+        min-height: 120px;
+        // border: 1px solid red;
+
+        .pic-card-alert {
+            color: rgb(250, 84, 0);
+            font-weight: 400;
         }
 
-        .pic-card-content-wrapper {
-            padding: 12px 0 2px;
-            // background-color: #fff;
-            font-size: 16px;
+        .pic-card-title,
+        .pic-card-price {
+            color: $gray-900;
             font-weight: 500;
-            position: relative;
-            overflow: hidden;
+        }
 
-            .pic-card-alert {
-                color: rgb(250, 84, 0);
-                font-weight: 400;
-            }
+        .pic-card-caption {
+            color: $gray-600;
+            font-size: 16px;
+        }
 
-            .pic-card-title {
-                width: 66%;
-            }
-
-            .pic-card-subtitle {
-                color: rgb(141,141,141);
-                font-size: 16px;
-            }
-
-            .pic-card-count-wrapper {
-                color: rgb(141,141,141);
-                height: 45px;
-                margin-top: 10px;
-            }
-
-            .pic-card-price {
-                position: absolute;
-                top: 0;
-                right: 0;
-                width: 100%;
-                padding: 12px 10px 0 0;
-                text-align: right;
-            }
+        .pic-card-price {
+            padding-top: 10px;
         }
 
         .media-thumb {
@@ -257,37 +236,9 @@ export default {
             .thumbImg {
                 width: 100%;
                 height: 100%;
-                border-radius: 50px;
+                border-radius: 3px;
             }
-
-            // .thumbImg {
-            //     width: 100%;
-            //     height: 100%;
-            //     border-radius: 50px;
-            //     background-size: cover;
-            //     background-position: center;
-            //     display: inline-block;
-            // }
-        }
-
-        .colorway-overflow {
-            margin-left: 5px;
-            display: inline-block;
-            line-height: 40px;
-            vertical-align: top;
         }
     }
-
-    // .pic-card-content {
-    //     position: absolute;
-    //     bottom: 0;
-    //     padding: 10px;
-    //     background-color: rgba(0,0,0,0.5);
-    //     color: #fff;
-    //     // height: 40px;
-    //     overflow: hidden;
-    //     font-size: 14px;
-    //     font-weight: 500;
-    //     width: 100%;
-    // }
+}
 </style>

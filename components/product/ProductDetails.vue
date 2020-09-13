@@ -1,22 +1,26 @@
 <script>
-import isObject from 'lodash.isobject';
-import _forEach from 'lodash.foreach';
 import product_mixin from '@/mixins/product_mixin';
 import shopping_cart_mixin from '@/mixins/shopping_cart_mixin';
+import ProductPrice from '@/components/product/ProductPrice';
+import ProductQuantityWarning from '@/components/product/ProductQuantityWarning';
+import ProductDetailsLayout from '@/components/product/ProductDetailsLayout';
+import ProductImageCarousel from '@/components/product/ProductImageCarousel';
+import ProductSizeButtons from '@/components/product/ProductSizeButtons';
+import TshirtSizeChart from '@/components/product/TshirtSizeChart';
+import NumberInput from '@/components/NumberInput';
 
 
 export default {
     name: 'ProductDetails',
 
     components: {
-        ProductPrice: () => import('@/components/product/ProductPrice'),
-        ProductQuantityWarning: () => import('@/components/product/ProductQuantityWarning'),
-        ProductDetailsLayout: () => import('@/components/product/ProductDetailsLayout'),
-        ProductImageCarousel: () => import('@/components/product/ProductImageCarousel'),
-        ProductSizeButtons: () => import('@/components/product/ProductSizeButtons'),
-
-        TshirtSizeChart: () => import('@/components/product/TshirtSizeChart'),
-        NumberInput: () => import('@/components/NumberInput')
+        ProductPrice,
+        ProductQuantityWarning,
+        ProductDetailsLayout,
+        ProductImageCarousel,
+        ProductSizeButtons,
+        TshirtSizeChart,
+        NumberInput
     },
 
     mixins: [
