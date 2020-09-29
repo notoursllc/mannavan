@@ -247,7 +247,9 @@ module.exports = {
      */
     build: {
         // analyze: true,
-        transpile: [/^element-ui/],
+        transpile: [
+            /^element-ui/
+        ],
 
         /*
         ** You can extend webpack config here
