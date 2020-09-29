@@ -48,14 +48,6 @@ export default {
         },
 
         /**
-         * Enable prev/next navigation buttons
-         */
-        navButtons: {
-            type: Boolean,
-            default: true
-        },
-
-        /**
          * All settings as one object
          */
         options: {
@@ -77,22 +69,6 @@ export default {
         rtl: {
             type: Boolean,
             default: false
-        },
-
-        /**
-         * Number of slides to scroll
-         */
-        slidesToScroll: {
-            type: Number,
-            default: 1
-        },
-
-        /**
-         * Number of slides to show
-         */
-        slidesToShow: {
-            type: Number,
-            default: 1
         },
 
         /**
@@ -143,15 +119,10 @@ export default {
 
     data () {
         return {
-            // autoplayInterval: null,
-            // autoplayRemaining: null,
-            // autoplayStartTimestamp: null,
-            // autoplayTimeout: null,
             currentSlide: null,
             dragDistance: 0,
             dragStartX: 0,
             dragStartY: 0,
-            // isAutoplayPaused: false,
             isMouseDown: false,
             slides: [],
             slidesClonedAfter: [],
@@ -208,7 +179,7 @@ export default {
         },
 
         widthSlide: function () {
-            return (!this.settings.unagile) ? this.widthContainer / this.settings.slidesToShow : 'auto';
+            return (!this.settings.unagile) ? this.widthContainer : 'auto';
         },
 
         // Initial settings based on props and options object
@@ -413,10 +384,10 @@ export default {
                 }
             }
 
-            const translateX = (!this.settings.fade) ? n * this.widthSlide * this.settings.slidesToScroll : 0;
+            const translateX = (!this.settings.fade) ? n * this.widthSlide : 0;
             this.transitionDelay = (transition) ? this.speed : 0;
 
-            if (this.infinite || (this.currentSlide + this.slidesToShow <= this.countSlides)) {
+            if (this.infinite || (this.currentSlide + 1 <= this.countSlides)) {
                 this.translateX = (this.settings.rtl) ? translateX : -1 * translateX;
             }
         },
@@ -444,10 +415,6 @@ export default {
             // this.toggleAutoPlay();
         },
 
-
-        /*
-        * EVENT HANDLERS
-        */
         handleMouseDown (e) {
             this.isMouseDown = true;
 
@@ -528,7 +495,7 @@ export default {
             const start = (this.slidesCloned) ? this.countSlides + this.currentSlide : this.currentSlide;
 
             // To account for the combination of infinite = false and centerMode = true, ensure we don't overrun the bounds of the slide count.
-            for (let i = Math.max(start, 0); i < Math.min(start + this.settings.slidesToShow, this.countSlides); i++) {
+            for (let i = Math.max(start, 0); i < Math.min(start + 1, this.countSlides); i++) {
                 this.slidesAll[i].classList.add('agile__slide--current');
             }
         },
