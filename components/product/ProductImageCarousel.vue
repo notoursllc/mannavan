@@ -24,14 +24,6 @@ export default {
         },
 
         /**
-         * Infinite loop sliding
-         */
-        infinite: {
-            type: Boolean,
-            default: true
-        },
-
-        /**
          * Index of slide to start on
          */
         initialSlide: {
@@ -125,13 +117,12 @@ export default {
             dragStartY: 0,
             isMouseDown: false,
             slides: [],
-            slidesClonedAfter: [],
-            slidesClonedBefore: [],
             isSSR: (typeof window === 'undefined'),
             transitionDelay: 0,
             translateX: 0,
             widthWindow: 0,
-            widthContainer: 0
+            widthContainer: 0,
+            widthSlide: 'auto'
         };
     },
 
@@ -141,19 +132,15 @@ export default {
         },
 
         canGoToPrev: function () {
-            return (this.settings.infinite || this.currentSlide > 0);
+            return this.currentSlide > 0;
         },
 
         canGoToNext: function () {
-            return (this.settings.infinite || this.currentSlide < this.countSlides - 1);
+            return this.currentSlide < this.countSlides - 1;
         },
 
         countSlides: function () {
             return (this.isSSR) ? this.htmlCollectionToArray(this.$slots.default).length : this.slides.length;
-        },
-
-        countSlidesAll: function () {
-            return this.slidesAll.length;
         },
 
         currentBreakpoint: function () {
@@ -166,21 +153,10 @@ export default {
                 return 0;
             }
 
-            const marginX = (this.slidesCloned) ? this.countSlides * this.widthSlide : 0;
+            const marginX = 0;
             return (this.settings.rtl) ? marginX : -1 * marginX;
         },
 
-        slidesCloned: function () {
-            return (!this.settings.unagile && !this.settings.fade && this.settings.infinite);
-        },
-
-        slidesAll: function () {
-            return (this.slidesCloned) ? [...this.slidesClonedBefore, ...this.slides, ...this.slidesClonedAfter] : this.slides;
-        },
-
-        widthSlide: function () {
-            return (!this.settings.unagile) ? this.widthContainer : 'auto';
-        },
 
         // Initial settings based on props and options object
         initialSettings: function () {
@@ -250,8 +226,10 @@ export default {
         },
 
         widthSlide () {
-            for (let i = 0; i < this.countSlidesAll; i++) {
-                this.slidesAll[i].style.width = `${this.widthSlide}${(this.widthSlide !== 'auto') ? 'px' : ''}`;
+            const widthStyle = `${this.widthSlide}${(this.widthSlide !== 'auto') ? 'px' : ''}`;
+
+            for (let i=0, l=this.slides.length; i<l; i++) {
+                this.slides[i].style.width = widthStyle;
             }
         },
 
@@ -299,10 +277,6 @@ export default {
     },
 
     methods: {
-
-        /**
-        * Set window & container width
-        */
         getWidth () {
             if (this.isSSR) {
                 return false;
@@ -310,6 +284,7 @@ export default {
 
             this.widthWindow = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
             this.widthContainer = this.$refs.list.clientWidth;
+            this.widthSlide = (!this.settings.unagile) ? this.widthContainer : 'auto';
         },
 
         /**
@@ -319,7 +294,6 @@ export default {
             return Array.prototype.slice.call(collection, 0);
         },
 
-        // Return current breakpoint
         getCurrentBreakpoint () {
             return this.currentBreakpoint;
         },
@@ -329,12 +303,10 @@ export default {
             return this.settings;
         },
 
-        // Return current slide index
         getCurrentSlide () {
             return this.currentSlide;
         },
 
-        // Return initial settings
         getInitialSettings () {
             return this.initialSettings;
         },
@@ -366,10 +338,7 @@ export default {
             let slideNextReal = n;
 
             if (transition) {
-                if (this.settings.infinite && n < 0) {
-                    slideNextReal = this.countSlides - 1;
-                }
-                else if (n >= this.countSlides) {
+                if (n >= this.countSlides) {
                     slideNextReal = 0;
                 }
 
@@ -387,7 +356,7 @@ export default {
             const translateX = (!this.settings.fade) ? n * this.widthSlide : 0;
             this.transitionDelay = (transition) ? this.speed : 0;
 
-            if (this.infinite || (this.currentSlide + 1 <= this.countSlides)) {
+            if (this.currentSlide + 1 <= this.countSlides) {
                 this.translateX = (this.settings.rtl) ? translateX : -1 * translateX;
             }
         },
@@ -406,13 +375,12 @@ export default {
             }
         },
 
-        // Reload carousel
         reload () {
+            console.log("RELOAD")
             this.getWidth();
             this.prepareSlides();
             this.prepareCarousel();
             this.toggleFade();
-            // this.toggleAutoPlay();
         },
 
         handleMouseDown (e) {
@@ -464,14 +432,11 @@ export default {
         prepareSlides () {
             this.slides = this.htmlCollectionToArray(this.$refs.slides.children);
 
-            // Probably timeout needed
-            if (this.slidesCloned) {
-                this.slidesClonedBefore = this.htmlCollectionToArray(this.$refs.slidesClonedBefore.children);
-                this.slidesClonedAfter = this.htmlCollectionToArray(this.$refs.slidesClonedAfter.children);
-            }
+            const widthStyle = `${this.widthSlide}${(this.widthSlide !== 'auto') ? 'px' : ''}`;
 
-            for (const slide of this.slidesAll) {
+            for (const slide of this.slides) {
                 slide.classList.add('agile__slide');
+                slide.style.width = widthStyle;
             }
         },
 
@@ -492,11 +457,11 @@ export default {
             // Add active & current class for current slide
             setTimeout(() => this.slides[this.currentSlide].classList.add('agile__slide--active'), this.changeDelay);
 
-            const start = (this.slidesCloned) ? this.countSlides + this.currentSlide : this.currentSlide;
+            const start = this.currentSlide;
 
             // To account for the combination of infinite = false and centerMode = true, ensure we don't overrun the bounds of the slide count.
             for (let i = Math.max(start, 0); i < Math.min(start + 1, this.countSlides); i++) {
-                this.slidesAll[i].classList.add('agile__slide--current');
+                this.slides[i].classList.add('agile__slide--current');
             }
         },
 
@@ -538,12 +503,7 @@ export default {
                 :style="{transform: `translate(${translateX + marginX}px)`, transition: `transform ${settings.timing} ${transitionDelay}ms`}"
                 @mouseover="handleMouseOver('track')"
                 @mouseout="handleMouseOut('track')">
-                <div
-                    v-show="slidesCloned"
-                    ref="slidesClonedBefore"
-                    class="agile__slides agile__slides--cloned">
-                    <slot />
-                </div>
+
 
                 <div
                     ref="slides"
@@ -551,12 +511,7 @@ export default {
                     <slot />
                 </div>
 
-                <div
-                    v-show="slidesCloned"
-                    ref="slidesClonedAfter"
-                    class="agile__slides agile__slides--cloned">
-                    <slot />
-                </div>
+
             </div>
         </div>
 
