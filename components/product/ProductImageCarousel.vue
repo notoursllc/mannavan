@@ -504,17 +504,13 @@ export default {
                 @mouseover="handleMouseOver('track')"
                 @mouseout="handleMouseOut('track')">
 
-
                 <div
                     ref="slides"
                     class="agile__slides agile__slides--regular">
                     <slot />
                 </div>
-
-
             </div>
         </div>
-
 
         <div
             v-if="$slots.caption"
@@ -525,6 +521,7 @@ export default {
         <div
             v-if="!settings.unagile"
             class="agile__actions">
+
             <button
                 ref="prevButton"
                 class="agile__nav-button agile__nav-button--prev"
@@ -533,6 +530,17 @@ export default {
                 @click="goToPrev()">
                 <slot name="prevButton">
                     ←
+                </slot>
+            </button>
+
+            <button
+                ref="nextButton"
+                class="agile__nav-button agile__nav-button--next"
+                :disabled="!canGoToNext"
+                type="button"
+                @click="goToNext()">
+                <slot name="nextButton">
+                    →
                 </slot>
             </button>
 
@@ -554,127 +562,248 @@ export default {
                 </li>
             </ul>
 
-            <button
-                ref="nextButton"
-                class="agile__nav-button agile__nav-button--next"
-                :disabled="!canGoToNext"
-                type="button"
-                @click="goToNext()">
-                <slot name="nextButton">
-                    →
-                </slot>
-            </button>
         </div>
+
     </div>
 </template>
 
 
-<style>
-.agile {
-    position: relative;
-}
+<style lang="scss">
+@import '~assets/css/components/_variables.scss';
+@import "~assets/css/components/_mixins.scss";
 
-.agile--ssr .agile__slides--cloned {
-    display: none
-}
-
-.agile--ssr .agile__slides > * {
-    overflow: hidden;
-    width: 0
-}
-
-.agile--ssr .agile__slides > *:first-child {
-    width: 100%
-}
-
-.agile--rtl .agile__track,
-.agile--rtl .agile__slides,
-.agile--rtl .agile__actions,
-.agile--rtl .agile__dots {
-    flex-direction: row-reverse;
-}
-
-.agile:focus, .agile:active, .agile *:focus, .agile *:active {
+.agile:focus,
+.agile:active,
+.agile *:focus,
+.agile *:active {
     outline: none;
 }
 
-.agile__list {
-    display: block;
+.agile {
+    position: relative;
     overflow: hidden;
-    position: relative;
-    width: 100%;
+
+    .agile--ssr {
+        .agile__slides--cloned {
+            display: none
+        }
+
+        .agile__slides > * {
+            overflow: hidden;
+            width: 0
+        }
+
+        .agile__slides > *:first-child {
+            width: 100%
+        }
+    }
+
+    .agile--rtl {
+        .agile__track,
+        .agile__slides,
+        .agile__actions,
+        .agile__dots {
+            flex-direction: row-reverse;
+        }
+    }
+
+    .agile__list {
+        display: block;
+        overflow: hidden;
+        position: relative;
+        width: 100%;
+    }
+
+    .agile__track {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+    }
+
+    .agile__slides {
+        align-items: center;
+        display: flex;
+        flex-direction: row;
+        flex-grow: 1;
+        flex-shrink: unset;
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+    }
+
+    .agile--disabled .agile__slides {
+        display: block;
+        width: 100%;
+    }
+
+    .agile__slide {
+        @include flexbox();
+        @include justify-content(center);
+        @include align-items(center);
+        @include flex-grow(1);
+        flex-shrink: 0;
+        overflow: hidden;
+    }
+
+    .agile__slide,
+    .agile__slide * {
+        -webkit-user-drag: none;
+    }
+
+    .agile--fade {
+        .agile__slide {
+            opacity: 0;
+            position: relative;
+            z-index: 0;
+        }
+
+        .agile__slide--active {
+            opacity: 1;
+            z-index: 2;
+        }
+
+        .agile__slide--expiring {
+            opacity: 1;
+            transition-duration: 0s;
+            z-index: 1;
+        }
+    }
+
+    .agile__actions {
+        display: flex;
+        justify-content: space-between;
+
+        .agile__nav-button {
+            background: none;
+            width: 90px;
+            border: none;
+            cursor: pointer;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            @include flexbox();
+            @include justify-content(center);
+            @include align-items(center);
+
+            // &:focus {
+            //     border: 2px solid green;
+            //     box-shadow: none;
+            // }
+
+            &[disabled] {
+                cursor: not-allowed;
+
+                svg {
+                    stroke: rgb(159, 159, 159) !important;
+                }
+            }
+
+            &.agile__nav-button--prev {
+                left: 0;
+
+                svg {
+                    margin-left: -2px;
+                }
+            }
+
+            &.agile__nav-button--next {
+                right: 0;
+
+                svg {
+                    margin-right: -2px;
+                }
+            }
+
+            &.agile__nav-button--prev,
+            &.agile__nav-button--next {
+                div {
+                    height: 40px;
+                    width: 40px;
+                    background-color: rgba(255, 255, 255, 0.2);
+                    border-radius: 20px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    text-align: center;
+
+                    svg {
+                        stroke: #000;
+                    }
+
+                    &:hover {
+                        background-color: rgba(255, 255, 255, 0.8);
+                    }
+                }
+            }
+        }
+
+        .agile__dots {
+            align-items: center;
+            display: flex;
+            list-style: none;
+            padding: 10px 0 0;
+            white-space: nowrap;
+            // bottom: -15px;
+            left: 50%;
+            position: relative;
+            transform: translateX(-50%);
+
+            .agile__dot {
+                margin: 0 10px;
+
+                button {
+                    background-color: transparent;
+                    border: 1px solid #a8a8a8;
+                    border-radius: 50%;
+                    cursor: pointer;
+                    display: block;
+                    height: 10px;
+                    font-size: 0;
+                    line-height: 0;
+                    margin: 0;
+                    padding: 0;
+                    transition-duration: .3s;
+                    width: 10px;
+                }
+
+                &.agile__dot--current,
+                &:hover {
+                    button {
+                        background-color: #a8a8a8;
+                    }
+                }
+            }
+        }
+    }
 }
 
-.agile__track {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-}
+.agile--disabled {
+    .agile__slides {
+        display: block;
+        width: 100%;
 
-.agile__actions {
-    display: flex;
-    justify-content: space-between;
-}
+        .slide {
+            width: 100%;
 
-.agile__slides {
-    align-items: center;
-    display: flex;
-    flex-direction: row;
-    flex-grow: 1;
-    flex-shrink: unset;
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-}
+            img {
+                width: 100%;
+            }
+        }
+    }
 
-.agile--disabled .agile__slides {
-    display: block;
-    width: 100%;
-}
+    @media only screen and (min-width: 1024px) {
+        .agile__slides {
+            @include flexbox();
+            @include flex-wrap(wrap);
+            @include justify-content(space-between);
+            @include align-items(flex-start);
+            padding: 10px 0 0 10px;
 
-.agile__slide {
-    display: block;
-    flex-grow: 1;
-    flex-shrink: 0;
-}
-
-.agile__slide,
-.agile__slide * {
-    -webkit-user-drag: none;
-}
-
-.agile--fade .agile__slide {
-    opacity: 0;
-    position: relative;
-    z-index: 0;
-}
-
-.agile--fade .agile__slide--active {
-    opacity: 1;
-    z-index: 2;
-}
-
-.agile--fade .agile__slide--expiring {
-    opacity: 1;
-    transition-duration: 0s;
-    z-index: 1;
-}
-
-.agile__nav-button[disabled] {
-    cursor: default;
-}
-
-.agile__dots {
-    align-items: center;
-    display: flex;
-    list-style: none;
-    padding: 0;
-    white-space: nowrap;
-}
-
-.agile__dot button {
-    cursor: pointer;
-    display: block;
-    font-size: 0;
-    line-height: 0;
+            .slide {
+                @include flex(none);
+                width: 50% !important;
+                padding: 0 10px 10px 0;
+            }
+        }
+    }
 }
 </style>
