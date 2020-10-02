@@ -14,6 +14,8 @@ import ProductFeaturedImageThumbs from '@/components/product/ProductFeaturedImag
 import NumberInput from '@/components/NumberInput';
 import QuantityButton from '@/components/product/QuantityButton';
 
+const slideBreakpoint = 1024;
+
 export default {
     components: {
         ProductPrice,
@@ -37,6 +39,7 @@ export default {
         return {
             product: {},
             visibleSku: {},
+            visibleImages: [],
 
             // skuOptions: {},
             selectedAttributes: {},
@@ -46,7 +49,21 @@ export default {
             selectedSize: null,
             selectedQty: 1,
             productQuantityMaxValue: 30,
-            isLoading: false
+            isLoading: false,
+            carouselOptions: {
+                fade: false,
+                responsive: [
+                    {
+                        breakpoint: 401
+                    },
+                    {
+                        breakpoint: slideBreakpoint,
+                        settings: {
+                            unagile: true
+                        }
+                    }
+                ]
+            }
         };
     },
 
@@ -59,10 +76,6 @@ export default {
     // },
 
     computed: {
-        visibleImages() {
-            return this.prodMix_getSkuImages(this.visibleSku);
-        }
-
         /**
          * Checks to see if the selected attributes reporesent a sku
          */
@@ -105,6 +118,7 @@ export default {
                 for(let i=0, l=data.product.skus.length; i<l; i++) {
                     if(data.product.skus[i].id === route.query.sku) {
                         data.visibleSku = data.product.skus[i];
+                        data.visibleImages = product_mixin.methods.prodMix_getSkuImages(data.visibleSku);
                         break;
                     }
                 }
@@ -265,6 +279,15 @@ export default {
 
         onThumbClick(sku) {
             this.visibleSku = sku || {};
+            this.visibleImages = this.prodMix_getSkuImages(this.visibleSku);
+
+            const widthWindow = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+            if(widthWindow <= slideBreakpoint) {
+                setTimeout(() => {
+                    this.$refs.carousel.goTo(0);
+                    this.$refs.carousel.reload();
+                }, 0);
+            }
         }
     }
 };
@@ -276,10 +299,25 @@ export default {
         <product-details-layout v-if="product">
             <!-- pics -->
             <template slot="pics">
-                <picture v-for="(obj, index) in visibleImages">
-                    <PiioElement :path="obj.url" tag="source" media="(max-width:969px)"></PiioElement>
-                    <PiioElement :path="obj.url" tag="img"></PiioElement>
-                </picture>
+                <client-only placeholder="Carousel loading...">
+                    <product-image-carousel :options="carouselOptions" ref="carousel">
+                        <picture
+                            v-for="(obj, index) in visibleImages"
+                            :key="index"
+                            class="slide">
+                            <PiioElement :path="obj.url" tag="source" media="(max-width:969px)"></PiioElement>
+                            <PiioElement :path="obj.url" tag="img"></PiioElement>
+                        </picture>
+
+                        <div slot="prevButton" class="">
+                            <svg-icon icon="chevron-left" width="24" height="24" />
+                        </div>
+
+                        <div slot="nextButton">
+                            <svg-icon icon="chevron-right" width="24" height="24" />
+                        </div>
+                    </product-image-carousel>
+                </client-only>
             </template>
 
             <template slot="title">{{ product.title }}</template>
@@ -326,15 +364,3 @@ export default {
         </product-details-layout>
     </div>
 </template>
-
-
-<style lang="scss">
-.grid-image {
-    width: 49%;
-    background-color: #ccc;
-    display: inline-block;
-    margin: 0;
-    padding: 0;
-}
-</style>
-

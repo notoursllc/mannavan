@@ -130,6 +130,7 @@ module.exports = {
         '@/plugins/prettyJson',
         '@/plugins/svgIcon.js',
         '@/plugins/piio/piio.js',
+        '@/plugins/directives.js',
         // '@/plugins/vue-placeholders.js',
         // '@/plugins/vue-observe-visibility.client.js',
         { src: '@/plugins/piio/piio.js', ssr: false },

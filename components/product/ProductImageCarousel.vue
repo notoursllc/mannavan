@@ -122,7 +122,11 @@ export default {
             translateX: 0,
             widthWindow: 0,
             widthContainer: 0,
-            widthSlide: 'auto'
+            widthSlide: 'auto',
+            fullscreen: {
+                show: false,
+                src: null
+            }
         };
     },
 
@@ -420,12 +424,6 @@ export default {
             this.enableScroll();
         },
 
-        handleMouseOver (element) {
-        },
-
-        handleMouseOut (element) {
-        },
-
         /**
          * Prepare slides classes and styles
          */
@@ -484,6 +482,17 @@ export default {
 
                 this.goTo(this.currentSlide);
             }
+        },
+
+        onSlidesClick(e) {
+            console.log("ON SLIDES CLICK", e)
+            console.log("TARGET", e.target.dataset.piio)
+            this.fullscreen.src = e.target.dataset.piio;
+            this.fullscreen.show = true;
+        },
+
+        onFullCloseClick() {
+            this.fullscreen.show = false;
         }
     }
 };
@@ -500,13 +509,12 @@ export default {
             <div
                 ref="track"
                 class="agile__track"
-                :style="{transform: `translate(${translateX + marginX}px)`, transition: `transform ${settings.timing} ${transitionDelay}ms`}"
-                @mouseover="handleMouseOver('track')"
-                @mouseout="handleMouseOut('track')">
+                :style="{transform: `translate(${translateX + marginX}px)`, transition: `transform ${settings.timing} ${transitionDelay}ms`}">
 
                 <div
                     ref="slides"
-                    class="agile__slides agile__slides--regular">
+                    class="agile__slides agile__slides--regular"
+                    @click="onSlidesClick">
                     <slot />
                 </div>
             </div>
@@ -551,9 +559,7 @@ export default {
                     v-for="n in countSlides"
                     :key="n"
                     class="agile__dot"
-                    :class="{'agile__dot--current': n - 1 === currentSlide}"
-                    @mouseover="handleMouseOver('dot')"
-                    @mouseout="handleMouseOut('dot')">
+                    :class="{'agile__dot--current': n - 1 === currentSlide}">
                     <button
                         type="button"
                         @click="goTo(n - 1)">
@@ -562,6 +568,17 @@ export default {
                 </li>
             </ul>
 
+        </div>
+
+        <div class="agile_full" v-if="fullscreen.show">
+            <img :src="fullscreen.src" v-image-drag:center />
+            <button
+                type="button"
+                class="agile_full_close"
+                :aria-label="$t('Close')"
+                @click="onFullCloseClick">
+                <svg-icon icon="x" width="24" height="24" />
+            </button>
         </div>
 
     </div>
@@ -771,6 +788,46 @@ export default {
                         background-color: #a8a8a8;
                     }
                 }
+            }
+        }
+    }
+
+    .agile_full {
+        position: fixed;
+        top: 0px;
+        bottom: 0px;
+        left: 0px;
+        right: 0px;
+        overflow: hidden;
+        background-color: rgb(255, 255, 255);
+        z-index: 10;
+
+        .agile_full_close {
+            border: 0;
+            background: none;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            cursor: pointer;
+        }
+
+        img {
+            position: absolute;
+            max-width: initial;
+            top: 0;
+            left: 0;
+            transition: opacity 100ms ease-in-out 0s;
+            opacity: 1;
+        }
+    }
+
+    @media #{$medium-and-up} {
+        .agile_full {
+            overflow: scroll;
+
+            .agile_full_close {
+                top: 40px;
+                right: 40px;
             }
         }
     }
