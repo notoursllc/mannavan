@@ -258,9 +258,11 @@ export default {
         this.$refs.track.addEventListener('touchstart', this.handleMouseDown);
         this.$refs.track.addEventListener('touchend', this.handleMouseUp);
         this.$refs.track.addEventListener('touchmove', this.handleMouseMove);
-        this.$refs.track.addEventListener('mousedown', this.handleMouseDown);
-        this.$refs.track.addEventListener('mouseup', this.handleMouseUp);
-        this.$refs.track.addEventListener('mousemove', this.handleMouseMove);
+
+        // Commenting out becase I only want touch swiping, not mouse swiping:
+        // this.$refs.track.addEventListener('mousedown', this.handleMouseDown);
+        // this.$refs.track.addEventListener('mouseup', this.handleMouseUp);
+        // this.$refs.track.addEventListener('mousemove', this.handleMouseMove);
 
         // Init
         this.isSSR = false;
@@ -273,9 +275,9 @@ export default {
         this.$refs.track.removeEventListener('touchstart', this.handleMouseDown);
         this.$refs.track.removeEventListener('touchend', this.handleMouseUp);
         this.$refs.track.removeEventListener('touchmove', this.handleMouseMove);
-        this.$refs.track.removeEventListener('mousedown', this.handleMouseDown);
-        this.$refs.track.removeEventListener('mouseup', this.handleMouseUp);
-        this.$refs.track.removeEventListener('mousemove', this.handleMouseMove);
+        // this.$refs.track.removeEventListener('mousedown', this.handleMouseDown);
+        // this.$refs.track.removeEventListener('mouseup', this.handleMouseUp);
+        // this.$refs.track.removeEventListener('mousemove', this.handleMouseMove);
 
         // this.disableAutoPlay();
     },
@@ -394,25 +396,28 @@ export default {
                 this.dragStartX = e.touches[0].clientX;
                 this.dragStartY = e.touches[0].clientY;
             }
-            if (e.type.indexOf('mouse') !== -1) {
-                this.dragStartX = e.clientX;
-                this.dragStartY = e.clientY;
-            }
+            // if (e.type.indexOf('mouse') !== -1) {
+            //     this.dragStartX = e.clientX;
+            //     this.dragStartY = e.clientY;
+            // }
         },
 
         handleMouseMove (e) {
             let positionX;
             let positionY;
+
             if (e.type.indexOf('touch') !== -1) {
                 positionX = e.touches[0].clientX;
                 positionY = e.touches[0].clientY;
             }
-            if (e.type.indexOf('mouse') !== -1) {
-                positionX = e.clientX;
-                positionY = e.clientY;
-            }
+            // if (e.type.indexOf('mouse') !== -1) {
+            //     positionX = e.clientX;
+            //     positionY = e.clientY;
+            // }
+
             const dragDistanceX = Math.abs(positionX - this.dragStartX);
             const dragDistanceY = Math.abs(positionY - this.dragStartY);
+
             if (dragDistanceX > 3 * dragDistanceY) {
                 this.disableScroll();
                 this.dragDistance = positionX - this.dragStartX;
@@ -571,7 +576,7 @@ export default {
         </div>
 
         <div class="agile_full" v-if="fullscreen.show">
-            <img :src="fullscreen.src" v-image-drag:center />
+            <img :src="fullscreen.src" v-image-drag:center>
             <button
                 type="button"
                 class="agile_full_close"
@@ -701,6 +706,10 @@ export default {
             @include justify-content(center);
             @include align-items(center);
 
+            &:hover {
+                background: rgba(255,255,255,0.2);
+            }
+
             // &:focus {
             //     border: 2px solid green;
             //     box-shadow: none;
@@ -708,6 +717,10 @@ export default {
 
             &[disabled] {
                 cursor: not-allowed;
+
+                &:hover {
+                    background: none;
+                }
 
                 svg {
                     stroke: rgb(159, 159, 159) !important;
@@ -823,8 +836,6 @@ export default {
 
     @media #{$medium-and-up} {
         .agile_full {
-            overflow: scroll;
-
             .agile_full_close {
                 top: 40px;
                 right: 40px;
