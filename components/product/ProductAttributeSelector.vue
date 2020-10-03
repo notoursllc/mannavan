@@ -1,8 +1,13 @@
 <script>
 import { Select, Option, Button } from 'element-ui';
+import BvButton from '@/components/button/BvButton';
 
 export default {
     name: 'ProductAttributeSelector',
+
+    components: {
+        BvButton
+    },
 
     inheritAttrs: false,
 
@@ -69,10 +74,10 @@ export default {
             this.optionLabelValues.forEach((obj) => {
                 buttons.push(
                     createElement(
-                        Button,
+                        BvButton,
                         {
                             props: {
-                                type: this.value === obj.value ? 'primary' : 'plain'
+                                variant: this.value === obj.value ? 'primary' : 'plain-outline'
                             },
                             class: 'attr-btn',
                             nativeOn: {

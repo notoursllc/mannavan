@@ -28,7 +28,6 @@
     "Artist": "Artist",
     "Attributes": "Attributes",
 
-
     "Barcode": "Barcode",
     "Barcode (ISBN, UPC, GTIN, etc.)": "Barcode (ISBN, UPC, GTIN, etc.)",
     "Billing address": "Billing address",
@@ -59,6 +58,7 @@
     "Choose a payment method": "Choose a payment method",
     "Choose another file": "Choose another file",
     "Choose file": "Choose file",
+    "Close": "Close",
     "Collection added successfully": "Collection added successfully",
     "Collection updated successfully": "Collection updated successfully",
     "Collections": "Collections",

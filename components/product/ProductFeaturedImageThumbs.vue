@@ -131,19 +131,18 @@ export default {
 
 <style lang="scss">
 .media-thumb {
-    margin: 0 3px;
-    display: inline-block;
+    padding: 0 3px;
+    display: table-cell;
     cursor: pointer;
 
     img {
         width: 100%;
-        height: 100%;
         border-radius: 3px;
         border: 2px transparent;
+        display: block;
 
         &:hover,
         &.selected {
-            // border: 2px solid rgb(55, 194, 245);
             box-shadow: 0 0 0 2px rgb(55, 194, 245);
         }
     }

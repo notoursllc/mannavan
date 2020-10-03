@@ -69,20 +69,6 @@ $bgGrayZebra: #f1f1f1;
 $borderColorGray: #dfdedf;
 
 $colorBlue: #3083cc;
-
-$white:    #fff !default;
-$gray-100: #f8f9fa !default;
-$gray-200: #e9ecef !default;
-$gray-300: #dee2e6 !default;
-$gray-400: #ced4da !default;
-$gray-500: #adb5bd !default;
-$gray-600: #6c757d !default;
-$gray-700: #495057 !default;
-$gray-800: #343a40 !default;
-$gray-900: #212529 !default;
-$black:    #000 !default;
-
-
 $blue:   #3399ff !default;
 $red:    #e55353;
 $yellow: #f9b115;
@@ -97,8 +83,7 @@ $orange:  #fd7e14 !default;
 // $teal:    #20c997 !default;
 // $cyan:    #17a2b8 !default;
 
-$body-bg:    $white !default;
-$body-color: $gray-700 !default;
+
 
 
 $link: #0066c0;
@@ -111,3 +96,54 @@ $tile_box_shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2),
                   0 1px 10px 0 rgba(0, 0, 0, 0.12);
 
 $bouncy: cubic-bezier(.20, 1.3, .7, 1);
+
+
+/*
+* Theme colors
+* Borrowed from: https://vue.chakra-ui.com/theme
+*/
+$black: #000 !default;
+$white: #fff !default;
+
+$blue-50: #DEF0FF !default;
+$blue-100: #AFD0FF !default;
+$blue-200: #7DB1FF !default;
+$blue-300: #4B91FF !default;
+$blue-400: #1A72FF !default;
+$blue-500: #0058E6 !default;
+$blue-600: #0045B4 !default;
+$blue-700: #003182 !default;
+$blue-800: #001D51 !default;
+$blue-900: #000A21 !default;
+
+$gray-100: #f8f9fa !default;
+$gray-200: #e9ecef !default;
+$gray-300: #dee2e6 !default;
+$gray-400: #ced4da !default;
+$gray-500: #adb5bd !default;
+$gray-600: #6c757d !default;
+$gray-700: #495057 !default;
+$gray-800: #343a40 !default;
+$gray-900: #212529 !default;
+
+$green-50: #E2FBED !default;
+$green-100: #C2EBD4 !default;
+$green-200: #9FDDB9 !default;
+$green-300: #7CCF9E !default;
+$green-400: #58C184 !default;
+$green-500: #3EA76A !default;
+$green-600: #2E8251 !default;
+$green-700: #1F5D3A !default;
+$green-800: #0F3921 !default;
+$green-900: #001506 !default;
+
+$red-50: #FFE5E9 !default;
+$red-100: #F9BCC2 !default;
+$red-200: #EE919A !default;
+$red-300: #E66673 !default;
+$red-400: #DD3B4B !default;
+$red-500: #C42231 !default;
+$red-600: #991826 !default;
+$red-700: #6E101A !default;
+$red-800: #44070E !default;
+$red-900: #1E0001 !default;

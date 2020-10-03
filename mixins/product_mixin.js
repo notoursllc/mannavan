@@ -64,7 +64,6 @@ export default {
 
 
         prodMix_getSkuImages(sku) {
-            console.log("GET SKI IMGES", sku)
             const images = [];
 
             if(isObject(sku) && Array.isArray(sku.images)) {
@@ -77,6 +76,8 @@ export default {
                     }
                 });
             }
+
+            console.log("prodMix_getSkuImages DONE", images)
 
             return images;
         },

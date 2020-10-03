@@ -186,16 +186,27 @@ export default {
     border: 1px solid #e6e6e6;
     border-radius: 3px;
 
+    // .pic-card {
+    //     color: #000;
+    //     transition: .3s;
+    //     overflow: hidden;
+    //     position: relative;
+    //     display: block;
+    //     border-radius: 3px;
+    //     padding-bottom: 75%;
+    //     height: 0;
+    //     margin: 0;
+    // }
     .pic-card {
-        color: #000;
         transition: .3s;
-        overflow: hidden;
-        position: relative;
         display: block;
-        border-radius: 3px;
-        padding-bottom: 75%;
-        height: 0;
-        margin: 0;
+        width: 100%;
+        background: #fff;
+
+        img {
+            width: 100%;
+            display: block;
+        }
     }
 
     .pic-card-info {
@@ -225,19 +236,6 @@ export default {
 
         .pic-card-price {
             padding-top: 10px;
-        }
-
-        .media-thumb {
-            margin: 0 3px;
-            display: inline-block;
-            width: 45px;
-            height: 45px;
-
-            .thumbImg {
-                width: 100%;
-                height: 100%;
-                border-radius: 3px;
-            }
         }
     }
 }

@@ -49,9 +49,9 @@ body {
   font-size: $font-size-base;
   font-weight: $font-weight-base;
   line-height: $line-height-base;
-  color: $body-color;
+  color: $gray-700;
   text-align: left; // 3
-  background-color: $body-bg; // 2
+  background-color: $white; // 2
 }
 
 // Future-proof rule: in browsers that support :focus-visible, suppress the focus outline
