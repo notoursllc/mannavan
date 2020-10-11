@@ -32,7 +32,8 @@ export default {
         return {
             visibleSku: {
                 sku: {},
-                featuredImageUrl: null
+                featuredImageUrl: null,
+                accentMessage: null
             },
             showThumbs: false,
             numVisibleThumbs: 0
@@ -82,6 +83,29 @@ export default {
 
             // no need to get a variant, the main image (600px wide) should be good:
             this.visibleSku.featuredImageUrl = isObject(img) && img.media ? img.media.url : null;
+            this.setAccentMessage();
+        },
+
+        setAccentMessage() {
+            const now = Date.now();
+
+            if(this.visibleSku.sku.accent_message_id
+                && this.visibleSku.sku.accent_message_begin
+                && (new Date(this.visibleSku.sku.accent_message_begin).getTime() <= now)) {
+
+                const message = this.$store.state.product.skuAccentMessages[this.visibleSku.sku.accent_message_id] || null;
+
+                if(this.visibleSku.accent_message_end) {
+                    this.visibleSku.accentMessage = new Date(this.visibleSku.sku.accent_message_end).getTime() >= now ? message : null;
+                }
+                else {
+                    // if there is no end date then the message will show indefinately
+                    this.visibleSku.accentMessage = message;
+                }
+            }
+            else {
+                this.visibleSku.accentMessage = null;
+            }
         },
 
         getSmallestMediaUrl(mediaObj) {
@@ -165,6 +189,7 @@ export default {
                 @click="(sku) => goToProductDetails(sku.id)" />
 
             <div v-show="!showThumbs">
+                <div v-if="visibleSku.accentMessage" class="pic-card-accent-msg">{{ visibleSku.accentMessage }}</div>
                 <div class="pic-card-title">{{ product.title }}</div>
                 <div class="pic-card-caption">{{ product.caption }}</div>
             </div>
@@ -202,6 +227,7 @@ export default {
         display: block;
         width: 100%;
         background: #fff;
+        margin: 0;
 
         img {
             width: 100%;
@@ -215,12 +241,17 @@ export default {
         font-weight: 500;
         position: relative;
         overflow: hidden;
-        min-height: 120px;
+        min-height: 140px;
         // border: 1px solid red;
 
         .pic-card-alert {
             color: rgb(250, 84, 0);
             font-weight: 400;
+        }
+
+        .pic-card-accent-msg {
+            color: #FD821B;
+            font-weight: 500;
         }
 
         .pic-card-title,
@@ -231,7 +262,6 @@ export default {
 
         .pic-card-caption {
             color: $gray-600;
-            font-size: 16px;
         }
 
         .pic-card-price {

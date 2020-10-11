@@ -1,6 +1,7 @@
 export const state = () => ({
     types: {},
-    subTypes: {}
+    subTypes: {},
+    skuAccentMessages: {}
 });
 
 
@@ -19,6 +20,14 @@ export const mutations = {
                 state.subTypes[obj.name] = obj;
             });
         }
+    },
+
+    PRODUCT_SKU_ACCENT_MESSAGES: (state, accentMessages) => {
+        if(Array.isArray(accentMessages)) {
+            accentMessages.forEach((obj) => {
+                state.skuAccentMessages[obj.id] = obj.message;
+            });
+        }
     }
 };
 
@@ -30,6 +39,10 @@ export const actions = {
 
     PRODUCT_SUBTYPES ({ commit }, subTypes) {
         commit('PRODUCT_SUBTYPES', subTypes);
+    },
+
+    PRODUCT_SKU_ACCENT_MESSAGES ({ commit }, accentMessages) {
+        commit('PRODUCT_SKU_ACCENT_MESSAGES', accentMessages);
     }
 };
 

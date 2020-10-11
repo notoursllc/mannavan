@@ -1,12 +1,15 @@
 import queryString from 'query-string';
 
+function formatParams(params) {
+    return queryString.stringify(params, {arrayFormat: 'bracket'});
+}
+
 
 export default ($axios) => ({
 
 
     list(params) {
-        const paramString = queryString.stringify(params, {arrayFormat: 'bracket'});
-        return $axios.$get(`/product/sku/options?${paramString}`); // TODO: is there a XSS issue here?
+        return $axios.$get(`/product/sku/options?${formatParams(params)}`); // TODO: is there a XSS issue here?
     },
 
 
