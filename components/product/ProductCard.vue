@@ -3,11 +3,14 @@ import isObject from 'lodash.isobject';
 import product_mixin from '@/mixins/product_mixin';
 import ProductPrice from '@/components/product/ProductPrice';
 import ProductFeaturedImageThumbs from '@/components/product/ProductFeaturedImageThumbs';
+import SkuAccentMessage from '@/components/product/SkuAccentMessage';
+import { isUuid4 } from '@/utils/common';
 
 export default {
     components: {
         ProductPrice,
-        ProductFeaturedImageThumbs
+        ProductFeaturedImageThumbs,
+        SkuAccentMessage
     },
 
     mixins: [
@@ -83,29 +86,6 @@ export default {
 
             // no need to get a variant, the main image (600px wide) should be good:
             this.visibleSku.featuredImageUrl = isObject(img) && img.media ? img.media.url : null;
-            this.setAccentMessage();
-        },
-
-        setAccentMessage() {
-            const now = Date.now();
-
-            if(this.visibleSku.sku.accent_message_id
-                && this.visibleSku.sku.accent_message_begin
-                && (new Date(this.visibleSku.sku.accent_message_begin).getTime() <= now)) {
-
-                const message = this.$store.state.product.skuAccentMessages[this.visibleSku.sku.accent_message_id] || null;
-
-                if(this.visibleSku.accent_message_end) {
-                    this.visibleSku.accentMessage = new Date(this.visibleSku.sku.accent_message_end).getTime() >= now ? message : null;
-                }
-                else {
-                    // if there is no end date then the message will show indefinately
-                    this.visibleSku.accentMessage = message;
-                }
-            }
-            else {
-                this.visibleSku.accentMessage = null;
-            }
         },
 
         getSmallestMediaUrl(mediaObj) {
@@ -189,7 +169,10 @@ export default {
                 @click="(sku) => goToProductDetails(sku.id)" />
 
             <div v-show="!showThumbs">
-                <div v-if="visibleSku.accentMessage" class="pic-card-accent-msg">{{ visibleSku.accentMessage }}</div>
+                <sku-accent-message
+                    :sku="visibleSku.sku"
+                    class="pic-card-accent-msg" />
+
                 <div class="pic-card-title">{{ product.title }}</div>
                 <div class="pic-card-caption">{{ product.caption }}</div>
             </div>
