@@ -310,11 +310,11 @@ export default {
                         </picture>
 
                         <div slot="prevButton" class="">
-                            <svg-icon icon="chevron-left" width="24" height="24" />
+                            <fig-icon icon="chevron-left" width="24" height="24" />
                         </div>
 
                         <div slot="nextButton">
-                            <svg-icon icon="chevron-right" width="24" height="24" />
+                            <fig-icon icon="chevron-right" width="24" height="24" />
                         </div>
                     </product-image-carousel>
                 </client-only>

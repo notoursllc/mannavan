@@ -582,7 +582,7 @@ export default {
                 class="agile_full_close"
                 :aria-label="$t('Close')"
                 @click="onFullCloseClick">
-                <svg-icon icon="x" width="24" height="24" />
+                <fig-icon icon="x" width="24" height="24" />
             </button>
         </div>
 

@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" class="icon-bv icon-bv-cookie" viewBox="0 0 24 24" fill="none">
-    <circle cx="9.5" cy="7.5" r="0.5" />
-    <circle cx="11.5" cy="17.5" r="0.5" />
-    <circle cx="7.5" cy="12.5" r="0.5" />
-    <circle cx="15.5" cy="13.5" r="0.5" />
-    <path d="M21.51,12a9.52,9.52,0,1,1-6.66-9.07,4.44,4.44,0,0,0,6.22,6.22A9.6,9.6,0,0,1,21.51,12Z" />
-    <circle cx="18" cy="2.5" r="0.5" />
-    <circle cx="19.5" cy="6.5" r="0.5" />
-</svg>

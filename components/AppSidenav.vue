@@ -53,7 +53,7 @@ export default {
                 index="cart-id"
                 @click="onMenuItemClick">
                 &nbsp;&nbsp;&nbsp;&nbsp;{{ $t('Cart') }}
-                <svg-icon icon="cart" width="30" height="30" stroke="#fff" />
+                <fig-icon icon="cart" width="30" height="30" stroke="#fff" />
                 <span v-if="numCartItems"
                     :class="{'badge-green': numCartItems}"
                     class="badge">{{ numCartItems }}</span>

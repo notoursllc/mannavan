@@ -1,15 +1,10 @@
 <script>
-import { Select, Option, Button } from 'element-ui';
-import BvButton from '@/components/button/BvButton';
+import FigButton from '@notoursllc/figleaf/components/button/FigButton.vue';
+import FigSelect from '@notoursllc/figleaf/components/select/FigSelect.vue';
+
 
 export default {
     name: 'ProductAttributeSelector',
-
-    components: {
-        BvButton
-    },
-
-    inheritAttrs: false,
 
     props: {
         attribute: {
@@ -74,7 +69,7 @@ export default {
             this.optionLabelValues.forEach((obj) => {
                 buttons.push(
                     createElement(
-                        BvButton,
+                        FigButton,
                         {
                             props: {
                                 variant: this.value === obj.value ? 'primary' : 'plain-outline'
@@ -95,33 +90,20 @@ export default {
         }
         // select menu:
         else {
-            const selectOptions = [];
-
-            this.optionLabelValues.forEach((obj) => {
-                selectOptions.push(
-                    createElement(Option, {
-                        props: {
-                            label: obj.label,
-                            value: obj.value
+            createdElements.push(
+                createElement(
+                    FigSelect,
+                    {
+                        attrs: {
+                            'v-model': this.value,
+                            options: this.optionLabelValues
+                        },
+                        on: {
+                            input: this.emitInput
                         }
-                    })
-                );
-            });
-
-            const select = createElement(
-                Select,
-                {
-                    props: {
-                        value: this.value
-                    },
-                    on: {
-                        input: this.emitInput
                     }
-                },
-                selectOptions
+                )
             );
-
-            createdElements.push(select);
         }
 
         return createElement(
@@ -133,6 +115,11 @@ export default {
 };
 </script>
 
+<!--
+<template>
+    <fig-select :options="[{label: 'Canada', value: 'ca'}]" />
+</template>
+-->
 
 <style lang="scss" scoped>
 @import "~assets/css/components/_mixins.scss";
@@ -147,7 +134,7 @@ export default {
 
 .attr-btn {
     margin: 0 7px 7px 0;
-    min-width: 75px;
+    min-width: 60px;
 }
 .attr-btn:last-child {
     margin-right: 0;

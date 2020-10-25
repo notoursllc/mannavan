@@ -128,7 +128,7 @@ module.exports = {
         '@/plugins/vuelidate',
         '@/plugins/format8601',
         '@/plugins/prettyJson',
-        '@/plugins/svgIcon.js',
+        '@/plugins/figIcon.js',
         '@/plugins/piio/piio.js',
         '@/plugins/directives.js',
         // '@/plugins/vue-placeholders.js',

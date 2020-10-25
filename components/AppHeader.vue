@@ -80,7 +80,7 @@ export default {
                             active-class="active">
                             {{ $t(type) }}
                             <div class="active-icon">
-                                <svg-icon icon="chevron-up" width="14" height="14" stroke="#b9b8b8" />
+                                <fig-icon icon="chevron-up" width="14" height="14" stroke="#b9b8b8" />
                             </div>
                         </nuxt-link>
 
@@ -92,7 +92,7 @@ export default {
                             :exact="true">
                             {{ $t('All') }}
                             <div class="active-icon">
-                                <svg-icon icon="chevron-up" width="14" height="14" stroke="#b9b8b8" />
+                                <fig-icon icon="chevron-up" width="14" height="14" stroke="#b9b8b8" />
                             </div>
                         </nuxt-link>
 
@@ -110,7 +110,7 @@ export default {
                                 width="250"
                                 trigger="manual">
                                 <span slot="reference" class="cart-button">
-                                    <svg-icon icon="cart" width="30" height="30" stroke-width="1px" />
+                                    <fig-icon icon="cart" width="30" height="30" stroke-width="1px" />
                                     <span class="badge" :class="{'badge-green': numCartItems}">{{ numCartItems }}</span>
                                 </span>
 

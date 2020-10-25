@@ -28,7 +28,7 @@ export default {
                 <nav class="nav-item">
                     <dl>
                         <dt>
-                            <svg-icon icon="building-store" width="24" height="24" />
+                            <fig-icon icon="building-store" width="24" height="24" />
                             {{ $t('PRODUCTS') }}</dt>
 
                         <dd v-for="(obj, type) in productSubTypes" :key="obj.id">
@@ -47,7 +47,7 @@ export default {
                 <nav class="nav-item">
                     <dl>
                         <dt>
-                            <svg-icon icon="checkbox" width="24" height="24" />
+                            <fig-icon icon="checkbox" width="24" height="24" />
                             {{ $t('TERMS') }}
                         </dt>
 
@@ -79,7 +79,7 @@ export default {
                 <nav class="nav-item">
                     <dl>
                         <dt>
-                            <svg-icon icon="shield-check" width="24" height="24" />
+                            <fig-icon icon="shield-check" width="24" height="24" />
                             {{ $t('SECURE') }}
                         </dt>
 

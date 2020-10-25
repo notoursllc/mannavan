@@ -25,7 +25,7 @@ export default {
 <template>
     <div>
         <page-title>
-            <svg-icon icon="arrow-back" width="26" height="26" stroke-width="1px" />
+            <fig-icon icon="arrow-back" width="26" height="26" stroke-width="1px" />
             {{ $t('Returns / Exchanges') }}
         </page-title>
 
