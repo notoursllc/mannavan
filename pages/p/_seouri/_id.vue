@@ -1,5 +1,6 @@
 <script>
 import isObject from 'lodash.isobject';
+import FigButton from '@notoursllc/figleaf/components/button/FigButton.vue';
 import product_mixin from '@/mixins/product_mixin';
 import shopping_cart_mixin from '@/mixins/shopping_cart_mixin';
 import { arraysAreEqual } from '@/utils/common';
@@ -7,27 +8,21 @@ import ProductPrice from '@/components/product/ProductPrice';
 import ProductQuantityWarning from '@/components/product/ProductQuantityWarning';
 import ProductDetailsLayout from '@/components/product/ProductDetailsLayout';
 import ProductImageCarousel from '@/components/product/ProductImageCarousel';
-import ProductSizeButtons from '@/components/product/ProductSizeButtons';
 import ProductAttributeSelector from '@/components/product/ProductAttributeSelector';
 import ProductFeaturedImageThumbs from '@/components/product/ProductFeaturedImageThumbs';
 // import TshirtSizeChart from '@/components/product/TshirtSizeChart';
-import NumberInput from '@/components/NumberInput';
-import QuantityButton from '@/components/product/QuantityButton';
 
 const slideBreakpoint = 1024;
 
 export default {
     components: {
+        FigButton,
         ProductPrice,
         ProductQuantityWarning,
         ProductDetailsLayout,
         ProductImageCarousel,
-        ProductSizeButtons,
         ProductAttributeSelector,
-        ProductFeaturedImageThumbs,
-        // TshirtSizeChart,
-        NumberInput,
-        QuantityButton
+        ProductFeaturedImageThumbs
     },
 
     mixins: [
@@ -44,8 +39,6 @@ export default {
             // skuOptions: {},
             selectedAttributes: {},
             selectedAttributesAreValid: false,
-            userSelectedSku: null,
-
             selectedSize: null,
             selectedQty: 1,
             productQuantityMaxValue: 30,
@@ -255,13 +248,14 @@ export default {
         },
 
         onAttributeChange(attribute, value) {
+            console.log("ON ATTR CHANGE", attribute, value);
+
             // TODO: display pics of the selected sku
             this.selectedAttributes[attribute.id] = attribute.value;
 
-            let selected = null;
             const selectedValues = [];
 
-            for(let key in this.selectedAttributes) {
+            for(const key in this.selectedAttributes) {
                 selectedValues.push(this.selectedAttributes[key]);
             }
 
@@ -270,16 +264,14 @@ export default {
             this.product.skus.forEach((sku) => {
                 const skuAttributeValues = sku.attributes.map(obj => obj.value);
                 if(arraysAreEqual(skuAttributeValues.sort(), selectedValues.sort())) {
-                    selected = sku;
+                    // selected = sku;
+                    this.setVisibleSku(sku);
                 }
             });
-
-            this.userSelectedSku = selected;
         },
 
         onThumbClick(sku) {
-            this.visibleSku = sku || {};
-            this.visibleImages = this.prodMix_getSkuImages(this.visibleSku);
+            this.setVisibleSku(sku);
 
             const widthWindow = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
             if(widthWindow <= slideBreakpoint) {
@@ -288,6 +280,12 @@ export default {
                     this.$refs.carousel.reload();
                 }, 0);
             }
+        },
+
+        setVisibleSku(sku) {
+            this.visibleSku = sku || {};
+            this.visibleImages = this.prodMix_getSkuImages(this.visibleSku);
+            console.log("setVisibleSku", sku);
         }
     }
 };
@@ -336,12 +334,16 @@ export default {
                     @click="onThumbClick" />
             </template>
 
-            <!-- TODO -->
             <template slot="attributes">
+                <product-quantity-warning
+                    :qty="visibleSku.inventory_count"
+                    class="mbm" />
+
                 <div v-for="(attr, index) in product.attributes" :key="index" class="mbm">
-                    <label class="fs12">{{ attr.label }}:</label>
+                    <label class="attr-label">{{ attr.label }}:</label>
                     <div>
                         <product-attribute-selector
+                            class="product-attribute-select"
                             v-model="attr.value"
                             :attribute="attr"
                             :skus="product.skus"
@@ -351,16 +353,37 @@ export default {
             </template>
 
             <template slot="button">
-                <div v-if="!userSelectedSku">Unavailable</div>
+                <div v-if="!visibleSku">Unavailable</div>
                 <template v-else>
-                    <template v-if="!userSelectedSku.inventory_count">{{ $t('Out of stock') }}</template>
-                    <quantity-button
+                    <template v-if="!visibleSku.inventory_count">{{ $t('Out of stock') }}</template>
+                    <fig-button
                         v-else
-                        v-model="selectedQty"
+                        variant="success"
+                        size="lg"
+                        class="btn-add"
                         @click="addToCart"
-                        :loading="isLoading">{{ $t('Add To Your Order') }}</quantity-button>
+                        :loading="isLoading">{{ $t('Add To Your Order') }}</fig-button>
                 </template>
             </template>
         </product-details-layout>
     </div>
 </template>
+
+
+<style lang="scss">
+.product-attribute-select {
+    .vs__dropdown-toggle,
+    .vs__selected {
+        line-height: 2;
+    }
+}
+
+.attr-label {
+    font-weight: 600;
+}
+
+.btn-add {
+    display: block;
+    width: 100%;
+}
+</style>

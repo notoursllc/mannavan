@@ -1,18 +1,44 @@
 <script>
+import IconMessage from '@/components/IconMessage';
+
 export default {
     name: 'ProductQuantityWarning',
 
+    components: {
+        IconMessage
+    },
+
     props: {
-        max: {
+        qty: {
             type: Number,
-            default: 1
+            default: 0
+        },
+
+        threshold: {
+            type: Number,
+            default: 10
+        }
+    },
+
+    computed: {
+        message() {
+            if(this.qty === 0) {
+                return this.$t('Sold out');
+            }
+            return this.$t('Just a few left. Order soon.');
         }
     }
-}
+};
 </script>
 
 
 <template>
-    <div v-if="max > 0 && max <= 10"
-        class="inlineBlock colorOrange">{{ $t('only_num_left', { qty: max }) }}</div>
+    <icon-message
+        v-if="qty <= threshold"
+        class="colorOrange">
+        <template v-slot:icon>
+            <fig-icon icon="urgent" width="28" height="28" stroke="#fd7e14" :stroke-width="1" />
+        </template>
+        {{ message }}
+    </icon-message>
 </template>

@@ -19,7 +19,7 @@
     "@bugsnag/js": "^7.3.3",
     "@bugsnag/plugin-vue": "^7.3.3",
     "@johmun/vue-tags-input": "^2.1.0",
-    "@notoursllc/figleaf": "^0.1.11",
+    "@notoursllc/figleaf": "^0.1.12",
     "@nuxtjs/axios": "^5.12.2",
     "@nuxtjs/pwa": "^3.0.2",
     "@paypal/checkout-server-sdk": "^1.0.1",

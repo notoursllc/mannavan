@@ -19,11 +19,6 @@ export default {
                     <slot name="title"></slot>
                 </div>
 
-                <!-- desc -->
-                <div v-if="$slots.description" class="prod-desc">
-                    <slot name="description"></slot>
-                </div>
-
                 <!-- price -->
                 <div v-if="$slots.price" class="prod-price">
                     <slot name="price"></slot>
@@ -42,6 +37,11 @@ export default {
                 <!-- button -->
                 <div v-if="$slots.button" class="prod-btn">
                     <slot name="button"></slot>
+                </div>
+
+                <!-- description -->
+                <div v-if="$slots.description" class="prod-desc">
+                    <slot name="description"></slot>
                 </div>
             </div>
         </div>
@@ -99,6 +99,7 @@ export default {
     .prod-desc {
         font-size: 16px;
         word-wrap: break-word;
+        margin-top: 50px;
     }
 
     .prod-price {

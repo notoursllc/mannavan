@@ -36,10 +36,23 @@ export default {
         optionLabelValues() {
             const opts = [];
 
+            // to prevent duplicate buttons/select menu options from appearing in the UI
+            const optionExists = (obj) => {
+                let exists = false;
+
+                opts.forEach((option) => {
+                    if(obj.label === option.label && obj.value === option.value) {
+                        exists = true;
+                    }
+                });
+
+                return exists;
+            };
+
             this.skus.forEach((sku) => {
                 if(Array.isArray(sku.attributes)) {
                     sku.attributes.forEach((attr) => {
-                        if(attr.value && attr.optionId === this.attribute.id) {
+                        if(!optionExists(attr) && attr.value && attr.optionId === this.attribute.id) {
                             opts.push({
                                 label: attr.label,
                                 value: attr.value
@@ -96,7 +109,8 @@ export default {
                     {
                         attrs: {
                             'v-model': this.value,
-                            options: this.optionLabelValues
+                            options: this.optionLabelValues,
+                            reduce: (obj) => obj.value
                         },
                         on: {
                             input: this.emitInput
