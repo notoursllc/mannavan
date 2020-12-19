@@ -129,7 +129,6 @@ module.exports = {
         '@/plugins/format8601',
         '@/plugins/prettyJson',
         '@/plugins/figIcon.js',
-        '@/plugins/piio/piio.js',
         '@/plugins/directives.js',
         // '@/plugins/vue-placeholders.js',
         // '@/plugins/vue-observe-visibility.client.js',
@@ -139,7 +138,14 @@ module.exports = {
     ],
 
     buildModules: [
+        '@nuxtjs/tailwindcss'
     ],
+
+    tailwindcss: {
+        cssPath: '@/node_modules/@notoursllc/figleaf/assets/css/tailwind.css',
+        configPath: 'tailwind.config.js',
+        exposeConfig: false // https://tailwindcss.nuxtjs.org/options/#exposeconfig
+    },
 
     router: {
         middleware: [
@@ -154,8 +160,7 @@ module.exports = {
         // Doc: https://axios.nuxtjs.org/usage
         '@nuxtjs/axios',
         'cookie-universal-nuxt',
-        ['@nuxtjs/pwa', { oneSignal: false }],
-        'bootstrap-vue/nuxt'
+        ['@nuxtjs/pwa', { oneSignal: false }]
     ],
 
     /*
@@ -166,81 +171,6 @@ module.exports = {
         debug: false,
         // retry: { retries: 3 },
         progress: true
-    },
-
-
-    /*
-    * Disabling automatic inclusion of bootstrap's compiled CSS files
-    * so we can import the SCSS files ourselves in base.scss
-    * https://bootstrap-vue.org/docs
-    */
-    bootstrapVue: {
-        bootstrapCSS: false, // Or `css: false`
-        bootstrapVueCSS: false, // Or `bvCSS: false`
-
-        // https://bootstrap-vue.org/docs/reference/settings#default-configuration
-        // https://getbootstrap.com/docs/4.4/utilities/borders/
-        config: {
-            BModal: {
-                buttonSize: 'md',
-                bodyBgVariant: null,
-                // bodyTextVariant: 'secondary',
-                cancelVariant: 'outline-secondary',
-                centered: true,
-                footerBgVariant: 'light',
-                footerBorderVariant: '0',
-                footerClass: 'p-1',
-                footerTextVariant: null,
-                headerBgVariant: null,
-                headerBorderVariant: null,
-                headerCloseContent: '&times;',
-                headerTextVariant: null,
-                headerCloseVariant: null,
-                hideHeaderClose: false,
-                okVariant: 'primary',
-                size: 'md',
-                titleTag: 'h6'
-            }
-        },
-
-        // importing only the stuff we are using to reduce bundle size
-        components: [
-            // 'BBadge',
-            // 'BButton',
-            // 'BButtonGroup',
-            // 'BCollapse',
-            // 'BContainer',
-            // 'BRow',
-            // 'BCol',
-            // 'BDropdown',
-            // 'BDropdownForm',
-            // 'BDropdownItem',
-            // 'BDropdownItemButton',
-            // 'BFormCheckbox',
-            // 'BFormFile',
-            // 'BFormGroup',
-            // 'BFormInput',
-            // 'BFormRadio',
-            // 'BFormSelect',
-            // 'BFormSelectOption',
-            // 'BFormTextarea',
-            'BImg',
-            // 'BInputGroup',
-            // 'BInputGroupText',
-            // 'BInputGroupAppend',
-            // 'BModal',
-            // 'BOverlay',
-            // 'BPopover',
-            // 'BTable',
-            'BTooltip'
-        ],
-        componentPlugins: [
-            // 'TablePlugin',
-            // 'ToastPlugin',
-            'ModalPlugin',
-            'BVModalPlugin'
-        ]
-        // directives: ['VBModal', 'VBPopover', 'VBToggle', 'VBTooltip', 'VBScrollspy'],
     },
 
     /**

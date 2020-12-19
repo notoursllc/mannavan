@@ -2,11 +2,19 @@
 import isObject from 'lodash.isobject';
 import product_mixin from '@/mixins/product_mixin';
 
+import {
+    FigTooltip
+} from '@notoursllc/figleaf';
+
 
 export default {
     mixins: [
         product_mixin
     ],
+
+    components: {
+        FigTooltip
+    },
 
     props: {
         product: {
@@ -114,16 +122,18 @@ export default {
                 <PiioElement :path="obj.url" tag="img" class="thumbImg"></PiioElement>
             </picture> -->
 
-            <PiioElement
-                :path="obj.url"
-                tag="img"
-                :id="`thumb_${index}`"
-                :class="{ selected: selectedSkuId === obj.sku.id }"
-                @mouseover="onThumbMouseOver(obj)">></PiioElement>
-
-            <b-tooltip
-                :disabled="obj.sku.inventory_count > 0"
-                :target="`thumb_${index}`">{{ $t('Sold out') }}</b-tooltip>
+            <fig-tooltip
+                :disabled="obj.sku.inventory_count > 0">
+                <span slot="toggler">
+                    <PiioElement
+                        :path="obj.url"
+                        tag="img"
+                        :id="`thumb_${index}`"
+                        :class="{ selected: selectedSkuId === obj.sku.id }"
+                        @mouseover="onThumbMouseOver(obj)" />
+                </span>
+                {{ $t('Sold out') }}
+            </fig-tooltip>
         </div>
     </div>
 </template>
