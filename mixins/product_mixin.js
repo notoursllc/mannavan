@@ -47,19 +47,15 @@ export default {
         },
 
 
-        prodMix_getFeaturedImageForSku(sku) {
-            let img = null;
-
-            if(isObject(sku) && Array.isArray(sku.images)) {
-                for(let i=0, len=sku.images.length; i<len; i++) {
-                    if(sku.images[i].published && sku.images[i].is_featured) {
-                        img = sku.images[i];
-                        break;
-                    }
-                }
+        /*
+        * The first variant image is the 'cover' image
+        */
+        prodMix_getVariantCoverImage(variant) {
+            if(isObject(variant) && Array.isArray(variant.images)) {
+                return variant.images[0];
             }
 
-            return img;
+            return null;
         },
 
 
@@ -82,32 +78,6 @@ export default {
             return images;
         },
 
-
-        prodMix_getFeaturedSkuImagesForProduct(product) {
-            const images = [];
-
-            if(!Array.isArray(product.skus) || !product.skus.length) {
-                return;
-            }
-
-            product.skus.forEach((sku) => {
-                const img = this.prodMix_getFeaturedImageForSku(sku);
-
-                if(isObject(img) && img.media) {
-                    // images.push({
-                    //     smallestMediaUrl: this.getSmallestMediaUrl(img.media),
-                    //     smallestImage: img,
-                    //     sku: sku
-                    // });
-                    images.push({
-                        url: img.media.url,
-                        sku: sku
-                    });
-                }
-            });
-
-            return images;
-        },
 
         // prodMix_getFeaturedMediaForSku(sku) {
         //     let media = null;

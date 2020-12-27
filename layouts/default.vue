@@ -1,10 +1,15 @@
 <script>
-import FigIconSprite from '@notoursllc/figleaf/components/icon/FigIconSprite.vue';
+import Vue from 'vue';
 import AppHeader from '@/components/AppHeader';
 import AppFooter from '@/components/AppFooter';
 import AppSidenav from '@/components/AppSidenav';
 
-export default {
+import {
+    FigIconSprite
+} from '@notoursllc/figleaf';
+
+
+export default Vue.extend({
     components: {
         FigIconSprite,
         AppHeader,
@@ -21,7 +26,7 @@ export default {
     created() {
         this.$store.dispatch('ui/closeSidebar');
     }
-};
+});
 </script>
 
 
@@ -32,7 +37,7 @@ export default {
         <app-sidenav />
         <app-header />
 
-        <main>
+        <main class="flex-grow">
             <nuxt />
         </main>
 
@@ -41,21 +46,10 @@ export default {
 </template>
 
 
-<style lang="scss" scoped>
-@import "~assets/css/components/_variables.scss";
-@import "~assets/css/components/_mixins.scss";
-
+<style lang="postcss" scoped>
 #__nuxt,
 #__layout,
 .layoutContainer {
-    @include flexbox();
-    @include flex-direction(column);
-    // use height instead of min-height because of an IE10-11 flex bug:
-    // https://github.com/philipwalton/flexbugs#flexbug-3
-    height: 100vh;
-
-    main {
-        @include flex-grow(1);
-    }
+    @apply flex flex-col h-screen;
 }
 </style>

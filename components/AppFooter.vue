@@ -21,9 +21,9 @@ export default {
 </script>
 
 <template>
-    <footer class="footer">
-        <div class="content">
-            <div class="nav-container">
+    <footer class="footer border-t border-gray-400 bg-white text-sm mt-24">
+        <div class="px-3 py-5 mx-auto mt-3 max-w-7xl">
+            <div class="container mx-auto flex flex-row justify-between items-start flex-wrap">
 
                 <nav class="nav-item">
                     <dl>
@@ -114,67 +114,25 @@ export default {
 </template>
 
 
-<style lang="scss" scoped>
-@import "~assets/css/components/_variables.scss";
-@import "~assets/css/components/_mixins.scss";
+<style lang="postcss" scoped>
+footer a { text-decoration: none !important; }
+footer a:hover { text-decoration: underline !important; }
 
-footer {
-    border-top: 1px solid #e1e2e2;
-    background-color: #fff;
-    font-size: 14px;
-    margin-top: 100px;
-
-    .content {
-        padding: 10px 20px;
-        max-width: 1230px;
-        margin: 15px auto 0 auto;
-    }
-
-    a {
-        text-decoration: none !important;
-    }
-    a:hover {
-        text-decoration: underline !important;
-    }
-
-    .nav-container {
-        @include flexbox();
-        @include flex-direction(row);
-        @include justify-content(space-between);
-        @include align-items(flex-start);
-        @include flex-wrap(wrap);
-
-        .nav-item {
-            @include align-items(center);
-            @include justify-content(center);
-            @include flex-basis(auto);
-            @include flex-grow(1);
-            max-width: 200px;
-            padding: 0 10px;
-        }
-    }
-
-    dt {
-        margin-bottom: 15px;
-        font-weight: bold;
-    }
-
-    dd {
-        line-height: 25px;
-    }
+footer .nav-item {
+    @apply items-center justify-center flex-grow max-w-xs px-4;
 }
 
-@media #{$medium-and-down} {
-    footer {
-        margin-bottom: 0;
+footer dt {
+    @apply mb-4 font-semibold;
+}
 
-        #footer-logo {
-            display: none;
-        }
+footer dd {
+    @apply leading-4;
+}
 
-        dd {
-            line-height: 30px;
-        }
+@screen lg {
+    footer dd {
+        @apply leading-6;
     }
 }
 </style>

@@ -8,7 +8,7 @@ function formatParams(params) {
 export default ($http) => ({
 
     async all(params) {
-        const { data } = await $http.$get(`/product/sku/accent_messages/all?${formatParams(params)}`);
+        const { data } = await $http.$get(`/product/accent_messages/all?${formatParams(params)}`);
         return data;
     }
 

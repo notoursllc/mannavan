@@ -1,10 +1,16 @@
 <script>
-import FigButton from '@notoursllc/figleaf/components/button/FigButton.vue';
-import FigSelect from '@notoursllc/figleaf/components/select/FigSelect.vue';
-
+import {
+    FigButton,
+    FigFormSelect
+} from '@notoursllc/figleaf';
 
 export default {
     name: 'ProductAttributeSelector',
+
+    components: {
+        FigButton,
+        FigFormSelect
+    },
 
     props: {
         attribute: {
@@ -105,7 +111,7 @@ export default {
         else {
             createdElements.push(
                 createElement(
-                    FigSelect,
+                    FigFormSelect,
                     {
                         attrs: {
                             'v-model': this.value,
@@ -129,11 +135,7 @@ export default {
 };
 </script>
 
-<!--
-<template>
-    <fig-select :options="[{label: 'Canada', value: 'ca'}]" />
-</template>
--->
+
 
 <style lang="scss" scoped>
 @import "~assets/css/components/_mixins.scss";

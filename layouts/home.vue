@@ -1,8 +1,11 @@
 <script>
-import FigIconSprite from '@notoursllc/figleaf/components/icon/FigIconSprite.vue';
 import AppHeader from '@/components/AppHeader';
 import AppFooter from '@/components/AppFooter';
 import AppSidenav from '@/components/AppSidenav';
+
+import {
+    FigIconSprite
+} from '@notoursllc/figleaf';
 
 export default {
     components: {

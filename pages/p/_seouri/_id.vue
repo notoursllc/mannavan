@@ -1,6 +1,6 @@
 <script>
 import isObject from 'lodash.isobject';
-import FigButton from '@notoursllc/figleaf/components/button/FigButton.vue';
+import { email, required } from 'vuelidate/lib/validators'
 import product_mixin from '@/mixins/product_mixin';
 import shopping_cart_mixin from '@/mixins/shopping_cart_mixin';
 import { arraysAreEqual } from '@/utils/common';
@@ -11,6 +11,10 @@ import ProductImageCarousel from '@/components/product/ProductImageCarousel';
 import ProductAttributeSelector from '@/components/product/ProductAttributeSelector';
 import ProductFeaturedImageThumbs from '@/components/product/ProductFeaturedImageThumbs';
 // import TshirtSizeChart from '@/components/product/TshirtSizeChart';
+
+import {
+    FigButton,
+} from '@notoursllc/figleaf';
 
 const slideBreakpoint = 1024;
 
@@ -39,10 +43,12 @@ export default {
             // skuOptions: {},
             selectedAttributes: {},
             selectedAttributesAreValid: false,
-            selectedSize: null,
-            selectedQty: 1,
             productQuantityMaxValue: 30,
             isLoading: false,
+            form: {
+                selectedSize: null,
+                selectedQty: 1,
+            },
             carouselOptions: {
                 fade: false,
                 responsive: [
@@ -58,6 +64,29 @@ export default {
                 ]
             }
         };
+    },
+
+    validations: function() {
+
+        // let baseValidation = {
+        //     countryCodeAlpha2: { required },
+        //     firstName: { required },
+        //     lastName: { required },
+        //     streetAddress: { required },
+        //     extendedAddress: {}, // no validation needed
+        //     city: { required },
+        //     state: { required },
+        //     postalCode: { required },
+        //     company: {} // no validation needed
+        // }
+
+        // if(this.type === 'shipping') {
+        //     baseValidation.email = { required, email }
+        // }
+
+        // return {
+        //     form: baseValidation
+        // }
     },
 
     fetchOnServer: true,
@@ -184,54 +213,39 @@ export default {
 
     methods: {
         addToCart: async function() {
-            //test
             console.log("addToCart");
-            return;
 
-            if (!this.selectedSize) {
-                this.$errorMessage(
-                    this.$t('Please select a size'),
-                    { closeOthers: true }
-                );
-            }
-            else if (!this.selectedQty) {
-                this.$errorMessage(
-                    this.$t('Please select a quantity'),
-                    { closeOthers: true }
-                );
-            }
-            else {
-                this.isLoading = true;
+            this.isLoading = true;
 
-                const addItemConfig = {
-                    id: this.product.id,
-                    options: {
-                        size: this.selectedSize,
-                        qty: this.selectedQty
+            const addItemConfig = {
+                product: this.product.id,
+                sku: this.visibleSku.id
+                // options: {
+                //     size: this.form.selectedSize,
+                //     qty: this.form.selectedQty
+                // }
+            };
+
+            try {
+                const response = await this.addItem(addItemConfig);
+                this.setCartAndTokenStateFromResponse(response);
+
+                this.isLoading = false;
+
+                this.$nuxt.$emit('PRODUCT_ADDED_TO_CART', this.product);
+            }
+            catch(err) {
+                this.isLoading = false;
+
+                this.$errorMessage(
+                    err.response.data.message,
+                );
+
+                this.$bugsnag.notify(err, {
+                    request: {
+                        addItem: addItemConfig
                     }
-                };
-
-                try {
-                    const response = await this.addItem(addItemConfig);
-                    this.setCartAndTokenStateFromResponse(response);
-
-                    this.isLoading = false;
-
-                    this.$nuxt.$emit('PRODUCT_ADDED_TO_CART', this.product);
-                }
-                catch(err) {
-                    this.isLoading = false;
-
-                    this.$errorMessage(
-                        err.response.data.message,
-                    );
-
-                    this.$bugsnag.notify(err, {
-                        request: {
-                            addItem: addItemConfig
-                        }
-                    });
-                }
+                });
             }
         },
 
@@ -241,8 +255,8 @@ export default {
             if(inventoryCount) {
                 this.productQuantityMaxValue = inventoryCount;
 
-                if(inventoryCount < this.selectedQty) {
-                    this.selectedQty = this.productQuantityMaxValue;
+                if(inventoryCount < this.form.selectedQty) {
+                    this.form.selectedQty = this.productQuantityMaxValue;
                 }
             }
         },

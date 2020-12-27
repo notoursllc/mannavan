@@ -67,7 +67,7 @@ export default {
         product: {
             handler(newVal) {
                 if(isObject(newVal) && Array.isArray(newVal.skus)) {
-                    const featuredImages = this.prodMix_getFeaturedSkuImagesForProduct(newVal);
+                    const featuredImages = this.getCoverImageThumbs(newVal);
 
                     // If there is only one featured image, then we will not dipslay any thumbs
                     // because that one image will already be displayed on the page
@@ -93,6 +93,33 @@ export default {
     },
 
     methods: {
+        //TODO: needs refactoring for using variant
+        getCoverImageThumbs(product) {
+            const images = [];
+
+            if(!Array.isArray(product.variants) || !product.variants.length) {
+                return;
+            }
+
+            product.variants.forEach((variant) => {
+                const img = this.prodMix_getVariantCoverImage(variant);
+
+                if(isObject(img) && img.media) {
+                    // images.push({
+                    //     smallestMediaUrl: this.getSmallestMediaUrl(img.media),
+                    //     smallestImage: img,
+                    //     sku: sku
+                    // });
+                    // images.push({
+                    //     url: img.media.url,
+                    //     sku: sku
+                    // });
+                }
+            });
+
+            return images;
+        },
+
         onThumbClick(obj) {
             this.$emit('click', obj.sku);
             this.selectedSkuId = obj.sku.id;

@@ -33,9 +33,9 @@ export default {
 
     data() {
         return {
-            visibleSku: {
-                sku: {},
-                featuredImageUrl: null,
+            visibleVariant: {
+                variant: {},
+                coverImageUrl: null,
                 accentMessage: null
             },
             showThumbs: false,
@@ -67,25 +67,31 @@ export default {
 
     methods: {
         init() {
-            if(isObject(this.product) && Array.isArray(this.product.skus)) {
-                const skus = this.product.skus;
+            if(isObject(this.product) && Array.isArray(this.product.variants)) {
+                const variants = this.product.variants;
 
-                for(let i=0, l=skus.length; i<l; i++) {
-                    if(skus[i].published) {
-                        this.setVisibleSku(skus[i]);
+                for(let i=0, l=variants.length; i<l; i++) {
+                    if(variants[i].published) {
+                        this.setVisibleVariant(variants[i]);
                         break;
                     }
                 }
             }
         },
 
-        setVisibleSku(sku) {
-            this.visibleSku.sku = isObject(sku) ? sku : {};
+        setVisibleVariant(variant) {
+            this.visibleVariant.variant = variant;
 
-            const img = this.prodMix_getFeaturedImageForSku(sku);
+            const img = this.prodMix_getVariantCoverImage(variant);
 
-            // no need to get a variant, the main image (600px wide) should be good:
-            this.visibleSku.featuredImageUrl = isObject(img) && img.media ? img.media.url : null;
+            // find the 600px image variant:
+            if(img && Array.isArray(img.variants)) {
+                img.variants.forEach((obj) => {
+                    if(obj.target_width === 600) {
+                        this.visibleVariant.coverImageUrl = obj.url;
+                    }
+                });
+            }
         },
 
         getSmallestMediaUrl(mediaObj) {
@@ -128,7 +134,7 @@ export default {
         },
 
         onCardClick() {
-            this.goToProductDetails(this.visibleSku.sku.id);
+            this.goToProductDetails(this.visibleVariant.sku.id);
         },
 
         onCardMouseAction(isEnter) {
@@ -152,9 +158,9 @@ export default {
             class="pic-card"
             @click="onCardClick">
 
-            <picture v-if="visibleSku.featuredImageUrl">
-                <PiioElement :path="visibleSku.featuredImageUrl" tag="source" media="(max-width:969px)"></PiioElement>
-                <PiioElement :path="visibleSku.featuredImageUrl" tag="img"></PiioElement>
+            <picture v-if="visibleVariant.coverImageUrl">
+                <PiioElement :path="visibleVariant.coverImageUrl" tag="source" media="(max-width:969px)"></PiioElement>
+                <PiioElement :path="visibleVariant.coverImageUrl" tag="img"></PiioElement>
             </picture>
         </figure>
 
@@ -165,12 +171,13 @@ export default {
                 :width="45"
                 :limit="maxVariantDisplay"
                 @numdisplayed="setNumVisibleThumbs"
-                @mouseover="setVisibleSku"
+                @mouseover="setVisibleVariant"
                 @click="(sku) => goToProductDetails(sku.id)" />
 
             <div v-show="!showThumbs">
+                <!-- TODO: rename to variant-accent-message -->
                 <sku-accent-message
-                    :sku="visibleSku.sku"
+                    :sku="visibleVariant.variant"
                     class="pic-card-accent-msg" />
 
                 <div class="pic-card-title">{{ product.title }}</div>
@@ -178,7 +185,7 @@ export default {
             </div>
 
             <div class="pic-card-price">
-                <product-price :sku="visibleSku.sku" />
+                <product-price :sku="visibleVariant.variant" />
             </div>
         </div>
     </div>

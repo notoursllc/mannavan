@@ -1,6 +1,5 @@
 @charset "UTF-8";
 
-@import "@notoursllc/figleaf/scss";
 @import "components/variables";
 @import "components/normalize";
 @import "components/prefixer";
@@ -278,17 +277,4 @@ ul.disc {
 }
 .grow:hover {
     @include growHover()
-}
-
-
-/// bulma replacements
-.image {
-  display: block;
-  position: relative;
-
-  img {
-    display: block;
-    height: auto;
-    width: 100%;
-  }
 }

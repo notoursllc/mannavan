@@ -1,4 +1,4 @@
 import Vue from 'vue';
-import FigIcon from '@notoursllc/figleaf/components/icon/FigIcon.vue';
+import { FigIcon } from '@notoursllc/figleaf';
 
 Vue.component('fig-icon', FigIcon);
