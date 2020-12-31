@@ -8,12 +8,13 @@ import ProductPrice from '@/components/product/ProductPrice';
 import ProductQuantityWarning from '@/components/product/ProductQuantityWarning';
 import ProductDetailsLayout from '@/components/product/ProductDetailsLayout';
 import ProductImageCarousel from '@/components/product/ProductImageCarousel';
+import ProductImageSlider from '@/components/product/ProductImageSlider';
 import ProductAttributeSelector from '@/components/product/ProductAttributeSelector';
-import ProductFeaturedImageThumbs from '@/components/product/ProductFeaturedImageThumbs';
+import ProductCardThumbs from '@/components/product/ProductCardThumbs';
 // import TshirtSizeChart from '@/components/product/TshirtSizeChart';
 
 import {
-    FigButton,
+    FigButton
 } from '@notoursllc/figleaf';
 
 const slideBreakpoint = 1024;
@@ -25,8 +26,9 @@ export default {
         ProductQuantityWarning,
         ProductDetailsLayout,
         ProductImageCarousel,
+        ProductImageSlider,
         ProductAttributeSelector,
-        ProductFeaturedImageThumbs
+        ProductCardThumbs
     },
 
     mixins: [
@@ -37,7 +39,7 @@ export default {
     data() {
         return {
             product: {},
-            visibleSku: {},
+            visibleVariant: {},
             visibleImages: [],
 
             // skuOptions: {},
@@ -91,40 +93,6 @@ export default {
 
     fetchOnServer: true,
 
-    // fetch({ params, store, app }) {
-    //     console.log("FETCH CONTEXT PARAMS", params)
-    //     console.log("FETCH CONTEXT STORE", store)
-    //     console.log("FETCH CONTEXT APP", app)
-    // },
-
-    computed: {
-        /**
-         * Checks to see if the selected attributes reporesent a sku
-         */
-        // selectedAttributesAreValid() {
-        //     let isMatch = false;
-        //     const selectedValues = [];
-
-        //     for(let key in this.selectedAttributes) {
-        //         selectedValues.push(this.selectedAttributes[key]);
-        //     }
-
-        //     // all of the selected values need to exist in a sku
-        //     // in order the the selection to be valid
-        //     this.product.skus.forEach((sku) => {
-        //         const skuAttributeValues = sku.attributes.map(obj => obj.value);
-
-        //         if(arraysAreEqual(skuAttributeValues.sort(), selectedValues.sort())) {
-        //             isMatch = true;
-        //         }
-        //         console.log("match?", skuAttributeValues, selectedValues, isMatch)
-        //     });
-
-        //     return isMatch;
-        // }
-    },
-
-
     async asyncData({ route, store, app }) {
         try {
             const data = {};
@@ -135,51 +103,16 @@ export default {
             //     return;
             // }
 
-            if(route.query.sku && Array.isArray(data.product.skus)) {
-                // this.product.skus.forEach((sku) => {
-                for(let i=0, l=data.product.skus.length; i<l; i++) {
-                    if(data.product.skus[i].id === route.query.sku) {
-                        data.visibleSku = data.product.skus[i];
-                        data.visibleImages = product_mixin.methods.prodMix_getSkuImages(data.visibleSku);
+            if(route.query.variant && Array.isArray(data.product.variants)) {
+                for(let i=0, l=data.product.variants.length; i<l; i++) {
+                    if(data.product.variants[i].id === route.query.variant) {
+                        data.visibleVariant = data.product.variants[i];
+                        data.visibleImages = product_mixin.methods.prodMix_getVariantImagesAtWidth(data.visibleVariant, 600);
                         break;
                     }
                 }
             }
 
-            // const opts = product_mixin.methods.buildSizeOptions(data.product);
-            // data.sizeOptions = opts.sizeOpts;
-
-/*
-            data.skuOptions = {};
-
-            if(isObject(data.product) && Array.isArray(data.product.skus) && Array.isArray(data.product.attributes)) {
-                // build the attribute lookup:
-                const attributeLookup = {};
-
-                data.product.attributes.map((obj) => {
-                    attributeLookup[obj.id] = obj.label;
-                });
-
-                console.log("ATTR LOOKUP", attributeLookup)
-
-                data.product.skus.forEach((obj) => {
-                    if(Array.isArray(obj.attributes)) {
-                        obj.attributes.forEach((attr) => {
-                            const optionsLabel = attributeLookup[attr.optionId];
-
-                            if(!data.skuOptions.hasOwnProperty(optionsLabel)) {
-                                data.skuOptions[optionsLabel] = [];
-                            }
-
-                            data.skuOptions[optionsLabel].push(attr.value);
-                        });
-                    }
-                });
-            }
-
-            console.log("SKU OPTS", data.skuOptions)
-            // TODO: create select menus from these options
-*/
             return data;
         }
         catch(err) {
@@ -213,13 +146,11 @@ export default {
 
     methods: {
         addToCart: async function() {
-            console.log("addToCart");
-
             this.isLoading = true;
 
             const addItemConfig = {
                 product: this.product.id,
-                sku: this.visibleSku.id
+                sku: this.visibleVariant.id
                 // options: {
                 //     size: this.form.selectedSize,
                 //     qty: this.form.selectedQty
@@ -275,7 +206,7 @@ export default {
 
             // all of the selected values need to exist in a sku
             // in order the the selection to be valid
-            this.product.skus.forEach((sku) => {
+            this.product.variants.forEach((sku) => {
                 const skuAttributeValues = sku.attributes.map(obj => obj.value);
                 if(arraysAreEqual(skuAttributeValues.sort(), selectedValues.sort())) {
                     // selected = sku;
@@ -297,9 +228,8 @@ export default {
         },
 
         setVisibleSku(sku) {
-            this.visibleSku = sku || {};
-            this.visibleImages = this.prodMix_getSkuImages(this.visibleSku);
-            console.log("setVisibleSku", sku);
+            this.visibleVariant = sku || {};
+            this.visibleImages = this.prodMix_getVariantImagesAtWidth(this.visibleVariant, 600);
         }
     }
 };
@@ -311,15 +241,18 @@ export default {
         <product-details-layout v-if="product">
             <!-- pics -->
             <template slot="pics">
+                visibleImages {{ visibleImages }}
                 <client-only placeholder="Carousel loading...">
-                    <product-image-carousel :options="carouselOptions" ref="carousel">
-                        <picture
+                    <!-- <product-image-carousel :options="carouselOptions" ref="carousel">
+                        <div
                             v-for="(obj, index) in visibleImages"
                             :key="index"
                             class="slide">
-                            <PiioElement :path="obj.url" tag="source" media="(max-width:969px)"></PiioElement>
-                            <PiioElement :path="obj.url" tag="img"></PiioElement>
-                        </picture>
+
+                            <nuxt-image
+                                :placeholder="true"
+                                :src="obj.url" />
+                        </div>
 
                         <div slot="prevButton" class="">
                             <fig-icon icon="chevron-left" width="24" height="24" />
@@ -328,7 +261,11 @@ export default {
                         <div slot="nextButton">
                             <fig-icon icon="chevron-right" width="24" height="24" />
                         </div>
-                    </product-image-carousel>
+                    </product-image-carousel> -->
+
+                    <product-image-slider
+                        :product="product" />
+
                 </client-only>
             </template>
 
@@ -337,44 +274,44 @@ export default {
             <template slot="description">{{ product.description }}</template>
 
             <template slot="price">
-                <product-price :sku="visibleSku"></product-price>
+                <product-price :sku="visibleVariant"></product-price>
             </template>
 
             <template slot="thumbs">
-                <product-featured-image-thumbs
+                <product-card-thumbs
                     :product="product"
                     :width="70"
-                    :selected="visibleSku.id"
+                    :selected="visibleVariant.id"
                     @click="onThumbClick" />
             </template>
 
             <template slot="attributes">
                 <product-quantity-warning
-                    :qty="visibleSku.inventory_count"
+                    :qty="visibleVariant.total_inventory_count"
                     class="mbm" />
 
                 <div v-for="(attr, index) in product.attributes" :key="index" class="mbm">
-                    <label class="attr-label">{{ attr.label }}:</label>
+                    <label class="font-semibold">{{ attr.label }}:</label>
                     <div>
                         <product-attribute-selector
                             class="product-attribute-select"
                             v-model="attr.value"
                             :attribute="attr"
-                            :skus="product.skus"
+                            :skus="product.variants"
                             @input="(val) => { onAttributeChange(attr, val) }" />
                     </div>
                 </div>
             </template>
 
             <template slot="button">
-                <div v-if="!visibleSku">Unavailable</div>
+                <div v-if="!visibleVariant">Unavailable</div>
                 <template v-else>
-                    <template v-if="!visibleSku.inventory_count">{{ $t('Out of stock') }}</template>
+                    <template v-if="!visibleVariant.total_inventory_count">{{ $t('Out of stock') }}</template>
                     <fig-button
                         v-else
                         variant="success"
                         size="lg"
-                        class="btn-add"
+                        class="w-full block"
                         @click="addToCart"
                         :loading="isLoading">{{ $t('Add To Your Order') }}</fig-button>
                 </template>
@@ -390,14 +327,5 @@ export default {
     .vs__selected {
         line-height: 2;
     }
-}
-
-.attr-label {
-    font-weight: 600;
-}
-
-.btn-add {
-    display: block;
-    width: 100%;
 }
 </style>

@@ -62,7 +62,7 @@ export default {
         <header role="banner" class="h-12 md:h-16 flex items-center relative p-0 bg-white border-b border-gray-300 w-full duration-500">
             <div class="content-wrap flex flex-row items-center w-full px-4 md:px-2 lg:px-0">
                 <!-- common header -->
-                <template v-if="inCheckoutFlow">
+                <template v-if="!inCheckoutFlow">
                     <!-- logo -->
                     <div>
                         <fig-victory-icon

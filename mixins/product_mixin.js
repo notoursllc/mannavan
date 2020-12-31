@@ -10,42 +10,6 @@ export default {
             });
         },
 
-        getSkusWithAttribute(product, attributeLabel) {
-            let id = null;
-            const skus = [];
-
-            if(isObject(product)
-                && Array.isArray(product.attributes)
-                && Array.isArray(product.skus)) {
-
-                // find the id of the attribute with a label that matches attributeLabel
-                product.attributes.forEach((obj) => {
-                    if(obj.label === attributeLabel) {
-                        id = obj.id;
-                    }
-                });
-
-                if(id) {
-                    // collect every product sku that contains an attribute with an optionId value of [id]
-                    product.skus.forEach((sku) => {
-                        if(Array.isArray(sku.attributes)) {
-                            sku.attributes.forEach((attr) => {
-                                if(attr.optionId === id) {
-                                    skus.push(sku);
-                                }
-                            });
-                        }
-                    });
-                }
-            }
-
-            return {
-                skus: skus,
-                attributeId: id
-            };
-
-        },
-
 
         /*
         * The first variant image is the 'cover' image
@@ -59,42 +23,25 @@ export default {
         },
 
 
-        prodMix_getSkuImages(sku) {
+        prodMix_getVariantImagesAtWidth(variant, width) {
             const images = [];
+            const w = width || 600;
 
-            if(isObject(sku) && Array.isArray(sku.images)) {
-                sku.images.forEach((obj) => {
-                    if(obj.published && obj.media.resource_type === 'IMAGE') {
-                        images.push({
-                            alt_text: obj.alt_text,
-                            url: obj.media.url
-                        });
-                    }
+            if(isObject(variant) && Array.isArray(variant.images)) {
+                variant.images.forEach((obj) => {
+                    obj.variants.forEach((v) => {
+                        if(v.target_width === w) {
+                            images.push({
+                                alt_text: obj.alt_text,
+                                url: v.url
+                            });
+                        }
+                    });
                 });
             }
 
-            console.log("prodMix_getSkuImages DONE", images)
-
             return images;
         },
-
-
-        // prodMix_getFeaturedMediaForSku(sku) {
-        //     let media = null;
-
-        //     if(isObject(sku) && Array.isArray(sku.images)) {
-        //         for(let i=0, len=sku.images.length; i<len; i++) {
-        //             const img = sku.images[i];
-
-        //             if(img.published && img.is_featured && img.media) {
-        //                 media = img.media;
-        //                 break;
-        //             }
-        //         }
-        //     }
-
-        //     return media;
-        // },
 
 
         featuredProductPic(product) {

@@ -3,10 +3,10 @@ import isObject from 'lodash.isobject';
 import { isUuid4 } from '@/utils/common';
 
 export default {
-    name: 'SkuAccentMessage',
+    name: '',
 
     props: {
-        sku: {
+        variant: {
             type: Object,
             default: () => {
                 return {};
@@ -19,15 +19,15 @@ export default {
             const now = Date.now();
             let msg = null;
 
-            if(isObject(this.sku) && this.sku.accent_message_id) {
+            if(isObject(this.variant) && this.variant.accent_message_id) {
                 // if accent_message_id is a UUID then we need to get the actual
                 // message from the list of all messages in Vuex
 
-                if(isUuid4(this.sku.accent_message_id)) {
-                    msg = this.$store.state.product.skuAccentMessages[this.sku.accent_message_id] || null;
+                if(isUuid4(this.variant.accent_message_id)) {
+                    msg = this.$store.state.product.skuAccentMessages[this.variant.accent_message_id] || null;
                 }
                 else {
-                    msg = this.sku.accent_message_id;
+                    msg = this.variant.accent_message_id;
                 }
 
                 if(!msg) {
@@ -35,12 +35,12 @@ export default {
                 }
 
                 // checking for begin or end date display restrictions
-                if(this.sku.accent_message_begin || this.sku.accent_message_end) {
+                if(this.variant.accent_message_begin || this.variant.accent_message_end) {
                     // if the begin time has not been reached yet
                     // or the end time is in the past
                     // then we can't set the message
-                    if( (this.sku.accent_message_begin && new Date(this.sku.accent_message_begin).getTime() > now)
-                        || (this.sku.accent_message_end && new Date(this.sku.accent_message_end).getTime() < now) ) {
+                    if( (this.variant.accent_message_begin && new Date(this.variant.accent_message_begin).getTime() > now)
+                        || (this.variant.accent_message_end && new Date(this.variant.accent_message_end).getTime() < now) ) {
                         return null;
                     }
                 }

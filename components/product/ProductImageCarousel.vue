@@ -520,7 +520,7 @@ export default {
                     ref="slides"
                     class="agile__slides agile__slides--regular"
                     @click="onSlidesClick">
-                    <slot />
+                    <slot></slot>
                 </div>
             </div>
         </div>

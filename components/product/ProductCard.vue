@@ -2,15 +2,15 @@
 import isObject from 'lodash.isobject';
 import product_mixin from '@/mixins/product_mixin';
 import ProductPrice from '@/components/product/ProductPrice';
-import ProductFeaturedImageThumbs from '@/components/product/ProductFeaturedImageThumbs';
-import SkuAccentMessage from '@/components/product/SkuAccentMessage';
+import ProductCardThumbs from '@/components/product/ProductCardThumbs';
+import VariantAccentMessage from '@/components/product/VariantAccentMessage';
 import { isUuid4 } from '@/utils/common';
 
 export default {
     components: {
         ProductPrice,
-        ProductFeaturedImageThumbs,
-        SkuAccentMessage
+        ProductCardThumbs,
+        VariantAccentMessage
     },
 
     mixins: [
@@ -115,15 +115,15 @@ export default {
             return smallestUrl;
         },
 
-        goToProductDetails(skuId) {
+        goToProductDetails(variantId) {
             const params = {
                 seouri: this.product.seo_uri,
                 id: this.product.id
             };
 
             const query = {};
-            if(skuId) {
-                query.sku = skuId;
+            if(variantId) {
+                query.variant = variantId;
             }
 
             this.$router.push({
@@ -134,7 +134,7 @@ export default {
         },
 
         onCardClick() {
-            this.goToProductDetails(this.visibleVariant.sku.id);
+            this.goToProductDetails(this.visibleVariant.variant.id);
         },
 
         onCardMouseAction(isEnter) {
@@ -150,41 +150,40 @@ export default {
 
 
 <template>
-    <div class="pic-card-wrap"
+    <div class="bg-white rounded-md border border-gray-200 cursor-pointer"
          @mouseenter="onCardMouseAction(true)"
          @mouseleave="onCardMouseAction()">
 
         <figure
-            class="pic-card"
+            class="bg-white w-full m-0 block"
             @click="onCardClick">
 
-            <picture v-if="visibleVariant.coverImageUrl">
-                <PiioElement :path="visibleVariant.coverImageUrl" tag="source" media="(max-width:969px)"></PiioElement>
-                <PiioElement :path="visibleVariant.coverImageUrl" tag="img"></PiioElement>
-            </picture>
+            <nuxt-image
+                v-if="visibleVariant.coverImageUrl"
+                :placeholder="true"
+                :src="visibleVariant.coverImageUrl" />
         </figure>
 
         <div class="pic-card-info">
-            <product-featured-image-thumbs
+            <product-card-thumbs
                 v-show="showThumbs"
                 :product="product"
                 :width="45"
                 :limit="maxVariantDisplay"
                 @numdisplayed="setNumVisibleThumbs"
                 @mouseover="setVisibleVariant"
-                @click="(sku) => goToProductDetails(sku.id)" />
+                @click="(variant) => goToProductDetails(variant.id)" />
 
             <div v-show="!showThumbs">
-                <!-- TODO: rename to variant-accent-message -->
-                <sku-accent-message
-                    :sku="visibleVariant.variant"
-                    class="pic-card-accent-msg" />
+                <variant-accent-message
+                    :variant="visibleVariant.variant"
+                    class="text-orange-600 font-semibold" />
 
-                <div class="pic-card-title">{{ product.title }}</div>
-                <div class="pic-card-caption">{{ product.caption }}</div>
+                <div class="text-gray-700 font-semibold">{{ product.title }}</div>
+                <div class="text-gray-600">{{ product.caption }}</div>
             </div>
 
-            <div class="pic-card-price">
+            <div class="text-gray-700 font-semibold pt-3">
                 <product-price :sku="visibleVariant.variant" />
             </div>
         </div>
@@ -192,71 +191,9 @@ export default {
 </template>
 
 
-<style lang="scss">
-@import "~assets/css/components/_variables.scss";
-
-.pic-card-wrap {
-    cursor: pointer;
-    background-color: #fff;
-    border: 1px solid #e6e6e6;
-    border-radius: 3px;
-
-    // .pic-card {
-    //     color: #000;
-    //     transition: .3s;
-    //     overflow: hidden;
-    //     position: relative;
-    //     display: block;
-    //     border-radius: 3px;
-    //     padding-bottom: 75%;
-    //     height: 0;
-    //     margin: 0;
-    // }
-    .pic-card {
-        transition: .3s;
-        display: block;
-        width: 100%;
-        background: #fff;
-        margin: 0;
-
-        img {
-            width: 100%;
-            display: block;
-        }
-    }
-
-    .pic-card-info {
-        padding: 10px;
-        font-size: 16px;
-        font-weight: 500;
-        position: relative;
-        overflow: hidden;
-        min-height: 140px;
-        // border: 1px solid red;
-
-        .pic-card-alert {
-            color: rgb(250, 84, 0);
-            font-weight: 400;
-        }
-
-        .pic-card-accent-msg {
-            color: #FD821B;
-            font-weight: 500;
-        }
-
-        .pic-card-title,
-        .pic-card-price {
-            color: $gray-900;
-            font-weight: 500;
-        }
-
-        .pic-card-caption {
-            color: $gray-600;
-        }
-
-        .pic-card-price {
-            padding-top: 10px;
-        }
-    }
+<style lang="postcss">
+.pic-card-info {
+    @apply p-3 text-base font-semibold relative overflow-hidden;
+    min-height: 140px;
 }
 </style>

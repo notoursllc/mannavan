@@ -62,6 +62,10 @@ export default {
         display: block;
     }
 
+    .prod-pics {
+        overflow: hidden;
+    }
+
     .prod-container {
         background-color: #fff;
         border: 1px solid #e6e6e6;

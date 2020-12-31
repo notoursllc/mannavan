@@ -1,4 +1,8 @@
 <script>
+/**
+ * Displays a thumbnail image for each product color
+ */
+
 import isObject from 'lodash.isobject';
 import product_mixin from '@/mixins/product_mixin';
 
@@ -6,15 +10,16 @@ import {
     FigTooltip
 } from '@notoursllc/figleaf';
 
-
 export default {
-    mixins: [
-        product_mixin
-    ],
+    name: 'ProductCardThumbs',
 
     components: {
         FigTooltip
     },
+
+    mixins: [
+        product_mixin
+    ],
 
     props: {
         product: {
@@ -43,7 +48,7 @@ export default {
     data() {
         return {
             thumbs: [],
-            selectedSkuId: null
+            selectedVariantId: null
         };
     },
 
@@ -66,16 +71,18 @@ export default {
     watch: {
         product: {
             handler(newVal) {
-                if(isObject(newVal) && Array.isArray(newVal.skus)) {
-                    const featuredImages = this.getCoverImageThumbs(newVal);
+                console.log("OROD WATCh", newVal)
+                if(isObject(newVal) && Array.isArray(newVal.variants)) {
+                    const variantThumbs = this.getOneThumbPerVariant(newVal);
+                    console.log("variantThumbs", variantThumbs)
 
                     // If there is only one featured image, then we will not dipslay any thumbs
                     // because that one image will already be displayed on the page
-                    if(!Array.isArray(featuredImages) || featuredImages.length === 1) {
+                    if(variantThumbs.length === 1) {
                         this.thumbs = [];
                     }
                     else {
-                        this.thumbs = this.limit ? featuredImages.slice(0, this.limit) : featuredImages;
+                        this.thumbs = this.limit ? variantThumbs.slice(0, this.limit) : variantThumbs;
                     }
                 }
 
@@ -86,34 +93,33 @@ export default {
 
         selected: {
             handler(newVal) {
-                this.selectedSkuId = newVal;
+                this.selectedVariantId = newVal;
             },
             immediate: true
         }
     },
 
     methods: {
-        //TODO: needs refactoring for using variant
-        getCoverImageThumbs(product) {
+        getOneThumbPerVariant(product) {
             const images = [];
 
             if(!Array.isArray(product.variants) || !product.variants.length) {
-                return;
+                return images;
             }
 
             product.variants.forEach((variant) => {
                 const img = this.prodMix_getVariantCoverImage(variant);
 
-                if(isObject(img) && img.media) {
-                    // images.push({
-                    //     smallestMediaUrl: this.getSmallestMediaUrl(img.media),
-                    //     smallestImage: img,
-                    //     sku: sku
-                    // });
-                    // images.push({
-                    //     url: img.media.url,
-                    //     sku: sku
-                    // });
+                // new get the 75px width image
+                if(isObject(img) && img.variants) {
+                    img.variants.forEach((obj) => {
+                        if(obj.target_width === 75) {
+                            images.push({
+                                url: obj.url,
+                                variant: variant
+                            });
+                        }
+                    });
                 }
             });
 
@@ -121,12 +127,12 @@ export default {
         },
 
         onThumbClick(obj) {
-            this.$emit('click', obj.sku);
-            this.selectedSkuId = obj.sku.id;
+            this.$emit('click', obj.variant);
+            this.selectedVariantId = obj.variant.id;
         },
 
         onThumbMouseOver(obj) {
-            this.$emit('mouseover', obj.sku);
+            this.$emit('mouseover', obj.variant);
         }
     }
 };
@@ -134,31 +140,23 @@ export default {
 
 
 <template>
-    <div>
+    <div class="flex flex-row items-center -mx-sm">
         <div v-for="(obj, index) in thumbs"
              :key="index"
              class="media-thumb"
-             :style="thumbStyle"
              @click="onThumbClick(obj)"
              @mouseover="onThumbMouseOver(obj)">
 
-            <!-- <picture
-                :id="`thumb_${index}`"
-                @mouseover="onThumbMouseOver(obj)">
-                <PiioElement :path="obj.url" tag="source" media="(max-width:45px)" class="thumbImg"></PiioElement>
-                <PiioElement :path="obj.url" tag="img" class="thumbImg"></PiioElement>
-            </picture> -->
-
             <fig-tooltip
-                :disabled="obj.sku.inventory_count > 0">
-                <span slot="toggler">
-                    <PiioElement
-                        :path="obj.url"
-                        tag="img"
+                :disabled="obj.variant.total_inventory_count > 0">
+                <template slot="toggler">
+                    <nuxt-image
+                        :placeholder="true"
+                        :src="obj.url"
+                        :style="thumbStyle"
                         :id="`thumb_${index}`"
-                        :class="{ selected: selectedSkuId === obj.sku.id }"
-                        @mouseover="onThumbMouseOver(obj)" />
-                </span>
+                        :class="{ selected: selectedVariantId === obj.variant.id }" />
+                </template>
                 {{ $t('Sold out') }}
             </fig-tooltip>
         </div>
@@ -166,22 +164,15 @@ export default {
 </template>
 
 
-<style lang="scss">
+<style lang="postcss">
 .media-thumb {
-    padding: 0 3px;
-    display: table-cell;
-    cursor: pointer;
-
-    img {
-        width: 100%;
-        border-radius: 3px;
-        border: 2px transparent;
-        display: block;
-
-        &:hover,
-        &.selected {
-            box-shadow: 0 0 0 2px rgb(55, 194, 245);
-        }
-    }
+    @apply cursor-pointer;
+}
+.media-thumb:not(:last-child) {
+    @apply pr-2;
+}
+.media-thumb img:hover,
+.media-thumb img.selected {
+    box-shadow: 0 0 0 2px rgb(55, 194, 245);
 }
 </style>
