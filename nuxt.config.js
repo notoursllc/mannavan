@@ -56,13 +56,7 @@ module.exports = {
             { hid: 'description', name: 'description', content: process.env.npm_package_description || '' }
         ],
         link: [
-            { rel: 'icon', type: 'image/x-icon', href: '/images/favicon.ico' },
-            { rel: 'preconnect', href: '//pcdn.piiojs.com' },
-            {
-                rel: 'preload',
-                as: 'script',
-                href: `//pcdn.piiojs.com/${process.env.PIIO_DOMAIN_KEY}/image.min.js`
-            }
+            { rel: 'icon', type: 'image/x-icon', href: '/images/favicon.ico' }
         ],
         script: [
             // NOTE: Putting this in the head() of the cart/checkout/index.vue file, instead of here,
@@ -75,19 +69,8 @@ module.exports = {
                 src: isDev ? 'https://js.squareupsandbox.com/v2/paymentform' : 'https://js.squareup.com/v2/paymentform',
                 body: true,
                 async: true
-            },
-            {
-                hid: 'piio-init',
-                innerHTML: `(function(i,m,a,g,e) {e = i.getElementsByTagName(m)[0], (g = i.createElement(m)).src = "//pcdn.piiojs.com/"+a+"/image.min.js",g.onerror = function() {(g = i.createElement(m)).src = "https://fs.piio.co/image-failover.min.js",e.parentNode.insertBefore(g, e);}, e.parentNode.insertBefore(g, e);}(document, "script", "${process.env.PIIO_DOMAIN_KEY}"));`,
-                type: 'text/javascript',
-                pbody: true
             }
-        ],
-
-        // disabling the HTML sanitizer for the piio-init script (innerHTML vaule)
-        __dangerouslyDisableSanitizersByTagID: {
-            'piio-init': ['innerHTML']
-        }
+        ]
     },
 
     telemetry: false,
@@ -133,7 +116,6 @@ module.exports = {
         '@/plugins/directives.js',
         // '@/plugins/vue-placeholders.js',
         // '@/plugins/vue-observe-visibility.client.js',
-        { src: '@/plugins/piio/piio.js', ssr: false },
         { src: '@/plugins/youtube', ssr: false },
         { src: '@/plugins/paypal-button/paypal-button.js', ssr: false }
     ],
