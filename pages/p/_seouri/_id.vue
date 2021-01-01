@@ -7,7 +7,6 @@ import { arraysAreEqual } from '@/utils/common';
 import ProductPrice from '@/components/product/ProductPrice';
 import ProductQuantityWarning from '@/components/product/ProductQuantityWarning';
 import ProductDetailsLayout from '@/components/product/ProductDetailsLayout';
-import ProductImageCarousel from '@/components/product/ProductImageCarousel';
 import ProductImageSlider from '@/components/product/ProductImageSlider';
 import ProductAttributeSelector from '@/components/product/ProductAttributeSelector';
 import ProductCardThumbs from '@/components/product/ProductCardThumbs';
@@ -25,7 +24,6 @@ export default {
         ProductPrice,
         ProductQuantityWarning,
         ProductDetailsLayout,
-        ProductImageCarousel,
         ProductImageSlider,
         ProductAttributeSelector,
         ProductCardThumbs
@@ -40,7 +38,6 @@ export default {
         return {
             product: {},
             visibleVariant: {},
-            visibleImages: [],
 
             // skuOptions: {},
             selectedAttributes: {},
@@ -49,21 +46,7 @@ export default {
             isLoading: false,
             form: {
                 selectedSize: null,
-                selectedQty: 1,
-            },
-            carouselOptions: {
-                fade: false,
-                responsive: [
-                    {
-                        breakpoint: 401
-                    },
-                    {
-                        breakpoint: slideBreakpoint,
-                        settings: {
-                            unagile: true
-                        }
-                    }
-                ]
+                selectedQty: 1
             }
         };
     },
@@ -107,7 +90,6 @@ export default {
                 for(let i=0, l=data.product.variants.length; i<l; i++) {
                     if(data.product.variants[i].id === route.query.variant) {
                         data.visibleVariant = data.product.variants[i];
-                        data.visibleImages = product_mixin.methods.prodMix_getVariantImagesAtWidth(data.visibleVariant, 600);
                         break;
                     }
                 }
@@ -229,7 +211,6 @@ export default {
 
         setVisibleSku(sku) {
             this.visibleVariant = sku || {};
-            this.visibleImages = this.prodMix_getVariantImagesAtWidth(this.visibleVariant, 600);
         }
     }
 };
@@ -241,31 +222,10 @@ export default {
         <product-details-layout v-if="product">
             <!-- pics -->
             <template slot="pics">
-                visibleImages {{ visibleImages }}
                 <client-only placeholder="Carousel loading...">
-                    <!-- <product-image-carousel :options="carouselOptions" ref="carousel">
-                        <div
-                            v-for="(obj, index) in visibleImages"
-                            :key="index"
-                            class="slide">
-
-                            <nuxt-image
-                                :placeholder="true"
-                                :src="obj.url" />
-                        </div>
-
-                        <div slot="prevButton" class="">
-                            <fig-icon icon="chevron-left" width="24" height="24" />
-                        </div>
-
-                        <div slot="nextButton">
-                            <fig-icon icon="chevron-right" width="24" height="24" />
-                        </div>
-                    </product-image-carousel> -->
-
                     <product-image-slider
-                        :product="product" />
-
+                        :product="product"
+                        :variant-id="visibleVariant.id" />
                 </client-only>
             </template>
 
