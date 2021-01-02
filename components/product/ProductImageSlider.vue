@@ -68,7 +68,7 @@ export default Vue.extend({
 
         slideLiStyle() {
             return !this.slideshowDisabled
-                ? { transform: 'translateX(-' + (this.currentIndex * 100) + '%)' }
+                ? { transform: 'translateX(-' + (this.currentIndex * 100) + '%)', width: this.countSlides * 100 + '%' }
                 : { width: '50%', display: 'flex' };
         },
 
@@ -93,8 +93,19 @@ export default Vue.extend({
         variantId: {
             handler: function(newVal) {
                 if(newVal) {
-                    this.pics = this.getPicsForWidth(600, this.variantId);
-                    this.fullscreen.pics = this.getPicsForWidth(1200, this.variantId);
+                    // BUG WORKAROUND:
+                    // Wrapping the setting of pics and fullscreen.pics with nextTick
+                    // to work around a bug in @nuxt/image:
+                    // https://github.com/nuxt/image/issues/114
+                    this.pics = [];
+                    this.fullscreen.pics = [];
+
+                    const self = this;
+
+                    Vue.nextTick(function () {
+                        self.pics = self.getPicsForWidth(600, self.variantId);
+                        self.fullscreen.pics = self.getPicsForWidth(1200, self.variantId);
+                    });
                 }
             },
             immediate: true
@@ -203,16 +214,17 @@ export default Vue.extend({
         :class="{'slider-disabled': slideshowDisabled}">
         <ul
             :style="slideUlStyle"
+            class="w-full"
             @click="onSlidesClick">
             <li
                 v-for="(obj, index) in pics"
                 :key="index"
                 :style="slideLiStyle">
                 <div class="relative w-full bg-gray-350 overflow-hidden">
-                    <img :src="obj.url" />
-                    <!-- <nuxt-image
+                    <nuxt-image
                         :placeholder="true"
-                        :src="obj.url" /> -->
+                        :src="obj.url"
+                        :lazy="true" />
                 </div>
             </li>
         </ul>

@@ -199,14 +199,7 @@ export default {
 
         onThumbClick(sku) {
             this.setVisibleSku(sku);
-
-            const widthWindow = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-            if(widthWindow <= slideBreakpoint) {
-                setTimeout(() => {
-                    this.$refs.carousel.goTo(0);
-                    this.$refs.carousel.reload();
-                }, 0);
-            }
+            this.$refs.slider.goTo(0);
         },
 
         setVisibleSku(sku) {
@@ -224,6 +217,7 @@ export default {
             <template slot="pics">
                 <client-only placeholder="Carousel loading...">
                     <product-image-slider
+                        ref="slider"
                         :product="product"
                         :variant-id="visibleVariant.id" />
                 </client-only>
