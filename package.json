@@ -18,10 +18,10 @@
   "dependencies": {
     "@bugsnag/js": "^7.3.3",
     "@bugsnag/plugin-vue": "^7.3.3",
-    "@notoursllc/figleaf": "^0.1.62",
-    "@nuxtjs/axios": "^5.12.2",
+    "@notoursllc/figleaf": "^0.1.63",
+    "@nuxtjs/axios": "^5.12.5",
     "@nuxtjs/pwa": "^3.0.2",
-    "@nuxtjs/tailwindcss": "^3.4.1",
+    "@nuxtjs/tailwindcss": "^3.4.2",
     "@paypal/checkout-server-sdk": "^1.0.1",
     "cookie": "^0.4.1",
     "cookie-universal-nuxt": "^2.1.4",
@@ -45,7 +45,7 @@
     "vue-json-tree-view": "^2.1.4",
     "vue-observe-visibility": "^0.4.6",
     "vue-youtube-embed": "^2.2.2",
-    "vuelidate": "^0.7.4",
+    "vuelidate": "^0.7.6",
     "vuex-router-sync": "^5.0.0"
   },
   "devDependencies": {
