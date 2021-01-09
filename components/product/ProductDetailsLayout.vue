@@ -7,40 +7,41 @@ export default {
 
 <template>
     <div class="prod-wrap">
-        <div class="prod-container">
+        <div class="block lg:flex lg:my-0 lg:mx-auto border border-gray-200 rounded-md bg-white">
 
-            <div class="prod-pics" v-if="$slots.pics">
+            <!-- pics -->
+            <div class="overflow-hidden block lg:flex-grow lg:flex-shrink" v-if="$slots.pics">
                 <slot name="pics"></slot>
             </div>
 
-            <div class="prod-details">
+            <div class="prod-details block px-3 md:px-6 md:py-4">
                 <!-- title -->
-                <div v-if="$slots.title" class="prod-title">
+                <div v-if="$slots.title" class="text-3xl">
                     <slot name="title"></slot>
                 </div>
 
                 <!-- price -->
-                <div v-if="$slots.price" class="prod-price">
+                <div v-if="$slots.price" class="text-base font-semibold mt-2">
                     <slot name="price"></slot>
                 </div>
 
                 <!-- thumbs -->
-                <div v-if="$slots.thumbs" class="prod-thumbs">
+                <div v-if="$slots.thumbs" class="mt-4">
                     <slot name="thumbs"></slot>
                 </div>
 
-                <!-- attributes -->
-                <div v-if="$slots.attributes" class="prod-attrs">
-                    <slot name="attributes"></slot>
+                <!-- sizes -->
+                <div v-if="$slots.sizes" class="mt-4">
+                    <slot name="sizes"></slot>
                 </div>
 
                 <!-- button -->
-                <div v-if="$slots.button" class="prod-btn">
+                <div v-if="$slots.button" class="mt-6">
                     <slot name="button"></slot>
                 </div>
 
                 <!-- description -->
-                <div v-if="$slots.description" class="prod-desc">
+                <div v-if="$slots.description" class="mt-6 break-normal text-base">
                     <slot name="description"></slot>
                 </div>
             </div>
@@ -53,76 +54,10 @@ export default {
 </template>
 
 
-<style lang="scss">
-@import '~assets/css/components/_variables.scss';
-@import "~assets/css/components/_mixins.scss";
-
-.prod-wrap {
-    .prod-container, .prod-pics, .prod-details  {
-        display: block;
-    }
-
-    .prod-pics {
-        overflow: hidden;
-    }
-
-    .prod-container {
-        background-color: #fff;
-        border: 1px solid #e6e6e6;
-        border-radius: 3px;
-        max-width: 1440px;
-    }
-
+<style lang="postcss">
+@screen lg {
     .prod-details {
-        padding: 0 5px;
-    }
-
-    @media (min-width: 1025px) {
-        .prod-container {
-            @include flexbox();
-            margin: 0px auto;
-        }
-
-        .prod-pics {
-            flex-grow: 3;
-            flex-shrink: 1;
-            flex-basis: 0%;
-        }
-
-        .prod-details {
-            padding: 10px 20px;
-            width: 400px;
-        }
-    }
-
-    .prod-title {
-        font-size: 24px;
-        font-weight: 500;
-    }
-
-    .prod-desc {
-        font-size: 16px;
-        word-wrap: break-word;
-        margin-top: 50px;
-    }
-
-    .prod-price {
-        font-size: 16px;
-        font-weight: 500;
-        margin-top: 10px;
-    }
-
-    .prod-thumbs {
-        margin-top: 20px;
-    }
-
-    .prod-attrs {
-        margin-top: 20px;
-    }
-
-    .prod-btn {
-        margin-top: 20px;
-        text-align: center;
+        width: 400px;
     }
 }
 </style>

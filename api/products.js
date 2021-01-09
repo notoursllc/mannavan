@@ -24,6 +24,22 @@ export default ($axios) => ({
             params
         });
         return data;
+    },
+
+
+    /*
+     * Product variants
+     */
+
+    async getVariantSku(id) {
+        const response = await $axios.$get('/product/variant/sku', {
+            params: {
+                id
+            }
+        });
+
+        return response.data;
     }
+
 
 });

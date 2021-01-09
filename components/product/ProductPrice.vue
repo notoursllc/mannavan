@@ -3,9 +3,16 @@ import isObject from 'lodash.isobject';
 
 export default {
     props: {
-        sku: {
+        variant: {
             type: Object,
             required: true
+        },
+
+        sku: {
+            type: Object,
+            default: () => {
+                return {};
+            }
         },
 
         showStrikethrough: {
@@ -21,45 +28,90 @@ export default {
 
     computed: {
         basePrice: function() {
-            // console.log("PROD", this.sku)
-            if (isObject(this.sku) && this.sku.base_price) {
-                return this.$n(this.sku.base_price, 'currency');
+            let price = null;
+
+            if (isObject(this.variant) && this.variant.base_price) {
+                price = this.$n(this.variant.base_price, 'currency');
+
+                // if the sku base_price is null then the value is inherited from the parent variant
+                if(isObject(this.sku) && this.sku.base_price !== null) {
+                    price = this.$n(this.sku.base_price, 'currency');
+                }
             }
 
-            return 0;
+            return price;
         },
 
         salePrice: function() {
-            if (isObject(this.sku)
-                && this.sku.is_on_sale
-                && this.sku.sale_price) {
-                return this.$n(this.sku.sale_price, 'currency');
+            let salePrice = null;
+
+            if (isObject(this.variant)) {
+                if(this.variant.is_on_sale && this.variant.sale_price !== null) {
+                    salePrice = this.$n(this.variant.sale_price, 'currency');
+                }
+
+                if(isObject(this.sku)
+                    && this.sku.is_on_sale
+                    && this.sku.sale_price !== null) {
+                    salePrice = this.$n(this.sku.sale_price, 'currency');
+                }
             }
 
-            return 0;
+            return salePrice;
+        }
+    },
+
+    render: function(h) {
+        if(this.showStrikethrough && this.salePrice && this.basePrice) {
+            return h(
+                'div',
+                {},
+                [
+                    h(
+                        'div',
+                        {
+                            class: {
+                                'text-gray-500 mr-1 line-through basePrice': true,
+                                'inline-block': !this.stacked
+                            }
+                        },
+                        this.basePrice
+                    ),
+                    h(
+                        'div',
+                        {
+                            class: 'inline-block'
+                        },
+                        this.salePrice
+                    )
+                ]
+            );
+        }
+        else if(this.salePrice) {
+            return h(
+                'span',
+                {},
+                this.salePrice
+            );
+        }
+        else {
+            return h(
+                'span',
+                {},
+                this.basePrice
+            );
         }
     }
 };
 </script>
 
 
-<template>
-    <div class="inlineBlock">
-        <div v-if="salePrice && basePrice && showStrikethrough">
-            <div class="colorGrayLighter strikethrough mrs basePrice" :class="{ 'inlineBlock': !stacked }">{{ basePrice }}</div>
-            <div class="inlineBlock">{{ salePrice }}</div>
-        </div>
-        <div v-else-if="salePrice" class="inlineBlock">{{ salePrice }}</div>
-        <div v-else class="inlineBlock">{{ basePrice }}</div>
-    </div>
-</template>
+<style lang="postcss" scoped>
+.basePrice {
+    @apply hidden;
+}
 
-<style lang="scss" scoped>
-    @import "~assets/css/components/_variables.scss";
-
-    @media #{$small-and-down} {
-        .basePrice {
-            display: none;
-        }
-    }
+@screen sm {
+    @apply inline-block;
+}
 </style>

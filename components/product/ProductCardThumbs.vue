@@ -75,7 +75,6 @@ export default {
                 if(isObject(newVal) && Array.isArray(newVal.variants)) {
                     const variantThumbs = this.getOneThumbPerVariant(newVal);
                     console.log("variantThumbs", variantThumbs)
-
                     // If there is only one featured image, then we will not dipslay any thumbs
                     // because that one image will already be displayed on the page
                     if(variantThumbs.length === 1) {
@@ -143,20 +142,22 @@ export default {
     <div class="flex flex-row items-center -mx-sm">
         <div v-for="(obj, index) in thumbs"
              :key="index"
-             class="media-thumb"
+             class="media-thumb-wrapper"
              @click="onThumbClick(obj)"
              @mouseover="onThumbMouseOver(obj)">
 
             <fig-tooltip
                 :disabled="obj.variant.total_inventory_count > 0">
-                <template slot="toggler">
+                <div
+                    slot="toggler"
+                    class="media-thumb"
+                    :class="{ 'media-thumb-selected': selectedVariantId === obj.variant.id }"
+                    :style="thumbStyle">
                     <nuxt-image
                         :placeholder="true"
                         :src="obj.url"
-                        :style="thumbStyle"
-                        :id="`thumb_${index}`"
-                        :class="{ selected: selectedVariantId === obj.variant.id }" />
-                </template>
+                        :style="thumbStyle" />
+                </div>
                 {{ $t('Sold out') }}
             </fig-tooltip>
         </div>
@@ -168,11 +169,15 @@ export default {
 .media-thumb {
     @apply cursor-pointer;
 }
-.media-thumb:not(:last-child) {
-    @apply pr-2;
+.media-thumb,
+.media-thumb > div {
+    @apply rounded-md;
 }
-.media-thumb img:hover,
-.media-thumb img.selected {
+.media-thumb-wrapper:not(:last-child) {
+    @apply mr-2;
+}
+.media-thumb:hover,
+.media-thumb-selected {
     box-shadow: 0 0 0 2px rgb(55, 194, 245);
 }
 </style>

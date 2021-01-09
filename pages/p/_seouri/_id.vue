@@ -3,30 +3,29 @@ import isObject from 'lodash.isobject';
 import { email, required } from 'vuelidate/lib/validators'
 import product_mixin from '@/mixins/product_mixin';
 import shopping_cart_mixin from '@/mixins/shopping_cart_mixin';
-import { arraysAreEqual } from '@/utils/common';
 import ProductPrice from '@/components/product/ProductPrice';
 import ProductQuantityWarning from '@/components/product/ProductQuantityWarning';
 import ProductDetailsLayout from '@/components/product/ProductDetailsLayout';
 import ProductImageSlider from '@/components/product/ProductImageSlider';
-import ProductAttributeSelector from '@/components/product/ProductAttributeSelector';
 import ProductCardThumbs from '@/components/product/ProductCardThumbs';
+import ProductSizeButtons from '@/components/product/ProductSizeButtons';
 // import TshirtSizeChart from '@/components/product/TshirtSizeChart';
 
 import {
-    FigButton
+    FigButton,
+    FigOverlay
 } from '@notoursllc/figleaf';
-
-const slideBreakpoint = 1024;
 
 export default {
     components: {
         FigButton,
+        FigOverlay,
         ProductPrice,
         ProductQuantityWarning,
         ProductDetailsLayout,
         ProductImageSlider,
-        ProductAttributeSelector,
-        ProductCardThumbs
+        ProductCardThumbs,
+        ProductSizeButtons
     },
 
     mixins: [
@@ -42,11 +41,11 @@ export default {
             // skuOptions: {},
             selectedAttributes: {},
             selectedAttributesAreValid: false,
-            productQuantityMaxValue: 30,
             isLoading: false,
+            cartButtonLoading: false,
+            selectedSkuInventoryCount: null,
             form: {
-                selectedSize: null,
-                selectedQty: 1
+                selectedSku: null
             }
         };
     },
@@ -130,26 +129,26 @@ export default {
         addToCart: async function() {
             this.isLoading = true;
 
+
+
             const addItemConfig = {
                 product: this.product.id,
                 sku: this.visibleVariant.id
                 // options: {
-                //     size: this.form.selectedSize,
+                //     size: this.form.selectedSku,
                 //     qty: this.form.selectedQty
                 // }
             };
 
             try {
-                const response = await this.addItem(addItemConfig);
-                this.setCartAndTokenStateFromResponse(response);
+                const sku = await this.$api.products.getVariantSku(route.params.id);
 
-                this.isLoading = false;
+                // const response = await this.addItem(addItemConfig);
+                // this.setCartAndTokenStateFromResponse(response);
 
-                this.$nuxt.$emit('PRODUCT_ADDED_TO_CART', this.product);
+                // this.$nuxt.$emit('PRODUCT_ADDED_TO_CART', this.product);
             }
             catch(err) {
-                this.isLoading = false;
-
                 this.$errorMessage(
                     err.response.data.message,
                 );
@@ -160,50 +159,43 @@ export default {
                     }
                 });
             }
+
+            this.isLoading = false;
         },
 
-        onSizeChange(newVal) {
-            const inventoryCount = this.getInventoryCountForSize(newVal, this.product);
-
-            if(inventoryCount) {
-                this.productQuantityMaxValue = inventoryCount;
-
-                if(inventoryCount < this.form.selectedQty) {
-                    this.form.selectedQty = this.productQuantityMaxValue;
-                }
-            }
-        },
-
-        onAttributeChange(attribute, value) {
-            console.log("ON ATTR CHANGE", attribute, value);
-
-            // TODO: display pics of the selected sku
-            this.selectedAttributes[attribute.id] = attribute.value;
-
-            const selectedValues = [];
-
-            for(const key in this.selectedAttributes) {
-                selectedValues.push(this.selectedAttributes[key]);
-            }
-
-            // all of the selected values need to exist in a sku
-            // in order the the selection to be valid
-            this.product.variants.forEach((sku) => {
-                const skuAttributeValues = sku.attributes.map(obj => obj.value);
-                if(arraysAreEqual(skuAttributeValues.sort(), selectedValues.sort())) {
-                    // selected = sku;
-                    this.setVisibleSku(sku);
-                }
-            });
-        },
-
-        onThumbClick(sku) {
-            this.setVisibleSku(sku);
+        onThumbClick(variant) {
+            // console.log("ON THUMNB CLIKC", variant)
+            this.setVisibleVariant(variant);
             this.$refs.slider.goTo(0);
         },
 
-        setVisibleSku(sku) {
-            this.visibleVariant = sku || {};
+        async onSizeSelect(sku) {
+            this.form.selectedSku = sku;
+
+
+            console.log("SIZE CHANGE", sku)
+
+            this.cartButtonLoading = true;
+            await this.getSkuInventoryCount(sku.id);
+            this.cartButtonLoading = false;
+        },
+
+        setVisibleVariant(variant) {
+            this.visibleVariant = variant || {};
+        },
+
+        async getSkuInventoryCount(id) {
+            try {
+                const sku = await this.$api.products.getVariantSku(id);
+                this.selectedSkuInventoryCount = isObject(sku) ? sku.inventory_count : 0;
+            }
+            catch(err) {
+                this.$errorMessage(
+                    err.response.data.message,
+                );
+
+                this.$bugsnag.notify(err);
+            }
         }
     }
 };
@@ -212,6 +204,7 @@ export default {
 
 <template>
     <div class="pageContainerMax container-fluid">
+        form {{ form }}
         <product-details-layout v-if="product">
             <!-- pics -->
             <template slot="pics">
@@ -228,7 +221,9 @@ export default {
             <template slot="description">{{ product.description }}</template>
 
             <template slot="price">
-                <product-price :sku="visibleVariant"></product-price>
+                <product-price
+                    :variant="visibleVariant"
+                    :sku="form.selectedSku" />
             </template>
 
             <template slot="thumbs">
@@ -239,36 +234,44 @@ export default {
                     @click="onThumbClick" />
             </template>
 
-            <template slot="attributes">
+            <template slot="sizes">
                 <product-quantity-warning
-                    :qty="visibleVariant.total_inventory_count"
-                    class="mbm" />
+                    :qty="visibleVariant.total_inventory_count" />
 
-                <div v-for="(attr, index) in product.attributes" :key="index" class="mbm">
-                    <label class="font-semibold">{{ attr.label }}:</label>
-                    <div>
-                        <product-attribute-selector
-                            class="product-attribute-select"
-                            v-model="attr.value"
-                            :attribute="attr"
-                            :skus="product.variants"
-                            @input="(val) => { onAttributeChange(attr, val) }" />
+                <div class="mtl">
+                    <div class="flex items-center font-medium mb-1 w-full">
+                        <div class="text-black flex-grow">{{ $t('Select a size') }}:</div>
+                        <div class="text-gray-500">{{ $t('Size guide') }}</div>
                     </div>
+
+                    <product-size-buttons
+                        :product="product"
+                        :variant-id="visibleVariant.id"
+                        @input="onSizeSelect" />
                 </div>
             </template>
 
             <template slot="button">
-                <div v-if="!visibleVariant">Unavailable</div>
-                <template v-else>
-                    <template v-if="!visibleVariant.total_inventory_count">{{ $t('Out of stock') }}</template>
-                    <fig-button
-                        v-else
-                        variant="success"
-                        size="lg"
-                        class="w-full block"
-                        @click="addToCart"
-                        :loading="isLoading">{{ $t('Add To Your Order') }}</fig-button>
-                </template>
+                <fig-overlay :show="cartButtonLoading">
+                    <div v-if="!visibleVariant">Unavailable</div>
+                    <template v-else>
+                        <div v-if="!visibleVariant.total_inventory_count || (selectedSkuInventoryCount !== null && selectedSkuInventoryCount < 1)">
+                            <fig-button
+                            variant="danger"
+                            :disabled="true"
+                            size="lg"
+                            class="w-full block">{{ $t('Out of stock') }}</fig-button>
+                        </div>
+
+                        <fig-button
+                            v-else
+                            variant="success"
+                            size="lg"
+                            class="w-full block"
+                            @click="addToCart"
+                            :loading="isLoading">{{ $t('Add To Your Order') }}</fig-button>
+                    </template>
+                </fig-overlay>
             </template>
         </product-details-layout>
     </div>
