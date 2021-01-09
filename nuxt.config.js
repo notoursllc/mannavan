@@ -5,8 +5,7 @@ if(isDev) {
 }
 
 module.exports = {
-    // mode: 'universal',
-    mode: 'spa',
+    mode: 'universal',
 
     vue: {
         config: {
