@@ -36,7 +36,9 @@
     "lodash.isobject": "^3.0.2",
     "lodash.orderby": "^4.6.0",
     "lodash.throttle": "^4.1.1",
+    "node-sass": "^4.14.1",
     "nuxt": "^2.14.4",
+    "sass-loader": "^8.0.2",
     "paypal-checkout": "^4.0.314",
     "query-string": "^6.12.1",
     "square-connect": "^2.20190925.0",
@@ -56,8 +58,6 @@
     "babel-eslint": "^10.0.1",
     "eslint": "^6.1.0",
     "eslint-plugin-nuxt": ">=0.4.2",
-    "node-sass": "^4.14.1",
-    "sass-loader": "^8.0.2",
     "testcafe": "^0.23.3",
     "testcafe-browser-provider-saucelabs": "^1.6.1",
     "testcafe-vue-selectors": "^3.0.0"
