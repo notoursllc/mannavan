@@ -245,7 +245,8 @@ export default {
 
                     <!-- price -->
                     <div class="fs20">
-                        <product-price :product="data.product" />
+                        TODO:
+                        <!-- <product-price :product="data.product" /> -->
                     </div>
 
                     <hr/>

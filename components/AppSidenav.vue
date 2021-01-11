@@ -26,7 +26,8 @@ export default {
             <i class="el-icon-close cursorPointer" @click="onMenuItemClick"></i>
         </div>
 
-        <el-menu
+        TODO: replace el-menu
+        <!-- <el-menu
             :router="true"
             background-color="#304156"
             text-color="#fff"
@@ -39,7 +40,6 @@ export default {
                 :index="type"
                 @click="onMenuItemClick">{{ $t(type) }}</el-menu-item>
 
-            <!-- all products -->
             <el-menu-item
                 :route="{ name: 'index' }"
                 index="index"
@@ -47,7 +47,6 @@ export default {
                 {{ $t('All products') }}
             </el-menu-item>
 
-            <!-- shopping cart -->
             <el-menu-item
                 :route="{ name: 'cart-id' }"
                 index="cart-id"
@@ -58,7 +57,7 @@ export default {
                     :class="{'badge-green': numCartItems}"
                     class="badge">{{ numCartItems }}</span>
             </el-menu-item>
-        </el-menu>
+        </el-menu> -->
 
     </aside>
 </template>

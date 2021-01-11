@@ -71,10 +71,9 @@ export default {
     watch: {
         product: {
             handler(newVal) {
-                console.log("OROD WATCh", newVal)
                 if(isObject(newVal) && Array.isArray(newVal.variants)) {
                     const variantThumbs = this.getOneThumbPerVariant(newVal);
-                    console.log("variantThumbs", variantThumbs)
+
                     // If there is only one featured image, then we will not dipslay any thumbs
                     // because that one image will already be displayed on the page
                     if(variantThumbs.length === 1) {

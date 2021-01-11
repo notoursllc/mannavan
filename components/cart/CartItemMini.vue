@@ -37,9 +37,10 @@ export default {
 
             <!-- Price -->
             <div class="fwb">
-                <product-price
+                TODO
+                <!-- <product-price
                     :product="cartItem.product"
-                    :show-strikethrough="false" />
+                    :show-strikethrough="false" /> -->
             </div>
         </div>
     </article>

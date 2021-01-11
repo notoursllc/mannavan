@@ -1,4 +1,7 @@
 <script>
+import HeroMain from '@/components/HeroMain';
+import ProductCardList from '@/components/product/ProductCardList';
+
 const bgImages = [
     'bg_silver_car.jpg',
     'bg_black_5.jpg'
@@ -14,8 +17,8 @@ export default {
     layout: 'home',
 
     components: {
-        HeroMain: () => import('@/components/HeroMain'),
-        ProductCardList: () => import('@/components/product/ProductCardList')
+        HeroMain,
+        ProductCardList
     },
 
     data() {
@@ -66,7 +69,7 @@ export default {
 
 <template>
     <div>
-        <div class="hero-wrap">
+        <div class="pt-4">
             <hero-main :bg-image="bgImage">
                 <!-- <div class="heading-icon">
                     <icon-logo icon-name="logo" class="vam" width="125px" />
@@ -80,15 +83,14 @@ export default {
             </hero-main>
         </div>
 
-        <div class="card-list-wrap content-wrap">
+        <div class="pt-4">
             <product-card-list :products="products" />
         </div>
     </div>
 </template>
 
-<style lang="scss" scoped>
-@import "~assets/css/components/_mixins.scss";
 
+<style scoped>
 .hero-wrap,
 .card-list-wrap {
     padding-top: 20px;

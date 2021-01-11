@@ -184,7 +184,7 @@ export default {
             </div>
 
             <div class="text-gray-700 font-semibold pt-3">
-                <product-price :sku="visibleVariant.variant" />
+                <product-price :variant="visibleVariant.variant" />
             </div>
         </div>
     </div>

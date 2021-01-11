@@ -93,7 +93,6 @@ module.exports = {
     ** Global CSS
     */
     css: [
-        'element-ui/lib/theme-chalk/index.css',
         '@/assets/css/base.scss'
     ],
 
@@ -101,12 +100,11 @@ module.exports = {
     ** Plugins to load before mounting the App
     */
     plugins: [
+        // { src: '@/plugins/bugsnag', ssr: true },
         { src: '@/plugins/bugsnag', mode: 'server' },
         '@/plugins/axios.js',
-        // '@/plugins/api.js',
         { src: '@/plugins/api.js', ssr: true },
         '@/plugins/i18n.js',
-        '@/plugins/element-ui',
         '@/plugins/global-properties',
         '@/plugins/vuelidate',
         '@/plugins/format8601',
@@ -115,7 +113,7 @@ module.exports = {
         '@/plugins/directives.js',
         // '@/plugins/vue-placeholders.js',
         // '@/plugins/vue-observe-visibility.client.js',
-        { src: '@/plugins/youtube', ssr: false },
+        // { src: '@/plugins/youtube', ssr: false },
         { src: '@/plugins/paypal-button/paypal-button.js', ssr: false }
     ],
 
@@ -160,9 +158,12 @@ module.exports = {
      *  Build configuration
      */
     build: {
-        // analyze: true,
         transpile: [
-            /^element-ui/
+            // Figleaf modules are written in ES6 javascript (using export/import)
+            // which a node server does not understand.   Since we are using nuxt in
+            // ssr mode (thus using a node server), the figleaf code needs to be transpiled,
+            // otherwise we will get an error "Unexpected token export"
+            '@notoursllc/figleaf'
         ],
 
         /*
