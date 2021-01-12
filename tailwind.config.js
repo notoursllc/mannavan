@@ -7,10 +7,8 @@ figleafTailwindConfig.purge.content.push(
     'layouts/**/*.vue',
     'pages/**/*.vue',
     'plugins/**/*.js',
-    'nuxt.config.js'
-    // TypeScript
-    // 'plugins/**/*.ts',
-    // 'nuxt.config.ts'
+    'nuxt.config.js',
+    'node_modules/@notoursllc/figleaf/components/**/*.vue'
 );
 
 module.exports = Object.assign({}, figleafTailwindConfig);
