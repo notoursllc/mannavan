@@ -69,7 +69,7 @@ export default {
 
 <template>
     <div>
-        <div class="pt-4">
+        <div class="lg:pt-4">
             <hero-main :bg-image="bgImage">
                 <!-- <div class="heading-icon">
                     <icon-logo icon-name="logo" class="vam" width="125px" />
@@ -83,7 +83,7 @@ export default {
             </hero-main>
         </div>
 
-        <div class="pt-4">
+        <div class="pt-4 content-wrap">
             <product-card-list :products="products" />
         </div>
     </div>

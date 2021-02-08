@@ -1,9 +1,7 @@
-'use strict';
-
-import isObject from 'lodash.isobject'
-import forEach from 'lodash.foreach'
-import * as Cookies from 'js-cookie'
-import cloneDeep from 'lodash.clonedeep'
+import isObject from 'lodash.isobject';
+import forEach from 'lodash.foreach';
+import * as Cookies from 'js-cookie';
+import cloneDeep from 'lodash.clonedeep';
 
 function getCartDefaults() {
     return {
@@ -35,7 +33,7 @@ function getCartDefaults() {
         shipping_rate: null,
         sales_tax: null,
         grand_total: null
-    }
+    };
 }
 
 
@@ -51,8 +49,6 @@ export const state = () => ({
     },
     shippingAddressIsValid: false,
     billingAddressIsValid: false,
-
-    //test
     updated: null
 });
 

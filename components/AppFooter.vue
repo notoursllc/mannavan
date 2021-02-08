@@ -1,10 +1,5 @@
 <script>
 export default {
-    components: {
-        IconLogo: () => import('@/components/icons/IconLogo'),
-        IconVictory: () => import('@/components/icons/IconVictory')
-    },
-
     data: function() {
         return {
             year: new Date().getFullYear(),
@@ -21,15 +16,15 @@ export default {
 </script>
 
 <template>
-    <footer class="footer border-t border-gray-400 bg-white text-sm mt-24">
+    <footer class="footerm">
         <div class="px-3 py-5 mx-auto mt-3 max-w-7xl">
             <div class="container mx-auto flex flex-row justify-between items-start flex-wrap">
 
                 <nav class="nav-item">
                     <dl>
                         <dt>
-                            <fig-icon icon="building-store" width="24" height="24" />
-                            {{ $t('PRODUCTS') }}</dt>
+                            <div class="footer-badge">{{ $t('PRODUCTS') }}</div>
+                        </dt>
 
                         <dd v-for="(obj, type) in productSubTypes" :key="obj.id">
                             <nuxt-link
@@ -47,8 +42,7 @@ export default {
                 <nav class="nav-item">
                     <dl>
                         <dt>
-                            <fig-icon icon="checkbox" width="24" height="24" />
-                            {{ $t('TERMS') }}
+                            <div class="footer-badge">{{ $t('TERMS') }}</div>
                         </dt>
 
                         <dd>
@@ -79,19 +73,7 @@ export default {
                 <nav class="nav-item">
                     <dl>
                         <dt>
-                            <fig-icon icon="shield-check" width="24" height="24" />
-                            {{ $t('SECURE') }}
-                        </dt>
-
-                        <dd>{{ $t('footer_cart_secure') }}</dd>
-                    </dl>
-                </nav>
-
-                <nav class="nav-item">
-                    <dl>
-                        <dt>
-                            <icon-victory icon-name="logo" class="vam" width="30" height="30" />
-                            {{ $t('BREADVAN') }}
+                            <div class="footer-badge">{{ $t('BREADVAN') }}</div>
                         </dt>
                         <dd>
                             <nuxt-link
@@ -101,12 +83,17 @@ export default {
                     </dl>
                 </nav>
             </div>
+        </div>
 
-            <div class="tac">
-                <icon-logo icon-name="breadvan_vintage_racing_apparel" width="100px" />
+        <div class="footer-base">
+            <div class="content-wrap">
+                <div class="flex flex-row items-center justify-between text-gray-700">
+                    <div>
+                        <span class="pr-1"><fig-icon icon="shield-check" width="24" height="24" /></span>
+                        <span>{{ $t('footer_cart_secure') }}</span>
+                    </div>
 
-                <div class="ptm fs12">
-                    &#169; {{ year }} {{ siteName }}, {{ $t('All Rights Reserved') }}.
+                    <div>&#169; {{ year }} {{ siteName }}, {{ $t('All Rights Reserved') }}.</div>
                 </div>
             </div>
         </div>
@@ -115,7 +102,14 @@ export default {
 
 
 <style lang="postcss" scoped>
-footer a { text-decoration: none !important; }
+footer {
+    @apply mt-24 text-sm;
+    background: #cceaf1;
+}
+footer a {
+    @apply text-gray-700;
+    text-decoration: none !important;
+}
 footer a:hover { text-decoration: underline !important; }
 
 footer .nav-item {
@@ -134,5 +128,15 @@ footer dd {
     footer dd {
         @apply leading-6;
     }
+}
+
+.footer-badge {
+    @apply text-white inline-block py-1 px-2 rounded;
+    background-color: #ff7101;
+}
+
+.footer-base {
+    @apply p-6;
+    background: #b8e1eb;
 }
 </style>

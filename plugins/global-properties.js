@@ -1,4 +1,4 @@
-import queryString from 'query-string';
+// import queryString from 'query-string';
 
 // export default async ({ $axios, store }) => {
 export default async (ctx) => {
@@ -12,7 +12,7 @@ export default async (ctx) => {
     //     $axios.$get('master_types?object=product_sub_type')
     // ]);
 
-    const [ productTypes, productSubTypes, productAccentMessages ] = await Promise.all([
+    const promises = [
         ctx.app.$api.masterTypes.all({
             where: ['object', '=', 'product_type']
         }),
@@ -20,10 +20,18 @@ export default async (ctx) => {
             where: ['object', '=', 'product_sub_type']
         }),
         ctx.app.$api.productAccentMessages.all()
-    ]);
+    ];
+
+    if(ctx.store.state.cart.id) {
+        promises.push(
+            ctx.app.$api.cart.get(ctx.store.state.cart.id)
+        );
+    }
+
+    const [ productTypes, productSubTypes, productAccentMessages, shoppingCart ] = await Promise.all(promises);
 
     ctx.store.dispatch('product/PRODUCT_TYPES', productTypes);
     ctx.store.dispatch('product/PRODUCT_SUBTYPES', productSubTypes);
     ctx.store.dispatch('product/PRODUCT_SKU_ACCENT_MESSAGES', productAccentMessages);
-
+    ctx.store.dispatch('cart/CART', shoppingCart);
 };

@@ -33,6 +33,7 @@ export default Vue.extend({
 <template>
     <div class="layoutContainer">
         <fig-icon-sprite />
+        <fig-toaster />
 
         <app-sidenav />
         <app-header />

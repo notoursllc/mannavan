@@ -1,21 +1,16 @@
-import queryString from 'query-string';
-import isObject from 'lodash.isobject';
-
-
 export default ($axios) => ({
 
-    upsert(params) {
-        return $axios.$post('/cart/upsert', params);
+    async get(id) {
+        const { data } = await $axios.$get('/cart', {
+            params: { id }
+        });
+        return data;
     },
 
-    // async deleteImage(url) {
-    //     const { data } = await $axios.$delete('/storage/image', {
-    //         params: {
-    //             url
-    //         }
-    //     });
-
-    //     return data;
-    // }
+    item(params) {
+        return $axios.$post('/cart/item', {
+            ...params
+        });
+    }
 
 });

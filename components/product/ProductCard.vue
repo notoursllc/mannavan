@@ -150,9 +150,10 @@ export default {
 
 
 <template>
-    <div class="bg-white rounded-md border border-gray-200 cursor-pointer"
-         @mouseenter="onCardMouseAction(true)"
-         @mouseleave="onCardMouseAction()">
+    <div
+        class="bg-white rounded-md cursor-pointer"
+        @mouseenter="onCardMouseAction(true)"
+        @mouseleave="onCardMouseAction()">
 
         <figure
             class="bg-white w-full m-0 block"

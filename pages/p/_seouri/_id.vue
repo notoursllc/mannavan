@@ -50,6 +50,12 @@ export default {
         };
     },
 
+    computed: {
+        addToCartButtonDisabled() {
+            return !this.form.selectedSku;
+        }
+    },
+
     validations: function() {
 
         // let baseValidation = {
@@ -75,6 +81,8 @@ export default {
 
     fetchOnServer: true,
 
+
+
     async asyncData({ route, store, app }) {
         try {
             const data = {};
@@ -89,6 +97,7 @@ export default {
                 for(let i=0, l=data.product.variants.length; i<l; i++) {
                     if(data.product.variants[i].id === route.query.variant) {
                         data.visibleVariant = data.product.variants[i];
+                        console.log("ASYNC VISIBLE VARIANT", data.visibleVariant);
                         break;
                     }
                 }
@@ -126,38 +135,60 @@ export default {
     },
 
     methods: {
-        addToCart: async function() {
+
+        /**
+         * Add a sku to the cart
+         *
+         * 1) Check for available stock
+         * 2) Upsert the cart
+         */
+        async addToCart() {
             this.isLoading = true;
 
+            // TODO: send cart data into $api.cart.upsert()
 
 
-            const addItemConfig = {
-                product: this.product.id,
-                sku: this.visibleVariant.id
-                // options: {
-                //     size: this.form.selectedSku,
-                //     qty: this.form.selectedQty
-                // }
-            };
+            // if(!this.$store.state.shoppingcart.token) {
+            //     const response = await this.$api.cart.upsert();
+            //     console.log("CART DATA", response.data);
+            //     this.$store.dispatch('shoppingcart/CART_SET', response.data);
+            // }
+
+
 
             try {
-                const sku = await this.$api.products.getVariantSku(route.params.id);
+                // Check stock
+                await this.getSkuInventoryCount(this.form.selectedSku.id);
 
-                // const response = await this.addItem(addItemConfig);
-                // this.setCartAndTokenStateFromResponse(response);
+                // Show error toast if no stock
+                if(!this.selectedSkuInventoryCount) {
+                    this.$errorToast({
+                        title: this.$t('Error'),
+                        text: this.$t('Sorry, this size is out of stock')
+                    });
+                    return;
+                }
+
+                // Upsert cart
+                const response = await this.$api.cart.item({
+                    cart: this.$store.state.cart.cart.id,
+                    product_variant_sku: this.form.selectedSku.id,
+                    qty: 1
+                });
+                console.log("CART DATA", response.data);
+
+                await this.$store.dispatch('cart/CART', response.data);
+                console.log("STORE CART", this.$store.state.cart);
 
                 // this.$nuxt.$emit('PRODUCT_ADDED_TO_CART', this.product);
             }
             catch(err) {
-                this.$errorMessage(
-                    err.response.data.message,
-                );
-
-                this.$bugsnag.notify(err, {
-                    request: {
-                        addItem: addItemConfig
-                    }
+                this.$errorToast({
+                    title: this.$t('Error'),
+                    text: err.response.data.message
                 });
+
+                this.$bugsnag.notify(err);
             }
 
             this.isLoading = false;
@@ -182,6 +213,7 @@ export default {
 
         setVisibleVariant(variant) {
             this.visibleVariant = variant || {};
+            console.log("VISIBLE VARIANT", this.visibleVariant);
         },
 
         async getSkuInventoryCount(id) {
@@ -253,15 +285,14 @@ export default {
 
             <template slot="button">
                 <fig-overlay :show="cartButtonLoading">
-                    <div v-if="!visibleVariant">Unavailable</div>
+                    <div v-if="!visibleVariant">{{ $t('Unavailable') }}</div>
                     <template v-else>
-                        <div v-if="!visibleVariant.total_inventory_count || (selectedSkuInventoryCount !== null && selectedSkuInventoryCount < 1)">
-                            <fig-button
+                        <fig-button
+                            v-if="!visibleVariant.total_inventory_count || (selectedSkuInventoryCount !== null && selectedSkuInventoryCount < 1)"
                             variant="danger"
                             :disabled="true"
                             size="lg"
                             class="w-full block">{{ $t('Out of stock') }}</fig-button>
-                        </div>
 
                         <fig-button
                             v-else
@@ -269,6 +300,7 @@ export default {
                             size="lg"
                             class="w-full block"
                             @click="addToCart"
+                            :disabled="addToCartButtonDisabled"
                             :loading="isLoading">{{ $t('Add To Your Order') }}</fig-button>
                     </template>
                 </fig-overlay>

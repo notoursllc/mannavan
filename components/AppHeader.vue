@@ -149,7 +149,9 @@ export default {
 
 <style lang="postcss" scoped>
 header:after {
-    background: linear-gradient(to right, #e84f47 30%, #ffcd02 31%, #ffcd02 66%, #0792d8 67%, #0792d8 100%);
+    /* background: linear-gradient(to right, #e14e2c 30%, #eb7d32 31%, #eb7d32 66%, #efc243 67%, #efc243 100%); */
+    /* background: linear-gradient(to right, #7ec3d4 30% ,#cceaf1 31%, #cceaf1 66%, #7ec3d4 67%, #7ec3d4 100%); */
+    background: #9cdff0;
     content: '';
     height: 1px;
     @apply right-0 left-0 top-0 absolute;
@@ -161,12 +163,13 @@ header:after {
 }
 
 header nav a {
-    @apply px-2 py-1 rounded text-blue-700 border-transparent;
+    @apply px-2 py-1 rounded text-gray-700 border-transparent;
 }
 header nav a:hover {
     @apply bg-blue-200 no-underline;
 }
 header nav a.nuxt-link-exact-active {
-    @apply bg-blue-700 text-white;
+    @apply text-white;
+    background: #ff7101;
 }
 </style>

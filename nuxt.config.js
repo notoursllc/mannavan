@@ -108,13 +108,17 @@ module.exports = {
         '@/plugins/global-properties',
         '@/plugins/vuelidate',
         '@/plugins/format8601',
+        '@/plugins/persistedState.client.js',
         '@/plugins/prettyJson',
         '@/plugins/figIcon.js',
         '@/plugins/directives.js',
+        '@/node_modules/@notoursllc/figleaf/components/toaster',
+        '@/node_modules/@notoursllc/figleaf/components/confirm',
         // '@/plugins/vue-placeholders.js',
         // '@/plugins/vue-observe-visibility.client.js',
         // { src: '@/plugins/youtube', ssr: false },
         { src: '@/plugins/paypal-button/paypal-button.js', ssr: false }
+
     ],
 
     buildModules: [

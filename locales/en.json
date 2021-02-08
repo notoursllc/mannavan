@@ -285,6 +285,7 @@
     "Slug": "Slug",
     "Sold out": "Sold out",
     "Sorry this item does not have any sizes available": "Sorry this item does not have any sizes available",
+    "Sorry, this size is out of stock": "Sorry, this size is out of stock",
     "Standard": "Standard",
     "STATE/PROVINCE/REGION": "STATE/PROVINCE/REGION",
     "State/Province/Region": "State/Province/Region",
@@ -310,6 +311,7 @@
     "Types": "Types",
 
     "Unable to initialize PayPal flow. Are your options correct?": "Unable to initialize PayPal flow. Are your options correct?",
+    "Unavailable": "Unavailable",
     "URL and handle": "URL and handle",
     "Use a different billing address": "Use a different billing address",
     "Use of Cookies": "Use of Cookies",
