@@ -4,7 +4,7 @@
  */
 
 import isObject from 'lodash.isobject';
-import product_mixin from '@/mixins/product_mixin';
+import { getProductVariantCoverImage } from '@/utils/product';
 
 import {
     FigTooltip
@@ -16,10 +16,6 @@ export default {
     components: {
         FigTooltip
     },
-
-    mixins: [
-        product_mixin
-    ],
 
     props: {
         product: {
@@ -106,17 +102,12 @@ export default {
             }
 
             product.variants.forEach((variant) => {
-                const img = this.prodMix_getVariantCoverImage(variant);
+                const img = getProductVariantCoverImage(variant, 75);
 
-                // new get the 75px width image
-                if(isObject(img) && img.variants) {
-                    img.variants.forEach((obj) => {
-                        if(obj.target_width === 75) {
-                            images.push({
-                                url: obj.url,
-                                variant: variant
-                            });
-                        }
+                if(isObject(img)) {
+                    images.push({
+                        ...img,
+                        variant: variant
                     });
                 }
             });

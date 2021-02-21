@@ -1,10 +1,9 @@
 <script>
 import isObject from 'lodash.isobject';
-import product_mixin from '@/mixins/product_mixin';
 import ProductPrice from '@/components/product/ProductPrice';
 import ProductCardThumbs from '@/components/product/ProductCardThumbs';
 import VariantAccentMessage from '@/components/product/VariantAccentMessage';
-import { isUuid4 } from '@/utils/common';
+import { getProductVariantCoverImage } from '@/utils/product';
 
 export default {
     components: {
@@ -12,10 +11,6 @@ export default {
         ProductCardThumbs,
         VariantAccentMessage
     },
-
-    mixins: [
-        product_mixin
-    ],
 
     props: {
         product: {
@@ -82,7 +77,7 @@ export default {
         setVisibleVariant(variant) {
             this.visibleVariant.variant = variant;
 
-            const img = this.prodMix_getVariantCoverImage(variant);
+            const img = getProductVariantCoverImage(variant);
 
             // find the 600px image variant:
             if(img && Array.isArray(img.variants)) {

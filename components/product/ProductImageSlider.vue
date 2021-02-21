@@ -8,6 +8,7 @@ import Vue from 'vue';
 import VueHotkey from 'v-hotkey';
 import throttle from 'lodash.throttle';
 import product_mixin from '@/mixins/product_mixin';
+import { getAllProductVariantImagesAtWidth } from '@/utils/product';
 
 Vue.use(VueHotkey);
 
@@ -195,7 +196,7 @@ export default Vue.extend({
 
             this.product.variants.forEach((variant) => {
                 if(variant.id === variantId) {
-                    const variantImages = this.prodMix_getVariantImagesAtWidth(variant, width);
+                    const variantImages = getAllProductVariantImagesAtWidth(variant, width);
                     if(variantImages.length) {
                         images = images.concat(variantImages);
                     }

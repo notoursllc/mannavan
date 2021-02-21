@@ -11,39 +11,6 @@ export default {
         },
 
 
-        /*
-        * The first variant image is the 'cover' image
-        */
-        prodMix_getVariantCoverImage(variant) {
-            if(isObject(variant) && Array.isArray(variant.images)) {
-                return variant.images[0];
-            }
-
-            return null;
-        },
-
-
-        prodMix_getVariantImagesAtWidth(variant, width) {
-            const images = [];
-            const w = width || 600;
-
-            if(isObject(variant) && Array.isArray(variant.images)) {
-                variant.images.forEach((obj) => {
-                    obj.variants.forEach((v) => {
-                        if(v.target_width === w) {
-                            images.push({
-                                alt_text: obj.alt_text,
-                                url: v.url
-                            });
-                        }
-                    });
-                });
-            }
-
-            return images;
-        },
-
-
         featuredProductPic(product) {
             let pic = null;
 
