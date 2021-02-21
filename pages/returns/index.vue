@@ -52,14 +52,14 @@ export default {
     </div>
 </template>
 
-<style lang="scss" scoped>
+<style scoped>
 .orderedList {
     margin: 0 20px;
+}
 
-    li {
-        padding-left: 10px;
-        margin-bottom: 10px;
-    }
+.orderedList li {
+    padding-left: 10px;
+    margin-bottom: 10px;
 }
 </style>
 

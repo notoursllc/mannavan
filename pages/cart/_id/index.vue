@@ -51,9 +51,9 @@ export default {
     </div>
 </template>
 
-<style lang="scss">
-    .checkout-buttons {
-        text-align: center;
-        margin: 20px 0;
-    }
+<style>
+.checkout-buttons {
+    text-align: center;
+    margin: 20px 0;
+}
 </style>

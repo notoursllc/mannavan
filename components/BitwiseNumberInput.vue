@@ -106,7 +106,7 @@ export default {
 </template>
 
 
-<style lang="scss">
+<style>
 .num-input .el-input__inner {
     text-align: center;
 }

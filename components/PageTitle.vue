@@ -23,18 +23,18 @@ export default {
     </div>
 </template>
 
-<style lang="scss" scoped>
+<style scoped>
 .pageTitle {
     max-width: 1440px;
     margin: 0 auto;
     padding: 20px 0;
+}
 
-    h1 {
-        max-width: 1440px;
-        font-size: 20px;
-        font-weight: 500;
-        padding: 0;
-        margin: 0;
-    }
+.pageTitle h1 {
+    max-width: 1440px;
+    font-size: 20px;
+    font-weight: 500;
+    padding: 0;
+    margin: 0;
 }
 </style>

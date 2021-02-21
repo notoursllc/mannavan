@@ -49,6 +49,24 @@ export default {
 </template>
 
 
-<style lang="scss">
-    @import "~assets/css/components/_privacy.scss";
+<style>
+.priv h2 {
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 35px;
+    margin-top: 20px;
+}
+
+.priv p {
+    margin-top: 15px;
+}
+
+.priv ul {
+    margin: 14px 0 14px 28px;
+    padding-left: 0;
+}
+
+.priv ul li {
+    list-style: disc;
+}
 </style>

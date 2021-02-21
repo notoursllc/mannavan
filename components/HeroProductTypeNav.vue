@@ -31,16 +31,16 @@ export default {
 </template>
 
 
-<style lang="scss" scoped>
-    .hero-prod-types {
-        width: 100vw;
-        box-sizing: border-box;
-        background: #fff;
-        padding: 15px 30px;
-        font-size: 14px;
-        position: relative;
-        text-align: center;
-        overflow: hidden;
-        white-space: nowrap;
-    }
+<style scoped>
+.hero-prod-types {
+    width: 100vw;
+    box-sizing: border-box;
+    background: #fff;
+    padding: 15px 30px;
+    font-size: 14px;
+    position: relative;
+    text-align: center;
+    overflow: hidden;
+    white-space: nowrap;
+}
 </style>

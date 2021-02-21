@@ -46,26 +46,19 @@ export default {
     </article>
 </template>
 
-<style lang="scss">
-    @import "~assets/css/components/_mixins.scss";
+<style>
+.cartItemMini {
+    @apply flex flex-row shadow-sm;
+    width: 100%;
+    margin-bottom: 10px;
+    background-color: rgba(255, 255, 255, 0.4);
+    transition: background-color .5s linear;
+}
 
-    .cartItemMini {
-        width: 100%;
-        margin-bottom: 10px;
-        // background-color: #fff;
-        background-color: rgba(255, 255, 255, 0.4);
-        @include box-shadow(0px, 1px, 2px, rgba(0,0,0,.1));
-        transition: background-color .5s linear;
-        @include flexbox();
-        @include flex-wrap(nowrap);
-        @include flex-direction(row);
-        @include align-content(stretch);
-
-        .cartItemPic {
-            width: 128px;
-            min-height: 128px;
-            background-size: cover;
-            background-position: center;
-        }
-    }
+.cartItemMini .cartItemPic {
+    width: 128px;
+    min-height: 128px;
+    background-size: cover;
+    background-position: center;
+}
 </style>
