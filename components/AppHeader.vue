@@ -39,19 +39,6 @@ export default {
         productSubTypes() {
             return this.$store.state.product.subTypes;
         }
-    },
-
-    created() {
-        const onProductAddedToCart = (product) => {
-            this.productAddedToCart.product = product;
-            this.productAddedToCart.showPopover = true;
-        };
-
-        this.$nuxt.$on('PRODUCT_ADDED_TO_CART', onProductAddedToCart)
-
-        this.$once('hook:beforeDestroy', () => {
-            this.$nuxt.$off('PRODUCT_ADDED_TO_CART', onProductAddedToCart);
-        });
     }
 };
 </script>
