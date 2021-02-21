@@ -1,35 +1,36 @@
-import isObject from 'lodash.isobject';
 import forEach from 'lodash.foreach';
 
 function getCartDefaults() {
     return {
-        billingSameAsShipping: true,
-        shipping_firstName: null,
-        shipping_lastName: null,
-        shipping_streetAddress: null,
-        shipping_extendedAddress: null,
-        shipping_company: null,
-        shipping_city: null,
-        shipping_state: null,
-        shipping_postalCode: null,
-        shipping_countryCodeAlpha2: null,
-        shipping_email: null,
+        billing_city: null,
+        billing_company: null,
+        billing_countryCodeAlpha2: null,
+        billing_extendedAddress: null,
         billing_firstName: null,
         billing_lastName: null,
-        billing_company: null,
-        billing_streetAddress: null,
-        billing_extendedAddress: null,
-        billing_city: null,
-        billing_state: null,
-        billing_postalCode: null,
-        billing_countryCodeAlpha2: null,
         billing_phone: null,
+        billing_postalCode: null,
+        billing_state: null,
+        billing_streetAddress: null,
+        billingSameAsShipping: true,
+        cart_items: [],
+        id: null,
         num_items: 0,
+        sales_tax: null,
+        shipping_city: null,
+        shipping_company: null,
+        shipping_countryCodeAlpha2: null,
+        shipping_email: null,
+        shipping_extendedAddress: null,
+        shipping_firstName: null,
+        shipping_lastName: null,
+        shipping_postalCode: null,
+        shipping_state: null,
+        shipping_streetAddress: null,
         product_weight_total: 0,
         sub_total: null,
         shipping_total: null,
         shipping_rate: null,
-        sales_tax: null,
         grand_total: null
     };
 }
@@ -52,7 +53,7 @@ export const mutations = {
             state.cart.cart_items = [];
         }
 
-                state.updated = new Date();
+        state.updated = new Date();
     },
 
     CART_ID: (state, id) => {
