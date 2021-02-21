@@ -180,7 +180,28 @@ export default {
                 await this.$store.dispatch('cart/CART', response.data);
                 console.log("STORE CART", this.$store.state.cart);
 
-                // this.$nuxt.$emit('PRODUCT_ADDED_TO_CART', this.product);
+                this.$nuxt.$emit('CART_ITEM_ADDED', this.form.selectedSku.id);
+
+                // show the ATC confirm
+                const confirmButtonClickIndex = await this.$showAtcConfirm(this.form.selectedSku.id);
+
+                // Redirect the user depending on the button clicked in the ATC confirm
+                switch(confirmButtonClickIndex) {
+                    case 1:
+                        this.$router.push({
+                            name: 'cart-id'
+                        });
+                        break;
+
+                    case 2:
+                        this.$router.push({
+                            name: 'cart-checkout'
+                        });
+                        break;
+
+                    default:
+                        // do nothing
+                }
             }
             catch(err) {
                 this.$errorToast({
@@ -202,7 +223,6 @@ export default {
 
         async onSizeSelect(sku) {
             this.form.selectedSku = sku;
-
 
             console.log("SIZE CHANGE", sku)
 
@@ -310,11 +330,9 @@ export default {
 </template>
 
 
-<style lang="scss">
-.product-attribute-select {
-    .vs__dropdown-toggle,
-    .vs__selected {
-        line-height: 2;
-    }
+<style>
+.product-attribute-select .vs__dropdown-toggle,
+.product-attribute-select .vs__selected {
+    line-height: 2;
 }
 </style>

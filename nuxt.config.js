@@ -104,6 +104,7 @@ module.exports = {
         { src: '@/plugins/bugsnag', mode: 'server' },
         '@/plugins/axios.js',
         { src: '@/plugins/api.js', ssr: true },
+        '@/plugins/confirm.js',
         '@/plugins/i18n.js',
         '@/plugins/global-properties',
         '@/plugins/vuelidate',
@@ -114,6 +115,7 @@ module.exports = {
         '@/plugins/directives.js',
         '@/node_modules/@notoursllc/figleaf/components/toaster',
         '@/node_modules/@notoursllc/figleaf/components/confirm',
+        '@/node_modules/@notoursllc/figleaf/components/confirm_atc',
         // '@/plugins/vue-placeholders.js',
         // '@/plugins/vue-observe-visibility.client.js',
         // { src: '@/plugins/youtube', ssr: false },
@@ -122,7 +124,8 @@ module.exports = {
     ],
 
     buildModules: [
-        '@nuxtjs/tailwindcss'
+        '@nuxtjs/tailwindcss',
+        '@nuxt/image'
     ],
 
     tailwindcss: {
@@ -143,7 +146,6 @@ module.exports = {
     modules: [
         // Doc: https://axios.nuxtjs.org/usage
         '@nuxtjs/axios',
-        '@nuxt/image',
         'cookie-universal-nuxt',
         ['@nuxtjs/pwa', { oneSignal: false }]
     ],
