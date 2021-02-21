@@ -1,5 +1,5 @@
 <script>
-import uuid from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 
 import {
     FigButton,
@@ -14,7 +14,7 @@ export default {
 
     data() {
         return {
-            uuid: uuid()
+            uuid: uuidv4()
         };
     },
 
