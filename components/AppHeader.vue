@@ -32,12 +32,21 @@ export default {
 
     computed: {
         ...mapGetters({
-            numCartItems: 'shoppingcart/numItems',
             inCheckoutFlow: 'ui/inCheckoutFlow'
         }),
 
         productSubTypes() {
             return this.$store.state.product.subTypes;
+        },
+
+        numCartItems() {
+            return this.$store.state.cart.cart.num_items;
+        }
+    },
+
+    methods: {
+        onCartButtonClick() {
+            this.$router.push({ name: 'cart' });
         }
     }
 };
@@ -89,7 +98,7 @@ export default {
                     <button
                         type="button"
                         class="cart-button relative p-0 m-0 mt-2 bg-transparent border-0 mr-3 lg:mr-0"
-                        :class="{'bounce': numCartItems}">
+                        @click="onCartButtonClick">
                         <fig-icon
                             icon="cart"
                             :width="27"

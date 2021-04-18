@@ -7,9 +7,24 @@ export default ($axios) => ({
         return data;
     },
 
-    item(params) {
+
+    addItem(params) {
         return $axios.$post('/cart/item', {
             ...params
+        });
+    },
+
+
+    updateItem(params) {
+        return $axios.$put('/cart/item', {
+            ...params
+        });
+    },
+
+
+    deleteItem(id) {
+        return $axios.$delete('/cart/item', {
+            params: { id }
         });
     }
 

@@ -129,9 +129,7 @@ module.exports = {
     ],
 
     tailwindcss: {
-        cssPath: '@/node_modules/@notoursllc/figleaf/assets/css/tailwind.css',
-        configPath: 'tailwind.config.js',
-        exposeConfig: false // https://tailwindcss.nuxtjs.org/options/#exposeconfig
+        cssPath: '@/node_modules/@notoursllc/figleaf/assets/css/tailwind.css'
     },
 
     router: {

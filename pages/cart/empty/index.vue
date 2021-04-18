@@ -1,10 +1,9 @@
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters } from 'vuex';
 
 export default {
     components: {
-        PageTitle: () => import('@/components/PageTitle'),
-        KeepShoppingButton: () => import('@/components/cart/KeepShoppingButton')
+        PageTitle: () => import('@/components/PageTitle')
     },
 
     computed: {
@@ -39,11 +38,7 @@ export default {
         <page-title>{{ $t('Secure Checkout') }}</page-title>
 
         <div class="pageContainerMax fs16 pal tac mtl">
-            {{ $t('Your shopping cart does not contain any items2.') }}
-
-            <div class="mtl">
-                <keep-shopping-button></keep-shopping-button>
-            </div>
+            {{ $t('Your shopping cart does not contain any items.') }}
         </div>
     </div>
 </template>

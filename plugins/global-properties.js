@@ -19,7 +19,8 @@ export default async (ctx) => {
         ctx.app.$api.masterTypes.all({
             where: ['object', '=', 'product_sub_type']
         }),
-        ctx.app.$api.productAccentMessages.all()
+        ctx.app.$api.productAccentMessages.all(),
+        ctx.app.$api.core.appConfig()
     ];
 
     if(ctx.store.state.cart.id) {
@@ -28,10 +29,11 @@ export default async (ctx) => {
         );
     }
 
-    const [ productTypes, productSubTypes, productAccentMessages, shoppingCart ] = await Promise.all(promises);
+    const [ productTypes, productSubTypes, productAccentMessages, appConfig, shoppingCart ] = await Promise.all(promises);
 
     ctx.store.dispatch('product/PRODUCT_TYPES', productTypes);
     ctx.store.dispatch('product/PRODUCT_SUBTYPES', productSubTypes);
     ctx.store.dispatch('product/PRODUCT_SKU_ACCENT_MESSAGES', productAccentMessages);
+    ctx.store.dispatch('ui/APP_CONFIG', appConfig);
     ctx.store.dispatch('cart/CART', shoppingCart);
 };

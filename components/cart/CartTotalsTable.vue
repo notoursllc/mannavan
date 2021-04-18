@@ -1,37 +1,43 @@
 <script>
-    export default {
-        props: {
-            showShippingCost: {
-                type: Boolean,
-                default: false
-            },
+export default {
+    props: {
+        showShippingCost: {
+            type: Boolean,
+            default: false
+        },
 
-            showSalesTax: {
-                type: Boolean,
-                default: false
-            },
+        showSalesTax: {
+            type: Boolean,
+            default: false
+        },
 
-            cart: {
-                type: Object,
-                required: true
-            },
+        cart: {
+            type: Object,
+            required: true
+        },
 
-            labelClass: {
-                type: String,
-                default: 'tar'
-            }
+        labelClass: {
+            type: String,
+            default: 'tar'
+        }
+    },
+
+    computed: {
+        numCartItems() {
+            return this.$store.state.cart.cart.num_items;
         }
     }
+};
 </script>
 
 
 <template>
-    <div v-if="cart.num_items" class="displayTable widthAll">
+    <div v-if="numCartItems" class="displayTable widthAll">
         <!-- subtotal -->
         <div class="displayTableRow">
             <div class="displayTableCell prl" :class="labelClass">
                 {{ $t('Total before tax') }}
-                <span class="nowrap">({{ cart.num_items }} {{ $tc('items', cart.num_items) }})</span>:
+                <span class="nowrap">({{ numCartItems }} {{ $tc('items', numCartItems) }})</span>:
             </div>
             <div class="displayTableCell tar mono">{{ $n(cart.sub_total, 'currency') }}</div>
         </div>

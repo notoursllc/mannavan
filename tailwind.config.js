@@ -11,4 +11,7 @@ figleafTailwindConfig.purge.content.push(
     'node_modules/@notoursllc/figleaf/components/**/*.vue'
 );
 
+figleafTailwindConfig.jit = true;
+figleafTailwindConfig.exposeConfig = false; // https://tailwindcss.nuxtjs.org/options/#exposeconfig
+
 module.exports = Object.assign({}, figleafTailwindConfig);

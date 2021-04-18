@@ -1,15 +1,32 @@
 <script>
-import product_mixin from '@/mixins/product_mixin';
-import shopping_cart_mixin from '@/mixins/shopping_cart_mixin';
-import IconTimesSquare from '@/components/icons/IconTimesSquare';
+import isObject from 'lodash.isobject';
+import ProductVariantCoverImage from '@/components/product/ProductVariantCoverImage';
+import ProductPrice from '@/components/product/ProductPrice';
+import {
+    FigButton,
+    FigPopConfirm,
+    FigOverlay,
+    FigFormSelectNative
+} from '@notoursllc/figleaf';
 
 export default {
     name: 'CartItem',
 
+    components: {
+        ProductVariantCoverImage,
+        ProductPrice,
+        FigButton,
+        FigPopConfirm,
+        FigOverlay,
+        FigFormSelectNative
+    },
+
     props: {
-        data: {
+        item: {
             type: Object,
-            default: null
+            default: () => {
+                return {};
+            }
         },
 
         editMode: {
@@ -28,345 +45,300 @@ export default {
         }
     },
 
-    components: {
-        ProductPrice: () => import('@/components/product/ProductPrice'),
-        ProductDetailsLayout: () => import('@/components/product/ProductDetailsLayout'),
-        ProductImageCarousel: () => import('@/components/product/ProductImageCarousel'),
-        ProductQuantityWarning: () => import('@/components/product/ProductQuantityWarning'),
-        NumberInput: () => import('@/components/NumberInput'),
-        IconTimesSquare
-    },
-
-    mixins: [
-        product_mixin,
-        shopping_cart_mixin
-    ],
-
     data() {
         return {
-            showConfirmDeleteModal: false,
-            showDialog: false
+            // item: {},
+            sizeOptions: [],
+            form: {
+                size: null,
+                qty: null
+            },
+            isLoading: false
+        };
+    },
+
+    computed: {
+        selectedColor() {
+            return isObject(this.item.product_variant) ? this.item.product_variant.label : null;
+        },
+
+        selectedSize() {
+            return isObject(this.item.product_variant_sku) ? this.item.product_variant_sku.label : null;
+        },
+
+        quantityOptions() {
+            const opts = [];
+            const max = this.$store.state.ui.appConfig.CART_PRODUCT_QUANTITY_LIMIT || 20;
+
+            for(let i=1; i<=max; i++) {
+                opts.push(
+                    { label: i, value: i }
+                );
+            }
+
+            return opts;
+        },
+
+        canEdit() {
+            // can't edit if there are no options,
+            // or if there is just one option and that option is the sku already selected
+            if(!this.sizeOptions.length
+                || (this.sizeOptions.length === 1 && this.sizeOptions[0].value === this.item.product_variant_sku.id)) {
+                return false;
+            }
+
+            return true;
+        }
+    },
+
+    watch: {
+        item: {
+            handler(newVal) {
+                this.init();
+            },
+            immediate: true,
+            deep: true
         }
     },
 
     methods: {
-        getProductQuantityMaxValue(selectedSize, product) {
-            return this.getInventoryCountForSize(selectedSize, product);
+        init() {
+            if(isObject(this.item)) {
+                this.form.qty = this.item.qty;
+                this.form.size = this.item.product_variant_sku.id;
+            }
+
+            this.setSizeOptions();
         },
 
-        async updateCartItemQuantity() {
-            const updateConfig = {
-                id: this.data.id,
-                qty: this.data.qty
-            };
+
+        // async updateCart(cartData) {
+        //     await this.$store.dispatch('cart/CART', cartData);
+        //     this.init();
+        // },
+
+        async onRemoveItem(id) {
+            this.isLoading = true;
 
             try {
-                const loadingInstance = this.$loadingService({ target: `#cartItem${this.data.id}` });
-
-
-                const response = await this.updateItemQty(updateConfig);
-
-                this.setCartAndTokenStateFromResponse(response);
-                this.$emit('updated');
-                loadingInstance.close();
+                const updatedCart = await this.$api.cart.deleteItem(id);
+                await this.$store.dispatch('cart/CART', updatedCart.data);
             }
             catch(err) {
-                this.$errorMessage(
-                    this.$t('An error occurred'),
-                    { closeOthers: true }
-                );
-
-                this.$bugsnag.notify(err, {
-                    request: {
-                        updateItemQty: updateConfig
-                    }
-                });
+                console.error('Error getting products', err);
             }
+
+            this.isLoading = false;
         },
 
-        async removeItem() {
+        // getProductQuantityMaxValue(selectedSize, product) {
+        //     return this.getInventoryCountForSize(selectedSize, product);
+        // },
+
+        async setSizeOptions() {
             try {
-                const loadingInstance = this.$loadingService({ target: `#cartItem${this.data.id}` });
-                const response = await this.deleteItem({ id: this.data.id });
-
-                this.setCartAndTokenStateFromResponse(response);
-                this.$emit('updated');
-                loadingInstance.close();
-            }
-            catch(err) {
-                this.$errorMessage(
-                    this.$t('An error occurred'),
-                    { closeOthers: true }
+                const variant = await this.$api.products.getVariant(
+                    this.item.product_variant.id,
+                    { skus: true }
                 );
 
-                this.$bugsnag.notify(err, {
-                    request: { deleteItem: { id: this.data.id } }
-                });
+                const opts = [];
+
+                if(isObject(variant) && Array.isArray(variant.skus)) {
+                    variant.skus.forEach((sku) => {
+                        opts.push({
+                            label: sku.label,
+                            value: sku.id
+                        });
+                    });
+                }
+
+                this.sizeOptions = opts;
+            }
+            catch(err) {
+                console.error('Error getting products', err);
             }
         },
 
-        onConfirmDelete() {
-            this.showConfirmDeleteModal = false;
-            this.removeItem()
+        async updateCartItem() {
+            this.isLoading = true;
+
+            try {
+                const updatedCart = await this.$api.cart.updateItem({
+                    cart_id: this.$store.state.cart.cart.id,
+                    id: this.item.id,
+                    product_variant_sku_id: this.form.size,
+                    qty: this.form.qty
+                });
+
+                // Update cart in vuex:
+                await this.$store.dispatch('cart/CART', updatedCart.data);
+
+                this.init();
+            }
+            catch(err) {
+                console.error('Error updating cart item', err);
+
+                this.$errorToast({
+                    title: this.$t('An error occurred')
+                });
+
+                this.$bugsnag.notify(err);
+            }
+
+            this.isLoading = false;
         },
 
-        onConfirmDeleteCancel() {
-            this.showConfirmDeleteModal = false;
+        async onQuantityChange() {
+            await this.updateCartItem();
+            this.$emit('quantity', this.form.qty);
         },
 
-        showProductDetailsDialog() {
-            this.showDialog = true;
+        async onSizeChange() {
+            console.log("SIZE CHANGE", this.form.size)
+            await this.updateCartItem();
+            this.$emit('size', this.form.size);
         }
-    }
+
+        // async updateCartItemQuantity() {
+        //     const updateConfig = {
+        //         id: this.data.id,
+        //         qty: this.data.qty
+        //     };
+
+        //     try {
+        //         const loadingInstance = this.$loadingService({ target: `#cartItem${this.data.id}` });
+
+
+        //         const response = await this.updateItemQty(updateConfig);
+
+        //         this.setCartAndTokenStateFromResponse(response);
+        //         this.$emit('updated');
+        //         loadingInstance.close();
+        //     }
+        //     catch(err) {
+        //         this.$errorMessage(
+        //             this.$t('An error occurred'),
+        //             { closeOthers: true }
+        //         );
+
+        //         this.$bugsnag.notify(err, {
+        //             request: {
+        //                 updateItemQty: updateConfig
+        //             }
+        //         });
+        //     }
+        // },
+
+        // async removeItem() {
+        //     try {
+        //         const loadingInstance = this.$loadingService({ target: `#cartItem${this.data.id}` });
+        //         const response = await this.deleteItem({ id: this.data.id });
+
+        //         this.setCartAndTokenStateFromResponse(response);
+        //         this.$emit('updated');
+        //         loadingInstance.close();
+        //     }
+        //     catch(err) {
+        //         this.$errorMessage(
+        //             this.$t('An error occurred'),
+        //             { closeOthers: true }
+        //         );
+
+        //         this.$bugsnag.notify(err, {
+        //             request: { deleteItem: { id: this.data.id } }
+        //         });
+        //     }
+        // },
+
+        // onConfirmDelete() {
+        //     this.showConfirmDeleteModal = false;
+        //     this.removeItem()
+        // },
+
+        // onConfirmDeleteCancel() {
+        //     this.showConfirmDeleteModal = false;
+        // },
+
+        // showProductDetailsDialog() {
+        //     this.showDialog = true;
+        // }
+    },
+
+
 }
 </script>
 
 
 <template>
-    <div>
-        <article class="cartItem is-flexbox" :id="'cartItem' + data.id">
-            <!-- pic -->
-            <div class="picCell">
-                <figure
-                    class="cartItemPic"
-                    :style="'background-image:url(' + featuredProductPic(data.product) + ');'"></figure>
+    <fig-overlay :show="isLoading">
+        <div class="bg-white rounded p-2 sm:p-3 mb-2 sm:mb-4 flex items-start">
+            <!-- image -->
+            <div class="mr-2 sm:mr-4">
+                <product-variant-cover-image
+                    :variant="item.product_variant"
+                    smallest />
             </div>
 
-            <div class="content-cell">
-                <div class="cart-item-header">
-                    <!-- title -->
-                    <el-tooltip
-                        effect="light"
-                        :content="$t('Product quick view')"
-                        placement="top-start">
-                        <a class="underlineDotted" @click="showProductDetailsDialog()">{{ data.product.title }}</a>
-                    </el-tooltip>
+            <div class="flex-grow">
+                <!-- product title -->
+                <div class="font-semibold mb-1">{{ item.product.title }}</div>
+
+                <!-- color -->
+                <div class="text-gray-600 mb-1">
+                    <div class="inline-block pr-1">{{ $t('Color') }}:</div>
+                    <div class="inline-block">{{ selectedColor }}</div>
                 </div>
 
-                <div class="cart-item-footer">
-                    <!-- Variants -->
-
-                     <!-- size -->
-                    <div class="cart-item-footer-cell">
-                        <label>{{ $t('Size') }}:</label>
-                        <span>{{ $t(data.variants.size) }}</span>
+                <!-- selected size -->
+                <div class="text-gray-600 mb-3 sm:mb-4">
+                    <div class="inline-block pr-1">{{ $t('Size') }}:</div>
+                    <div class="inline-block">
+                        <template v-if="!canEdit">{{ selectedSize }}</template>
+                        <template v-else>
+                            <fig-form-select-native
+                                v-model="form.size"
+                                @input="onSizeChange"
+                                :options="sizeOptions" />
+                        </template>
                     </div>
+                </div>
 
-                    <!-- Price -->
-                    <div class="cart-item-footer-cell">
-                        <label>{{ $t('Price') }}:</label>
-                        <span>
-                            <!-- price -->
-                            <product-price
-                                :product="data.product"
-                                :show-strikethrough="showPriceStrikethrough"
-                                :stacked="false" />
-                        </span>
-                    </div>
+                <div>
+                    <!-- remove button -->
+                    <fig-pop-confirm @confirm="onRemoveItem(item.id)">
+                        {{ $t('Remove this item?') }}
 
-                    <!-- Quantity -->
-                    <div class="cart-item-footer-cell">
-                        <label>
-                            {{ $t('Quantity') }}:
-                            <span class="fs12" v-if="showQuantityWarning"><product-quantity-warning :max="getProductQuantityMaxValue(data.variants.size, data.product)" /></span>
-                        </label>
-                        <span>
-                            <template v-if="editMode">
-                                <number-input
-                                    v-model="data.qty"
-                                    :max="getProductQuantityMaxValue(data.variants.size, data.product)"
-                                    size="mini"
-                                    @input="updateCartItemQuantity"
-                                    class="qty" />
-                            </template>
-                            <template v-else>
-                                {{ data.qty }}
-                            </template>
-                        </span>
-                    </div>
+                        <fig-button
+                            slot="reference"
+                            variant="naked"
+                            size="sm">
+                            <span class="border-b border-gray-400">{{ $t('Remove') }}</span>
+                        </fig-button>
+                    </fig-pop-confirm>
                 </div>
             </div>
 
-            <!-- delete button -->
-            <div class="deleteButton" v-if="editMode">
-                <el-popover
-                    v-model="showConfirmDeleteModal"
-                    width="200"
-                    trigger="click"
-                    placement="bottom-start">
-                    <div class="tac">{{ $t('Remove this item?') }}</div>
-                    <div class="tac mtm">
-                        <el-button
-                            type="primary"
-                            size="mini"
-                            @click="onConfirmDelete">{{ $t('CONFIRM') }}</el-button>
-
-                        <el-button
-                            size="mini"
-                            type="text"
-                            @click="onConfirmDeleteCancel">{{ $t('cancel') }}</el-button>
-                    </div>
-
-                    <span class="cursorPointer" slot="reference">
-                        <el-tooltip
-                            effect="light"
-                            :content="$t('Remove item from cart')"
-                            placement="top-start">
-                            <icon-times-square
-                                icon-name="times"
-                                class-name="fillGrayLight"
-                                width="20px"
-                                class="status-icon" />
-                        </el-tooltip>
-                    </span>
-                </el-popover>
+            <div class="mr-8 sm:mr-10">
+                <!-- quantity -->
+                <div>{{ $t('Quantity') }}:</div>
+                <fig-form-select-native
+                    v-model="form.qty"
+                    @input="onQuantityChange"
+                    :options="quantityOptions" />
             </div>
-        </article>
 
-
-        <el-dialog
-            :visible.sync="showDialog"
-            custom-class="productDialog"
-            width="95%"
-            top="5vh">
-
-            <product-details-layout>
-                <!-- pics -->
-                <template slot="pics">
-                    <product-image-carousel :product="data.product" />
-                </template>
-
-                <template slot="info">
-                    <!-- title -->
-                    <div class="fs20 pbm">{{ data.product.title }}</div>
-
-                    <!-- description -->
-                    <div class="pbl fs16 wordBreakBreakWord">{{ data.product.description_long }}</div>
-
-                    <!-- price -->
-                    <div class="fs20">
-                        TODO:
-                        <!-- <product-price :product="data.product" /> -->
-                    </div>
-
-                    <hr/>
-
-                    <div class="displayTable">
-                        <!-- size -->
-                        <div class="formRow">
-                            <label class="nowrap fwb">{{ $t('Size') }}:</label>
-                            <span>{{ $t(data.variants.size) }}</span>
-                        </div>
-
-                        <!-- quantity -->
-                        <div class="formRow">
-                            <label class="nowrap fwb">{{ $t('Quantity') }}:</label>
-                            <span>{{ data.qty }}</span>
-                        </div>
-                    </div>
-                </template>
-            </product-details-layout>
-        </el-dialog>
-    </div>
+            <div>
+                <product-price
+                    :variant="item.product_variant"
+                    :sku="item.product_variant_sku" />
+            </div>
+        </div>
+    </fig-overlay>
 </template>
 
-<style lang="scss">
-    @import "~assets/css/components/_variables.scss";
-    @import "~assets/css/components/_mixins.scss";
-    @import "~assets/css/components/_formRow.scss";
-
-    .is-flexbox {
-        @include flexbox();
-        @include flex-wrap(nowrap);
-        @include flex-direction(row);
-        @include align-content(stretch);
-    }
-
-    .cartItem {
-        margin-bottom: 20px;
-        background-color: #fff;
-        @include box-shadow(0px, 1px, 2px, rgba(0,0,0,.1));
-        transition: background-color .5s linear;
-        position: relative;
-        @include flexbox();
-        @include flex-direction(row);
-
-        .content-cell {
-            @include flex-grow(1);
-            @include flexbox();
-            @include flex-direction(column);
-
-            .cart-item-header {
-                padding: 10px 20px !important;
-                @include flex-grow(1);
-            }
-
-            .cart-item-footer {
-                padding: 0;
-                background: #f9f9f9;
-                padding: 3px 0;
-
-                @include flexbox();
-                @include flex-wrap(nowrap);
-                @include flex-direction(row);
-            }
-
-            .cart-item-footer-cell {
-                display: inline-block;
-                vertical-align: top;
-                padding: 0 10px;
-                @include flex-grow(1);
-                text-align: center;
-
-                >label,
-                >span {
-                    display: block;
-                }
-
-                >label {
-                    font-size: 14px;
-                    line-height: 25px;
-                    font-weight: 300;
-                }
-
-                >span {
-                    font-size: 15px;
-                    font-weight: 500;
-                    text-align: center;
-                }
-
-                .qty {
-                    width: 130px;
-                }
-            }
-        }
-
-        .picCell {
-            width: 128px;
-            min-height: 128px;
-            position: relative;
-        }
-
-        .cartItemPic {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background-size: cover;
-            background-position: center;
-        }
-
-        .deleteButton {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            width: 20px;
-            height: 20px;
-        }
-    }
-
-    @media #{$medium-and-up} {
-        .productDialog {
-            max-width: 1000px;
-        }
-    }
+<style>
+.qty-select {
+    padding: 1px 30px 1px 10px;
+}
 </style>

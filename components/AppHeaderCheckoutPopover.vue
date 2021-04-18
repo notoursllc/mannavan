@@ -31,7 +31,7 @@ export default {
     methods: {
         onReturnToCartClick() {
             this.hide();
-            return this.$router.push({ name: 'cart-id' });
+            return this.$router.push({ name: 'cart' });
         },
 
         focusCancelButton(isVisible) {

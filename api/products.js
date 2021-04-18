@@ -10,26 +10,28 @@ export default ($axios) => ({
     },
 
     async get(id, options) {
-        let params = {};
-
-        if(isObject(options)) {
-            params = {
-                ...options
-            };
-        }
-
-        params.id = id;
-
         const { data } = await $axios.$get('/product', {
-            params
+            params: {
+                id,
+                ...(isObject(options) ? options : {})
+            }
         });
         return data;
     },
 
-
     /*
      * Product variants
      */
+    async getVariant(id, options) {
+        const response = await $axios.$get('/product/variant', {
+            params: {
+                id,
+                ...(isObject(options) ? options : {})
+            }
+        });
+
+        return response.data;
+    },
 
     async getVariantSku(id) {
         const response = await $axios.$get('/product/variant/sku', {
@@ -40,6 +42,4 @@ export default ($axios) => ({
 
         return response.data;
     }
-
-
 });

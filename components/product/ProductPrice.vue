@@ -30,36 +30,53 @@ export default {
         basePrice: function() {
             let price = null;
 
-            if (isObject(this.variant) && this.variant.base_price) {
-                price = this.$n(this.variant.base_price, 'currency');
+            if (isObject(this.variant) && this.variant.base_price !== null) {
+                price = this.variant.base_price;
+            }
+            console.log("this.variant.base_price", this.variant.base_price)
 
-                // if the sku base_price is null then the value is inherited from the parent variant
-                if(isObject(this.sku) && this.sku.base_price !== null) {
-                    price = this.$n(this.sku.base_price, 'currency');
-                }
+            // The SKU data gets prescident if it exists
+            if(isObject(this.sku) && this.sku.base_price !== null) {
+                price = this.sku.base_price;
             }
 
-            return price;
+            return this.formatPrice(price);
         },
 
         salePrice: function() {
-            let salePrice = null;
+            let price = null;
 
-            if (isObject(this.variant)) {
-                if(this.variant.is_on_sale && this.variant.sale_price !== null) {
-                    salePrice = this.$n(this.variant.sale_price, 'currency');
-                }
+            if (isObject(this.variant)
+                && this.variant.is_on_sale
+                && this.variant.sale_price !== null) {
+                price = this.variant.sale_price;
+            }
 
-                if(isObject(this.sku)
-                    && this.sku.is_on_sale
-                    && this.sku.sale_price !== null) {
-                    salePrice = this.$n(this.sku.sale_price, 'currency');
+            // The SKU data gets prescident if it exists
+            if(isObject(this.sku)
+                && this.sku.is_on_sale
+                && this.sku.sale_price !== null) {
+                price = this.sku.sale_price;
+            }
+
+            return this.formatPrice(price);
+        }
+    },
+
+    methods: {
+        formatPrice(price) {
+            if(price !== null) {
+                price = parseInt(price, 10);
+
+                if(price && !isNaN(price)) {
+                    return this.$n(price/100, 'currency');
                 }
             }
 
-            return salePrice;
+            return null;
         }
     },
+
 
     render: function(h) {
         if(this.showStrikethrough && this.salePrice && this.basePrice) {
@@ -106,12 +123,14 @@ export default {
 </script>
 
 
-<style lang="postcss" scoped>
+<style scoped>
 .basePrice {
     @apply hidden;
 }
 
 @screen sm {
-    @apply inline-block;
+    .basePrice {
+        @apply inline-block;
+    }
 }
 </style>

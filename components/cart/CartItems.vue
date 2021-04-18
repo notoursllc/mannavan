@@ -1,9 +1,12 @@
 <script>
-import IconTimesSquare from '@/components/icons/IconTimesSquare';
-import cloneDeep from 'lodash.clonedeep'
+import CartItem from '@/components/cart/CartItem';
 
 export default {
     name: 'CartItems',
+
+    components: {
+        CartItem
+    },
 
     props: {
         allowEdit: {
@@ -12,36 +15,36 @@ export default {
         }
     },
 
-    components: {
-        CartItem: () => import('@/components/cart/CartItem'),
-        KeepShoppingButton: () => import('@/components/cart/KeepShoppingButton'),
-        IconTimesSquare
+    computed: {
+        numCartItems() {
+            return this.$store.state.cart.cart.num_items;
+        }
     },
 
-    computed: {
-        shoppingCart() {
-            return cloneDeep(this.$store.state.shoppingcart.cart);
+    methods: {
+        onItemSizeChange(index, newSize) {
+            console.log("ITEMS - onItemSizeChange", index, newSize)
+            //TODO: API request to update cart
+        },
+
+        onItemQuantityChange(index, newQty) {
+            console.log("ITEMS - onItemQuantityChange", index, newQty);
+            //TODO: API request to update cart
         }
     }
-}
+};
 </script>
 
 
 <template>
-    <div v-if="shoppingCart">
-        <div v-if="!shoppingCart.num_items" class="fs16 tac pal">
-            {{ $t('Your shopping cart does not contain any items.') }}
-            <div class="mtl">
-                <keep-shopping-button />
-            </div>
-        </div>
-
-        <div v-else class="ptl">
-            <div v-for="item in shoppingCart.cart_items" :key="item.id">
-                <cart-item
-                    :data="item"
-                    :edit-mode="allowEdit" />
-            </div>
-        </div>
+    <div v-if="numCartItems">
+        <cart-item
+            v-for="(item, index) in $store.state.cart.cart.cart_items"
+            :key="item.id"
+            :index="index"
+            :item="item"
+            :edit-mode="allowEdit"
+            @size="(s) => { onItemSizeChange(index, s) }"
+            @quantity="(q) => { onItemQuantityChange(index, q) }" />
     </div>
 </template>

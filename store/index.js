@@ -3,7 +3,8 @@
 
 
 export const state = () => ({
-    user: null
+    user: null,
+    CART_MAX_TOTAL_QUANTITY: null
 });
 
 export const mutations = {

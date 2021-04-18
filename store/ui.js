@@ -1,4 +1,4 @@
-'use strict';
+import isObject from 'lodash.isobject';
 
 const domainName = 'goBreadVan.com';
 
@@ -16,36 +16,37 @@ export const state = () => ({
     siteName: domainName,
     siteUrlLong: process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : `https://www.${domainName}`,
     siteUrlShort: process.env.NODE_ENV === 'development' ? 'localhost:3000' : `www.${domainName}`,
-    twitterUser: 'gmnstLife'
+    twitterUser: 'gmnstLife',
+    appConfig: {}
 });
 
 export const mutations = {
     CLOSE_SIDEBAR: (state) => {
-        state.sidebarOpened = false
+        state.sidebarOpened = false;
     },
 
     OPEN_SIDEBAR: (state) => {
-        state.sidebarOpened = true
+        state.sidebarOpened = true;
     },
 
     TOGGLE_SIDEBAR: (state) => {
-        state.sidebarOpened = !state.sidebarOpened
+        state.sidebarOpened = !state.sidebarOpened;
     },
 
     LOCATION_CHANGE: (state) => {
-        state.sidebarOpened = false
+        state.sidebarOpened = false;
     },
 
     WINDOW_RESIZE: (state) => {
-        const { innerWidth } = window
-        const isDesktop = innerWidth > 1024
-        state.isMobile = !isDesktop
-        state.sidebarOpened = isDesktop
+        const { innerWidth } = window;
+        const isDesktop = innerWidth > 1024;
+        state.isMobile = !isDesktop;
+        state.sidebarOpened = isDesktop;
     },
 
     SET_LANG(state, locale) {
         if (state.locales.indexOf(locale) !== -1) {
-            state.locale = locale
+            state.locale = locale;
         }
     },
 
@@ -61,24 +62,32 @@ export const mutations = {
         messageInstances.forEach((messageInstance) => {
             messageInstance.close();
         });
+    },
+
+    APP_CONFIG: (state, config) => {
+        if(isObject(config)) {
+            for(const prop in config) {
+                state.appConfig[prop] = config[prop];
+            }
+        }
     }
-}
+};
 
 export const actions = {
     openSidebar ({ commit }) {
-        commit('OPEN_SIDEBAR')
+        commit('OPEN_SIDEBAR');
     },
 
     closeSidebar ({ commit }) {
-        commit('CLOSE_SIDEBAR')
+        commit('CLOSE_SIDEBAR');
     },
 
     toggleSidebar ({ commit }) {
-        commit('TOGGLE_SIDEBAR')
+        commit('TOGGLE_SIDEBAR');
     },
 
     windowResize ({ commit }) {
-        commit('WINDOW_RESIZE')
+        commit('WINDOW_RESIZE');
     },
 
     IN_CHECKOUT_FLOW: ({ commit }, inCheckoutFlow) => {
@@ -92,11 +101,15 @@ export const actions = {
     CLOSE_MESSAGE_INSTANCES: ({ commit }) => {
         commit('CLOSE_MESSAGE_INSTANCES');
     },
-}
+
+    APP_CONFIG ({ commit }, config) {
+        commit('APP_CONFIG', config);
+    }
+};
 
 
 export const getters = {
     inCheckoutFlow: (state) => {
         return state.inCheckoutFlow;
     }
-}
+};

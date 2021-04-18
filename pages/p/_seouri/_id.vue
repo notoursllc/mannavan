@@ -13,7 +13,8 @@ import ProductSizeButtons from '@/components/product/ProductSizeButtons';
 
 import {
     FigButton,
-    FigOverlay
+    FigOverlay,
+    FigModal
 } from '@notoursllc/figleaf';
 
 export default {
@@ -25,7 +26,8 @@ export default {
         ProductDetailsLayout,
         ProductImageSlider,
         ProductCardThumbs,
-        ProductSizeButtons
+        ProductSizeButtons,
+        FigModal
     },
 
     mixins: [
@@ -169,10 +171,10 @@ export default {
                     return;
                 }
 
-                // Upsert cart
-                const response = await this.$api.cart.item({
-                    cart: this.$store.state.cart.cart.id,
-                    product_variant_sku: this.form.selectedSku.id,
+                // Add item to  cart
+                const response = await this.$api.cart.addItem({
+                    cart_id: this.$store.state.cart.cart.id,
+                    product_variant_sku_id: this.form.selectedSku.id,
                     qty: 1
                 });
                 console.log("CART DATA", response.data);
@@ -189,7 +191,7 @@ export default {
                 switch(confirmButtonClickIndex) {
                     case 1:
                         this.$router.push({
-                            name: 'cart-id'
+                            name: 'cart'
                         });
                         break;
 
@@ -204,6 +206,14 @@ export default {
                 }
             }
             catch(err) {
+                console.log("ERR", {...err});
+
+                if(err.response && err.response.data && err.response.data.message === 'INVALID_QUANTITY') {
+                    // TODO: use FigModal here instead
+                    this.$refs.invalid_qty_modal.show();
+                    return;
+                }
+
                 this.$errorToast({
                     title: this.$t('Error'),
                     text: err.response.data.message
@@ -248,6 +258,10 @@ export default {
 
                 this.$bugsnag.notify(err);
             }
+        },
+
+        goToViewCart() {
+            this.$router.push({ name: 'cart' });
         }
     }
 };
@@ -326,6 +340,17 @@ export default {
                 </fig-overlay>
             </template>
         </product-details-layout>
+
+        <fig-modal ref="invalid_qty_modal" size="md">
+            <template slot="header">{{ $t('Error') }}</template>
+
+            <div class="mb-4">{{ $t('cart_product_qty_limit') }}</div>
+            <div class="text-center">
+                <fig-button
+                    variant="primary"
+                    @click="goToViewCart">{{ $t('View cart') }}</fig-button>
+            </div>
+        </fig-modal>
     </div>
 </template>
 
