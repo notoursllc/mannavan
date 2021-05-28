@@ -2,6 +2,12 @@ import { convertEmptyStringsToNull } from '../utils/common';
 
 
 export default {
+    computed: {
+        numCartItems() {
+            return this.$store.state.cart.cart.num_items;
+        }
+    },
+
     methods: {
         setCartAndTokenStateFromResponse(response) {
             this.$store.dispatch('shoppingcart/CART_SET', response.data.data);
@@ -141,15 +147,6 @@ export default {
             return null;
         },
 
-
-        cartEmptyRedirect(shoppingCart) {
-            if(shoppingCart && !shoppingCart.num_items) {
-                this.$router.push({ name: 'cart-empty' });
-                return true;
-            }
-            return false;
-        },
-
         invalidShippingFormRedirect() {
             if(!this.$store.state.shoppingcart.shippingAddressIsValid) {
                 this.$router.push({ name: 'cart-checkout' });
@@ -159,4 +156,4 @@ export default {
             return false;
         }
     }
-}
+};

@@ -93,7 +93,8 @@ module.exports = {
     ** Global CSS
     */
     css: [
-        '@/assets/css/base.scss'
+        '@/assets/css/base.scss',
+        '@/assets/css/base.css'
     ],
 
     /*
@@ -113,6 +114,7 @@ module.exports = {
         '@/plugins/prettyJson',
         '@/plugins/figIcon.js',
         '@/plugins/directives.js',
+        '@/plugins/filters.js',
         '@/node_modules/@notoursllc/figleaf/components/toaster',
         '@/node_modules/@notoursllc/figleaf/components/confirm',
         '@/node_modules/@notoursllc/figleaf/components/confirm_atc',

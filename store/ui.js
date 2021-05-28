@@ -8,8 +8,8 @@ const messageInstances = [];
 export const state = () => ({
     sidebarOpened: true,
     isMobile: false,
-    locales: ['en', 'fr'],
-    locale: 'en',
+    locales: ['en-US', 'fr-FR'],
+    locale: 'en-US',
     inCheckoutFlow: false,
     infoEmailAddress: `info@${domainName}`,
     brandName: 'BreadVan',

@@ -53,3 +53,23 @@ export const isUuid4 = (val) => {
     const re = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
     return re.test(val);
 };
+
+
+export const parseIso8601 = (date) => {
+    const parts = date ? date.split('T') : [];
+    const ymd = parts[0] ? parts[0].split('-') : [];
+    const hms = parts[1] ? parts[1].split(':') : [];
+
+    const makeInt = (val) => {
+        return val ? parseInt(val, 10) : null;
+    };
+
+    return {
+        year: makeInt(ymd[0]),
+        month: makeInt(ymd[1]),
+        day: makeInt(ymd[2]),
+        hours: makeInt(hms[0]),
+        minutes: makeInt(hms[1]),
+        seconds: makeInt(hms[2].replace('Z', ''))
+    };
+};

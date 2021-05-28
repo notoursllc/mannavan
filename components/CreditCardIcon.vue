@@ -11,10 +11,10 @@ export default{
 
     computed: {
         cardTypeIcon: function() {
-            let type = this.cardType ? this.cardType.toLowerCase() : null;
-            if(supportedCardIcons.indexOf(type) > -1) {
-                return `/images/creditcards/${type}.png`;
-            }
+            // let type = this.cardType ? this.cardType.toLowerCase() : null;
+            // if(supportedCardIcons.indexOf(type) > -1) {
+            //     return `/images/creditcards/${type}.png`;
+            // }
             return null;
         }
     }

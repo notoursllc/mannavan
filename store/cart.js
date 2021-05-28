@@ -1,4 +1,5 @@
 import forEach from 'lodash.foreach';
+import isObject from 'lodash.isobject';
 
 function getCartDefaults() {
     return {
@@ -27,6 +28,7 @@ function getCartDefaults() {
         shipping_postalCode: null,
         shipping_state: null,
         shipping_streetAddress: null,
+        shipping_phone: null,
         product_weight_total: 0,
         sub_total: null,
         shipping_total: null,
@@ -58,6 +60,10 @@ export const mutations = {
 
     CART_ID: (state, id) => {
         state.id = id;
+    },
+
+    ATTRIBUTE_SET: (state, config) => {
+        state.cart[config.attribute] = config.value;
     }
 };
 
@@ -69,10 +75,59 @@ export const actions = {
 
     CART_ID ({ commit }, id) {
         commit('CART_ID', id);
+    },
+
+    ATTRIBUTE_SET: ({ commit }, config) => {
+        const conf = Array.isArray(config) ? config : [config];
+
+        conf.forEach((obj) => {
+            if(isObject(obj) &&
+                obj.hasOwnProperty('attribute') &&
+                obj.hasOwnProperty('value')) {
+                commit('ATTRIBUTE_SET', obj);
+            }
+        });
     }
 };
 
 
 export const getters = {
+    cart: (state) => {
+        return state.cart;
+    },
 
+    shippingRateTotal: (state) => {
+        const rate = state.cart.shipping_rate;
+        let total = 0;
+
+        if(isObject(rate)) {
+            if(isObject(rate.shipping_amount)) {
+                total += rate.shipping_amount.amount ? rate.shipping_amount.amount * 100 : 0;
+            }
+
+            if(isObject(rate.other_amount)) {
+                total += rate.other_amount.amount ? rate.other_amount.amount * 100 : 0;
+            }
+
+            if(isObject(rate.insurance_amount)) {
+                total += rate.insurance_amount.amount ? rate.insurance_amount.amount * 100 : 0;
+            }
+
+            if(isObject(rate.confirmation_amount)) {
+                total += rate.confirmation_amount.amount ? rate.confirmation_amount.amount * 100 : 0;
+            }
+        }
+
+        return total;
+    },
+
+    shippingRateEstimatedDeliveryDate: (state) => {
+        const rate = state.cart.shipping_rate;
+
+        if(isObject(rate)) {
+            return rate.estimated_delivery_date;
+        }
+
+        return null;
+    }
 };

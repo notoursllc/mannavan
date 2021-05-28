@@ -62,7 +62,7 @@ export default {
 
         <div
             slot="footer"
-            class="text-center">
+            class="flex items-center justify-center">
             <fig-button
                 variant="plain"
                 size="sm"

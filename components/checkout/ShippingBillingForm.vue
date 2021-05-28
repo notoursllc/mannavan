@@ -49,8 +49,8 @@
         },
 
         components: {
-            CountrySelect: () => import('@/components/CountrySelect'),
-            SelectStateProvince: () => import('@/components/SelectStateProvince'),
+            // CountrySelect: () => import('@/components/CountrySelect'),
+            // SelectStateProvince: () => import('@/components/SelectStateProvince'),
             StatusWrapper: () => import('@/components/StatusWrapper'),
             ShippingBillingHelp: () => import('@/components/checkout/ShippingBillingHelp')
         },

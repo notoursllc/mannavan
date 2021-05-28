@@ -114,10 +114,10 @@ export default {
 
     created() {
         if(!this.product) {
-            this.$errorMessage(
-                this.$t('Product not found'),
-                { closeOthers: true }
-            );
+            this.$errorToast({
+                title: this.$t('Error'),
+                text: this.$t('Product not found')
+            });
         }
     },
 
@@ -252,9 +252,10 @@ export default {
                 this.selectedSkuInventoryCount = isObject(sku) ? sku.inventory_count : 0;
             }
             catch(err) {
-                this.$errorMessage(
-                    err.response.data.message,
-                );
+                this.$errorToast({
+                    title: this.$t('Error'),
+                    text: err.response.data.message
+                });
 
                 this.$bugsnag.notify(err);
             }

@@ -33,7 +33,6 @@ export default {
             if (isObject(this.variant) && this.variant.base_price !== null) {
                 price = this.variant.base_price;
             }
-            console.log("this.variant.base_price", this.variant.base_price)
 
             // The SKU data gets prescident if it exists
             if(isObject(this.sku) && this.sku.base_price !== null) {
