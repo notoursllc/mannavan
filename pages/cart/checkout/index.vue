@@ -5,20 +5,35 @@ import cloneDeep from 'lodash.clonedeep';
 import app_mixin from '@/mixins/app_mixin';
 import shopping_cart_mixin from '@/mixins/shopping_cart_mixin';
 import CartTotalsTable from '@/components/cart/CartTotalsTable';
-import DeliveryOptionsForm from '@/components/checkout/DeliveryOptionsForm';
+import CartItemMini from '@/components/cart/CartItemMini';
 import { parseIso8601 } from '@/utils/common';
-
 import {
     FigButton,
     FigOverlay,
-    // FigModal,
     FigTextCard,
     FigCartCtaLayout,
+    FigCheckoutWrapper,
     FigDivider,
     FigAddress,
     FigFormRadio,
-    FigIcon
+    FigIcon,
+    FigFormCheckbox,
+    FigAddressForm,
+    FigStripeForm
 } from '@notoursllc/figleaf';
+
+
+const addressFormBase = {
+    firstName: null,
+    lastName: null,
+    streetAddress: null,
+    extendedAddress: null,
+    countryCodeAlpha2: null,
+    city: null,
+    state: null,
+    postalCode: null
+};
+
 
 export default {
     components: {
@@ -26,12 +41,16 @@ export default {
         FigOverlay,
         FigTextCard,
         FigCartCtaLayout,
+        FigCheckoutWrapper,
         FigDivider,
         FigAddress,
         FigFormRadio,
         FigIcon,
+        FigFormCheckbox,
+        FigAddressForm,
+        FigStripeForm,
         CartTotalsTable,
-        DeliveryOptionsForm,
+        CartItemMini
         // ShippingBillingForm: () => import('@/components/checkout/ShippingBillingForm'),
         // BottomPopover: () => import('@/components/BottomPopover'),
         // CartItemMini: () => import('@/components/cart/CartItemMini'),
@@ -46,25 +65,34 @@ export default {
     data: function() {
         return {
             loading: false,
-            showDeliveryOptions: true,
-            deliveryOptions: {
-                showDetails: false,
+            step: 1,
+            Stripe: null,
+            shippingForm: {
                 loading: false,
-                done: false,
-                shipping: {
-                    loading: false,
-                    estimates: [],
-                    selectedRate: null,
-                    showDetails: false
+                isInvalid: true,
+                form: {
+                    ...addressFormBase,
+                    email: null,
+                    phone: null
+                }
+            },
+            shippingRates: {
+                loading: false,
+                rates: [],
+                selectedRate: null,
+                showDetails: false
+            },
+            billingForm: {
+                isInvalid: true,
+                form: {
+                    ...addressFormBase
                 }
             },
             payment: {
-                show: false
-            },
-            orderReview: {
-                show: false
+                loading: false,
+                billingSameAsShipping: true,
+                stripeFormIsValid: false
             }
-
         };
     },
 
@@ -82,42 +110,128 @@ export default {
             cart: 'cart/cart',
             shippingRateTotal: 'cart/shippingRateTotal',
             shippingRateEstimatedDeliveryDate: 'cart/shippingRateEstimatedDeliveryDate'
-        })
+        }),
 
-        // ...mapGetters({
-        //     shippingAttributes: 'shoppingcart/shippingAttributes'
-        // }),
-
-        // shoppingCart() {
-        //     return this.$store.state.cart.cart;
-        // },
-
-        // shippingFormIsValid: {
-        //     get: function() {
-        //         return this.$store.state.checkout.validations.shippingForm;
-        //     },
-        //     set: async function(newVal) {
-        //         await this.$store.dispatch('checkout/SHIPPING_FORM_VALID', newVal);
-        //     }
-        // }
+        canShowPlaceOrderButton() {
+            return (this.payment.billingSameAsShipping || !this.billingForm.isInvalid) && this.payment.stripeFormIsValid;
+        }
     },
 
-    created() {
+    mounted() {
         this.$store.dispatch('ui/IN_CHECKOUT_FLOW', true);
+        this.setShippingFormFromCart();
+        this.Stripe = Stripe(this.$config.stripePublishableKey);
     },
 
     methods: {
-        async onDeliveryOptionsSaved() {
-            this.deliveryOptions.shipping.loading = true;
-            this.deliveryOptions.showDetails = true;
+        translateShippingDate(isoDate) {
+            const parsed = parseIso8601(isoDate);
+
+            if(parsed.month && parsed.day) {
+                return this.$t(`month_${parsed.month}_short`) + ' ' + parsed.day;
+            }
+        },
+
+        /**
+         * Steps:
+         * 1) Shipping form view
+         * 2) Shipping details view && shipping rate selection view
+         * 3) Payment form view
+         */
+        goToStep(stepNumber) {
+            this.step = stepNumber;
+        },
+
+        onStripeFormValid(isValid) {
+            this.payment.stripeFormIsValid = isValid;
+        },
+
+        onStripeTokenGenerated(token) {
+            console.log("onStripeTokenGenerated", token)
+            //TODO: send token to server
+        },
+
+        onShippingAddressFormInvalid(isInvalid) {
+            this.shippingForm.isInvalid = isInvalid;
+        },
+
+        onBillingAddressFormInvalid(isInvalid) {
+            this.billingForm.isInvalid = isInvalid;
+        },
+
+        async continueToPayment() {
+            this.shippingRates.loading = true;
 
             try {
-                const { data } = await this.$api.cart.shipping.estimate(this.$store.state.cart.cart.id);
-                console.log("SHIPPING ESTIMATE", data)
-                this.deliveryOptions.shipping.estimates = data;
+                const { data } = await this.$api.cart.shipping.selectRate(
+                    this.$store.state.cart.cart.id,
+                    this.shippingRates.selectedRate
+                );
 
-                if(this.deliveryOptions.shipping.estimates.length === 1) {
-                    this.deliveryOptions.shipping.selectedRate = this.deliveryOptions.shipping.estimates[0].rate_id;
+                this.$store.dispatch('cart/CART', data);
+                this.goToStep(3);
+            }
+            catch(err) {
+                this.$errorToast({
+                    title: this.$t('An error occurred')
+                });
+
+                this.$bugsnag.notify(err);
+            }
+
+            this.shippingRates.loading = false;
+        },
+
+        setShippingFormFromCart() {
+            for(const key in this.shippingForm.form) {
+                this.shippingForm.form[key] = this.cart[`shipping_${key}`];
+            }
+        },
+
+        async saveShippingForm() {
+            this.shippingForm.loading = true;
+
+            try {
+                const stateData = {};
+                const formData = this.shippingForm.form;
+
+                for(const key in formData) {
+                    stateData[`shipping_${key}`] = formData[key];
+                }
+
+                const { data } = await this.$api.cart.update({
+                    id: this.$store.state.cart.cart.id,
+                    ...stateData
+                });
+
+                await this.$store.dispatch('cart/CART', data);
+                this.setShippingFormFromCart();
+                this.goToStep(2);
+                this.getShippingRates();
+            }
+            catch(err) {
+                console.log('ERR', err);
+
+                this.$errorToast({
+                    title: this.$t('Error')
+                    // text: err.response.data.message
+                });
+
+                this.$bugsnag.notify(err);
+            }
+
+            this.shippingForm.loading = false;
+        },
+
+        async getShippingRates() {
+            this.shippingRates.loading = true;
+
+            try {
+                const { data } = await this.$api.cart.shipping.getEstimatesForCart(this.$store.state.cart.cart.id);
+                this.shippingRates.rates = data;
+
+                if(this.shippingRates.rates.length === 1) {
+                    this.shippingRates.selectedRate = this.shippingRates.rates[0].rate_id;
 
                 }
             }
@@ -130,39 +244,101 @@ export default {
                 this.$bugsnag.notify(err);
             }
 
-            this.deliveryOptions.shipping.loading = false;
+            this.shippingRates.loading = false;
         },
 
-        translateShippingDate(isoDate) {
-            const parsed = parseIso8601(isoDate);
+        finalizeBillingAddress() {
+            const isSame = this.payment.billingSameAsShipping;
 
-            if(parsed.month && parsed.day) {
-                return this.$t(`month_${parsed.month}_short`) + ' ' + parsed.day;
+            for(const attr in this.billingForm.form) {
+                this.billingForm.form[attr] = isSame ? null : this.shippingForm.form[attr];
             }
         },
 
-        async continueToPayment() {
-            this.deliveryOptions.loading = true;
+        async onClickPlaceOrder(cardElement) {
+            console.log("cardElement", cardElement);
+            this.payment.loading = true;
+
+            const cartId = this.$store.state.cart.cart.id;
 
             try {
-                const { data } = await this.$api.cart.shipping.selectRate(
-                    this.$store.state.cart.cart.id,
-                    this.deliveryOptions.shipping.selectedRate
+                const { data } = await this.$api.cart.payment.intent(cartId);
+
+                this.finalizeBillingAddress();
+
+                const stripeResponse = await this.sendStripeCardPayment(
+                    data.clientSecret,
+                    cardElement
                 );
 
-                this.$store.dispatch('cart/CART', data);
-                this.deliveryOptions.done = true;
-                this.deliveryOptions.shipping.showDetails = true;
+                console.log("STRIPE RESPONSE", stripeResponse)
+
+                if(stripeResponse.error) {
+                    this.$errorToast({
+                        title: this.$t('An error occurred when processing your card'),
+                        text: stripeResponse.error
+                    });
+                    return;
+                }
+
+                const successResponse = await this.$api.cart.payment.success(
+                    cartId,
+                    stripeResponse.paymentIntent.id
+                );
+
+                console.log("successResponse", successResponse);
+
+                await this.$store.dispatch('cart/CART_RESET');
+
+                return this.$router.push({
+                    name: 'order-id',
+                    params: { id: cartId }
+                });
             }
             catch(err) {
                 this.$errorToast({
-                    title: this.$t('An error occurred')
+                    title: this.$t('An error occurred'),
+                    text: err.message
                 });
 
                 this.$bugsnag.notify(err);
             }
 
-            this.deliveryOptions.loading = false;
+            this.payment.loading = false;
+        },
+
+        sendStripeCardPayment(clientSecret, cardElement) {
+            const billingAddressSource = this.payment.billingSameAsShipping ? this.shippingForm.form : this.billingForm.form;
+
+            return this.Stripe.confirmCardPayment(
+                clientSecret,
+                {
+                    payment_method: {
+                        card: cardElement,
+
+                        //https://stripe.com/docs/api/payment_methods/create#create_payment_method-billing_details
+                        billing_details: {
+                            address: {
+                                city: billingAddressSource.city,
+                                country: billingAddressSource.countryCodeAlpha2,
+                                line1: billingAddressSource.streetAddress,
+                                line2: billingAddressSource.extendedAddress,
+                                postal_code: billingAddressSource.postalCode,
+                                state: billingAddressSource.state
+                            },
+                            name: `${billingAddressSource.firstName} ${billingAddressSource.lastName}`.trim()
+                            // email: null,
+                            // phone: null
+                        },
+
+                        // https://stripe.com/docs/api/payment_methods/create#create_payment_method-metadata
+                        metadata: {
+                            cart_id: this.cart.id
+                        }
+                    }
+                    // receipt_email: 'gregbruins@gmail.com'
+                }
+            );
         }
 
         /*
@@ -276,17 +452,13 @@ export default {
                 this.loading = false;
             }
         },
-
-        onShippingFormValid(isValid) {
-            this.shippingFormIsValid = isValid;
-        }
         */
     }
 };
 </script>
 
 <template>
-    <div class="pt-10">
+    <fig-checkout-wrapper class="pt-10">
 
         <div v-if="!numCartItems" class="text-center text-lg">
             {{ $t('Your shopping cart does not contain any items.') }}
@@ -299,12 +471,10 @@ export default {
 
                 <!-- delivery options -->
                 <div class="mb-4">
-                    <fig-text-card
-                        variant="dark"
-                        :show-body="showDeliveryOptions">
+                    <fig-text-card variant="dark">
                         <div slot="header-left" class="flex items-center font-semibold p-1 uppercase">
                             <fig-icon
-                                v-if="deliveryOptions.done"
+                                v-if="step === 3"
                                 icon="check-circle"
                                 :width="24"
                                 :height="24"
@@ -313,105 +483,144 @@ export default {
                             1. {{ $t('Delivery options') }}
                         </div>
 
-                        <fig-overlay :show="deliveryOptions.loading">
-                            <!-- shipping address details view -->
-                            <div v-if="deliveryOptions.showDetails">
-                                <!-- <div class="text-gray-900">{{ $t('Shipping Address') }}</div> -->
+                        <fig-button
+                            v-if="step > 1"
+                            slot="header-right"
+                            variant="plain"
+                            size="sm"
+                            @click="goToStep(1)">{{ $t('Edit') }}</fig-button>
+
+
+                        <!-- shipping address form view -->
+                        <template v-if="step === 1">
+                            <fig-overlay :show="shippingForm.loading">
+                                <fig-address-form
+                                    v-model="shippingForm.form"
+                                    @invalid="onShippingAddressFormInvalid" />
+
+
+                                <div class="mt-4 w-full">
+                                    <fig-button
+                                        variant="primary"
+                                        @click="saveShippingForm"
+                                        :disabled="shippingForm.isInvalid">{{ $t('Save & Continue') }}</fig-button>
+                                </div>
+                            </fig-overlay>
+                        </template>
+
+
+                        <!-- shipping address details && rate selection view -->
+                        <template v-else>
+                            <fig-overlay :show="shippingRates.loading">
                                 <div class="text-gray-700 text-sm border border-gray-200 p-2 rounded flex items-start">
-                                    <div class="flex-grow">
-                                        <fig-address
-                                            :first-name="cart.shipping_firstName"
-                                            :last-name="cart.shipping_lastName"
-                                            :street-address="cart.shipping_streetAddress"
-                                            :extended-address="cart.shipping_extendedAddress"
-                                            :city="cart.shipping_city"
-                                            :state="cart.shipping_state"
-                                            :zip="cart.shipping_postalCode"
-                                            :email="cart.shipping_email"
-                                            :phone="cart.shipping_phone" />
-                                    </div>
-                                    <div>
-                                        <fig-button
-                                            variant="ghost"
-                                            size="sm">{{ $t('Edit') }}</fig-button>
-                                    </div>
+                                    <fig-address
+                                        :first-name="cart.shipping_firstName"
+                                        :last-name="cart.shipping_lastName"
+                                        :street-address="cart.shipping_streetAddress"
+                                        :extended-address="cart.shipping_extendedAddress"
+                                        :city="cart.shipping_city"
+                                        :state="cart.shipping_state"
+                                        :zip="cart.shipping_postalCode"
+                                        :email="cart.shipping_email"
+                                        :phone="cart.shipping_phone" />
                                 </div>
 
                                 <!-- Shipping estimates -->
                                 <div class="mt-4">
-                                    <fig-overlay :show="deliveryOptions.shipping.loading">
-                                        <div class="text-gray-900 font-semibold">
-                                            {{ deliveryOptions.shipping.estimates.length > 1 ? $t('Choose your shipping speed') : $t('Shipping') }}:
-                                        </div>
+                                    <div class="text-gray-900 font-semibold">
+                                        {{ shippingRates.rates.length > 1 ? $t('Choose your shipping speed') : $t('Shipping') }}:
+                                    </div>
 
-                                        <div class="mt-2">
-                                            <template v-if="deliveryOptions.shipping.showDetails">
+                                    <div class="mt-2">
+                                        <!-- selected rate details -->
+                                        <template v-if="step === 3">
+                                            <div class="inline-block text-black">
+                                                {{ $n(shippingRateTotal ? shippingRateTotal/100 : 0, 'currency') }}
+                                            </div>
+                                            <div class="inline-block text-gray-500 pl-3">
+                                                {{ $t('Estimated arrival: {date}', { date: translateShippingDate(shippingRateEstimatedDeliveryDate) }) }}
+                                            </div>
+                                        </template>
+
+                                        <!-- rate selection -->
+                                        <template v-else>
+                                            <fig-form-radio
+                                                v-for="obj in shippingRates.rates"
+                                                :key="obj.rate_id"
+                                                name="selectedShipping"
+                                                :checked-value="obj.rate_id"
+                                                v-model="shippingRates.selectedRate">
                                                 <div class="inline-block text-black">
-                                                    {{ $n(shippingRateTotal ? shippingRateTotal/100 : 0, 'currency') }}
+                                                    {{ $n(obj.shipping_amount.amount, 'currency') }}
                                                 </div>
                                                 <div class="inline-block text-gray-500 pl-3">
-                                                    {{ $t('Estimated arrival: {date}', { date: translateShippingDate(shippingRateEstimatedDeliveryDate) }) }}
+                                                    {{ $t('Estimated arrival: {date}', { date: translateShippingDate(obj.estimated_delivery_date) }) }}
                                                 </div>
-                                            </template>
+                                            </fig-form-radio>
 
-                                            <template v-else>
-                                                <fig-form-radio
-                                                    v-for="obj in deliveryOptions.shipping.estimates"
-                                                    :key="obj.rate_id"
-                                                    name="selectedShipping"
-                                                    :checked-value="obj.rate_id"
-                                                    v-model="deliveryOptions.shipping.selectedRate">
-                                                    <div class="inline-block text-black">
-                                                        {{ $n(obj.shipping_amount.amount, 'currency') }}
-                                                    </div>
-                                                    <div class="inline-block text-gray-500 pl-3">
-                                                        {{ $t('Estimated arrival: {date}', { date: translateShippingDate(obj.estimated_delivery_date) }) }}
-                                                    </div>
-                                                </fig-form-radio>
-                                            </template>
-                                        </div>
-                                    </fig-overlay>
-
-                                    <div class="mt-3 flex justify-end">
-                                        <fig-button
-                                            variant="primary"
-                                            size="md"
-                                            @click="continueToPayment"
-                                            :disabled="!deliveryOptions.shipping.selectedRate">{{ $t('Continue to payment') }}</fig-button>
+                                            <div class="mt-4">
+                                                <fig-button
+                                                    variant="primary"
+                                                    size="md"
+                                                    @click="continueToPayment"
+                                                    :disabled="!shippingRates.selectedRate">{{ $t('Continue to payment') }}</fig-button>
+                                            </div>
+                                        </template>
                                     </div>
                                 </div>
-                            </div>
-
-                            <!-- shipping address form view -->
-                            <delivery-options-form
-                                v-else
-                                @saved="onDeliveryOptionsSaved" />
-                        </fig-overlay>
+                            </fig-overlay>
+                        </template>
                     </fig-text-card>
                 </div>
 
 
                 <!-- payment -->
                 <div class="mb-4">
-                    <fig-text-card
+                    <!-- <fig-text-card
                         variant="dark"
-                        :show-body="payment.show">
+                        :show-body="step === 3"> -->
+                    <fig-text-card v-if="step === 3" variant="dark">
                         <div slot="header-left" class="font-semibold p-1 uppercase">2. {{ $t('Payment') }}</div>
 
-                    </fig-text-card>
-                </div>
+                        <fig-overlay :show="payment.loading">
+                            <fig-stripe-form
+                                :stripe="Stripe"
+                                @valid="onStripeFormValid"
+                                @token="onStripeTokenGenerated">
 
+                                <template v-slot:content="props">
+                                    <!-- billing same as shipping checkbox -->
+                                    <div class="mt-4">
+                                        <fig-form-checkbox
+                                            class="mr-3"
+                                            v-model="payment.billingSameAsShipping">{{ $t('Billing address same as shipping') }}</fig-form-checkbox>
+                                    </div>
 
-                <!-- order review -->
-                <div class="mb-2">
-                    <fig-text-card
-                        variant="dark"
-                        :show-body="orderReview.show">
-                        <div slot="header-left" class="font-semibold p-1 uppercase">3. {{ $t('Order review') }}</div>
+                                    <!-- billing address form -->
+                                    <div v-if="!payment.billingSameAsShipping" class="mt-4">
+                                        <div class="text-black">{{ $t('Billing address') }}:</div>
+                                        <fig-address-form
+                                            v-model="billingForm.form"
+                                            @invalid="onBillingAddressFormInvalid"
+                                            hide-email
+                                            hide-phone />
+                                    </div>
 
+                                    <!-- place order button -->
+                                    <div class="pt-6">
+                                        <fig-button
+                                            variant="primary"
+                                            size="lg"
+                                            @click="onClickPlaceOrder(props.cardElement)"
+                                            :disabled="!canShowPlaceOrderButton">{{ $t('PLACE YOUR ORDER') }}</fig-button>
+                                    </div>
+                                </template>
+                            </fig-stripe-form>
+                        </fig-overlay>
                     </fig-text-card>
                 </div>
             </template>
+
 
             <template slot="right">
                 <fig-text-card variant="light">
@@ -426,9 +635,17 @@ export default {
                             sales-tax />
 
                         <fig-divider />
+
+                        <div class="cart-item-mini-container">
+                            <cart-item-mini
+                                v-for="(item, index) in $store.state.cart.cart.cart_items"
+                                :key="item.id"
+                                :index="index"
+                                :item="item" />
+                        </div>
                     </div>
                 </fig-text-card>
             </template>
         </fig-cart-cta-layout>
-    </div>
+    </fig-checkout-wrapper>
 </template>

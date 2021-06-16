@@ -1,64 +1,64 @@
 <script>
-import product_mixin from '@/mixins/product_mixin';
+import isObject from 'lodash.isobject';
+import ProductPrice from '@/components/product/ProductPrice';
+import ProductVariantCoverImage from '@/components/product/ProductVariantCoverImage';
 
 export default {
+    components: {
+        ProductPrice,
+        ProductVariantCoverImage
+    },
+
     props: {
-        cartItem: {
+        item: {
             type: Object,
             default: null
         }
     },
 
-    components: {
-        ProductPrice: () => import('@/components/product/ProductPrice')
-    },
+    computed: {
+        selectedColor() {
+            return isObject(this.item.product_variant) ? this.item.product_variant.label : null;
+        },
 
-    mixins: [
-        product_mixin
-    ]
-}
+        selectedSize() {
+            return isObject(this.item.product_variant_sku) ? this.item.product_variant_sku.label : null;
+        }
+    }
+};
 </script>
 
 
 <template>
-    <article class="cartItemMini">
+    <article class="flex items-start w-full my-2">
         <!-- pic -->
-        <div class="cartItemPic" :style="'background-image:url(' + featuredProductPic(cartItem.product) + ');'"></div>
+        <div class="mr-2 sm:mr-4">
+            <product-variant-cover-image
+                :variant="item.product_variant"
+                smallest />
+        </div>
 
-        <div class="flexGrow pam fs14">
+        <div class="flex-grow text-sm">
             <!-- title -->
-            <div class="fwb mbs">{{ cartItem.product.title }}</div>
+            <div class="font-semibold mb-1">{{ item.product.title }}</div>
 
-            <!-- Size -->
-            <div class="mbs">
-                {{ $t(cartItem.variants.size) }}
-                <span v-if="cartItem.qty > 1" class="pls">({{ $t('quantity') }}: {{ cartItem.qty }})</span>
+            <!-- color -->
+            <div class="text-gray-600">
+                {{ $t('Color') }}: {{ selectedColor }}
             </div>
 
-            <!-- Price -->
-            <div class="fwb">
-                TODO
-                <!-- <product-price
-                    :product="cartItem.product"
-                    :show-strikethrough="false" /> -->
+            <!-- selected size -->
+            <div class="text-gray-600">
+                {{ $t('Size') }}: {{ selectedSize }}
+            </div>
+
+            <!-- quantity -->
+            <div class="text-gray-600">
+                {{ $t('Qty') }}: {{ $n(item.qty) }}
+                @ <product-price
+                    :variant="item.product_variant"
+                    :sku="item.product_variant_sku" />
             </div>
         </div>
     </article>
 </template>
-
-<style>
-.cartItemMini {
-    @apply flex flex-row shadow-sm;
-    width: 100%;
-    margin-bottom: 10px;
-    background-color: rgba(255, 255, 255, 0.4);
-    transition: background-color .5s linear;
-}
-
-.cartItemMini .cartItemPic {
-    width: 128px;
-    min-height: 128px;
-    background-size: cover;
-    background-position: center;
-}
-</style>

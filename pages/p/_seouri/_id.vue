@@ -5,16 +5,16 @@ import product_mixin from '@/mixins/product_mixin';
 import shopping_cart_mixin from '@/mixins/shopping_cart_mixin';
 import ProductPrice from '@/components/product/ProductPrice';
 import ProductQuantityWarning from '@/components/product/ProductQuantityWarning';
-import ProductDetailsLayout from '@/components/product/ProductDetailsLayout';
 import ProductImageSlider from '@/components/product/ProductImageSlider';
 import ProductCardThumbs from '@/components/product/ProductCardThumbs';
-import ProductSizeButtons from '@/components/product/ProductSizeButtons';
 // import TshirtSizeChart from '@/components/product/TshirtSizeChart';
 
 import {
     FigButton,
     FigOverlay,
-    FigModal
+    FigModal,
+    FigSizeButtons,
+    FigProductDetailsLayout
 } from '@notoursllc/figleaf';
 
 export default {
@@ -23,11 +23,11 @@ export default {
         FigOverlay,
         ProductPrice,
         ProductQuantityWarning,
-        ProductDetailsLayout,
         ProductImageSlider,
         ProductCardThumbs,
-        ProductSizeButtons,
-        FigModal
+        FigModal,
+        FigSizeButtons,
+        FigProductDetailsLayout
     },
 
     mixins: [
@@ -232,9 +232,7 @@ export default {
         },
 
         async onSizeSelect(sku) {
-            this.form.selectedSku = sku;
-
-            console.log("SIZE CHANGE", sku)
+            // this.form.selectedSku = sku;
 
             this.cartButtonLoading = true;
             await this.getSkuInventoryCount(sku.id);
@@ -272,7 +270,7 @@ export default {
 <template>
     <div class="pageContainerMax container-fluid">
         form {{ form }}
-        <product-details-layout v-if="product">
+        <fig-product-details-layout v-if="product">
             <!-- pics -->
             <template slot="pics">
                 <client-only placeholder="Carousel loading...">
@@ -311,9 +309,9 @@ export default {
                         <div class="text-gray-500">{{ $t('Size guide') }}</div>
                     </div>
 
-                    <product-size-buttons
-                        :product="product"
-                        :variant-id="visibleVariant.id"
+                    <fig-size-buttons
+                        v-model="form.selectedSku"
+                        :skus="visibleVariant.skus"
                         @input="onSizeSelect" />
                 </div>
             </template>
@@ -340,7 +338,7 @@ export default {
                     </template>
                 </fig-overlay>
             </template>
-        </product-details-layout>
+        </fig-product-details-layout>
 
         <fig-modal ref="invalid_qty_modal" size="md">
             <template slot="header">{{ $t('Error') }}</template>

@@ -2,12 +2,18 @@
 import isObject from 'lodash.isobject';
 import payment_mixin from '@/mixins/payment_mixin';
 
+import {
+    FigIcon,
+    FigOverlay
+} from '@notoursllc/figleaf';
+
 export default {
     components: {
-        PaymentTypeDisplay: () => import('@/components/payment/PaymentTypeDisplay'),
+        // PaymentTypeDisplay: () => import('@/components/payment/PaymentTypeDisplay'),
         IconVictoryPeace: () => import('@/components/icons/IconVictoryPeace'),
-        IconEnvelope: () => import('@/components/icons/IconEnvelope'),
-        CartShippingAddressDisplay: () => import('@/components/cart/CartShippingAddressDisplay')
+        FigIcon,
+        FigOverlay
+        // CartShippingAddressDisplay: () => import('@/components/cart/CartShippingAddressDisplay')
     },
 
     mixins: [
@@ -17,23 +23,12 @@ export default {
     data: function() {
         return {
             loading: true,
+            cart: null,
             paymentExists: false,
             payment: {
                 shoppingCart: {}
             }
-        }
-    },
-
-    async created() {
-        try {
-            this.payment = await this.getPayment(this.$route.params.id);
-            this.paymentExists = true;
-        }
-        catch(e) {
-            this.paymentExists = false;
-        }
-
-        this.loading = false;
+        };
     },
 
     head() {
@@ -42,17 +37,32 @@ export default {
             meta: [
                 { vmid: 'description', name: 'description', content: `Thanks for your order from ${this.$store.state.ui.siteName}` }
             ]
+        };
+    },
+
+    async created() {
+        try {
+            this.cart = await this.$api.cart.get(this.$route.params.id)
         }
+        catch(err) {
+            this.$errorToast({
+                title: this.$t('An error occurred')
+            });
+
+            this.$bugsnag.notify(err);
+        }
+
+        this.loading = false;
     }
-}
+};
 </script>
 
 
 <template>
-    <div class="mbl" v-loading.fullscreen.lock="loading">
+    <fig-overlay :show="loading">
         <template v-if="!loading">
 
-            <div v-if="!paymentExists" class="tac">
+            <div v-if="!cart" class="tac">
                 {{ $t('Oops we could not find the order you are looking for.') }}
             </div>
 
@@ -79,14 +89,18 @@ export default {
                     <div class="dotted"></div>
                 </header>
 
-                <div class="grayCell">
-                    <div class="colorGreen">
+                <div class="text-center p-4 bg-gray-200">
+                    <div class="text-green-600">
                         <span class="fs16">{{ $t('An email confirmation was sent to:' )}}</span>
-                        <div class="tac" style="margin-bottom:-10px">
-                            <icon-envelope icon-name="email" class-name="fillGreen" width="50px" />
+                        <div class="text-center">
+                            <fig-icon
+                                icon="mail"
+                                :stroke-width="1"
+                                :width="50"
+                                :height="50" />
                         </div>
                         <div class="fwb fs20">
-                            {{ payment.shoppingCart.shipping_email }}
+                            {{ cart.shipping_email }}
                         </div>
                     </div>
 
@@ -96,55 +110,44 @@ export default {
                 <div class="displayTable mha">
                     <div class="mtl">
                         <div class="fwb">{{ $t('Shipping to') }}:</div>
-                        <cart-shipping-address-display :shopping-cart="payment.shoppingCart" />
+                        <!-- <cart-shipping-address-display :shopping-cart="payment.shoppingCart" /> -->
                     </div>
 
                     <div class="mtl">
                         <div class="displayTableRow">
                             <div class="displayTableCell prm pbs">{{ $t('# items') }}:</div>
-                            <div class="displayTableCell fwb pbs">{{ payment.shoppingCart.num_items }}</div>
+                            <div class="displayTableCell fwb pbs">{{ cart.num_items }}</div>
                         </div>
 
                         <div class="displayTableRow">
                             <div class="displayTableCell prm pbs">{{ $t('Total') }}:</div>
-                            <div class="displayTableCell fwb pbs">{{ $n(payment.shoppingCart.grand_total, 'currency') }}</div>
+                            <div class="displayTableCell fwb pbs">{{ $n(cart.grand_total, 'currency') }}</div>
                         </div>
 
                         <div class="displayTableRow">
                             <div class="displayTableCell prm pbs">{{ $t('Payment method') }}:</div>
                             <div class="displayTableCell fwb pbs">
-                                <payment-type-display :payment="payment" />
+                                <!-- <payment-type-display :payment="payment" /> -->
                             </div>
                         </div>
 
                         <div class="displayTableRow">
                             <div class="displayTableCell prm pbs">{{ $t('Order') }}:</div>
                             <div class="displayTableCell fwb pbs">
-                                <a v-if="payment.id" @click="goToPaymentDetails(payment.id)">{{ payment.id }}</a>
+                                <!-- <a v-if="payment.id" @click="goToPaymentDetails(payment.id)">{{ payment.id }}</a> -->
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </template>
-    </div>
+    </fig-overlay>
 </template>
 
 <style lang="scss" >
     @import "~assets/css/components/_variables.scss";
     @import "~assets/css/components/_mixins.scss";
     @import "~assets/css/components/_animations.scss";
-
-    .grayCell {
-        padding: 10px;
-        margin: 0 auto;
-        display: table;
-        font-size: 14px;
-        @include rounded();
-        background-color: $bgGrayZebra;
-        width: 100%;
-        text-align: center;
-    }
 
     .icon-victory-peace {
         font-size: 100px;

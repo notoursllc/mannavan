@@ -64,6 +64,12 @@ export const mutations = {
 
     ATTRIBUTE_SET: (state, config) => {
         state.cart[config.attribute] = config.value;
+    },
+
+    CART_RESET: (state) => {
+        forEach(getCartDefaults(), (val, key) => {
+            state.cart[key] = val;
+        });
     }
 };
 
@@ -87,6 +93,10 @@ export const actions = {
                 commit('ATTRIBUTE_SET', obj);
             }
         });
+    },
+
+    CART_RESET: ({ commit }) => {
+        commit('CART_RESET');
     }
 };
 

@@ -70,6 +70,6 @@ export const parseIso8601 = (date) => {
         day: makeInt(ymd[2]),
         hours: makeInt(hms[0]),
         minutes: makeInt(hms[1]),
-        seconds: makeInt(hms[2].replace('Z', ''))
+        seconds: hms[2] ? makeInt(hms[2].replace('Z', '')) : 0
     };
 };

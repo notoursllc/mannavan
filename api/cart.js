@@ -36,7 +36,7 @@ export default ($axios) => ({
     },
 
     shipping: {
-        estimate(cartId) {
+        getEstimatesForCart(cartId) {
             return $axios.$post('/cart/shipping/estimate', {
                 id: cartId
             });
@@ -46,6 +46,21 @@ export default ($axios) => ({
             return $axios.post('/cart/shipping/rate', {
                 id: cartId,
                 rate_id: rateId
+            });
+        }
+    },
+
+    payment: {
+        intent(cartId) {
+            return $axios.$post('/cart/payment/intent', {
+                id: cartId
+            });
+        },
+
+        success(cartId, paymentIntentId) {
+            return $axios.$post('/cart/payment', {
+                id: cartId,
+                stripe_payment_intent_id: paymentIntentId
             });
         }
     }

@@ -30,6 +30,7 @@ module.exports = {
     "An apparel company": "An apparel company",
     "An email confirmation was sent to:": "An email confirmation was sent to:",
     "An error occurred": "An error occurred",
+    "An error occurred when processing your card": "An error occurred when processing your card",
     "An error occurred while processing the PayPal transaction": "An error occurred while processing the PayPal transaction",
     "Are you sure you want to return to your Shopping Cart?": "Are you sure you want to return to your Shopping Cart?",
     "Artist": "Artist",
@@ -38,6 +39,7 @@ module.exports = {
     "Barcode": "Barcode",
     "Barcode (ISBN, UPC, GTIN, etc.)": "Barcode (ISBN, UPC, GTIN, etc.)",
     "Billing address": "Billing address",
+    "Billing address same as shipping": "Billing address same as shipping",
     "BREADVAN": "BREADVAN",
 
     "cancel": "cancel",
@@ -189,7 +191,6 @@ module.exports = {
     "Order Details": "Order Details",
     "Order More": "Order More",
     "Order not found": "Order not found",
-    "Order review": "Order review",
     "Order summary": "Order summary",
     "Order total": "Order total",
     "Ordered on": "Ordered on",
@@ -239,6 +240,7 @@ module.exports = {
     "PRODUCTS": "PRODUCTS",
     "Published": "Published",
 
+    "Qty": "Qty",
     "quantity": "quantity",
     "Quantity": "Quantity",
 
@@ -261,6 +263,7 @@ module.exports = {
     "SAVE": "SAVE",
     "Save & Continue": "Save & Continue",
     "Search engine listing": "Search engine listing",
+    "Security code": "Security code",
     "SECURE": "SECURE",
     "Secure Checkout": "Secure Checkout",
     "Secure Payment": "Secure Payment",

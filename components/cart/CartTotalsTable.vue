@@ -1,6 +1,4 @@
 <script>
-import ProductPrice from '@/components/product/ProductPrice';
-
 import {
     FigTooltip,
     FigIcon,
@@ -13,8 +11,7 @@ export default {
     components: {
         FigTooltip,
         FigIcon,
-        FigIconLabel,
-        ProductPrice
+        FigIconLabel
     },
 
     props: {

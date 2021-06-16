@@ -4,7 +4,8 @@ import CartItems from '@/components/cart/CartItems';
 import CartTotalsTable from '@/components/cart/CartTotalsTable';
 import {
     FigButton,
-    FigCartCtaLayout
+    FigCartCtaLayout,
+    FigCheckoutWrapper
 } from '@notoursllc/figleaf';
 
 export default {
@@ -13,7 +14,8 @@ export default {
         CartItems,
         CartTotalsTable,
         FigButton,
-        FigCartCtaLayout
+        FigCartCtaLayout,
+        FigCheckoutWrapper
     },
 
     head() {
@@ -41,7 +43,7 @@ export default {
 
 
 <template>
-    <div>
+    <fig-checkout-wrapper>
         <page-title>{{ $t('Shopping Cart') }}</page-title>
 
         <div v-if="!numCartItems" class="text-base">
@@ -67,5 +69,5 @@ export default {
                     class="w-full">{{ $t('Checkout') }}</fig-button>
             </template>
         </fig-cart-cta-layout>
-    </div>
+    </fig-checkout-wrapper>
 </template>
