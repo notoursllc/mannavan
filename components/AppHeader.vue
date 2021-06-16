@@ -40,13 +40,17 @@ export default {
         },
 
         numCartItems() {
-            return this.$store.state.cart.cart.num_items;
+            return this.$store.state.cart.num_items;
         }
     },
 
     methods: {
         onCartButtonClick() {
             this.$router.push({ name: 'cart' });
+        },
+
+        onLogoClick() {
+            this.$router.push({ name: 'index' });
         }
     }
 };
@@ -57,16 +61,17 @@ export default {
 
         <header role="banner" class="h-12 md:h-16 flex items-center relative p-0 bg-white border-b border-gray-300 w-full duration-500">
             <div class="content-wrap flex flex-row items-center w-full px-4 md:px-2 lg:px-0">
+                <div class="inline-block cursor-pointer" @click="onLogoClick">
+                    <fig-victory-icon
+                        class="vam hidden md:inline-block"
+                        fill="#565656"
+                        :width="60"
+                        :height="30" />
+                </div>
+
                 <!-- common header -->
                 <template v-if="!inCheckoutFlow">
-                    <!-- logo -->
                     <div>
-                        <fig-victory-icon
-                            class="vam hidden md:inline-block"
-                            fill="#565656"
-                            :width="60"
-                            :height="30" />
-
                         <fig-icon
                             icon="chevrons-right"
                             :width="40"
@@ -112,15 +117,6 @@ export default {
 
                 <!-- checkout header -->
                 <template v-else>
-                    <div>
-                        <app-header-checkout-popover>
-                            <fig-victory-icon
-                                fill="#565656"
-                                :width="60"
-                                :height="30" />
-                        </app-header-checkout-popover>
-                    </div>
-
                     <div class="mx-auto flex flex-no-wrap items-center justify-center">
                         <span class="pr-2 text-xl">{{ $t('Checkout') }}</span>
                         <app-header-checkout-popover>
