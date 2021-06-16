@@ -43,11 +43,11 @@ export default {
 
     computed: {
         cart() {
-            return this.$store.state.cart.cart;
+            return this.$store.state.cart;
         },
 
         numCartItems() {
-            return this.$store.state.cart.cart.num_items;
+            return this.$store.state.cart.num_items;
         }
     }
 };

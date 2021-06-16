@@ -29,9 +29,11 @@ export default ($axios) => ({
     },
 
 
-    deleteItem(id) {
+    deleteItem(params) {
         return $axios.$delete('/cart/item', {
-            params: { id }
+            params: {
+                ...params
+            }
         });
     },
 
@@ -43,7 +45,7 @@ export default ($axios) => ({
         },
 
         selectRate(cartId, rateId) {
-            return $axios.post('/cart/shipping/rate', {
+            return $axios.$post('/cart/shipping/rate', {
                 id: cartId,
                 rate_id: rateId
             });

@@ -173,15 +173,13 @@ export default {
 
                 // Add item to  cart
                 const response = await this.$api.cart.addItem({
-                    cart_id: this.$store.state.cart.cart.id,
+                    cart_id: this.$store.state.cart.id,
                     product_variant_sku_id: this.form.selectedSku.id,
-                    qty: 1
+                    qty: 1,
+                    clear_shipping_rate: true
                 });
-                console.log("CART DATA", response.data);
 
                 await this.$store.dispatch('cart/CART', response.data);
-                console.log("STORE CART", this.$store.state.cart);
-
                 this.$nuxt.$emit('CART_ITEM_ADDED', this.form.selectedSku.id);
 
                 // show the ATC confirm

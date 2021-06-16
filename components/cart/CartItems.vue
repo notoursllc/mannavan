@@ -17,7 +17,7 @@ export default {
 
     computed: {
         numCartItems() {
-            return this.$store.state.cart.cart.num_items;
+            return this.$store.state.cart.num_items;
         }
     },
 
@@ -39,7 +39,7 @@ export default {
 <template>
     <div v-if="numCartItems">
         <cart-item
-            v-for="(item, index) in $store.state.cart.cart.cart_items"
+            v-for="(item, index) in $store.state.cart.cart_items"
             :key="item.id"
             :index="index"
             :item="item"

@@ -121,7 +121,10 @@ export default {
             this.isLoading = true;
 
             try {
-                const updatedCart = await this.$api.cart.deleteItem(id);
+                const updatedCart = await this.$api.cart.deleteItem({
+                    id: id,
+                    clear_shipping_rate: true
+                });
                 await this.$store.dispatch('cart/CART', updatedCart.data);
             }
             catch(err) {
@@ -165,10 +168,11 @@ export default {
 
             try {
                 const updatedCart = await this.$api.cart.updateItem({
-                    cart_id: this.$store.state.cart.cart.id,
+                    cart_id: this.$store.state.cart.id,
                     id: this.item.id,
                     product_variant_sku_id: this.form.size,
-                    qty: this.form.qty
+                    qty: this.form.qty,
+                    clear_shipping_rate: true
                 });
 
                 // Update cart in vuex:
@@ -195,78 +199,11 @@ export default {
         },
 
         async onSizeChange() {
-            console.log("SIZE CHANGE", this.form.size)
             await this.updateCartItem();
             this.$emit('size', this.form.size);
         }
-
-        // async updateCartItemQuantity() {
-        //     const updateConfig = {
-        //         id: this.data.id,
-        //         qty: this.data.qty
-        //     };
-
-        //     try {
-        //         const loadingInstance = this.$loadingService({ target: `#cartItem${this.data.id}` });
-
-
-        //         const response = await this.updateItemQty(updateConfig);
-
-        //         this.setCartAndTokenStateFromResponse(response);
-        //         this.$emit('updated');
-        //         loadingInstance.close();
-        //     }
-        //     catch(err) {
-        //         this.$errorMessage(
-        //             this.$t('An error occurred'),
-        //             { closeOthers: true }
-        //         );
-
-        //         this.$bugsnag.notify(err, {
-        //             request: {
-        //                 updateItemQty: updateConfig
-        //             }
-        //         });
-        //     }
-        // },
-
-        // async removeItem() {
-        //     try {
-        //         const loadingInstance = this.$loadingService({ target: `#cartItem${this.data.id}` });
-        //         const response = await this.deleteItem({ id: this.data.id });
-
-        //         this.setCartAndTokenStateFromResponse(response);
-        //         this.$emit('updated');
-        //         loadingInstance.close();
-        //     }
-        //     catch(err) {
-        //         this.$errorMessage(
-        //             this.$t('An error occurred'),
-        //             { closeOthers: true }
-        //         );
-
-        //         this.$bugsnag.notify(err, {
-        //             request: { deleteItem: { id: this.data.id } }
-        //         });
-        //     }
-        // },
-
-        // onConfirmDelete() {
-        //     this.showConfirmDeleteModal = false;
-        //     this.removeItem()
-        // },
-
-        // onConfirmDeleteCancel() {
-        //     this.showConfirmDeleteModal = false;
-        // },
-
-        // showProductDetailsDialog() {
-        //     this.showDialog = true;
-        // }
-    },
-
-
-}
+    }
+};
 </script>
 
 

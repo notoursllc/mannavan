@@ -4,7 +4,7 @@ import { convertEmptyStringsToNull } from '../utils/common';
 export default {
     computed: {
         numCartItems() {
-            return this.$store.state.cart.cart.num_items;
+            return this.$store.state.cart.num_items;
         }
     },
 

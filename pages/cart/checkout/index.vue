@@ -164,7 +164,7 @@ export default {
 
             try {
                 const { data } = await this.$api.cart.shipping.selectRate(
-                    this.$store.state.cart.cart.id,
+                    this.$store.state.cart.id,
                     this.shippingRates.selectedRate
                 );
 
@@ -200,7 +200,7 @@ export default {
                 }
 
                 const { data } = await this.$api.cart.update({
-                    id: this.$store.state.cart.cart.id,
+                    id: this.$store.state.cart.id,
                     ...stateData
                 });
 
@@ -227,7 +227,7 @@ export default {
             this.shippingRates.loading = true;
 
             try {
-                const { data } = await this.$api.cart.shipping.getEstimatesForCart(this.$store.state.cart.cart.id);
+                const { data } = await this.$api.cart.shipping.getEstimatesForCart(this.$store.state.cart.id);
                 this.shippingRates.rates = data;
 
                 if(this.shippingRates.rates.length === 1) {
@@ -259,7 +259,7 @@ export default {
             console.log("cardElement", cardElement);
             this.payment.loading = true;
 
-            const cartId = this.$store.state.cart.cart.id;
+            const cartId = this.$store.state.cart.id;
 
             try {
                 const { data } = await this.$api.cart.payment.intent(cartId);
@@ -638,7 +638,7 @@ export default {
 
                         <div class="cart-item-mini-container">
                             <cart-item-mini
-                                v-for="(item, index) in $store.state.cart.cart.cart_items"
+                                v-for="(item, index) in $store.state.cart.cart_items"
                                 :key="item.id"
                                 :index="index"
                                 :item="item" />

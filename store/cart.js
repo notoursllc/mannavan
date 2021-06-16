@@ -15,6 +15,9 @@ function getCartDefaults() {
         billing_streetAddress: null,
         billingSameAsShipping: true,
         cart_items: [],
+        created_at: null,
+        currency: null,
+        grand_total: null,
         id: null,
         num_items: 0,
         sales_tax: null,
@@ -29,11 +32,11 @@ function getCartDefaults() {
         shipping_state: null,
         shipping_streetAddress: null,
         shipping_phone: null,
-        product_weight_total: 0,
-        sub_total: null,
         shipping_total: null,
-        shipping_rate: null,
-        grand_total: null
+        shipping_rate: {},
+        sub_total: null,
+        updated_at: null,
+        weight_oz_total: null
     };
 }
 
@@ -41,18 +44,19 @@ export const state = () => ({
     // There seems to be an issue with reactivity in the UI
     // if state properties do not exist by default.  Defining these properties
     // that need to have immediate UI reactivity solves the issue
-    cart: getCartDefaults()
+    ...getCartDefaults()
 });
 
 
 export const mutations = {
     CART: (state, cartData) => {
+        console.log("CART MUTATION", cartData)
         forEach(cartData, (val, key) => {
-            state.cart[key] = val;
+            state[key] = val;
         });
 
-        if(state.cart.num_items === 0) {
-            state.cart.cart_items = [];
+        if(state.num_items === 0) {
+            state.cart_items = [];
         }
 
         state.updated = new Date();
@@ -63,12 +67,12 @@ export const mutations = {
     },
 
     ATTRIBUTE_SET: (state, config) => {
-        state.cart[config.attribute] = config.value;
+        state[config.attribute] = config.value;
     },
 
     CART_RESET: (state) => {
         forEach(getCartDefaults(), (val, key) => {
-            state.cart[key] = val;
+            state[key] = val;
         });
     }
 };
@@ -103,11 +107,11 @@ export const actions = {
 
 export const getters = {
     cart: (state) => {
-        return state.cart;
+        return state;
     },
 
     shippingRateTotal: (state) => {
-        const rate = state.cart.shipping_rate;
+        const rate = state.shipping_rate;
         let total = 0;
 
         if(isObject(rate)) {
@@ -132,7 +136,7 @@ export const getters = {
     },
 
     shippingRateEstimatedDeliveryDate: (state) => {
-        const rate = state.cart.shipping_rate;
+        const rate = state.shipping_rate;
 
         if(isObject(rate)) {
             return rate.estimated_delivery_date;

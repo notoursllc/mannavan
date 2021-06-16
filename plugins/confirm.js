@@ -94,7 +94,7 @@ export default (context) => {
      * @return Promise
      */
     Vue.prototype.$showAtcConfirm = function(skuId, config) {
-        const shoppingCart = this.$store.state.cart.cart;
+        const shoppingCart = this.$store.state.cart;
 
         if(!Array.isArray(shoppingCart.cart_items)) {
             return;
