@@ -1,12 +1,7 @@
 <script>
 import paypal from 'paypal-checkout';
-import shopping_cart_mixin from '@/mixins/shopping_cart_mixin';
 
 export default {
-    mixins: [
-        shopping_cart_mixin
-    ],
-
     mounted() {
         paypal.Button.render(
             {
@@ -35,37 +30,42 @@ export default {
         payment(data, actions) {
             return new paypal.Promise(async (resolve, reject) => {
                 try {
-                    const res = await this.paypalCreatePayment();
+                    const res = await this.$api.cart.payment.paypal.create(this.$store.state.cart.id);
                     resolve(res.paymentToken);
                 }
                 catch(err) {
+                    // this.onError(err);
                     reject(err);
                 }
             });
         },
 
         onAuthorize(data, actions) {
-            console.log('onAuthorize request', data);
-
             return new paypal.Promise(async (resolve, reject) => {
                 try {
-                    const res = await this.paypalExecutePayment(data.paymentToken);
-                    console.log('onAuthorize SUCCESS', res);
-                    this.$emit('payment-success', res);
+                    const res = await this.$api.cart.payment.paypal.execute(
+                        this.$store.state.cart.id,
+                        data.paymentToken
+                    );
+
+                    // console.log('onAuthorize SUCCESS', res);
+                    this.$emit('success', res);
                     resolve(res);
                 }
                 catch(err) {
+                    // this.onError(err);
                     reject(err);
                 }
             });
         },
 
         onCancel(data) {
-            this.$emit('payment-cancelled', data);
+            this.$emit('cancelled', data);
         },
 
         onError(data) {
-            this.$emit('payment-error', data);
+            console.error(data);
+            this.$emit('error', data);
         }
     }
 };

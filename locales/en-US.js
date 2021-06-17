@@ -269,6 +269,7 @@ module.exports = {
     "Secure Payment": "Secure Payment",
     "Select a size": "Select a size",
     "Select file": "Select file",
+    "SELECT PAYMENT METHOD": "SELECT PAYMENT METHOD",
     "Ship to": "Ship to",
     "SHIPPING": "SHIPPING",
     "Shipping": "Shipping",

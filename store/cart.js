@@ -50,7 +50,6 @@ export const state = () => ({
 
 export const mutations = {
     CART: (state, cartData) => {
-        console.log("CART MUTATION", cartData)
         forEach(cartData, (val, key) => {
             state[key] = val;
         });

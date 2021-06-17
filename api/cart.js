@@ -64,6 +64,22 @@ export default ($axios) => ({
                 id: cartId,
                 stripe_payment_intent_id: paymentIntentId
             });
+        },
+
+        paypal: {
+            async create(cartId) {
+                const { data } = await $axios.$post('/cart/payment/paypal', {
+                    id: cartId
+                });
+                return data;
+            },
+
+            execute(cartId, paymentToken) {
+                return $axios.$put('/cart/payment/paypal', {
+                    id: cartId,
+                    token: paymentToken
+                });
+            }
         }
     }
 

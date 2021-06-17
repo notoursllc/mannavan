@@ -239,7 +239,6 @@ export default {
 
         setVisibleVariant(variant) {
             this.visibleVariant = variant || {};
-            console.log("VISIBLE VARIANT", this.visibleVariant);
         },
 
         async getSkuInventoryCount(id) {
@@ -267,7 +266,6 @@ export default {
 
 <template>
     <div class="pageContainerMax container-fluid">
-        form {{ form }}
         <fig-product-details-layout v-if="product">
             <!-- pics -->
             <template slot="pics">

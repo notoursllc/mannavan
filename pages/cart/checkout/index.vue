@@ -19,7 +19,8 @@ import {
     FigIcon,
     FigFormCheckbox,
     FigAddressForm,
-    FigStripeForm
+    FigStripeForm,
+    FigPaymentTypeChooser
 } from '@notoursllc/figleaf';
 
 
@@ -49,12 +50,9 @@ export default {
         FigFormCheckbox,
         FigAddressForm,
         FigStripeForm,
+        FigPaymentTypeChooser,
         CartTotalsTable,
         CartItemMini
-        // ShippingBillingForm: () => import('@/components/checkout/ShippingBillingForm'),
-        // BottomPopover: () => import('@/components/BottomPopover'),
-        // CartItemMini: () => import('@/components/cart/CartItemMini'),
-        // CartTotalsTable: () => import('@/components/cart/CartTotalsTable')
     },
 
     mixins: [
@@ -91,7 +89,8 @@ export default {
             payment: {
                 loading: false,
                 billingSameAsShipping: true,
-                stripeFormIsValid: false
+                stripeFormIsValid: false,
+                paymentType: 'cc'
             }
         };
     },
@@ -271,7 +270,7 @@ export default {
                     cardElement
                 );
 
-                console.log("STRIPE RESPONSE", stripeResponse)
+                // console.log("STRIPE RESPONSE", stripeResponse)
 
                 if(stripeResponse.error) {
                     this.$errorToast({
@@ -286,14 +285,9 @@ export default {
                     stripeResponse.paymentIntent.id
                 );
 
-                console.log("successResponse", successResponse);
+                // console.log("successResponse", successResponse);
 
-                await this.$store.dispatch('cart/CART_RESET');
-
-                return this.$router.push({
-                    name: 'order-id',
-                    params: { id: cartId }
-                });
+                this.afterTransactionSuccess();
             }
             catch(err) {
                 this.$errorToast({
@@ -339,120 +333,33 @@ export default {
                     // receipt_email: 'gregbruins@gmail.com'
                 }
             );
+        },
+
+        paypalCompleted(data) {
+            console.log("paypalCompleted", data);
+            return this.afterTransactionSuccess();
+        },
+
+        paypalCancelled(data) {
+            console.log("paypalCancelled", data);
+        },
+
+        paypalError(data) {
+            this.$errorToast({
+                title: this.$t('Error'),
+                text: this.$t('An error occurred while processing the PayPal transaction')
+            });
+        },
+
+        async afterTransactionSuccess() {
+            const cartId = this.$store.state.cart.id;
+            await this.$store.dispatch('cart/CART_RESET');
+
+            return this.$router.push({
+                name: 'order-id',
+                params: { id: cartId }
+            });
         }
-
-        /*
-        shippingFormDone: async function() {
-            try {
-                const shippingAttributes = cloneDeep(this.shippingAttributes);
-                delete shippingAttributes.shipping_total;
-                delete shippingAttributes.shipping_rate;
-                delete shippingAttributes.shipping_fullName;
-
-                // This step needs to clear the shipping rate cache because
-                // we are assuming the shipping address has changed and thus
-                // new rates should be retrieved
-                await this.$store.dispatch('shoppingcart/CLEAR_SHIPPING_RATES_CACHE');
-
-                // Setting the shipping address will also calculate the
-                // sales tax for the cart because sales tax calculation requires
-                // knowledge of the destination.  Sales tax needs to be set so
-                // the API can return the shipping/tax/grand total amounts for the 'review'
-                // checkout step
-                const response = await this.setShippingAddress(shippingAttributes);
-                this.setCartAndTokenStateFromResponse(response);
-
-                const cart = response.data.data;
-
-                if(!cart.billing_countryCodeAlpha2) {
-                    cart.billing_countryCodeAlpha2 = cart.shipping_countryCodeAlpha2
-
-                    if(!cart.billing_state) {
-                        cart.billing_state = cart.shipping_state
-                    }
-                }
-
-                this.shippingFormIsValid = true;
-                this.$router.push({ name: 'cart-checkout-place-order' });
-            }
-            catch(err) {
-                this.shippingFormIsValid = false;
-
-                this.$errorToast({
-                    title: this.$t(' server error occurred while setting the shipping address')
-                });
-
-                this.$bugsnag.notify(err, {
-                    request: {
-                        setShippingAddress: shippingAttributes
-                    }
-                });
-            }
-        },
-
-        submitShippingForm: async function() {
-            try {
-                const c = this.shoppingCart;
-
-                this.loading = true;
-
-                const validateAddressConfig = {
-                    name: `${c.shipping_firstName} ${c.shipping_lastName}`,
-                    company: c.shipping_company,
-                    street1: c.shipping_streetAddress,
-                    city: c.shipping_city,
-                    state: c.shipping_state,
-                    zip: c.shipping_postalCode,
-                    country: c.shipping_countryCodeAlpha2
-                };
-
-                const result = await this.validateAddress(validateAddressConfig);
-
-                if(!isObject(result)
-                    || !result.hasOwnProperty('validation_results')
-                    || !result.validation_results.is_valid) {
-                    this.$errorToast({
-                        title: this.$t('The address you provided does not seem to be a valid mailing adddress.')
-                    });
-                }
-                else {
-                    // Updating the shipping attributes:
-                    const updates = {};
-                    updates.shipping_company = result.company;
-                    updates.shipping_streetAddress = result.street1;
-                    updates.shipping_city = result.city;
-                    updates.shipping_state = result.state;
-                    updates.shipping_postalCode = result.zip;
-                    updates.shipping_countryCodeAlpha2 = result.country;
-
-                    this.$store.dispatch('shoppingcart/CART_SET', updates);
-
-                    await this.shippingFormDone();
-                }
-
-                this.loading = false;
-            }
-            catch(error) {
-                let msg = error.message;
-
-                if (error.response) {
-                    msg = error.response.data.message;
-                }
-
-                this.$errorToast({
-                    title: msg || 'An internal server error occurred'
-                });
-
-                this.$bugsnag.notify(error, {
-                    request: {
-                        validateAddress: validateAddressConfig
-                    }
-                });
-
-                this.loading = false;
-            }
-        },
-        */
     }
 };
 </script>
@@ -470,27 +377,26 @@ export default {
             <template slot="left">
 
                 <!-- delivery options -->
-                <div class="mb-4">
-                    <fig-text-card variant="dark">
-                        <div slot="header-left" class="flex items-center font-semibold p-1 uppercase">
-                            <fig-icon
-                                v-if="step === 3"
-                                icon="check-circle"
-                                :width="24"
-                                :height="24"
-                                variant="success"
-                                class="mr-2" />
-                            1. {{ $t('Delivery options') }}
-                        </div>
+                <fig-text-card variant="dark" class="mb-4">
+                    <div slot="header-left" class="flex items-center font-semibold p-1 uppercase">
+                        <fig-icon
+                            v-if="step === 3"
+                            icon="check-circle"
+                            :width="24"
+                            :height="24"
+                            variant="success"
+                            class="mr-2" />
+                        1. {{ $t('Delivery options') }}
+                    </div>
 
-                        <fig-button
-                            v-if="step > 1"
-                            slot="header-right"
-                            variant="plain"
-                            size="sm"
-                            @click="goToStep(1)">{{ $t('Edit') }}</fig-button>
+                    <fig-button
+                        v-if="step > 1"
+                        slot="header-right"
+                        variant="plain"
+                        size="sm"
+                        @click="goToStep(1)">{{ $t('Edit') }}</fig-button>
 
-
+                    <div class="p-2">
                         <!-- shipping address form view -->
                         <template v-if="step === 1">
                             <fig-overlay :show="shippingForm.loading">
@@ -507,7 +413,6 @@ export default {
                                 </div>
                             </fig-overlay>
                         </template>
-
 
                         <!-- shipping address details && rate selection view -->
                         <template v-else>
@@ -570,53 +475,68 @@ export default {
                                 </div>
                             </fig-overlay>
                         </template>
-                    </fig-text-card>
-                </div>
+                    </div>
+                </fig-text-card>
 
 
                 <!-- payment -->
                 <div class="mb-4">
-                    <!-- <fig-text-card
-                        variant="dark"
-                        :show-body="step === 3"> -->
                     <fig-text-card v-if="step === 3" variant="dark">
                         <div slot="header-left" class="font-semibold p-1 uppercase">2. {{ $t('Payment') }}</div>
+                        <div class="p-2">
 
-                        <fig-overlay :show="payment.loading">
-                            <fig-stripe-form
-                                :stripe="Stripe"
-                                @valid="onStripeFormValid"
-                                @token="onStripeTokenGenerated">
+                            <div class="pb-6">
+                                <div class="font-medium text-black">{{ $t('SELECT PAYMENT METHOD') }}</div>
+                                <fig-payment-type-chooser v-model="payment.paymentType" />
+                            </div>
 
-                                <template v-slot:content="props">
-                                    <!-- billing same as shipping checkbox -->
-                                    <div class="mt-4">
-                                        <fig-form-checkbox
-                                            class="mr-3"
-                                            v-model="payment.billingSameAsShipping">{{ $t('Billing address same as shipping') }}</fig-form-checkbox>
-                                    </div>
+                            <!-- credit card payment form -->
+                            <div v-show="payment.paymentType === 'cc'">
+                                <fig-overlay :show="payment.loading">
+                                    <fig-stripe-form
+                                        :stripe="Stripe"
+                                        @valid="onStripeFormValid"
+                                        @token="onStripeTokenGenerated">
 
-                                    <!-- billing address form -->
-                                    <div v-if="!payment.billingSameAsShipping" class="mt-4">
-                                        <div class="text-black">{{ $t('Billing address') }}:</div>
-                                        <fig-address-form
-                                            v-model="billingForm.form"
-                                            @invalid="onBillingAddressFormInvalid"
-                                            hide-email
-                                            hide-phone />
-                                    </div>
+                                        <template v-slot:content="props">
+                                            <!-- billing same as shipping checkbox -->
+                                            <div class="mt-4">
+                                                <fig-form-checkbox
+                                                    class="mr-3"
+                                                    v-model="payment.billingSameAsShipping">{{ $t('Billing address same as shipping') }}</fig-form-checkbox>
+                                            </div>
 
-                                    <!-- place order button -->
-                                    <div class="pt-6">
-                                        <fig-button
-                                            variant="primary"
-                                            size="lg"
-                                            @click="onClickPlaceOrder(props.cardElement)"
-                                            :disabled="!canShowPlaceOrderButton">{{ $t('PLACE YOUR ORDER') }}</fig-button>
-                                    </div>
-                                </template>
-                            </fig-stripe-form>
-                        </fig-overlay>
+                                            <!-- billing address form -->
+                                            <div v-if="!payment.billingSameAsShipping" class="mt-4">
+                                                <div class="text-black">{{ $t('Billing address') }}:</div>
+                                                <fig-address-form
+                                                    v-model="billingForm.form"
+                                                    @invalid="onBillingAddressFormInvalid"
+                                                    hide-email
+                                                    hide-phone />
+                                            </div>
+
+                                            <!-- place order button -->
+                                            <div class="pt-6">
+                                                <fig-button
+                                                    variant="primary"
+                                                    size="lg"
+                                                    @click="onClickPlaceOrder(props.cardElement)"
+                                                    :disabled="!canShowPlaceOrderButton">{{ $t('PLACE YOUR ORDER') }}</fig-button>
+                                            </div>
+                                        </template>
+                                    </fig-stripe-form>
+                                </fig-overlay>
+                            </div>
+
+                            <!-- paypal payment form -->
+                            <div v-show="payment.paymentType === 'paypal'" class="text-center">
+                                <paypal-button
+                                    @success="paypalCompleted"
+                                    @cancelled="paypalCancelled"
+                                    @error="paypalError" />
+                            </div>
+                        </div>
                     </fig-text-card>
                 </div>
             </template>
