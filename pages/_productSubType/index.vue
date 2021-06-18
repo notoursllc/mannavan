@@ -2,8 +2,6 @@
 import product_mixin from '@/mixins/product_mixin';
 
 export default {
-    layout: 'home',
-
     components: {
         ProductCardList: () => import('@/components/product/ProductCardList')
     },
@@ -12,20 +10,9 @@ export default {
         product_mixin
     ],
 
-    data() {
-        return {
-            products: [],
-            productSubType: null
-        };
-    },
+    layout: 'home',
 
-    computed: {
-        productTypeName() {
-            return this.$t(this.productSubType);
-        }
-    },
-
-    asyncData({ params, store, app }) {
+    async asyncData({ params, store, app }) {
         // console.log("IN ASYNC DATA store", store.state.product)
         // console.log("IN ASYNC DATA", context.app.store)
         try {
@@ -40,7 +27,6 @@ export default {
                 });
             }
 
-
             const searchConfig = {
                 where: ['published', '=', true],
                 // andWhere: [
@@ -54,20 +40,23 @@ export default {
                 searchConfig.whereRaw = ['sub_type & ? > 0', [subTypeData.value]];
             }
 
-            // const products = await product_mixin.methods.getProducts.call(
-            //     app,
-            //     searchConfig
-            // );
-            const products = [];
+            const { data } = await app.$api.products.list(searchConfig);
 
             return {
-                products: products,
+                products: data,
                 productSubType: subTypeData.name
             };
         }
         catch(err) {
-            console.error('Error getting products', err)
+            console.error('Error getting products', err);
         }
+    },
+
+    data() {
+        return {
+            products: [],
+            productSubType: null
+        };
     },
 
     head() {
@@ -77,7 +66,17 @@ export default {
                 { vmid: 'description', name: 'description', content: `${this.productTypeName} by ${this.$store.state.ui.brandName}` }
             ]
         };
-    }
+    },
+
+    computed: {
+        productTypeName() {
+            return this.$t(this.productSubType);
+        }
+    },
+
+
+
+
 };
 </script>
 

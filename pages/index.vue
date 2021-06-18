@@ -14,19 +14,12 @@ function randomIntFromInterval(min, max) {
 
 
 export default {
-    layout: 'home',
-
     components: {
         HeroMain,
         ProductCardList
     },
 
-    data() {
-        return {
-            products: {},
-            bgImage: null
-        };
-    },
+    layout: 'home',
 
     async asyncData({ params, store, app }) {
         // console.log("IN ASYNC DATA store", store.state.product)
@@ -53,6 +46,13 @@ export default {
         catch(err) {
             console.error('Error getting products', err);
         }
+    },
+
+    data() {
+        return {
+            products: {},
+            bgImage: null
+        };
     },
 
     head() {

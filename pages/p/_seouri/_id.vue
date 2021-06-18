@@ -177,7 +177,6 @@ export default {
                         selectedCartItem = obj;
                     }
                 });
-                console.log("selectedCartItem", selectedCartItem)
 
                 const confirmButtonClickIndex = await this.$showAtcConfirm(selectedCartItem);
 
