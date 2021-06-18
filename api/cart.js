@@ -1,8 +1,10 @@
 export default ($axios) => ({
 
-    async get(id) {
+    async get(params) {
         const { data } = await $axios.$get('/cart', {
-            params: { id }
+            params: {
+                ...params
+            }
         });
         return data;
     },

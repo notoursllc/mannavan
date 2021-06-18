@@ -15,21 +15,35 @@ export default {
         }
     },
 
+    data() {
+        return {
+            loading: false,
+            cart: {}
+        };
+    },
+
     computed: {
         numCartItems() {
             return this.$store.state.cart.num_items;
         }
     },
 
-    methods: {
-        onItemSizeChange(index, newSize) {
-            console.log("ITEMS - onItemSizeChange", index, newSize)
-            //TODO: API request to update cart
-        },
+    created() {
+        this.getCart();
+    },
 
-        onItemQuantityChange(index, newQty) {
-            console.log("ITEMS - onItemQuantityChange", index, newQty);
-            //TODO: API request to update cart
+    methods: {
+        async getCart() {
+            if(this.$store.state.cart.id) {
+                this.loading = true;
+
+                this.cart = await this.$api.cart.get({
+                    id: this.$store.state.cart.id,
+                    relations: true
+                });
+
+                this.loading = false;
+            }
         }
     }
 };
@@ -39,12 +53,11 @@ export default {
 <template>
     <div v-if="numCartItems">
         <cart-item
-            v-for="(item, index) in $store.state.cart.cart_items"
+            v-for="(item, index) in cart.cart_items"
             :key="item.id"
             :index="index"
             :item="item"
             :edit-mode="allowEdit"
-            @size="(s) => { onItemSizeChange(index, s) }"
-            @quantity="(q) => { onItemQuantityChange(index, q) }" />
+            @updated="getCart" />
     </div>
 </template>

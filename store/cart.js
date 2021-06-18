@@ -1,37 +1,51 @@
 import forEach from 'lodash.foreach';
 import isObject from 'lodash.isobject';
 
+/*
+* I decided not to include the "billing_" and "shipping_" attributes
+* in local storage, because I guess it could be a priviacy issue.
+* Omitting it comes with some inconvenience in the UI, as now
+* I need to fetch cart data from the API more often in order to
+* get "billing_" and "shipping_" data, but the impact isn't that great.
+* Seems worth the tradeoff.
+*
+* cart_items are also omitted because of a staleness issue I discovered:
+* If the UI uses cart_data from local storage, and product info changes in the
+* back end (price or availability, for example) then those changes arent reflected
+* in the cart, and an issue can occur (for example a customer may be charged a different
+* price for a product than is set in the DB)
+*/
 function getCartDefaults() {
     return {
-        billing_city: null,
-        billing_company: null,
-        billing_countryCodeAlpha2: null,
-        billing_extendedAddress: null,
-        billing_firstName: null,
-        billing_lastName: null,
-        billing_phone: null,
-        billing_postalCode: null,
-        billing_state: null,
-        billing_streetAddress: null,
-        billingSameAsShipping: true,
-        cart_items: [],
+        // billing_city: null,
+        // billing_company: null,
+        // billing_countryCodeAlpha2: null,
+        // billing_extendedAddress: null,
+        // billing_firstName: null,
+        // billing_lastName: null,
+        // billing_phone: null,
+        // billing_postalCode: null,
+        // billing_state: null,
+        // billing_streetAddress: null,
+        // billingSameAsShipping: true,
+        // cart_items: [],
         created_at: null,
         currency: null,
         grand_total: null,
         id: null,
         num_items: 0,
         sales_tax: null,
-        shipping_city: null,
-        shipping_company: null,
-        shipping_countryCodeAlpha2: null,
-        shipping_email: null,
-        shipping_extendedAddress: null,
-        shipping_firstName: null,
-        shipping_lastName: null,
-        shipping_postalCode: null,
-        shipping_state: null,
-        shipping_streetAddress: null,
-        shipping_phone: null,
+        // shipping_city: null,
+        // shipping_company: null,
+        // shipping_countryCodeAlpha2: null,
+        // shipping_email: null,
+        // shipping_extendedAddress: null,
+        // shipping_firstName: null,
+        // shipping_lastName: null,
+        // shipping_postalCode: null,
+        // shipping_state: null,
+        // shipping_streetAddress: null,
+        // shipping_phone: null,
         shipping_total: null,
         shipping_rate: {},
         sub_total: null,
@@ -50,23 +64,15 @@ export const state = () => ({
 
 export const mutations = {
     CART: (state, cartData) => {
-        forEach(cartData, (val, key) => {
-            state[key] = val;
-        });
-
-        if(state.num_items === 0) {
-            state.cart_items = [];
+        if(!isObject(cartData)) {
+            return;
         }
 
-        state.updated = new Date();
-    },
-
-    CART_ID: (state, id) => {
-        state.id = id;
-    },
-
-    ATTRIBUTE_SET: (state, config) => {
-        state[config.attribute] = config.value;
+        for(const key in state) {
+            if(cartData.hasOwnProperty(key)) {
+                state[key] = cartData[key];
+            }
+        }
     },
 
     CART_RESET: (state) => {
@@ -81,23 +87,6 @@ export const actions = {
     CART ({ commit }, cart) {
         commit('CART', cart);
     },
-
-    CART_ID ({ commit }, id) {
-        commit('CART_ID', id);
-    },
-
-    ATTRIBUTE_SET: ({ commit }, config) => {
-        const conf = Array.isArray(config) ? config : [config];
-
-        conf.forEach((obj) => {
-            if(isObject(obj) &&
-                obj.hasOwnProperty('attribute') &&
-                obj.hasOwnProperty('value')) {
-                commit('ATTRIBUTE_SET', obj);
-            }
-        });
-    },
-
     CART_RESET: ({ commit }) => {
         commit('CART_RESET');
     }

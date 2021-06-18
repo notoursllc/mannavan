@@ -1,7 +1,5 @@
 <script>
 import { mapGetters } from 'vuex';
-import isObject from 'lodash.isobject';
-import cloneDeep from 'lodash.clonedeep';
 import app_mixin from '@/mixins/app_mixin';
 import shopping_cart_mixin from '@/mixins/shopping_cart_mixin';
 import CartTotalsTable from '@/components/cart/CartTotalsTable';
@@ -65,6 +63,7 @@ export default {
             loading: false,
             step: 1,
             Stripe: null,
+            cart: {},
             shippingForm: {
                 loading: false,
                 isInvalid: true,
@@ -106,20 +105,24 @@ export default {
 
     computed: {
         ...mapGetters({
-            cart: 'cart/cart',
             shippingRateTotal: 'cart/shippingRateTotal',
             shippingRateEstimatedDeliveryDate: 'cart/shippingRateEstimatedDeliveryDate'
         }),
+
+        numCartItems() {
+            return this.$store.state.cart.num_items;
+        },
 
         canShowPlaceOrderButton() {
             return (this.payment.billingSameAsShipping || !this.billingForm.isInvalid) && this.payment.stripeFormIsValid;
         }
     },
 
-    mounted() {
+    async mounted() {
         this.$store.dispatch('ui/IN_CHECKOUT_FLOW', true);
-        this.setShippingFormFromCart();
         this.Stripe = Stripe(this.$config.stripePublishableKey);
+        await this.getCart();
+        this.setShippingFormFromCart();
     },
 
     methods: {
@@ -192,10 +195,9 @@ export default {
 
             try {
                 const stateData = {};
-                const formData = this.shippingForm.form;
 
-                for(const key in formData) {
-                    stateData[`shipping_${key}`] = formData[key];
+                for(const key in this.shippingForm.form) {
+                    stateData[`shipping_${key}`] = this.shippingForm.form[key];
                 }
 
                 const { data } = await this.$api.cart.update({
@@ -203,7 +205,8 @@ export default {
                     ...stateData
                 });
 
-                await this.$store.dispatch('cart/CART', data);
+                this.cart = data;
+                await this.$store.dispatch('cart/CART', this.cart);
                 this.setShippingFormFromCart();
                 this.goToStep(2);
                 this.getShippingRates();
@@ -220,6 +223,39 @@ export default {
             }
 
             this.shippingForm.loading = false;
+        },
+
+        saveBillingForm() {
+            try {
+                // If billing is the same as shipping then
+                // set all billing form values to null
+                if(this.payment.billingSameAsShipping) {
+                    this.billingForm.form = {
+                        ...addressFormBase
+                    };
+                }
+
+                // append 'billing_' to all of the keys
+                const billingData = {};
+                for(const key in this.billingForm.form) {
+                    billingData[`billing_${key}`] = this.billingForm.form[key];
+                }
+
+                return this.$api.cart.update({
+                    id: this.$store.state.cart.id,
+                    ...billingData
+                });
+            }
+            catch(err) {
+                console.error('ERR', err);
+
+                this.$errorToast({
+                    title: this.$t('Error')
+                    // text: err.response.data.message
+                });
+
+                this.$bugsnag.notify(err);
+            }
         },
 
         async getShippingRates() {
@@ -246,24 +282,16 @@ export default {
             this.shippingRates.loading = false;
         },
 
-        finalizeBillingAddress() {
-            const isSame = this.payment.billingSameAsShipping;
-
-            for(const attr in this.billingForm.form) {
-                this.billingForm.form[attr] = isSame ? null : this.shippingForm.form[attr];
-            }
-        },
-
         async onClickPlaceOrder(cardElement) {
-            console.log("cardElement", cardElement);
             this.payment.loading = true;
 
             const cartId = this.$store.state.cart.id;
 
             try {
-                const { data } = await this.$api.cart.payment.intent(cartId);
+                // first save the billing data
+                await this.saveBillingForm();
 
-                this.finalizeBillingAddress();
+                const { data } = await this.$api.cart.payment.intent(cartId);
 
                 const stripeResponse = await this.sendStripeCardPayment(
                     data.clientSecret,
@@ -280,12 +308,10 @@ export default {
                     return;
                 }
 
-                const successResponse = await this.$api.cart.payment.success(
+                await this.$api.cart.payment.success(
                     cartId,
                     stripeResponse.paymentIntent.id
                 );
-
-                // console.log("successResponse", successResponse);
 
                 this.afterTransactionSuccess();
             }
@@ -359,6 +385,21 @@ export default {
                 name: 'order-id',
                 params: { id: cartId }
             });
+        },
+
+        async getCart() {
+            if(this.$store.state.cart.id) {
+                this.loading = true;
+
+                this.cart = await this.$api.cart.get({
+                    id: this.$store.state.cart.id,
+                    relations: true
+                });
+
+                this.$store.dispatch('cart/CART', this.cart);
+
+                this.loading = false;
+            }
         }
     }
 };
@@ -558,7 +599,7 @@ export default {
 
                         <div class="cart-item-mini-container">
                             <cart-item-mini
-                                v-for="(item, index) in $store.state.cart.cart_items"
+                                v-for="(item, index) in cart.cart_items"
                                 :key="item.id"
                                 :index="index"
                                 :item="item" />

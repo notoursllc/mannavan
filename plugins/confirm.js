@@ -93,21 +93,10 @@ export default (context) => {
      * @param {*} config
      * @return Promise
      */
-    Vue.prototype.$showAtcConfirm = function(skuId, config) {
-        const shoppingCart = this.$store.state.cart;
-
-        if(!Array.isArray(shoppingCart.cart_items)) {
+    Vue.prototype.$showAtcConfirm = function(cartItem, config) {
+        if(!isObject(cartItem)) {
             return;
         }
-
-        let cartItem = null;
-        shoppingCart.cart_items.forEach((obj) => {
-            if(isObject(obj.product_variant_sku) && obj.product_variant_sku.id === skuId) {
-                cartItem = obj;
-            }
-        });
-
-        // console.log("productImage", productImage);
 
         const cfg = Object.assign(
             {},

@@ -16,6 +16,7 @@ module.exports = {
     "Add row": "Add row",
     "Add To Your Order": "Add To Your Order",
     "Add variant": "Add variant",
+    "Added to Cart": "Added to Cart",
     "Address": "Address",
     "Address_or_PO_Box": "Address (or PO Box)",
     "Added To Your Order": "Added To Your Order",
@@ -349,6 +350,7 @@ module.exports = {
     "Vendors": "Vendors",
     "Victory!": "Victory!",
     "View": "View",
+    "View Cart": "View Cart",
     "View My Order": "View My Order",
     "Vintage. Racing.": "Vintage. Racing.",
 

@@ -13,7 +13,7 @@ export default {
         ShippingView: () => import('@/components/checkout/ShippingView'),
         CartItemMini: () => import('@/components/cart/CartItemMini'),
         CartTotalsTable: () => import('@/components/cart/CartTotalsTable'),
-        ShippingBillingForm: () => import('@/components/checkout/ShippingBillingForm'),
+        // ShippingBillingForm: () => import('@/components/checkout/ShippingBillingForm'),
         BottomPopover: () => import('@/components/BottomPopover'),
         PrivacyDisplay: () => import('@/components/PrivacyDisplay'),
         ConditionsOfUseDisplay: () => import('@/components/ConditionsOfUseDisplay'),

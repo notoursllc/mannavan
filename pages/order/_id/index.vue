@@ -42,7 +42,10 @@ export default {
 
     async created() {
         try {
-            this.cart = await this.$api.cart.get(this.$route.params.id)
+            this.cart = await this.$api.cart.get({
+                id: this.$route.params.id,
+                relations: true
+            });
         }
         catch(err) {
             this.$errorToast({

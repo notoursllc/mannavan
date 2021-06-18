@@ -47,7 +47,7 @@ export default {
 
     data() {
         return {
-            // item: {},
+            cartItem: {},
             sizeOptions: [],
             form: {
                 size: null,
@@ -59,11 +59,11 @@ export default {
 
     computed: {
         selectedColor() {
-            return isObject(this.item.product_variant) ? this.item.product_variant.label : null;
+            return isObject(this.cartItem.product_variant) ? this.cartItem.product_variant.label : null;
         },
 
         selectedSize() {
-            return isObject(this.item.product_variant_sku) ? this.item.product_variant_sku.label : null;
+            return isObject(this.cartItem.product_variant_sku) ? this.cartItem.product_variant_sku.label : null;
         },
 
         quantityOptions() {
@@ -83,7 +83,7 @@ export default {
             // can't edit if there are no options,
             // or if there is just one option and that option is the sku already selected
             if(!this.sizeOptions.length
-                || (this.sizeOptions.length === 1 && this.sizeOptions[0].value === this.item.product_variant_sku.id)) {
+                || (this.sizeOptions.length === 1 && this.sizeOptions[0].value === this.cartItem.product_variant_sku.id)) {
                 return false;
             }
 
@@ -94,6 +94,9 @@ export default {
     watch: {
         item: {
             handler(newVal) {
+                this.cartItem = {
+                    ...newVal
+                };
                 this.init();
             },
             immediate: true,
@@ -103,29 +106,24 @@ export default {
 
     methods: {
         init() {
-            if(isObject(this.item)) {
-                this.form.qty = this.item.qty;
-                this.form.size = this.item.product_variant_sku.id;
-            }
-
             this.setSizeOptions();
         },
 
-
-        // async updateCart(cartData) {
-        //     await this.$store.dispatch('cart/CART', cartData);
-        //     this.init();
-        // },
+        emitUpdated() {
+            this.$emit('updated');
+        },
 
         async onRemoveItem(id) {
             this.isLoading = true;
 
             try {
-                const updatedCart = await this.$api.cart.deleteItem({
+                const { data } = await this.$api.cart.deleteItem({
                     id: id,
                     clear_shipping_rate: true
                 });
-                await this.$store.dispatch('cart/CART', updatedCart.data);
+
+                this.emitUpdated();
+                await this.$store.dispatch('cart/CART', data);
             }
             catch(err) {
                 console.error('Error getting products', err);
@@ -141,7 +139,7 @@ export default {
         async setSizeOptions() {
             try {
                 const variant = await this.$api.products.getVariant(
-                    this.item.product_variant.id,
+                    this.cartItem.product_variant.id,
                     { skus: true }
                 );
 
@@ -167,17 +165,16 @@ export default {
             this.isLoading = true;
 
             try {
-                const updatedCart = await this.$api.cart.updateItem({
+                const { data } = await this.$api.cart.updateItem({
                     cart_id: this.$store.state.cart.id,
-                    id: this.item.id,
-                    product_variant_sku_id: this.form.size,
-                    qty: this.form.qty,
+                    id: this.cartItem.id,
+                    product_variant_sku_id: this.cartItem.product_variant_sku.id,
+                    qty: this.cartItem.qty,
                     clear_shipping_rate: true
                 });
 
-                // Update cart in vuex:
-                await this.$store.dispatch('cart/CART', updatedCart.data);
-
+                this.emitUpdated();
+                await this.$store.dispatch('cart/CART', data);
                 this.init();
             }
             catch(err) {
@@ -191,16 +188,6 @@ export default {
             }
 
             this.isLoading = false;
-        },
-
-        async onQuantityChange() {
-            await this.updateCartItem();
-            this.$emit('quantity', this.form.qty);
-        },
-
-        async onSizeChange() {
-            await this.updateCartItem();
-            this.$emit('size', this.form.size);
         }
     }
 };
@@ -213,13 +200,13 @@ export default {
             <!-- image -->
             <div class="mr-2 sm:mr-4">
                 <product-variant-cover-image
-                    :variant="item.product_variant"
+                    :variant="cartItem.product_variant"
                     smallest />
             </div>
 
             <div class="flex-grow">
                 <!-- product title -->
-                <div class="font-semibold mb-1">{{ item.product.title }}</div>
+                <div class="font-semibold mb-1">{{ cartItem.product.title }}</div>
 
                 <!-- color -->
                 <div class="text-gray-600 mb-1">
@@ -234,8 +221,8 @@ export default {
                         <template v-if="!canEdit">{{ selectedSize }}</template>
                         <template v-else>
                             <fig-form-select-native
-                                v-model="form.size"
-                                @input="onSizeChange"
+                                v-model="cartItem.product_variant_sku.id"
+                                @input="updateCartItem"
                                 :options="sizeOptions" />
                         </template>
                     </div>
@@ -243,7 +230,7 @@ export default {
 
                 <div>
                     <!-- remove button -->
-                    <fig-pop-confirm @confirm="onRemoveItem(item.id)">
+                    <fig-pop-confirm @confirm="onRemoveItem(cartItem.id)">
                         {{ $t('Remove this item?') }}
 
                         <fig-button
@@ -260,22 +247,16 @@ export default {
                 <!-- quantity -->
                 <div>{{ $t('Quantity') }}:</div>
                 <fig-form-select-native
-                    v-model="form.qty"
-                    @input="onQuantityChange"
+                    v-model="cartItem.qty"
+                    @input="updateCartItem"
                     :options="quantityOptions" />
             </div>
 
             <div>
                 <product-price
-                    :variant="item.product_variant"
-                    :sku="item.product_variant_sku" />
+                    :variant="cartItem.product_variant"
+                    :sku="cartItem.product_variant_sku" />
             </div>
         </div>
     </fig-overlay>
 </template>
-
-<style>
-.qty-select {
-    padding: 1px 30px 1px 10px;
-}
-</style>

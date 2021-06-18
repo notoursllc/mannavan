@@ -147,17 +147,6 @@ export default {
         async addToCart() {
             this.isLoading = true;
 
-            // TODO: send cart data into $api.cart.upsert()
-
-
-            // if(!this.$store.state.shoppingcart.token) {
-            //     const response = await this.$api.cart.upsert();
-            //     console.log("CART DATA", response.data);
-            //     this.$store.dispatch('shoppingcart/CART_SET', response.data);
-            // }
-
-
-
             try {
                 // Check stock
                 await this.getSkuInventoryCount(this.form.selectedSku.id);
@@ -172,18 +161,25 @@ export default {
                 }
 
                 // Add item to  cart
-                const response = await this.$api.cart.addItem({
+                const { data } = await this.$api.cart.addItem({
                     cart_id: this.$store.state.cart.id,
                     product_variant_sku_id: this.form.selectedSku.id,
                     qty: 1,
                     clear_shipping_rate: true
                 });
 
-                await this.$store.dispatch('cart/CART', response.data);
-                this.$nuxt.$emit('CART_ITEM_ADDED', this.form.selectedSku.id);
+                await this.$store.dispatch('cart/CART', data);
 
                 // show the ATC confirm
-                const confirmButtonClickIndex = await this.$showAtcConfirm(this.form.selectedSku.id);
+                let selectedCartItem = null;
+                data.cart_items.forEach((obj) => {
+                    if(isObject(obj.product_variant_sku) && obj.product_variant_sku.id === this.form.selectedSku.id) {
+                        selectedCartItem = obj;
+                    }
+                });
+                console.log("selectedCartItem", selectedCartItem)
+
+                const confirmButtonClickIndex = await this.$showAtcConfirm(selectedCartItem);
 
                 // Redirect the user depending on the button clicked in the ATC confirm
                 switch(confirmButtonClickIndex) {
