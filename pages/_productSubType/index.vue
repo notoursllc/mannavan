@@ -72,11 +72,7 @@ export default {
         productTypeName() {
             return this.$t(this.productSubType);
         }
-    },
-
-
-
-
+    }
 };
 </script>
 
