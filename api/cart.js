@@ -68,6 +68,16 @@ export default ($axios) => ({
             });
         },
 
+        async getPayment(cartId) {
+            const { data } = await $axios.$get('/cart/payment', {
+                params: {
+                    id: cartId
+                }
+            });
+            return data;
+        },
+
+
         paypal: {
             async create(cartId) {
                 const { data } = await $axios.$post('/cart/payment/paypal', {

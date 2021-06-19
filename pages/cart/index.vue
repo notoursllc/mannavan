@@ -43,7 +43,7 @@ export default {
 
 
 <template>
-    <fig-checkout-wrapper>
+    <fig-checkout-wrapper class="px-4">
         <page-title>{{ $t('Shopping Cart') }}</page-title>
 
         <div v-if="!numCartItems" class="text-base">
@@ -58,6 +58,7 @@ export default {
             <template slot="right">
                 <div class="mb-4">
                     <cart-totals-table
+                        :cart="$store.state.cart"
                         sales-tax-on-next-step
                         shipping-on-next-step />
                 </div>

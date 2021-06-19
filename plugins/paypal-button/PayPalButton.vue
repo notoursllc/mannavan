@@ -1,7 +1,14 @@
 <script>
 import paypal from 'paypal-checkout';
+import {
+    FigSpinner
+} from '@notoursllc/figleaf';
 
 export default {
+    components: {
+        FigSpinner
+    },
+
     mounted() {
         paypal.Button.render(
             {
@@ -73,5 +80,7 @@ export default {
 
 
 <template>
-    <div id="paypal-button"></div>
+    <div id="paypal-button">
+        <!-- <fig-spinner :width="40" color="#3b82f6" /> -->
+    </div>
 </template>

@@ -1,41 +1,15 @@
 <script>
-import payment_mixin from '@/mixins/payment_mixin'
-
+import CartReceipt from '@/components/cart/CartReceipt';
+import PageTitle from '@/components/PageTitle';
+import {
+    FigCheckoutWrapper
+} from '@notoursllc/figleaf';
 
 export default {
     components: {
-        PageTitle: () => import('@/components/PageTitle'),
-        OrderDetails: () => import('@/components/order/OrderDetails')
-    },
-
-    mixins: [
-        payment_mixin
-    ],
-
-    data: function() {
-        return {
-            loading: true,
-            orderExists: false,
-            order: {
-                shipping: {},
-                shoppingCart: {},
-                transaction: {
-                    payment: {}
-                }
-            }
-        }
-    },
-
-    async created() {
-        try {
-            this.order = await this.getPayment(this.$route.params.id);
-            this.orderExists = true;
-            this.loading = false;
-        }
-        catch(e) {
-            this.orderExists = false;
-            this.loading = false;
-        }
+        CartReceipt,
+        PageTitle,
+        FigCheckoutWrapper
     },
 
     head() {
@@ -44,24 +18,21 @@ export default {
             meta: [
                 { vmid: 'description', name: 'description', content: `Order Details for your order from ${this.$store.state.ui.siteName}` }
             ]
-        }
+        };
     }
-}
+};
 </script>
 
+
 <template>
-    <div>
+    <fig-checkout-wrapper class="px-4">
         <page-title>{{ $t('Order Details') }}</page-title>
 
-        <div class="pageContainerMax" v-loading.fullscreen.lock="loading">
-            <template v-if="!loading">
-                <div v-if="!orderExists" class="tac">
-                    {{ $t('Oops we could not find the order you are looking for.') }}
-                </div>
-                <div v-else>
-                    <order-details :order="order" />
-                </div>
-            </template>
-        </div>
-    </div>
+        <cart-receipt
+            :cart-id="$route.params.id"
+            @found="onCartFound" />
+    </fig-checkout-wrapper>
 </template>
+
+
+

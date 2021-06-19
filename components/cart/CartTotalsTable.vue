@@ -15,6 +15,10 @@ export default {
     },
 
     props: {
+        cart: {
+            type: Object
+        },
+
         shipping: {
             type: Boolean,
             default: false
@@ -42,12 +46,8 @@ export default {
     },
 
     computed: {
-        cart() {
-            return this.$store.state.cart;
-        },
-
         numCartItems() {
-            return this.$store.state.cart.num_items;
+            return this.cart.num_items;
         }
     }
 };

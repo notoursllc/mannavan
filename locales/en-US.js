@@ -39,6 +39,7 @@ module.exports = {
 
     "Barcode": "Barcode",
     "Barcode (ISBN, UPC, GTIN, etc.)": "Barcode (ISBN, UPC, GTIN, etc.)",
+    "Billing": "Billing",
     "Billing address": "Billing address",
     "Billing address same as shipping": "Billing address same as shipping",
     "BREADVAN": "BREADVAN",
@@ -120,6 +121,7 @@ module.exports = {
     "Error placing order": "Error placing order",
     "Estimated arrival: {date}": "Estimated arrival: {date}",
     "Estimated tax": "Estimated tax",
+    "Expiration": "Expiration",
     "Expiration date": "Expiration date",
 
     "Fit type": "Fit type",
@@ -148,6 +150,7 @@ module.exports = {
     "In inches": "In inches",
     "Introducing Breadvan": "Introducing Breadvan",
     "Inventory": "Inventory",
+    "Item": "Item",
     "Item not found": "Item not found",
     "items": "item | items",
 
@@ -192,6 +195,7 @@ module.exports = {
     "Order Details": "Order Details",
     "Order More": "Order More",
     "Order not found": "Order not found",
+    "Order number": "Order number",
     "Order summary": "Order summary",
     "Order total": "Order total",
     "Ordered on": "Ordered on",
@@ -281,7 +285,6 @@ module.exports = {
     "SHIPPING METHOD": "SHIPPING METHOD",
     "Shipping method": "Shipping method",
     "Shipping options are loading": "Shipping options are loading",
-    "Shipping to": "Shipping to",
     "Shopping Cart": "Shopping Cart",
     "Shop for": "Shop for",
     "Shorts": "Shorts",

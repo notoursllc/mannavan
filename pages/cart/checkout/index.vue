@@ -87,7 +87,7 @@ export default {
             },
             payment: {
                 loading: false,
-                billingSameAsShipping: true,
+                billing_same_as_shipping: true,
                 stripeFormIsValid: false,
                 paymentType: 'cc'
             }
@@ -114,7 +114,7 @@ export default {
         },
 
         canShowPlaceOrderButton() {
-            return (this.payment.billingSameAsShipping || !this.billingForm.isInvalid) && this.payment.stripeFormIsValid;
+            return (this.payment.billing_same_as_shipping || !this.billingForm.isInvalid) && this.payment.stripeFormIsValid;
         }
     },
 
@@ -229,14 +229,16 @@ export default {
             try {
                 // If billing is the same as shipping then
                 // set all billing form values to null
-                if(this.payment.billingSameAsShipping) {
+                if(this.payment.billing_same_as_shipping) {
                     this.billingForm.form = {
                         ...addressFormBase
                     };
                 }
 
                 // append 'billing_' to all of the keys
-                const billingData = {};
+                const billingData = {
+                    billing_same_as_shipping: this.payment.billing_same_as_shipping
+                };
                 for(const key in this.billingForm.form) {
                     billingData[`billing_${key}`] = this.billingForm.form[key];
                 }
@@ -298,7 +300,7 @@ export default {
                     cardElement
                 );
 
-                // console.log("STRIPE RESPONSE", stripeResponse)
+                console.log("STRIPE RESPONSE", stripeResponse);
 
                 if(stripeResponse.error) {
                     this.$errorToast({
@@ -328,7 +330,7 @@ export default {
         },
 
         sendStripeCardPayment(clientSecret, cardElement) {
-            const billingAddressSource = this.payment.billingSameAsShipping ? this.shippingForm.form : this.billingForm.form;
+            const billingAddressSource = this.payment.billing_same_as_shipping ? this.shippingForm.form : this.billingForm.form;
 
             return this.Stripe.confirmCardPayment(
                 clientSecret,
@@ -544,11 +546,11 @@ export default {
                                             <div class="mt-4">
                                                 <fig-form-checkbox
                                                     class="mr-3"
-                                                    v-model="payment.billingSameAsShipping">{{ $t('Billing address same as shipping') }}</fig-form-checkbox>
+                                                    v-model="payment.billing_same_as_shipping">{{ $t('Billing address same as shipping') }}</fig-form-checkbox>
                                             </div>
 
                                             <!-- billing address form -->
-                                            <div v-if="!payment.billingSameAsShipping" class="mt-4">
+                                            <div v-if="!payment.billing_same_as_shipping" class="mt-4">
                                                 <div class="text-black">{{ $t('Billing address') }}:</div>
                                                 <fig-address-form
                                                     v-model="billingForm.form"
@@ -571,7 +573,7 @@ export default {
                             </div>
 
                             <!-- paypal payment form -->
-                            <div v-show="payment.paymentType === 'paypal'" class="text-center">
+                            <div v-if="payment.paymentType === 'paypal'" class="text-center">
                                 <paypal-button
                                     @success="paypalCompleted"
                                     @cancelled="paypalCancelled"
@@ -592,6 +594,7 @@ export default {
 
                     <div class="text-sm">
                         <cart-totals-table
+                            :cart="$store.state.cart"
                             shipping
                             sales-tax />
 
