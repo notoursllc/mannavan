@@ -1,11 +1,11 @@
 <script>
-    export default {
-        data: function() {
-            return {
-                modalIsActive: false
-            }
+export default {
+    data: function() {
+        return {
+            modalIsActive: false
         }
     }
+}
 </script>
 
 

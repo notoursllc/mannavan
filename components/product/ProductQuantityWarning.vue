@@ -1,11 +1,11 @@
 <script>
-import IconMessage from '@/components/IconMessage';
+import { FigIconLabel } from '@notoursllc/figleaf';
 
 export default {
     name: 'ProductQuantityWarning',
 
     components: {
-        IconMessage
+        FigIconLabel
     },
 
     props: {
@@ -33,12 +33,12 @@ export default {
 
 
 <template>
-    <icon-message
+    <fig-icon-label
         v-if="qty <= threshold"
         class="colorOrange">
-        <template v-slot:icon>
+        <template v-slot:left>
             <fig-icon icon="urgent" width="28" height="28" stroke="#fd7e14" :stroke-width="1" />
         </template>
         {{ message }}
-    </icon-message>
+    </fig-icon-label>
 </template>
