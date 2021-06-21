@@ -17,6 +17,13 @@ export default ($axios) => ({
     },
 
 
+    setShippingAddress(params) {
+        return $axios.$post('/cart/shippingaddress', {
+            ...params
+        });
+    },
+
+
     addItem(params) {
         return $axios.$post('/cart/item', {
             ...params

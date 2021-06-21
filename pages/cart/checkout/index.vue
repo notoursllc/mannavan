@@ -15,6 +15,7 @@ import {
     FigAddress,
     FigFormRadio,
     FigIcon,
+    FigIconLabel,
     FigFormCheckbox,
     FigAddressForm,
     FigStripeForm,
@@ -45,6 +46,7 @@ export default {
         FigAddress,
         FigFormRadio,
         FigIcon,
+        FigIconLabel,
         FigFormCheckbox,
         FigAddressForm,
         FigStripeForm,
@@ -67,6 +69,10 @@ export default {
             shippingForm: {
                 loading: false,
                 isInvalid: true,
+                validation: {
+                    error: false,
+                    warning: false
+                },
                 form: {
                     ...addressFormBase,
                     email: null,
@@ -200,16 +206,36 @@ export default {
                     stateData[`shipping_${key}`] = this.shippingForm.form[key];
                 }
 
-                const { data } = await this.$api.cart.update({
+                const { data } = await this.$api.cart.setShippingAddress({
                     id: this.$store.state.cart.id,
                     ...stateData
                 });
 
-                this.cart = data;
-                await this.$store.dispatch('cart/CART', this.cart);
-                this.setShippingFormFromCart();
-                this.goToStep(2);
-                this.getShippingRates();
+                // https://www.shipengine.com/docs/addresses/validation/#address-status-meanings
+                switch(data.validation_status) {
+                    case 'error':
+                        this.shippingForm.validation.error = true;
+                        this.shippingForm.validation.warning = false;
+                        break;
+
+                    case 'warning':
+                        this.shippingForm.validation.error = false;
+                        this.shippingForm.validation.warning = true;
+                        break;
+
+                    default:
+                        this.shippingForm.validation.error = false;
+                        this.shippingForm.validation.warning = false;
+                }
+
+                if(!this.shippingForm.validation.error) {
+                    this.cart = data.cart;
+                    await this.$store.dispatch('cart/CART', this.cart);
+
+                    this.setShippingFormFromCart();
+                    this.goToStep(2);
+                    this.getShippingRates();
+                }
             }
             catch(err) {
                 console.log('ERR', err);
@@ -443,6 +469,19 @@ export default {
                         <!-- shipping address form view -->
                         <template v-if="step === 1">
                             <fig-overlay :show="shippingForm.loading">
+                                <!-- validation error -->
+                                <div v-if="shippingForm.validation.error" class="p-1 mb-2 bg-red-100 text-red-800 rounded text-sm">
+                                    <fig-icon-label>
+                                        <fig-icon
+                                            slot="left"
+                                            icon="alert-circle"
+                                            :width="24"
+                                            :height="24"
+                                            variant="danger" />
+                                        {{ $t('shipping_address_validation_error_message') }}
+                                    </fig-icon-label>
+                                </div>
+
                                 <fig-address-form
                                     v-model="shippingForm.form"
                                     @invalid="onShippingAddressFormInvalid" />
@@ -460,7 +499,7 @@ export default {
                         <!-- shipping address details && rate selection view -->
                         <template v-else>
                             <fig-overlay :show="shippingRates.loading">
-                                <div class="text-gray-700 text-sm border border-gray-200 p-2 rounded flex items-start">
+                                <div class="text-gray-700 text-sm border border-gray-200 p-2 rounded">
                                     <fig-address
                                         :first-name="cart.shipping_firstName"
                                         :last-name="cart.shipping_lastName"
@@ -471,6 +510,19 @@ export default {
                                         :zip="cart.shipping_postalCode"
                                         :email="cart.shipping_email"
                                         :phone="cart.shipping_phone" />
+
+                                    <!-- validation warning -->
+                                    <div v-if="shippingForm.validation.warning" class="p-1 mt-1 bg-yellow-100 rounded">
+                                        <fig-icon-label>
+                                            <fig-icon
+                                                slot="left"
+                                                icon="urgent"
+                                                :width="24"
+                                                :height="24"
+                                                variant="warning" />
+                                            {{ $t('Please double-check this address for accuracy') }}
+                                        </fig-icon-label>
+                                    </div>
                                 </div>
 
                                 <!-- Shipping estimates -->
