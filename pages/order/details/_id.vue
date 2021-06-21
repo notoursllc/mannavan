@@ -29,8 +29,7 @@ export default {
         <page-title>{{ $t('Order Details') }}</page-title>
 
         <cart-receipt
-            :cart-id="$route.params.id"
-            @found="onCartFound" />
+            :cart-id="$route.params.id" />
     </fig-checkout-wrapper>
 </template>
 
