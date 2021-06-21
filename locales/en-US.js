@@ -86,6 +86,7 @@ module.exports = {
     "PRODUCTS": "PRODUCTS",
 
     "Qty": "Qty",
+    "Qty / Price": "Qty / Price",
     "Quantity": "Quantity",
 
     "Remove": "Remove",
