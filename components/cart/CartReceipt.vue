@@ -74,8 +74,6 @@ export default {
                 this.$emit('found', {
                     ...this.cart
                 });
-
-                console.log("cart", this.cart);
             }
             catch(err) {
                 this.$errorToast({
@@ -89,7 +87,6 @@ export default {
         async getPayment() {
             try {
                 this.payment = await this.$api.cart.payment.getPayment(this.cart.id);
-                console.log("payment", this.payment);
             }
             catch(err) {
                 this.$errorToast({
