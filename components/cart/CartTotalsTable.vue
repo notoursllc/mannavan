@@ -16,7 +16,10 @@ export default {
 
     props: {
         cart: {
-            type: Object
+            type: Object,
+            default() {
+                return {};
+            }
         },
 
         shipping: {
