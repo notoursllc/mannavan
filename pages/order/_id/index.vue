@@ -29,6 +29,9 @@ export default {
             title: this.$t('We have a winner!'),
             meta: [
                 { vmid: 'description', name: 'description', content: `Thanks for your order from ${this.$store.state.ui.siteName}` }
+            ],
+            link: [
+                { rel: 'stylesheet', href: '/css/animations.css' }
             ]
         };
     },
