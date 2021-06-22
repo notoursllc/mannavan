@@ -196,6 +196,21 @@ export default {
             }
         },
 
+        shippingDataNeedsValidation() {
+            let needValidation = false;
+
+            ['streetAddress', 'city', 'state', 'postalCode', 'countryCodeAlpha2'].forEach((attr) => {
+                const formAttr = (this.shippingForm.form[attr] + '').toLowerCase().trim();
+                const cartAttr = (this.cart[`shipping_${attr}`] + '').toLowerCase().trim();
+
+                if(formAttr !== cartAttr) {
+                    needValidation = true;
+                }
+            });
+
+            return needValidation;
+        },
+
         async saveShippingForm() {
             this.shippingForm.loading = true;
 
@@ -208,7 +223,8 @@ export default {
 
                 const { data } = await this.$api.cart.setShippingAddress({
                     id: this.$store.state.cart.id,
-                    ...stateData
+                    ...stateData,
+                    validate: this.shippingDataNeedsValidation()
                 });
 
                 // https://www.shipengine.com/docs/addresses/validation/#address-status-meanings
@@ -326,7 +342,7 @@ export default {
                     cardElement
                 );
 
-                console.log("STRIPE RESPONSE", stripeResponse);
+                // console.log("STRIPE RESPONSE", stripeResponse);
 
                 if(stripeResponse.error) {
                     this.$errorToast({
@@ -445,7 +461,7 @@ export default {
             right-first-on-break>
             <template slot="left">
 
-                <!-- delivery options -->
+                <!-- DELIVERY OPTIONS CARD-->
                 <fig-text-card variant="dark" class="mb-4">
                     <div slot="header-left" class="flex items-center font-semibold p-1 uppercase">
                         <fig-icon
@@ -574,66 +590,67 @@ export default {
                 </fig-text-card>
 
 
-                <!-- payment -->
-                <div class="mb-4">
-                    <fig-text-card v-if="step === 3" variant="dark">
-                        <div slot="header-left" class="font-semibold p-1 uppercase">2. {{ $t('Payment') }}</div>
-                        <div class="p-2">
+                <!-- PAYMENT CARD -->
+                <fig-text-card
+                    v-if="step === 3"
+                    variant="dark"
+                    class="mb-4">
+                    <div slot="header-left" class="font-semibold p-1 uppercase">2. {{ $t('Payment') }}</div>
+                    <div class="p-2">
 
-                            <div class="pb-6">
-                                <div class="font-medium text-black">{{ $t('SELECT PAYMENT METHOD') }}</div>
-                                <fig-payment-type-chooser v-model="payment.paymentType" />
-                            </div>
-
-                            <!-- credit card payment form -->
-                            <div v-show="payment.paymentType === 'cc'">
-                                <fig-overlay :show="payment.loading">
-                                    <fig-stripe-form
-                                        :stripe="Stripe"
-                                        @valid="onStripeFormValid"
-                                        @token="onStripeTokenGenerated">
-
-                                        <template v-slot:content="props">
-                                            <!-- billing same as shipping checkbox -->
-                                            <div class="mt-4">
-                                                <fig-form-checkbox
-                                                    class="mr-3"
-                                                    v-model="payment.billing_same_as_shipping">{{ $t('Billing address same as shipping') }}</fig-form-checkbox>
-                                            </div>
-
-                                            <!-- billing address form -->
-                                            <div v-if="!payment.billing_same_as_shipping" class="mt-4">
-                                                <div class="text-black">{{ $t('Billing address') }}:</div>
-                                                <fig-address-form
-                                                    v-model="billingForm.form"
-                                                    @invalid="onBillingAddressFormInvalid"
-                                                    hide-email
-                                                    hide-phone />
-                                            </div>
-
-                                            <!-- place order button -->
-                                            <div class="pt-6">
-                                                <fig-button
-                                                    variant="primary"
-                                                    size="lg"
-                                                    @click="onClickPlaceOrder(props.cardElement)"
-                                                    :disabled="!canShowPlaceOrderButton">{{ $t('PLACE YOUR ORDER') }}</fig-button>
-                                            </div>
-                                        </template>
-                                    </fig-stripe-form>
-                                </fig-overlay>
-                            </div>
-
-                            <!-- paypal payment form -->
-                            <div v-if="payment.paymentType === 'paypal'" class="text-center">
-                                <paypal-button
-                                    @success="paypalCompleted"
-                                    @cancelled="paypalCancelled"
-                                    @error="paypalError" />
-                            </div>
+                        <div class="pb-6">
+                            <div class="font-medium text-black">{{ $t('SELECT PAYMENT METHOD') }}</div>
+                            <fig-payment-type-chooser v-model="payment.paymentType" />
                         </div>
-                    </fig-text-card>
-                </div>
+
+                        <!-- credit card payment form -->
+                        <div v-show="payment.paymentType === 'cc'">
+                            <fig-overlay :show="payment.loading">
+                                <fig-stripe-form
+                                    :stripe="Stripe"
+                                    @valid="onStripeFormValid"
+                                    @token="onStripeTokenGenerated">
+
+                                    <template v-slot:content="props">
+                                        <!-- billing same as shipping checkbox -->
+                                        <div class="mt-4">
+                                            <fig-form-checkbox
+                                                class="mr-3"
+                                                v-model="payment.billing_same_as_shipping">{{ $t('Billing address same as shipping') }}</fig-form-checkbox>
+                                        </div>
+
+                                        <!-- billing address form -->
+                                        <div v-if="!payment.billing_same_as_shipping" class="mt-4">
+                                            <div class="text-black">{{ $t('Billing address') }}:</div>
+                                            <fig-address-form
+                                                v-model="billingForm.form"
+                                                @invalid="onBillingAddressFormInvalid"
+                                                hide-email
+                                                hide-phone />
+                                        </div>
+
+                                        <!-- place order button -->
+                                        <div class="pt-6">
+                                            <fig-button
+                                                variant="primary"
+                                                size="lg"
+                                                @click="onClickPlaceOrder(props.cardElement)"
+                                                :disabled="!canShowPlaceOrderButton">{{ $t('PLACE YOUR ORDER') }}</fig-button>
+                                        </div>
+                                    </template>
+                                </fig-stripe-form>
+                            </fig-overlay>
+                        </div>
+
+                        <!-- paypal payment form -->
+                        <div v-if="payment.paymentType === 'paypal'" class="text-center">
+                            <paypal-button
+                                @success="paypalCompleted"
+                                @cancelled="paypalCancelled"
+                                @error="paypalError" />
+                        </div>
+                    </div>
+                </fig-text-card>
             </template>
 
 
