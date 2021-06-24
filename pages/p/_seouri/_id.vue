@@ -35,6 +35,32 @@ export default {
         shopping_cart_mixin
     ],
 
+    async asyncData({ route, store, app }) {
+        try {
+            const data = {};
+            // data.product = await product_mixin.methods.getProductBySeoUri.call(app, params.seouri);
+            data.product = await app.$api.products.get(route.params.id);
+
+            // if(!data.product) {
+            //     return;
+            // }
+
+            if(route.query.variant && Array.isArray(data.product.variants)) {
+                for(let i=0, l=data.product.variants.length; i<l; i++) {
+                    if(data.product.variants[i].id === route.query.variant) {
+                        data.visibleVariant = data.product.variants[i];
+                        break;
+                    }
+                }
+            }
+
+            return data;
+        }
+        catch(err) {
+            console.log('Error getting product', err);
+        }
+    },
+
     data() {
         return {
             product: {},
@@ -52,6 +78,21 @@ export default {
         };
     },
 
+    head() {
+        return {
+            title: this.productTitle,
+            meta: [
+                { vmid: 'description', name: 'description', content: this.productDesc },
+                { name: 'og:site_name', content: this.$store.state.ui.siteName },
+                { name: 'og:url', content: this.$route.fullPath },
+                { name: 'og:title', content: this.productTitle },
+                { name: 'og:type', content: 'website' },
+                { name: 'og:image', content: this.mediaPicture },
+                { name: 'og:description', content: this.product ? this.product.description_long: '' },
+            ]
+        };
+    },
+
     computed: {
         addToCartButtonDisabled() {
             return !this.form.selectedSku;
@@ -59,7 +100,6 @@ export default {
     },
 
     validations: function() {
-
         // let baseValidation = {
         //     countryCodeAlpha2: { required },
         //     firstName: { required },
@@ -83,35 +123,6 @@ export default {
 
     fetchOnServer: true,
 
-
-
-    async asyncData({ route, store, app }) {
-        try {
-            const data = {};
-            // data.product = await product_mixin.methods.getProductBySeoUri.call(app, params.seouri);
-            data.product = await app.$api.products.get(route.params.id);
-
-            // if(!data.product) {
-            //     return;
-            // }
-
-            if(route.query.variant && Array.isArray(data.product.variants)) {
-                for(let i=0, l=data.product.variants.length; i<l; i++) {
-                    if(data.product.variants[i].id === route.query.variant) {
-                        data.visibleVariant = data.product.variants[i];
-                        console.log("ASYNC VISIBLE VARIANT", data.visibleVariant);
-                        break;
-                    }
-                }
-            }
-
-            return data;
-        }
-        catch(err) {
-            console.log('Error getting product', err);
-        }
-    },
-
     created() {
         if(!this.product) {
             this.$errorToast({
@@ -119,21 +130,6 @@ export default {
                 text: this.$t('Product not found')
             });
         }
-    },
-
-    head() {
-        return {
-            title: this.productTitle,
-            meta: [
-                { vmid: 'description', name: 'description', content: this.productDesc },
-                { name: 'og:site_name', content: this.$store.state.ui.siteName },
-                { name: 'og:url', content: this.$route.fullPath },
-                { name: 'og:title', content: this.productTitle },
-                { name: 'og:type', content: 'website' },
-                { name: 'og:image', content: this.mediaPicture },
-                { name: 'og:description', content: this.product ? this.product.description_long: '' },
-            ]
-        };
     },
 
     methods: {
@@ -199,8 +195,6 @@ export default {
                 }
             }
             catch(err) {
-                console.log("ERR", {...err});
-
                 if(err.response && err.response.data && err.response.data.message === 'INVALID_QUANTITY') {
                     // TODO: use FigModal here instead
                     this.$refs.invalid_qty_modal.show();
@@ -297,7 +291,7 @@ export default {
                 <div class="mtl">
                     <div class="flex items-center font-medium mb-1 w-full">
                         <div class="text-black flex-grow">{{ $t('Select a size') }}:</div>
-                        <div class="text-gray-500">{{ $t('Size guide') }}</div>
+                        <!-- <div class="text-gray-500">{{ $t('Size guide') }}</div> -->
                     </div>
 
                     <fig-size-buttons
