@@ -18,8 +18,8 @@
     "test": "jest"
   },
   "dependencies": {
-    "@bugsnag/js": "^7.6.0",
-    "@bugsnag/plugin-vue": "^7.6.0",
+    "@bugsnag/js": "^7.10.1",
+    "@bugsnag/plugin-vue": "^7.10.0",
     "@notoursllc/figleaf": "^0.12.1",
     "@nuxt/image": "^0.0.4",
     "@nuxtjs/axios": "^5.12.5",

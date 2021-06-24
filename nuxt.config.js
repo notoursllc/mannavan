@@ -18,6 +18,7 @@ module.exports = {
         axios: {
             browserBaseURL: process.env.API_URL
         },
+        bugSnagApiKey: process.env.BUG_SNAG_API_KEY,
         cookieSecure: process.env.COOKIE_SECURE || false,
         domainName: process.env.DOMAIN_NAME,
         emailInfo: process.env.EMAIL_INFO,
@@ -44,9 +45,9 @@ module.exports = {
         locale: process.env.LOCALE
     },
 
-    privateRuntimeConfig: {
-        bugSnagApiKey: process.env.BUG_SNAG_API_KEY
-    },
+    // privateRuntimeConfig: {
+    //     bugSnagApiKey: process.env.BUG_SNAG_API_KEY
+    // },
 
     /*
     ** Headers
@@ -112,8 +113,8 @@ module.exports = {
     ** Plugins to load before mounting the App
     */
     plugins: [
-        // { src: '@/plugins/bugsnag', ssr: true },
-        { src: '@/plugins/bugsnag', mode: 'server' },
+        // { src: '@/plugins/bugsnag', mode: 'server' },
+        '@/plugins/bugsnag',
         '@/plugins/axios.js',
         { src: '@/plugins/api.js', ssr: true },
         '@/plugins/confirm.js',
