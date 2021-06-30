@@ -19,10 +19,7 @@ export default {
 
 <template>
     <div>
-        <page-title>
-            <fig-icon icon="checkbox" width="26" height="26" stroke-width="1px" />
-            {{ $t('Conditions of Use') }}
-        </page-title>
+        <page-title>{{ $t('Conditions of Use') }}</page-title>
 
         <div class="pageContainerMax priv">
             <conditions-of-use-display />

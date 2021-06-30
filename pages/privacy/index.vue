@@ -19,10 +19,7 @@ export default {
 
 <template>
     <div>
-        <page-title>
-            <fig-icon icon="lock" width="26" height="26" stroke-width="1px" />
-            {{ $t('Privacy Notice') }}
-        </page-title>
+        <page-title>{{ $t('Privacy Notice') }}</page-title>
 
         <div class="pageContainerMax priv">
             <privacy-display />
