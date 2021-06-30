@@ -2,8 +2,6 @@ import isObject from 'lodash.isobject';
 
 const domainName = 'goBreadVan.com';
 
-// This doens't need to be reactive, so not in state
-const messageInstances = [];
 
 export const state = () => ({
     sidebarOpened: true,
@@ -54,16 +52,6 @@ export const mutations = {
         state.inCheckoutFlow = inCheckoutFlow;
     },
 
-    ADD_MESSAGE_INSTANCE: (state, messageInstance) => {
-        messageInstances.push(messageInstance);
-    },
-
-    CLOSE_MESSAGE_INSTANCES: (state) => {
-        messageInstances.forEach((messageInstance) => {
-            messageInstance.close();
-        });
-    },
-
     APP_CONFIG: (state, config) => {
         if(isObject(config)) {
             for(const prop in config) {
@@ -92,14 +80,6 @@ export const actions = {
 
     IN_CHECKOUT_FLOW: ({ commit }, inCheckoutFlow) => {
         commit('IN_CHECKOUT_FLOW', inCheckoutFlow);
-    },
-
-    ADD_MESSAGE_INSTANCE: ({ commit }, messageInstance) => {
-        commit('ADD_MESSAGE_INSTANCE', messageInstance);
-    },
-
-    CLOSE_MESSAGE_INSTANCES: ({ commit }) => {
-        commit('CLOSE_MESSAGE_INSTANCES');
     },
 
     APP_CONFIG ({ commit }, config) {

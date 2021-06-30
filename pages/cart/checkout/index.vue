@@ -125,7 +125,6 @@ export default {
     },
 
     async mounted() {
-        this.$store.dispatch('ui/IN_CHECKOUT_FLOW', true);
         this.Stripe = Stripe(this.$config.stripePublishableKey);
         await this.getCart();
         this.setShippingFormFromCart();
@@ -180,7 +179,7 @@ export default {
                 this.goToStep(3);
             }
             catch(err) {
-                this.$errorToast({
+                this.$figleaf.errorToast({
                     title: this.$t('An error occurred')
                 });
 
@@ -256,7 +255,7 @@ export default {
             catch(err) {
                 console.log('ERR', err);
 
-                this.$errorToast({
+                this.$figleaf.errorToast({
                     title: this.$t('Error')
                     // text: err.response.data.message
                 });
@@ -293,7 +292,7 @@ export default {
             catch(err) {
                 console.error('ERR', err);
 
-                this.$errorToast({
+                this.$figleaf.errorToast({
                     title: this.$t('Error')
                     // text: err.response.data.message
                 });
@@ -315,7 +314,7 @@ export default {
                 }
             }
             catch(err) {
-                this.$errorToast({
+                this.$figleaf.errorToast({
                     title: this.$t('A server error occurred while setting the shipping rates'),
                     text: err.message
                 });
@@ -328,6 +327,12 @@ export default {
 
         async onClickPlaceOrder(cardElement) {
             this.payment.loading = true;
+
+            // this may be a second attempt at processing payment
+            // if the first attempt resulted in an error, so closing
+            // any previous message instances
+            this.$figleaf.clearToasts();
+
 
             const cartId = this.$store.state.cart.id;
 
@@ -345,22 +350,22 @@ export default {
                 // console.log("STRIPE RESPONSE", stripeResponse);
 
                 if(stripeResponse.error) {
-                    this.$errorToast({
+                    this.$figleaf.errorToast({
                         title: this.$t('An error occurred when processing your card'),
-                        text: stripeResponse.error
+                        text: stripeResponse.error ? stripeResponse.error.message : null
                     });
-                    return;
                 }
+                else {
+                    await this.$api.cart.payment.success(
+                        cartId,
+                        stripeResponse.paymentIntent.id
+                    );
 
-                await this.$api.cart.payment.success(
-                    cartId,
-                    stripeResponse.paymentIntent.id
-                );
-
-                this.afterTransactionSuccess();
+                    this.afterTransactionSuccess();
+                }
             }
             catch(err) {
-                this.$errorToast({
+                this.$figleaf.errorToast({
                     title: this.$t('An error occurred'),
                     text: err.message
                 });
@@ -406,16 +411,16 @@ export default {
         },
 
         paypalCompleted(data) {
-            console.log("paypalCompleted", data);
+            // console.log("paypalCompleted", data);
             return this.afterTransactionSuccess();
         },
 
         paypalCancelled(data) {
-            console.log("paypalCancelled", data);
+            // console.log("paypalCancelled", data);
         },
 
         paypalError(data) {
-            this.$errorToast({
+            this.$figleaf.errorToast({
                 title: this.$t('Error'),
                 text: this.$t('An error occurred while processing the PayPal transaction')
             });

@@ -76,7 +76,7 @@ export default {
                 });
             }
             catch(err) {
-                this.$errorToast({
+                this.$figleaf.errorToast({
                     title: this.$t('An error occurred')
                 });
 
@@ -89,7 +89,7 @@ export default {
                 this.payment = await this.$api.cart.payment.getPayment(this.cart.id);
             }
             catch(err) {
-                this.$errorToast({
+                this.$figleaf.errorToast({
                     title: this.$t('An error occurred')
                 });
 

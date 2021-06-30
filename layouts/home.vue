@@ -15,12 +15,6 @@ export default {
         AppSidenav
     },
 
-    watch: {
-        $route() {
-            this.$store.dispatch('ui/CLOSE_MESSAGE_INSTANCES');
-        }
-    },
-
     created() {
         this.$store.dispatch('ui/closeSidebar');
     }

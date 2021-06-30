@@ -3,7 +3,7 @@ const figleafTranslations = require('@notoursllc/figleaf/locales/en-US.js');
 module.exports = {
     ...figleafTranslations,
 
-    "A server error occurred while setting the shipping rates": "A server error occurred while setting the shipping rates",
+    "2A server error occurred while setting the shipping rates": "A server error occurred while setting the shipping rates",
     "About Billing and Shipping Addresses": "About Billing and Shipping Addresses",
     "accept_privacy_and_tos": "By placing your order, you agree to our {linkPrivacy} and {linkTos}.",
     "Add Company, C/O, Apt, Suite, Unit": "Add Company, C/O, Apt, Suite, Unit",

@@ -8,7 +8,7 @@ export default (context, inject) => {
         appType: 'client',
         plugins: [new BugsnagPluginVue()],
         enabledReleaseStages: [ 'production', 'staging' ],
-        releaseStage: process.env.NODE_ENV
+        releaseStage: context.$config.nodeEnv
     });
 
     const bugsnagVue = Bugsnag.getPlugin('vue');

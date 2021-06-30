@@ -125,7 +125,7 @@ export default {
 
     created() {
         if(!this.product) {
-            this.$errorToast({
+            this.$figleaf.errorToast({
                 title: this.$t('Error'),
                 text: this.$t('Product not found')
             });
@@ -149,7 +149,7 @@ export default {
 
                 // Show error toast if no stock
                 if(!this.selectedSkuInventoryCount) {
-                    this.$errorToast({
+                    this.$figleaf.errorToast({
                         title: this.$t('Error'),
                         text: this.$t('Sorry, this size is out of stock')
                     });
@@ -201,7 +201,7 @@ export default {
                     return;
                 }
 
-                this.$errorToast({
+                this.$figleaf.errorToast({
                     title: this.$t('Error'),
                     text: err.response.data.message
                 });
@@ -236,7 +236,7 @@ export default {
                 this.selectedSkuInventoryCount = isObject(sku) ? sku.inventory_count : 0;
             }
             catch(err) {
-                this.$errorToast({
+                this.$figleaf.errorToast({
                     title: this.$t('Error'),
                     text: err.response.data.message
                 });

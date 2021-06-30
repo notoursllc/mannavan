@@ -148,7 +148,7 @@ module.exports = {
 
     router: {
         middleware: [
-            'in-checkout'
+            'store-dispatch'
         ]
     },
 

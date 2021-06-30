@@ -19,7 +19,7 @@ export default Vue.extend({
 
     watch: {
         $route() {
-            this.$store.dispatch('ui/CLOSE_MESSAGE_INSTANCES');
+            this.$figleaf.clearToasts();
         }
     },
 

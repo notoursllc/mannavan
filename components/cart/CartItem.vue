@@ -180,7 +180,7 @@ export default {
             catch(err) {
                 console.error('Error updating cart item', err);
 
-                this.$errorToast({
+                this.$figleaf.errorToast({
                     title: this.$t('An error occurred')
                 });
 
