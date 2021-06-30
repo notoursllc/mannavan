@@ -5,7 +5,8 @@ import CartTotalsTable from '@/components/cart/CartTotalsTable';
 import {
     FigButton,
     FigCartCtaLayout,
-    FigCheckoutWrapper
+    FigCheckoutWrapper,
+    FigSpinner
 } from '@notoursllc/figleaf';
 
 export default {
@@ -15,7 +16,14 @@ export default {
         CartTotalsTable,
         FigButton,
         FigCartCtaLayout,
-        FigCheckoutWrapper
+        FigCheckoutWrapper,
+        FigSpinner
+    },
+
+    data() {
+        return {
+            loading: true
+        };
     },
 
     head() {
@@ -33,6 +41,10 @@ export default {
         }
     },
 
+    mounted() {
+        this.loading = false;
+    },
+
     methods: {
         onClickCheckout() {
             this.$router.push({ name: 'cart-checkout' });
@@ -46,29 +58,35 @@ export default {
     <fig-checkout-wrapper class="px-4">
         <page-title>{{ $t('Shopping Cart') }}</page-title>
 
-        <div v-if="!numCartItems" class="text-base">
-            {{ $t('Your shopping cart does not contain any items.') }}
-        </div>
+        <template v-if="loading">
+            <fig-spinner :width="40" />
+        </template>
 
-        <fig-cart-cta-layout v-else>
-            <template slot="left">
-                <cart-items />
-            </template>
+        <template v-else>
+            <div v-if="!numCartItems" class="text-base">
+                {{ $t('Your shopping cart does not contain any items.') }}
+            </div>
 
-            <template slot="right">
-                <div class="mb-4">
-                    <cart-totals-table
-                        :cart="$store.state.cart"
-                        sales-tax-on-next-step
-                        shipping-on-next-step />
-                </div>
+            <fig-cart-cta-layout v-else>
+                <template slot="left">
+                    <cart-items />
+                </template>
 
-                <fig-button
-                    variant="primary"
-                    size="lg"
-                    @click="onClickCheckout"
-                    class="w-full">{{ $t('Checkout') }}</fig-button>
-            </template>
-        </fig-cart-cta-layout>
+                <template slot="right">
+                    <div class="mb-4">
+                        <cart-totals-table
+                            :cart="$store.state.cart"
+                            sales-tax-on-next-step
+                            shipping-on-next-step />
+                    </div>
+
+                    <fig-button
+                        variant="primary"
+                        size="lg"
+                        @click="onClickCheckout"
+                        class="w-full">{{ $t('Checkout') }}</fig-button>
+                </template>
+            </fig-cart-cta-layout>
+        </template>
     </fig-checkout-wrapper>
 </template>
