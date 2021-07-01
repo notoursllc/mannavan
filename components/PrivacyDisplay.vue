@@ -1,18 +1,20 @@
 <script>
+import SiteName from '@/components/SiteName';
+
 export default {
     name: 'PrivacyDisplay',
 
     components: {
-        SiteName: () => import('@/components/SiteName')
+        SiteName
     },
 
     data: function() {
         return {
             helpEmailAddress: this.$store.state.ui.infoEmailAddress,
             brandName: this.$store.state.ui.brandName
-        }
+        };
     }
-}
+};
 </script>
 
 <template>

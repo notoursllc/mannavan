@@ -1,8 +1,11 @@
 <script>
+import PageTitle from '@/components/PageTitle';
+import PrivacyDisplay from '@/components/PrivacyDisplay';
+
 export default {
     components: {
-        PageTitle: () => import('@/components/PageTitle'),
-        PrivacyDisplay: () => import('@/components/PrivacyDisplay')
+        PageTitle,
+        PrivacyDisplay
     },
 
     head() {
@@ -11,9 +14,9 @@ export default {
             meta: [
                 { vmid: 'description', name: 'description', content: `Privacy Notice for ${this.$store.state.ui.siteName}` }
             ]
-        }
+        };
     }
-}
+};
 </script>
 
 

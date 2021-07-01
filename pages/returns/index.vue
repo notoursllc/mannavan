@@ -1,13 +1,9 @@
 <script>
+import PageTitle from '@/components/PageTitle';
+
 export default {
     components: {
-        PageTitle: () => import('@/components/PageTitle'),
-    },
-
-    computed: {
-        returnsEmailAddress() {
-            return this.$store.state.ui.infoEmailAddress;
-        }
+        PageTitle
     },
 
     head() {
@@ -16,9 +12,15 @@ export default {
             meta: [
                 { vmid: 'description', name: 'description', content: `Returns and Exchanges for your order at ${this.$store.state.ui.siteName}` }
             ]
+        };
+    },
+
+    computed: {
+        returnsEmailAddress() {
+            return this.$store.state.ui.infoEmailAddress;
         }
     }
-}
+};
 </script>
 
 
@@ -35,8 +37,10 @@ export default {
 
                 <ol class="mts orderedList">
                     <li>Include a copy of the packing slip or confirmation email from your order.</li>
-                    <li>Mail your return to:<br/>
-                    TBD Mailing address</li>
+                    <li>
+                        Mail your return to:<br>
+                        TBD Mailing address
+                    </li>
                     <li>We will issue your refund when the return is received</li>
                 </ol>
 
@@ -53,7 +57,6 @@ export default {
 .orderedList {
     margin: 0 20px;
 }
-
 .orderedList li {
     padding-left: 10px;
     margin-bottom: 10px;

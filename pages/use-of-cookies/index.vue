@@ -1,7 +1,9 @@
 <script>
+import PageTitle from '@/components/PageTitle';
+
 export default {
     components: {
-        PageTitle: () => import('@/components/PageTitle')
+        PageTitle
     },
 
     head() {
