@@ -1,6 +1,9 @@
 <script>
 import HeroMain from '@/components/HeroMain';
-import ProductCardList from '@/components/product/ProductCardList';
+import ProductCard from '@/components/product/ProductCard';
+import {
+    FigProductGrid
+} from '@notoursllc/figleaf';
 
 const bgImages = [
     'bg_silver_car.jpg',
@@ -16,7 +19,8 @@ function randomIntFromInterval(min, max) {
 export default {
     components: {
         HeroMain,
-        ProductCardList
+        ProductCard,
+        FigProductGrid
     },
 
     layout: 'home',
@@ -84,7 +88,11 @@ export default {
         </div>
 
         <div class="pt-4 content-wrap">
-            <product-card-list :products="products" />
+            <fig-product-grid :products="products">
+                <template v-slot:default="slotProps">
+                    <product-card :product="slotProps.product" />
+                </template>
+            </fig-product-grid>
         </div>
     </div>
 </template>
