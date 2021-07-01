@@ -1,10 +1,9 @@
 <script>
 import isObject from 'lodash.isobject';
-import { email, required } from 'vuelidate/lib/validators'
+import { email, required } from 'vuelidate/lib/validators';
 import product_mixin from '@/mixins/product_mixin';
 import shopping_cart_mixin from '@/mixins/shopping_cart_mixin';
 import ProductPrice from '@/components/product/ProductPrice';
-import ProductQuantityWarning from '@/components/product/ProductQuantityWarning';
 import ProductImageSlider from '@/components/product/ProductImageSlider';
 import ProductCardThumbs from '@/components/product/ProductCardThumbs';
 // import TshirtSizeChart from '@/components/product/TshirtSizeChart';
@@ -14,7 +13,8 @@ import {
     FigOverlay,
     FigModal,
     FigSizeButtons,
-    FigProductDetailsLayout
+    FigProductDetailsLayout,
+    FigStockLevelWarning
 } from '@notoursllc/figleaf';
 
 export default {
@@ -22,12 +22,12 @@ export default {
         FigButton,
         FigOverlay,
         ProductPrice,
-        ProductQuantityWarning,
         ProductImageSlider,
         ProductCardThumbs,
         FigModal,
         FigSizeButtons,
-        FigProductDetailsLayout
+        FigProductDetailsLayout,
+        FigStockLevelWarning
     },
 
     mixins: [
@@ -285,7 +285,7 @@ export default {
             </template>
 
             <template slot="sizes">
-                <product-quantity-warning
+                <fig-stock-level-warning
                     :qty="visibleVariant.total_inventory_count" />
 
                 <div class="mtl">

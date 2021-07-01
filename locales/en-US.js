@@ -56,8 +56,6 @@ module.exports = {
     "In inches": "In inches",
     "Item": "Item",
 
-    "Just a few left. Order soon.": "Just a few left. Order soon.",
-
     "Length": "Length",
     "Length measurement": "Length measurement",
     "length_measurement_description": "The length is measured down the entire height of the shirt, from the hight point of the shoulder to the bottom.",
@@ -106,7 +104,6 @@ module.exports = {
     "Size guide": "Size guide",
     "Sleeve measurement": "Sleeve measurement",
     "sleeve_measurement_description": "The sleeve length is measured from the shoulder seam to the end of the sleeve.",
-    "Sold out": "Sold out",
     "Sorry, this size is out of stock": "Sorry, this size is out of stock",
     "Stay in checkout": "Stay in checkout",
     "Subtotal": "Subtotal",
