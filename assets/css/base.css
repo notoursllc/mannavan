@@ -30,19 +30,9 @@ svg {
     opacity: 0;
 }
 
-[v-cloak] {
-    display: none
-}
-
-
 .pageContainerMax {
     padding: 20px 20px 100px 20px;
     width: 100%;
-}
-
-.content-wrap {
-    margin-left: 0;
-    margin-right: 0;
 }
 
 .pageContainerMax {
@@ -50,25 +40,12 @@ svg {
 }
 
 @media only screen and (min-width: 993px) {
-    .content-wrap {
-        margin-left: 30px;
-        margin-right: 30px;
-    }
-
     .pageContainerMax {
         max-width: 1440px;
         margin-right: auto;
         margin-left: auto;
     }
 }
-
-@media only screen and (min-width: 1301px) {
-    .content-wrap {
-        margin-left: 70px;
-        margin-right: 70px;
-    }
-}
-
 
 .pageContainerMaxSkinny {
     max-width: 700px !important;

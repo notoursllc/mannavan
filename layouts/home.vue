@@ -1,18 +1,18 @@
 <script>
 import AppHeader from '@/components/AppHeader';
 import AppFooter from '@/components/AppFooter';
-import AppSidenav from '@/components/AppSidenav';
 
 import {
-    FigIconSprite
+    FigIconSprite,
+    FigSlideover
 } from '@notoursllc/figleaf';
 
 export default {
     components: {
         FigIconSprite,
+        FigSlideover,
         AppHeader,
-        AppFooter,
-        AppSidenav
+        AppFooter
     },
 
     created() {
@@ -26,7 +26,14 @@ export default {
     <div class="layoutContainer">
         <fig-icon-sprite />
 
-        <app-sidenav />
+        <fig-slideover
+            :opened="$store.state.ui.sidebarOpened"
+            @close="() => { $store.dispatch('ui/closeSidebar') }"
+            class="bg-gray-800">
+            <div>nav goes here</div>
+            <div slot="footer">FOOTER GOES HERE</div>
+        </fig-slideover>
+
         <app-header />
 
         <main class="flex-grow">

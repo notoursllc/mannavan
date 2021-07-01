@@ -16,7 +16,6 @@ module.exports = {
     "An error occurred": "An error occurred",
     "An error occurred when processing your card": "An error occurred when processing your card",
     "An error occurred while processing the PayPal transaction": "An error occurred while processing the PayPal transaction",
-    "Are you sure you want to return to your Shopping Cart?": "Are you sure you want to return to your Shopping Cart?",
 
     "Billing": "Billing",
     "Billing address": "Billing address",
@@ -56,7 +55,6 @@ module.exports = {
 
     "In inches": "In inches",
     "Item": "Item",
-    "items": "item | items",
 
     "Just a few left. Order soon.": "Just a few left. Order soon.",
 
