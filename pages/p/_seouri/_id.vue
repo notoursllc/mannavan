@@ -6,6 +6,7 @@ import shopping_cart_mixin from '@/mixins/shopping_cart_mixin';
 import ProductPrice from '@/components/product/ProductPrice';
 import ProductImageSlider from '@/components/product/ProductImageSlider';
 import ProductCardThumbs from '@/components/product/ProductCardThumbs';
+import { getProductVariantCoverImage } from '@/utils/product';
 // import TshirtSizeChart from '@/components/product/TshirtSizeChart';
 
 import {
@@ -14,7 +15,8 @@ import {
     FigModal,
     FigSizeButtons,
     FigProductDetailsLayout,
-    FigStockLevelWarning
+    FigStockLevelWarning,
+    FigTexasToast
 } from '@notoursllc/figleaf';
 
 export default {
@@ -27,7 +29,8 @@ export default {
         FigModal,
         FigSizeButtons,
         FigProductDetailsLayout,
-        FigStockLevelWarning
+        FigStockLevelWarning,
+        FigTexasToast
     },
 
     mixins: [
@@ -74,6 +77,12 @@ export default {
             selectedSkuInventoryCount: null,
             form: {
                 selectedSku: null
+            },
+            atcConfirm: {
+                title: null,
+                imageUrl: null,
+                productSize: null,
+                productPrice: null
             }
         };
     },
@@ -174,7 +183,7 @@ export default {
                     }
                 });
 
-                const confirmButtonClickIndex = await this.$showAtcConfirm(selectedCartItem);
+                const confirmButtonClickIndex = await this.showAtcConfirm(selectedCartItem);
 
                 // Redirect the user depending on the button clicked in the ATC confirm
                 switch(confirmButtonClickIndex) {
@@ -245,6 +254,39 @@ export default {
             }
         },
 
+        onHideTexasToast(buttonIndex) {
+            switch(buttonIndex) {
+                case 1:
+                    this.goToViewCart();
+                    break;
+
+                case 2:
+                    this.$router.push({ name: 'cart-checkout' });
+                    break;
+            }
+        },
+
+        showAtcConfirm(cartItem, config) {
+            if(!isObject(cartItem)) {
+                return;
+            }
+
+            // this.atcConfirm.cartItem = cartItem;
+            this.atcConfirm.imageUrl = cartItem ? getProductVariantCoverImage(cartItem.product_variant) : null;
+            this.atcConfirm.title = isObject(cartItem.product) ? cartItem.product.title : null;
+            this.atcConfirm.productSize = isObject(cartItem.product_variant_sku) ? cartItem.product_variant_sku.label : null;
+
+
+            if(isObject(cartItem.product_variant)) {
+                const intPrice = parseInt(cartItem.product_variant.display_price, 10);
+                if(!isNaN(intPrice)) {
+                    this.atcConfirm.productPrice = intPrice / 100;
+                }
+            }
+
+            this.$refs.addToCartToast.show(5000);
+        },
+
         goToViewCart() {
             this.$router.push({ name: 'cart' });
         }
@@ -279,7 +321,7 @@ export default {
             <template slot="thumbs">
                 <product-card-thumbs
                     :product="product"
-                    :width="70"
+                    preset="prod_thumb"
                     :selected="visibleVariant.id"
                     @click="onThumbClick" />
             </template>
@@ -325,6 +367,7 @@ export default {
             </template>
         </fig-product-details-layout>
 
+
         <fig-modal ref="invalid_qty_modal" size="md">
             <template slot="header">{{ $t('Error') }}</template>
 
@@ -335,6 +378,42 @@ export default {
                     @click="goToViewCart">{{ $t('View cart') }}</fig-button>
             </div>
         </fig-modal>
+
+
+        <!-- add to cart toast -->
+        <fig-texas-toast
+            ref="addToCartToast"
+            @hide="onHideTexasToast">
+            <template v-slot:title>{{ $t('Added to Cart') }}</template>
+            <template v-slot:message>
+                <div class="flex items-start justify-start">
+                    <!-- thumbnail -->
+                    <div class="pr-5" v-if="atcConfirm.imageUrl">
+                        <nuxt-img
+                            :src="atcConfirm.imageUrl"
+                            preset="prod_thumb" />
+                    </div>
+
+                    <!-- message -->
+                    <div class="text-left">
+                        <!-- title -->
+                        <div v-if="atcConfirm.title" class="text-gray-800 font-medium mb-1">{{ atcConfirm.title }}</div>
+
+                        <!-- size -->
+                        <div v-if="atcConfirm.productSize" class="text-gray-500 mb-1">
+                            {{ $t('Size') }}: {{ atcConfirm.productSize }}
+                        </div>
+
+                        <!-- price -->
+                        <div v-if="atcConfirm.productPrice" class="text-gray-800">
+                            {{ $n(atcConfirm.productPrice, 'currency') }}
+                        </div>
+                    </div>
+                </div>
+            </template>
+            <template v-slot:secondaryButtonLabel>{{ $t('View Cart') }}</template>
+            <template v-slot:primaryButtonLabel>{{ $t('Checkout') }}</template>
+        </fig-texas-toast>
     </div>
 </template>
 
