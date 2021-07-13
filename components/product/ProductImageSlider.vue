@@ -8,7 +8,6 @@ import Vue from 'vue';
 import VueHotkey from 'v-hotkey';
 import throttle from 'lodash.throttle';
 import product_mixin from '@/mixins/product_mixin';
-import { getAllProductVariantImagesAtWidth } from '@/utils/product';
 
 Vue.use(VueHotkey);
 
@@ -53,8 +52,7 @@ export default Vue.extend({
                 endX: 0
             },
             fullscreen: {
-                show: false,
-                pics: []
+                show: false
             },
             pics: []
         };
@@ -94,19 +92,7 @@ export default Vue.extend({
         variantId: {
             handler: function(newVal) {
                 if(newVal) {
-                    // BUG WORKAROUND:
-                    // Wrapping the setting of pics and fullscreen.pics with nextTick
-                    // to work around a bug in @nuxt/image:
-                    // https://github.com/nuxt/image/issues/114
-                    this.pics = [];
-                    this.fullscreen.pics = [];
-
-                    const self = this;
-
-                    Vue.nextTick(function () {
-                        self.pics = self.getPicsForWidth(600, self.variantId);
-                        self.fullscreen.pics = self.getPicsForWidth(1200, self.variantId);
-                    });
+                    this.pics = this.getVariantImages(newVal);
                 }
             },
             immediate: true
@@ -187,21 +173,16 @@ export default Vue.extend({
             this.widthWindow = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
         },
 
-        getPicsForWidth(width, variantId) {
+        getVariantImages(variantId) {
             let images = [];
 
-            if(!Array.isArray(this.product.variants) || !this.product.variants.length) {
-                return images;
-            }
-
-            this.product.variants.forEach((variant) => {
-                if(variant.id === variantId) {
-                    const variantImages = getAllProductVariantImagesAtWidth(variant, width);
-                    if(variantImages.length) {
-                        images = images.concat(variantImages);
+            if(Array.isArray(this.product.variants)) {
+                this.product.variants.forEach((variant) => {
+                    if(variant.id === variantId && Array.isArray(variant.images)) {
+                        images = variant.images.map(obj => obj.url);
                     }
-                }
-            });
+                });
+            }
 
             return images;
         }
@@ -218,14 +199,14 @@ export default Vue.extend({
             class="w-full"
             @click="onSlidesClick">
             <li
-                v-for="(obj, index) in pics"
+                v-for="(url, index) in pics"
                 :key="index"
                 :style="slideLiStyle">
                 <div class="relative w-full bg-gray-350 overflow-hidden">
-                    <nuxt-image
-                        :placeholder="true"
-                        :src="obj.url"
-                        :lazy="true" />
+                    <nuxt-img
+                        v-if="url"
+                        :src="url"
+                        sizes="lg:580px md:400px"></nuxt-img>
                 </div>
             </li>
         </ul>
@@ -282,14 +263,14 @@ export default Vue.extend({
             class="slider-fullscreen"
             v-if="fullscreen.show"
             v-hotkey="{'esc': onFullScreenCloseClick}">
-
             <div
-                v-for="(obj, index) in fullscreen.pics"
+                v-for="(url, index) in pics"
                 :key="index"
                 class="mb-2">
-                <nuxt-image
-                    :placeholder="true"
-                    :src="obj.url" />
+                <nuxt-img
+                    v-if="url"
+                    :src="url"
+                    sizes="lg:100vw md:100vw sm:100vw"></nuxt-img>
             </div>
 
             <button

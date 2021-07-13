@@ -100,7 +100,6 @@ module.exports = {
         duration: 5000
     },
 
-
     /*
     ** Global CSS
     */
@@ -129,7 +128,6 @@ module.exports = {
         '@/plugins/filters.js',
         '@/node_modules/@notoursllc/figleaf/components/toaster',
         '@/node_modules/@notoursllc/figleaf/components/confirm',
-        '@/node_modules/@notoursllc/figleaf/components/confirm_atc',
         // '@/plugins/vue-placeholders.js',
         // '@/plugins/vue-observe-visibility.client.js',
         // { src: '@/plugins/youtube', ssr: false },
@@ -141,6 +139,41 @@ module.exports = {
         '@nuxtjs/tailwindcss',
         '@nuxt/image'
     ],
+
+    // Nuxt image config
+    // https://image.nuxtjs.org/api/options/
+    image: {
+        domains: [
+            'https://gmnst-assets.nyc3.digitaloceanspaces.com'
+        ],
+        staticFilename: '[publicPath]/images/[name]-[hash][ext]',
+        // The screen sizes predefined by `@nuxt/image`:
+        screens: {
+            xs: 320,
+            sm: 640,
+            md: 768,
+            lg: 1024,
+            xl: 1280,
+            xxl: 1536,
+            '2xl': 1536
+        },
+        presets: {
+            prod_thumb: {
+                modifiers: {
+                    format: 'jpg',
+                    width: 75,
+                    height: 75
+                }
+            },
+            prod_thumb_xs: {
+                modifiers: {
+                    format: 'jpg',
+                    width: 45,
+                    height: 45
+                }
+            }
+        }
+    },
 
     tailwindcss: {
         cssPath: '@/node_modules/@notoursllc/figleaf/assets/css/tailwind.css'
@@ -159,7 +192,8 @@ module.exports = {
         // Doc: https://axios.nuxtjs.org/usage
         '@nuxtjs/axios',
         'cookie-universal-nuxt',
-        ['@nuxtjs/pwa', { oneSignal: false }]
+        ['@nuxtjs/pwa', { oneSignal: false }],
+        '@nuxt/image'
     ],
 
     /*

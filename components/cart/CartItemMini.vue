@@ -1,12 +1,11 @@
 <script>
 import isObject from 'lodash.isobject';
+import { getProductVariantCoverImage } from '@/utils/product';
 import ProductPrice from '@/components/product/ProductPrice';
-import ProductVariantCoverImage from '@/components/product/ProductVariantCoverImage';
 
 export default {
     components: {
-        ProductPrice,
-        ProductVariantCoverImage
+        ProductPrice
     },
 
     props: {
@@ -23,6 +22,10 @@ export default {
 
         selectedSize() {
             return isObject(this.item.product_variant_sku) ? this.item.product_variant_sku.label : null;
+        },
+
+        coverImage() {
+            return getProductVariantCoverImage(this.item.product_variant);
         }
     }
 };
@@ -33,9 +36,10 @@ export default {
     <article class="flex items-start w-full my-2">
         <!-- pic -->
         <div class="mr-2 sm:mr-4">
-            <product-variant-cover-image
-                :variant="item.product_variant"
-                smallest />
+            <nuxt-img
+                v-if="coverImage"
+                :src="coverImage"
+                preset="prod_thumb" />
         </div>
 
         <div class="flex-grow text-sm">

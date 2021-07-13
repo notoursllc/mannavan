@@ -1,6 +1,6 @@
 <script>
 import isObject from 'lodash.isobject';
-import ProductVariantCoverImage from '@/components/product/ProductVariantCoverImage';
+import { getProductVariantCoverImage } from '@/utils/product';
 import ProductPrice from '@/components/product/ProductPrice';
 import {
     FigButton,
@@ -9,11 +9,11 @@ import {
     FigFormSelectNative
 } from '@notoursllc/figleaf';
 
+
 export default {
     name: 'CartItem',
 
     components: {
-        ProductVariantCoverImage,
         ProductPrice,
         FigButton,
         FigPopConfirm,
@@ -64,6 +64,10 @@ export default {
 
         selectedSize() {
             return isObject(this.cartItem.product_variant_sku) ? this.cartItem.product_variant_sku.label : null;
+        },
+
+        coverImage() {
+            return getProductVariantCoverImage(this.cartItem.product_variant);
         },
 
         quantityOptions() {
@@ -199,9 +203,10 @@ export default {
         <div class="bg-white rounded p-2 sm:p-3 mb-2 sm:mb-4 flex items-start">
             <!-- image -->
             <div class="mr-2 sm:mr-4">
-                <product-variant-cover-image
-                    :variant="cartItem.product_variant"
-                    smallest />
+                <nuxt-img
+                    v-if="coverImage"
+                    :src="coverImage"
+                    preset="prod_thumb" />
             </div>
 
             <div class="flex-grow">

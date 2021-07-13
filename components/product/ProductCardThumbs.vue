@@ -30,9 +30,10 @@ export default {
             default: null
         },
 
-        width: {
-            type: Number,
-            default: 45
+        preset: {
+            type: String,
+            default: 'prod_thumb_xs',
+            validator: (value) => ['prod_thumb', 'prod_thumb_xs'].includes(value)
         },
 
         selected: {
@@ -54,13 +55,6 @@ export default {
                 return `+${this.numProductSkus - this.maxVariantDisplay}`;
             }
             return '';
-        },
-
-        thumbStyle() {
-            return {
-                width: `${this.width}px`,
-                height: `${this.width}px`
-            };
         }
     },
 
@@ -97,20 +91,18 @@ export default {
         getOneThumbPerVariant(product) {
             const images = [];
 
-            if(!Array.isArray(product.variants) || !product.variants.length) {
-                return images;
+            if(Array.isArray(product.variants)) {
+                product.variants.forEach((variant) => {
+                    const url = getProductVariantCoverImage(variant);
+
+                    if(url) {
+                        images.push({
+                            url: url,
+                            variant: variant
+                        });
+                    }
+                });
             }
-
-            product.variants.forEach((variant) => {
-                const img = getProductVariantCoverImage(variant, 75);
-
-                if(isObject(img)) {
-                    images.push({
-                        ...img,
-                        variant: variant
-                    });
-                }
-            });
 
             return images;
         },
@@ -141,12 +133,10 @@ export default {
                 <div
                     slot="toggler"
                     class="media-thumb"
-                    :class="{ 'media-thumb-selected': selectedVariantId === obj.variant.id }"
-                    :style="thumbStyle">
-                    <nuxt-image
-                        :placeholder="true"
+                    :class="{ 'media-thumb-selected': selectedVariantId === obj.variant.id }">
+                    <nuxt-img
                         :src="obj.url"
-                        :style="thumbStyle" />
+                        :preset="preset" />
                 </div>
                 {{ $t('Sold out') }}
             </fig-tooltip>

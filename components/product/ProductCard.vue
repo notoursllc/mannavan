@@ -3,7 +3,6 @@ import isObject from 'lodash.isobject';
 import ProductPrice from '@/components/product/ProductPrice';
 import ProductCardThumbs from '@/components/product/ProductCardThumbs';
 import VariantAccentMessage from '@/components/product/VariantAccentMessage';
-import { getProductVariantCoverImage } from '@/utils/product';
 
 export default {
     components: {
@@ -76,17 +75,7 @@ export default {
 
         setVisibleVariant(variant) {
             this.visibleVariant.variant = variant;
-
-            const img = getProductVariantCoverImage(variant);
-
-            // find the 600px image variant:
-            if(img && Array.isArray(img.variants)) {
-                img.variants.forEach((obj) => {
-                    if(obj.target_width === 600) {
-                        this.visibleVariant.coverImageUrl = obj.url;
-                    }
-                });
-            }
+            this.visibleVariant.coverImageUrl = Array.isArray(variant.images) ? variant.images[0].url : null;
         },
 
         getSmallestMediaUrl(mediaObj) {
@@ -153,18 +142,17 @@ export default {
         <figure
             class="bg-white w-full m-0 block"
             @click="onCardClick">
-
-            <nuxt-image
+            <nuxt-img
                 v-if="visibleVariant.coverImageUrl"
-                :placeholder="true"
-                :src="visibleVariant.coverImageUrl" />
+                :src="visibleVariant.coverImageUrl"
+                sizes="lg:575px md:375px sm:500px" />
         </figure>
 
         <div class="pic-card-info">
             <product-card-thumbs
                 v-show="showThumbs"
                 :product="product"
-                :width="45"
+                preset="prod_thumb_xs"
                 :limit="maxVariantDisplay"
                 @numdisplayed="setNumVisibleThumbs"
                 @mouseover="setVisibleVariant"
