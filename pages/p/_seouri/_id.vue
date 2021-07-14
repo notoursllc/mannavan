@@ -16,7 +16,8 @@ import {
     FigSizeButtons,
     FigProductDetailsLayout,
     FigStockLevelWarning,
-    FigTexasToast
+    FigTexasToast,
+    FigContent
 } from '@notoursllc/figleaf';
 
 export default {
@@ -30,7 +31,8 @@ export default {
         FigSizeButtons,
         FigProductDetailsLayout,
         FigStockLevelWarning,
-        FigTexasToast
+        FigTexasToast,
+        FigContent
     },
 
     mixins: [
@@ -296,7 +298,7 @@ export default {
 
 
 <template>
-    <div class="pageContainerMax container-fluid">
+    <fig-content class="pt-4">
         <fig-product-details-layout v-if="product">
             <!-- pics -->
             <template slot="pics">
@@ -414,7 +416,7 @@ export default {
             <template v-slot:secondaryButtonLabel>{{ $t('View Cart') }}</template>
             <template v-slot:primaryButtonLabel>{{ $t('Checkout') }}</template>
         </fig-texas-toast>
-    </div>
+    </fig-content>
 </template>
 
 

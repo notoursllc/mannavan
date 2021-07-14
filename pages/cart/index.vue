@@ -5,8 +5,8 @@ import CartTotalsTable from '@/components/cart/CartTotalsTable';
 import {
     FigButton,
     FigCartCtaLayout,
-    FigCheckoutWrapper,
-    FigSpinner
+    FigSpinner,
+    FigContent
 } from '@notoursllc/figleaf';
 
 export default {
@@ -16,8 +16,8 @@ export default {
         CartTotalsTable,
         FigButton,
         FigCartCtaLayout,
-        FigCheckoutWrapper,
-        FigSpinner
+        FigSpinner,
+        FigContent
     },
 
     data() {
@@ -55,7 +55,7 @@ export default {
 
 
 <template>
-    <fig-checkout-wrapper class="px-4">
+    <fig-content size="lg">
         <page-title>{{ $t('Shopping Cart') }}</page-title>
 
         <template v-if="loading">
@@ -88,5 +88,5 @@ export default {
                 </template>
             </fig-cart-cta-layout>
         </template>
-    </fig-checkout-wrapper>
+    </fig-content>
 </template>

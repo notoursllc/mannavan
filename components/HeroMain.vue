@@ -22,11 +22,9 @@ export default {
 
 
 <template>
-    <div class="content-wrap">
-        <div class="hero-main" :style="heroMainStyle">
-            <div class="hero-content">
-                <slot></slot>
-            </div>
+    <div class="hero-main" :style="heroMainStyle">
+        <div class="hero-content">
+            <slot></slot>
         </div>
     </div>
 </template>

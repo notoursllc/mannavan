@@ -10,7 +10,6 @@ import {
     FigOverlay,
     FigTextCard,
     FigCartCtaLayout,
-    FigCheckoutWrapper,
     FigDivider,
     FigAddress,
     FigFormRadio,
@@ -19,7 +18,8 @@ import {
     FigFormCheckbox,
     FigAddressForm,
     FigStripeForm,
-    FigPaymentTypeChooser
+    FigPaymentTypeChooser,
+    FigContent
 } from '@notoursllc/figleaf';
 
 
@@ -41,7 +41,6 @@ export default {
         FigOverlay,
         FigTextCard,
         FigCartCtaLayout,
-        FigCheckoutWrapper,
         FigDivider,
         FigAddress,
         FigFormRadio,
@@ -51,6 +50,7 @@ export default {
         FigAddressForm,
         FigStripeForm,
         FigPaymentTypeChooser,
+        FigContent,
         CartTotalsTable,
         CartItemMini
     },
@@ -455,7 +455,7 @@ export default {
 </script>
 
 <template>
-    <fig-checkout-wrapper class="pt-10">
+    <fig-content size="lg" class="pt-6">
 
         <div v-if="!numCartItems" class="text-center text-lg">
             {{ $t('Your shopping cart does not contain any items.') }}
@@ -685,5 +685,5 @@ export default {
                 </fig-text-card>
             </template>
         </fig-cart-cta-layout>
-    </fig-checkout-wrapper>
+    </fig-content>
 </template>

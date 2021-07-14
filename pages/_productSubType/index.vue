@@ -2,13 +2,15 @@
 import product_mixin from '@/mixins/product_mixin';
 import ProductCard from '@/components/product/ProductCard';
 import {
-    FigProductGrid
+    FigProductGrid,
+    FigContent
 } from '@notoursllc/figleaf';
 
 export default {
     components: {
         ProductCard,
-        FigProductGrid
+        FigProductGrid,
+        FigContent
     },
 
     mixins: [
@@ -83,9 +85,11 @@ export default {
 
 
 <template>
-    <fig-product-grid :products="products">
-        <template v-slot:default="slotProps">
-            <product-card :product="slotProps.product" />
-        </template>
-    </fig-product-grid>
+    <fig-content>
+        <fig-product-grid :products="products">
+            <template v-slot:default="slotProps">
+                <product-card :product="slotProps.product" />
+            </template>
+        </fig-product-grid>
+    </fig-content>
 </template>

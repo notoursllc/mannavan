@@ -1,11 +1,13 @@
 <script>
 import PageTitle from '@/components/PageTitle';
 import PrivacyDisplay from '@/components/PrivacyDisplay';
+import { FigContent } from '@notoursllc/figleaf';
 
 export default {
     components: {
         PageTitle,
-        PrivacyDisplay
+        PrivacyDisplay,
+        FigContent
     },
 
     head() {
@@ -21,11 +23,11 @@ export default {
 
 
 <template>
-    <div>
+    <fig-content size="lg">
         <page-title>{{ $t('Privacy Notice') }}</page-title>
 
-        <div class="pageContainerMax priv">
+        <div class="priv">
             <privacy-display />
         </div>
-    </div>
+    </fig-content>
 </template>

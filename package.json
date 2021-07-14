@@ -20,7 +20,7 @@
   "dependencies": {
     "@bugsnag/js": "^7.10.1",
     "@bugsnag/plugin-vue": "^7.10.0",
-    "@notoursllc/figleaf": "^0.18.1",
+    "@notoursllc/figleaf": "^0.19.1",
     "@nuxt/image": "^0.5.0",
     "@nuxtjs/axios": "^5.12.5",
     "@nuxtjs/pwa": "^3.3.5",

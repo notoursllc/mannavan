@@ -1,15 +1,13 @@
 <script>
 import CartReceipt from '@/components/cart/CartReceipt';
 import PageTitle from '@/components/PageTitle';
-import {
-    FigCheckoutWrapper
-} from '@notoursllc/figleaf';
+import { FigContent } from '@notoursllc/figleaf';
 
 export default {
     components: {
         CartReceipt,
         PageTitle,
-        FigCheckoutWrapper
+        FigContent
     },
 
     head() {
@@ -25,12 +23,12 @@ export default {
 
 
 <template>
-    <fig-checkout-wrapper class="px-4">
+    <fig-content size="lg">
         <page-title>{{ $t('Order Details') }}</page-title>
 
         <cart-receipt
             :cart-id="$route.params.id" />
-    </fig-checkout-wrapper>
+    </fig-content>
 </template>
 
 

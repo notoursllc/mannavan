@@ -2,7 +2,8 @@
 import HeroMain from '@/components/HeroMain';
 import ProductCard from '@/components/product/ProductCard';
 import {
-    FigProductGrid
+    FigProductGrid,
+    FigContent
 } from '@notoursllc/figleaf';
 
 const bgImages = [
@@ -20,7 +21,8 @@ export default {
     components: {
         HeroMain,
         ProductCard,
-        FigProductGrid
+        FigProductGrid,
+        FigContent
     },
 
     layout: 'home',
@@ -73,7 +75,7 @@ export default {
 
 <template>
     <div>
-        <div class="lg:pt-4">
+        <fig-content class="pt-2">
             <hero-main :bg-image="bgImage">
                 <!-- <div class="heading-icon">
                     <icon-logo icon-name="logo" class="vam" width="125px" />
@@ -85,15 +87,15 @@ export default {
                     </div> -->
                 </div>
             </hero-main>
-        </div>
+        </fig-content>
 
-        <div class="pt-4 content-wrap">
+        <fig-content full-height>
             <fig-product-grid :products="products">
                 <template v-slot:default="slotProps">
                     <product-card :product="slotProps.product" />
                 </template>
             </fig-product-grid>
-        </div>
+        </fig-content>
     </div>
 </template>
 

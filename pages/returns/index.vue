@@ -1,9 +1,11 @@
 <script>
 import PageTitle from '@/components/PageTitle';
+import { FigContent } from '@notoursllc/figleaf';
 
 export default {
     components: {
-        PageTitle
+        PageTitle,
+        FigContent
     },
 
     head() {
@@ -25,10 +27,10 @@ export default {
 
 
 <template>
-    <div>
+    <fig-content size="lg">
         <page-title>{{ $t('Returns / Exchanges') }}</page-title>
 
-        <div class="pageContainerMax">
+        <div>
             <!-- {{ this.$t('returns_help')}}: -->
             Items can be returned within 30 days of delivery as long as they are unwashed, unworn, and undamaged. Please note that shipping charges are non-refundable.
 
@@ -50,7 +52,7 @@ export default {
                 </div>
             </div>
         </div>
-    </div>
+    </fig-content>
 </template>
 
 <style scoped>

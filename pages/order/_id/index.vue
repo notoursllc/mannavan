@@ -4,7 +4,7 @@ import IconVictoryPeace from '@/components/icons/IconVictoryPeace';
 import CartReceipt from '@/components/cart/CartReceipt';
 import {
     FigIcon,
-    FigCheckoutWrapper,
+    FigContent,
     FigSpinner
 } from '@notoursllc/figleaf';
 
@@ -13,7 +13,7 @@ export default {
         IconVictoryPeace,
         CartReceipt,
         FigIcon,
-        FigCheckoutWrapper,
+        FigContent,
         FigSpinner
     },
 
@@ -103,11 +103,11 @@ export default {
         </template>
 
         <!-- order details -->
-        <fig-checkout-wrapper class="px-4">
+        <fig-content size="lg" class="px-4">
             <cart-receipt
                 :cart-id="$route.params.id"
                 @found="onCartFound" />
-        </fig-checkout-wrapper>
+        </fig-content>
     </div>
 </template>
 

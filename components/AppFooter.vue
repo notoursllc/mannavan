@@ -1,5 +1,11 @@
 <script>
+import { FigContent } from '@notoursllc/figleaf';
+
 export default {
+    components: {
+        FigContent
+    },
+
     data: function() {
         return {
             year: new Date().getFullYear(),
@@ -18,8 +24,7 @@ export default {
 <template>
     <footer class="footerm">
         <div class="px-3 py-5 mx-auto mt-3 max-w-7xl">
-            <div class="container mx-auto flex flex-row justify-between items-start flex-wrap">
-
+            <fig-content class="flex flex-row justify-between items-start flex-wrap">
                 <nav class="nav-item">
                     <dl>
                         <dt>
@@ -82,11 +87,11 @@ export default {
                         </dd>
                     </dl>
                 </nav>
-            </div>
+            </fig-content>
         </div>
 
         <div class="footer-base">
-            <div class="content-wrap">
+            <fig-content>
                 <div class="flex flex-row items-center justify-between text-gray-700">
                     <div>
                         <span class="pr-1"><fig-icon icon="shield-check" width="24" height="24" /></span>
@@ -95,7 +100,7 @@ export default {
 
                     <div>&#169; {{ year }} {{ siteName }}, {{ $t('All Rights Reserved') }}.</div>
                 </div>
-            </div>
+            </fig-content>
         </div>
     </footer>
 </template>
