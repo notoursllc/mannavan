@@ -109,7 +109,10 @@ module.exports = {
     ],
 
     /*
-    ** Plugins to load before mounting the App
+    ** Plugins to load before mounting the App.
+    ** Note that the 'persistedState' plugin needs to be added before
+    ** 'global-properties' because global-properties sets vuex state,
+    ** which needs persistedState to persist to local storage.
     */
     plugins: [
         // { src: '@/plugins/bugsnag', mode: 'server' },
@@ -118,10 +121,10 @@ module.exports = {
         { src: '@/plugins/api.js', ssr: true },
         '@/plugins/confirm.js',
         '@/plugins/i18n.js',
+        '@/plugins/persistedState.client.js',
         '@/plugins/global-properties',
         '@/plugins/vuelidate',
         '@/plugins/format8601',
-        '@/plugins/persistedState.client.js',
         '@/plugins/prettyJson',
         '@/plugins/figIcon.js',
         '@/plugins/directives.js',

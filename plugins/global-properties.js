@@ -25,7 +25,9 @@ export default async (ctx) => {
 
     if(ctx.store.state.cart.id) {
         promises.push(
-            ctx.app.$api.cart.get(ctx.store.state.cart.id)
+            ctx.app.$api.cart.get({
+                id: ctx.store.state.cart.id
+            })
         );
     }
 
@@ -35,5 +37,11 @@ export default async (ctx) => {
     ctx.store.dispatch('product/PRODUCT_SUBTYPES', productSubTypes);
     ctx.store.dispatch('product/PRODUCT_SKU_ACCENT_MESSAGES', productAccentMessages);
     ctx.store.dispatch('ui/APP_CONFIG', appConfig);
-    ctx.store.dispatch('cart/CART', shoppingCart);
+
+    if(!ctx.store.state.cart.id || !shoppingCart) {
+        ctx.store.dispatch('cart/CART_RESET');
+    }
+    else {
+        ctx.store.dispatch('cart/CART', shoppingCart);
+    }
 };

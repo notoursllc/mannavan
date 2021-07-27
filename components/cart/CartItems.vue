@@ -1,4 +1,5 @@
 <script>
+import isObject from 'lodash.isobject';
 import CartItem from '@/components/cart/CartItem';
 
 export default {
@@ -18,13 +19,13 @@ export default {
     data() {
         return {
             loading: false,
-            cart: {}
+            cart_items: []
         };
     },
 
     computed: {
         numCartItems() {
-            return this.$store.state.cart.num_items;
+            return isObject(this.$store.state.cart) ? this.$store.state.cart.num_items : 0;
         }
     },
 
@@ -37,10 +38,12 @@ export default {
             if(this.$store.state.cart.id) {
                 this.loading = true;
 
-                this.cart = await this.$api.cart.get({
+                const res = await this.$api.cart.get({
                     id: this.$store.state.cart.id,
                     relations: true
                 });
+
+                this.cart_items = isObject(res) ? res.cart_items : [];
 
                 this.loading = false;
             }
@@ -53,7 +56,7 @@ export default {
 <template>
     <div v-if="numCartItems">
         <cart-item
-            v-for="(item, index) in cart.cart_items"
+            v-for="(item, index) in cart_items"
             :key="item.id"
             :index="index"
             :item="item"

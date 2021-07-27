@@ -1,4 +1,3 @@
-import forEach from 'lodash.foreach';
 import isObject from 'lodash.isobject';
 
 /*
@@ -54,6 +53,7 @@ function getCartDefaults() {
     };
 }
 
+
 export const state = () => ({
     // There seems to be an issue with reactivity in the UI
     // if state properties do not exist by default.  Defining these properties
@@ -76,9 +76,11 @@ export const mutations = {
     },
 
     CART_RESET: (state) => {
-        forEach(getCartDefaults(), (val, key) => {
-            state[key] = val;
-        });
+        const defaults = getCartDefaults();
+
+        for(const key in defaults) {
+            state[key] = defaults[key];
+        }
     }
 };
 
@@ -87,6 +89,7 @@ export const actions = {
     CART ({ commit }, cart) {
         commit('CART', cart);
     },
+
     CART_RESET: ({ commit }) => {
         commit('CART_RESET');
     }
