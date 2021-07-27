@@ -170,12 +170,15 @@ export default {
             this.shippingRates.loading = true;
 
             try {
-                const { data } = await this.$api.cart.shipping.selectRate(
-                    this.$store.state.cart.id,
-                    this.shippingRates.selectedRate
-                );
+                if(this.shippingRates.selectedRate) {
+                    const { data } = await this.$api.cart.shipping.selectRate(
+                        this.$store.state.cart.id,
+                        this.shippingRates.selectedRate
+                    );
 
-                this.$store.dispatch('cart/CART', data);
+                    this.$store.dispatch('cart/CART', data);
+                }
+
                 this.goToStep(3);
             }
             catch(err) {
@@ -308,9 +311,13 @@ export default {
                 const { data } = await this.$api.cart.shipping.getEstimatesForCart(this.$store.state.cart.id);
                 this.shippingRates.rates = data;
 
-                if(this.shippingRates.rates.length === 1) {
+                // Hopefully an unlikely scenario, but if no shipping rates were returned
+                // then we should probably consider it as 'free' and move on to the next step.
+                if(!this.shippingRates.rates.length) {
+                    this.continueToPayment();
+                }
+                else if(this.shippingRates.rates.length === 1) {
                     this.shippingRates.selectedRate = this.shippingRates.rates[0].rate_id;
-
                 }
             }
             catch(err) {
@@ -548,19 +555,21 @@ export default {
 
                                 <!-- Shipping estimates -->
                                 <div class="mt-4">
-                                    <div class="text-gray-900 font-semibold">
+                                    <div class="text-gray-900 font-semibold mb-2" v-if="shippingRates.rates.length">
                                         {{ shippingRates.rates.length > 1 ? $t('Choose your shipping speed') : $t('Shipping') }}:
                                     </div>
 
-                                    <div class="mt-2">
+                                    <div>
                                         <!-- selected rate details -->
                                         <template v-if="step === 3">
-                                            <div class="inline-block text-black">
-                                                {{ $n(shippingRateTotal ? shippingRateTotal/100 : 0, 'currency') }}
-                                            </div>
-                                            <div class="inline-block text-gray-500 pl-3">
-                                                {{ $t('Estimated arrival: {date}', { date: translateShippingDate(shippingRateEstimatedDeliveryDate) }) }}
-                                            </div>
+                                            <template v-if="shippingRates.selectedRate">
+                                                <div class="inline-block text-black">
+                                                    {{ $n(shippingRateTotal ? shippingRateTotal/100 : 0, 'currency') }}
+                                                </div>
+                                                <div class="inline-block text-gray-500 pl-3">
+                                                    {{ $t('Estimated arrival: {date}', { date: translateShippingDate(shippingRateEstimatedDeliveryDate) }) }}
+                                                </div>
+                                            </template>
                                         </template>
 
                                         <!-- rate selection -->
