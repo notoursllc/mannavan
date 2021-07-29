@@ -196,17 +196,17 @@ export default Vue.extend({
         :class="{'slider-disabled': slideshowDisabled}">
         <ul
             :style="slideUlStyle"
-            class="w-full"
+            class="w-full2"
             @click="onSlidesClick">
             <li
                 v-for="(url, index) in pics"
                 :key="index"
                 :style="slideLiStyle">
-                <div class="relative w-full bg-gray-350 overflow-hidden">
+                <div class="relative overflow-hidden">
                     <nuxt-img
                         v-if="url"
                         :src="url"
-                        sizes="lg:580px md:400px"></nuxt-img>
+                        sizes="lg:550px md:400px"></nuxt-img>
                 </div>
             </li>
         </ul>
