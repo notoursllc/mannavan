@@ -136,12 +136,11 @@ export default {
 <template>
     <div
         class="bg-white rounded-md cursor-pointer"
+        @click="onCardClick"
         @mouseenter="onCardMouseAction(true)"
         @mouseleave="onCardMouseAction()">
 
-        <figure
-            class="bg-white w-full m-0 block"
-            @click="onCardClick">
+        <figure class="bg-white w-full m-0 block">
             <nuxt-img
                 v-if="visibleVariant.coverImageUrl"
                 :src="visibleVariant.coverImageUrl"
