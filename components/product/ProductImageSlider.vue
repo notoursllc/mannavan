@@ -196,7 +196,6 @@ export default Vue.extend({
         :class="{'slider-disabled': slideshowDisabled}">
         <ul
             :style="slideUlStyle"
-            class="w-full2"
             @click="onSlidesClick">
             <li
                 v-for="(url, index) in pics"
