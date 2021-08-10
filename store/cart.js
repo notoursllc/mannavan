@@ -46,7 +46,7 @@ function getCartDefaults() {
         // shipping_streetAddress: null,
         // shipping_phone: null,
         shipping_total: null,
-        shipping_rate: {},
+        selected_shipping_rate: {},
         sub_total: null,
         updated_at: null,
         weight_oz_total: null
@@ -102,7 +102,7 @@ export const getters = {
     },
 
     shippingRateTotal: (state) => {
-        const rate = state.shipping_rate;
+        const rate = state.selected_shipping_rate;
         let total = 0;
 
         if(isObject(rate)) {
@@ -127,7 +127,7 @@ export const getters = {
     },
 
     shippingRateEstimatedDeliveryDate: (state) => {
-        const rate = state.shipping_rate;
+        const rate = state.selected_shipping_rate;
 
         if(isObject(rate)) {
             return rate.estimated_delivery_date;
