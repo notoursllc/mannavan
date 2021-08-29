@@ -333,7 +333,7 @@ export default Vue.extend({
     @apply absolute bottom-0 w-full pb-2;
 }
 .slider-nav-dots {
-    @apply flex items-center list-none whitespace-nowrap relative p-0 py-2 m-0;
+    @apply flex items-center list-none whitespace-no-wrap relative p-0 py-2 m-0;
     left: 50%;
     transform: translateX(-50%);
 }
