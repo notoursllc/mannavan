@@ -209,6 +209,13 @@ module.exports = {
         progress: true
     },
 
+    // PWA module configuration: https://go.nuxtjs.dev/pwa
+    pwa: {
+        manifest: {
+            lang: 'en'
+        }
+    },
+
     /**
      *  Build configuration
      */
