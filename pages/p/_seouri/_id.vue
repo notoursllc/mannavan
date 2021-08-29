@@ -377,7 +377,7 @@ export default {
             <div class="text-center">
                 <fig-button
                     variant="primary"
-                    @click="goToViewCart">{{ $t('View cart') }}</fig-button>
+                    @click="goToViewCart">{{ $t('View Cart') }}</fig-button>
             </div>
         </fig-modal>
 
