@@ -19,11 +19,10 @@
   "dependencies": {
     "@bugsnag/js": "^7.10.1",
     "@bugsnag/plugin-vue": "^7.11.0",
-    "@notoursllc/figleaf": "^0.26.3",
+    "@notoursllc/figleaf": "^0.26.4",
     "@nuxt/image": "^0.5.0",
     "@nuxtjs/axios": "^5.13.6",
     "@nuxtjs/pwa": "^3.3.5",
-    "@nuxtjs/tailwindcss": "^4.2.1",
     "@paypal/checkout-server-sdk": "^1.0.2",
     "cookie": "^0.3.1",
     "cookie-universal-nuxt": "^2.1.5",
@@ -48,19 +47,19 @@
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.14.7",
+    "@nuxtjs/tailwindcss": "^4.2.1",
     "@vue/test-utils": "^1.2.1",
     "babel-core": "7.0.0-bridge.0",
     "babel-jest": "^27.0.5",
     "eslint": "^7.29.0",
     "eslint-plugin-vue": "^7.12.1",
     "jest": "^27.0.5",
-    "postcss": "^8.3.5",
     "testcafe": "^1.10.1",
     "testcafe-browser-provider-saucelabs": "^1.8.0",
     "testcafe-vue-selectors": "^3.1.0",
     "vue-jest": "^3.0.4"
   },
   "engines": {
-    "node": "14.17.5"
+    "node": "12.14.1"
   }
 }
