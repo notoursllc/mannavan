@@ -5,7 +5,7 @@ if(isDev) {
 }
 
 module.exports = {
-    mode: 'universal',
+    ssr: true,
 
     vue: {
         config: {
