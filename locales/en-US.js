@@ -31,6 +31,7 @@ module.exports = {
     "chest_measurement_description": "The chest is measured around the circumference of the body, 1 inch below the armpit.",
     "Close": "Close",
     "Color": "Color",
+    "Company": "Company",
     "Conditions of Use": "Conditions of Use",
     "Contact BreadVan": "Contact BreadVan",
     "Continue to payment": "Continue to payment",
@@ -41,6 +42,7 @@ module.exports = {
     "Delivery options": "Delivery options",
 
     "Edit": "Edit",
+    "Email": "Email",
     "Error": "Error",
     "Estimated arrival: {date}": "Estimated arrival: {date}",
     "Estimated tax": "Estimated tax",
@@ -54,6 +56,7 @@ module.exports = {
     "hip_measurement_description": "The hip is measured around the circumference of the body, at the bottom of the shirt.",
 
     "In inches": "In inches",
+    "invalid email address format": "invalid email address format",
     "Item": "Item",
 
     "Length": "Length",
@@ -61,6 +64,7 @@ module.exports = {
     "length_measurement_description": "The length is measured down the entire height of the shirt, from the hight point of the shoulder to the bottom.",
 
     "Make sure your address is correct": "Make sure your address is correct",
+    "Message": "Message",
 
     "OK": "OK",
     "Oops we could not find the order you are looking for.": "Oops we could not find the order you are looking for.",
@@ -88,6 +92,7 @@ module.exports = {
 
     "Remove": "Remove",
     "Remove this item?": "Remove this item?",
+    "required": "required",
     "Return to cart": "Return to cart",
     "Returns / Exchanges": "Returns / Exchanges",
     "returns_help": "For help with Exchanging or Returning an item, please contact us at",
@@ -106,6 +111,7 @@ module.exports = {
     "sleeve_measurement_description": "The sleeve length is measured from the shoulder seam to the end of the sleeve.",
     "Sorry, this size is out of stock": "Sorry, this size is out of stock",
     "Stay in checkout": "Stay in checkout",
+    "Submit": "Submit",
     "Subtotal": "Subtotal",
     "subtotal_tooltip": "The subtotal reflects the total price of your order before shipping costs and taxes.",
 
@@ -127,6 +133,7 @@ module.exports = {
     "We'll get back to you within 1 business day.": "We'll get back to you within 1 business day.",
 
     "Your cart": "Your cart",
+    "Your name": "Your name",
     "Your shopping cart does not contain any items.": "Your shopping cart does not contain any items.",
 
     // Calendar values.  Used for shipping rate API response from ShipEngine
