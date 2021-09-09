@@ -14,10 +14,14 @@ export default async (ctx) => {
 
     const promises = [
         ctx.app.$api.masterTypes.all({
-            where: ['object', '=', 'product_type']
+            where: ['object', '=', 'product_type'],
+            sortBy: 'ordinal',
+            sortDesc: false
         }),
         ctx.app.$api.masterTypes.all({
-            where: ['object', '=', 'product_sub_type']
+            where: ['object', '=', 'product_sub_type'],
+            sortBy: 'ordinal',
+            sortDesc: false
         }),
         ctx.app.$api.productAccentMessages.all(),
         ctx.app.$api.core.appConfig()
