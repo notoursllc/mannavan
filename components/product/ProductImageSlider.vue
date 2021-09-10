@@ -62,7 +62,7 @@ export default Vue.extend({
         slideUlStyle() {
             return !this.slideshowDisabled
                 ? { width: this.countSlides * 100 + '%' }
-                : { display: 'flex', 'flex-wrap': 'wrap', 'justify-content': 'space-between', 'align-items': 'flex-start' };
+                : { display: 'flex', 'flex-grow': '1', 'flex-wrap': 'wrap', 'justify-content': 'space-between', 'align-items': 'flex-start' };
         },
 
         slideLiStyle() {
