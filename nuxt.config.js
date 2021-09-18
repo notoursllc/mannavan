@@ -146,10 +146,12 @@ module.exports = {
     // Nuxt image config
     // https://image.nuxtjs.org/api/options/
     image: {
-        domains: [
-            'https://gmnst-assets.nyc3.digitaloceanspaces.com'
-        ],
-        staticFilename: '[publicPath]/images/[name]-[hash][ext]',
+        providers: {
+            cloudflare: {
+                provider: '~/providers/cloudflare',
+                baseURL: 'https://imagedelivery.net/onkdurJr24OykoZY1xYs4g'
+            }
+        },
         // The screen sizes predefined by `@nuxt/image`:
         screens: {
             xs: 320,

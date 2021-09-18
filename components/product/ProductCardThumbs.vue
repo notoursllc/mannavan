@@ -135,8 +135,11 @@ export default {
                     class="media-thumb"
                     :class="{ 'media-thumb-selected': selectedVariantId === obj.variant.id }">
                     <nuxt-img
+                        provider="cloudflare"
                         :src="obj.url"
-                        :preset="preset" />
+                        :preset="preset"
+                        loading="lazy"
+                        :alt="obj.alt_text || $t('variant image')" />
                 </div>
                 {{ $t('Sold out') }}
             </fig-tooltip>

@@ -38,8 +38,12 @@ export default {
         <div class="mr-2 sm:mr-4">
             <nuxt-img
                 v-if="coverImage"
+                provider="cloudflare"
                 :src="coverImage"
-                preset="prod_thumb" />
+                preset="prod_thumb"
+                loading="lazy"
+                width="75"
+                height="75" />
         </div>
 
         <div class="flex-grow text-sm">

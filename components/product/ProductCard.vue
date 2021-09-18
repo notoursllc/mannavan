@@ -75,29 +75,29 @@ export default {
 
         setVisibleVariant(variant) {
             this.visibleVariant.variant = variant;
-            this.visibleVariant.coverImageUrl = Array.isArray(variant.images) ? variant.images[0].url : null;
+            this.visibleVariant.coverImageUrl = Array.isArray(variant.images) ? variant.images[0].third_party_id : null;
         },
 
-        getSmallestMediaUrl(mediaObj) {
-            let smallestWidth;
-            let smallestUrl;
+        // getSmallestMediaUrl(mediaObj) {
+        //     let smallestWidth;
+        //     let smallestUrl;
 
-            if(isObject(mediaObj)) {
-                smallestWidth = mediaObj.width || 9999;
-                smallestUrl = mediaObj.url;
+        //     if(isObject(mediaObj)) {
+        //         smallestWidth = mediaObj.width || 9999;
+        //         smallestUrl = mediaObj.url;
 
-                if(Array.isArray(mediaObj.variants)) {
-                    mediaObj.variants.forEach((variant) => {
-                        if(variant.width < smallestWidth) {
-                            smallestWidth = variant.width;
-                            smallestUrl = variant.url;
-                        }
-                    });
-                }
-            }
+        //         if(Array.isArray(mediaObj.variants)) {
+        //             mediaObj.variants.forEach((variant) => {
+        //                 if(variant.width < smallestWidth) {
+        //                     smallestWidth = variant.width;
+        //                     smallestUrl = variant.url;
+        //                 }
+        //             });
+        //         }
+        //     }
 
-            return smallestUrl;
-        },
+        //     return smallestUrl;
+        // },
 
         goToProductDetails(variantId) {
             const params = {
@@ -144,6 +144,8 @@ export default {
             <nuxt-img
                 v-if="visibleVariant.coverImageUrl"
                 :src="visibleVariant.coverImageUrl"
+                provider="cloudflare"
+                loading="lazy"
                 sizes="lg:575px md:375px sm:500px" />
         </figure>
 

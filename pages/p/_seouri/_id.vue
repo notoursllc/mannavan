@@ -393,7 +393,11 @@ export default {
                     <div class="pr-5" v-if="atcConfirm.imageUrl">
                         <nuxt-img
                             :src="atcConfirm.imageUrl"
-                            preset="prod_thumb" />
+                            provider="cloudflare"
+                            preset="prod_thumb"
+                            loading="lazy"
+                            width="75"
+                            height="75" />
                     </div>
 
                     <!-- message -->

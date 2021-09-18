@@ -179,7 +179,7 @@ export default Vue.extend({
             if(Array.isArray(this.product.variants)) {
                 this.product.variants.forEach((variant) => {
                     if(variant.id === variantId && Array.isArray(variant.images)) {
-                        images = variant.images.map(obj => obj.url);
+                        images = variant.images.map(obj => obj.third_party_id);
                     }
                 });
             }
@@ -205,6 +205,8 @@ export default Vue.extend({
                     <nuxt-img
                         v-if="url"
                         :src="url"
+                        provider="cloudflare"
+                        loading="lazy"
                         sizes="lg:550px md:400px"></nuxt-img>
                 </div>
             </li>
@@ -269,6 +271,8 @@ export default Vue.extend({
                 <nuxt-img
                     v-if="url"
                     :src="url"
+                    provider="cloudflare"
+                    loading="lazy"
                     sizes="lg:100vw md:100vw sm:100vw"></nuxt-img>
             </div>
 
