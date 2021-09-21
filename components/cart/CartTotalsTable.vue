@@ -61,7 +61,7 @@ export default {
     <div v-if="numCartItems" class="table w-full text-black">
         <!-- subtotal -->
         <div class="table-row">
-            <div class="table-cell pr-3" :class="labelClass">
+            <div class="cart-totals-cell-label" :class="labelClass">
                 <fig-icon-label>
                     {{ $t('Subtotal') }}
                     <template slot="right">
@@ -76,12 +76,12 @@ export default {
                     </template>
                 </fig-icon-label>
             </div>
-            <div class="table-cell text-right font-mono">{{ $n(cart.sub_total/100, 'currency') }}</div>
+            <div class="cart-totals-cell-value">{{ $n(cart.sub_total/100, 'currency') }}</div>
         </div>
 
         <!-- shipping -->
         <div class="table-row" v-if="shipping || shippingOnNextStep">
-            <div class="table-cell pr-3" :class="labelClass">
+            <div class="cart-totals-cell-label" :class="labelClass">
                 <fig-icon-label>
                     {{ $t('Shipping') }}
                     <div
@@ -98,7 +98,7 @@ export default {
                     </div>
                 </fig-icon-label>
             </div>
-            <div class="table-cell text-right font-mono">
+            <div class="cart-totals-cell-value">
                 <template v-if="shippingOnNextStep">--</template>
                 <template v-else>{{ $n(cart.shipping_total/100, 'currency') }}</template>
             </div>
@@ -106,7 +106,7 @@ export default {
 
         <!-- sales tax -->
         <div class="table-row" v-if="salesTax || salesTaxOnNextStep">
-            <div class="table-cell pr-3" :class="labelClass">
+            <div class="cart-totals-cell-label" :class="labelClass">
                 <fig-icon-label>
                     {{ $t('Estimated tax') }}
                     <div
@@ -123,7 +123,7 @@ export default {
                     </div>
                 </fig-icon-label>
             </div>
-            <div class="table-cell text-right font-mono">
+            <div class="cart-totals-cell-value">
                 <template v-if="salesTaxOnNextStep">--</template>
                 <template v-else>{{ $n(cart.sales_tax/100, 'currency') }}</template>
             </div>
@@ -131,8 +131,19 @@ export default {
 
         <!-- order total -->
         <div class="table-row" v-if="shipping && salesTax">
-            <div class="table-cell pr-3 pt-2 font-medium" :class="labelClass">{{ $t('Order total') }}:</div>
-            <div class="table-cell text-right text-green-700 pt-2 font-medium font-mono">{{ $n(cart.grand_total/100, 'currency') }}</div>
+            <div class="cart-totals-cell-label pt-2 font-medium" :class="labelClass">{{ $t('Order total') }}:</div>
+            <div class="cart-totals-cell-value text-green-700 pt-2 font-medium">{{ $n(cart.grand_total/100, 'currency') }}</div>
         </div>
     </div>
 </template>
+
+
+<style scoped>
+.cart-totals-cell-label {
+    @apply table-cell pr-3 pb-2;
+}
+
+.cart-totals-cell-value {
+    @apply table-cell pb-2 text-right font-mono;
+}
+</style>
