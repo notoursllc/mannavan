@@ -1,6 +1,7 @@
 <script>
 import AppHeader from '@/components/AppHeader';
 import AppFooter from '@/components/AppFooter';
+import AppSlideover from '@/components/AppSlideover';
 
 import {
     FigIconSprite,
@@ -12,7 +13,14 @@ export default {
         FigIconSprite,
         FigSlideover,
         AppHeader,
-        AppFooter
+        AppFooter,
+        AppSlideover
+    },
+
+    methods: {
+        onSlideoverNav() {
+            this.$store.dispatch('ui/closeSidebar');
+        }
     },
 
     created() {
@@ -25,15 +33,9 @@ export default {
 <template>
     <div class="layoutContainer">
         <fig-icon-sprite />
+        <fig-toaster />
 
-        <fig-slideover
-            :opened="$store.state.ui.sidebarOpened"
-            @close="() => { $store.dispatch('ui/closeSidebar') }"
-            class="bg-gray-800">
-            <div>nav goes here</div>
-            <div slot="footer">FOOTER GOES HERE</div>
-        </fig-slideover>
-
+        <app-slideover @nav="onSlideoverNav" />
         <app-header />
 
         <main class="flex-grow">
