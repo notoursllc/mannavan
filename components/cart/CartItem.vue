@@ -42,6 +42,12 @@ export default {
         showQuantityWarning: {
             type: Boolean,
             default: true
+        },
+
+        imageLoading: {
+            type: String,
+            default: 'eager',
+            validator: (value) => ['lazy', 'eager', 'auto'].includes(value)
         }
     },
 
@@ -208,7 +214,7 @@ export default {
                     provider="cloudflare"
                     :src="coverImage"
                     preset="prod_thumb"
-                    loading="lazy"
+                    :loading="imageLoading"
                     width="75"
                     height="75" />
             </div>

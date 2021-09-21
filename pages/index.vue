@@ -92,7 +92,10 @@ export default {
         <fig-content full-height>
             <fig-product-grid :products="products">
                 <template v-slot:default="slotProps">
-                    <product-card :product="slotProps.product" />
+                    <product-card
+                        class
+                        :product="slotProps.data.product"
+                        :image-loading="slotProps.data.index > 5 ? 'lazy' : 'eager'" />
                 </template>
             </fig-product-grid>
         </fig-content>

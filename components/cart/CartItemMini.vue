@@ -12,6 +12,12 @@ export default {
         item: {
             type: Object,
             default: null
+        },
+
+        imageLoading: {
+            type: String,
+            default: 'eager',
+            validator: (value) => ['lazy', 'eager', 'auto'].includes(value)
         }
     },
 
@@ -41,7 +47,7 @@ export default {
                 provider="cloudflare"
                 :src="coverImage"
                 preset="prod_thumb"
-                loading="lazy"
+                :loading="imageLoading"
                 width="75"
                 height="75" />
         </div>

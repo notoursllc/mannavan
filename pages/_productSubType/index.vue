@@ -88,7 +88,7 @@ export default {
     <fig-content>
         <fig-product-grid :products="products">
             <template v-slot:default="slotProps">
-                <product-card :product="slotProps.product" />
+                <product-card :product="slotProps.data.product" />
             </template>
         </fig-product-grid>
     </fig-content>

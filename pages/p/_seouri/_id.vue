@@ -395,7 +395,7 @@ export default {
                             :src="atcConfirm.imageUrl"
                             provider="cloudflare"
                             preset="prod_thumb"
-                            loading="lazy"
+                            loading="eager"
                             width="75"
                             height="75" />
                     </div>

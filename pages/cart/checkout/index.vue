@@ -687,8 +687,8 @@ export default {
                             <cart-item-mini
                                 v-for="(item, index) in cart.cart_items"
                                 :key="item.id"
-                                :index="index"
-                                :item="item" />
+                                :item="item"
+                                :image-loading="index > 5 ? 'lazy' : 'eager'" />
                         </div>
                     </div>
                 </fig-text-card>

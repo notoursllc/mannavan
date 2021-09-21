@@ -206,7 +206,7 @@ export default Vue.extend({
                         v-if="url"
                         :src="url"
                         provider="cloudflare"
-                        loading="lazy"
+                        loading="eager"
                         sizes="lg:550px md:400px"></nuxt-img>
                 </div>
             </li>
@@ -272,7 +272,7 @@ export default Vue.extend({
                     v-if="url"
                     :src="url"
                     provider="cloudflare"
-                    loading="lazy"
+                    :loading="index > 1 ? 'lazy' : 'eager'"
                     sizes="lg:100vw md:100vw sm:100vw"></nuxt-img>
             </div>
 

@@ -58,9 +58,9 @@ export default {
         <cart-item
             v-for="(item, index) in cart_items"
             :key="item.id"
-            :index="index"
             :item="item"
             :edit-mode="allowEdit"
+            :image-loading="index > 5 ? 'lazy' : 'eager'"
             @updated="getCart" />
     </div>
 </template>

@@ -19,6 +19,12 @@ export default {
             }
         },
 
+        imageLoading: {
+            type: String,
+            default: 'lazy',
+            validator: (value) => ['lazy', 'eager', 'auto'].includes(value)
+        },
+
         maxVariantDisplay: {
             type: Number,
             default: 4
@@ -135,17 +141,17 @@ export default {
 
 <template>
     <div
-        class="bg-white rounded-md cursor-pointer"
+        class="product-card"
         @click="onCardClick"
         @mouseenter="onCardMouseAction(true)"
         @mouseleave="onCardMouseAction()">
 
-        <figure class="bg-white w-full m-0 block">
+        <figure>
             <nuxt-img
                 v-if="visibleVariant.coverImageUrl"
                 :src="visibleVariant.coverImageUrl"
                 provider="cloudflare"
-                loading="lazy"
+                :loading="imageLoading"
                 sizes="lg:575px md:375px sm:500px" />
         </figure>
 
@@ -177,6 +183,21 @@ export default {
 
 
 <style lang="postcss">
+.product-card {
+    @apply bg-white rounded-md cursor-pointer;
+}
+
+/* https://www.codecaptain.io/blog/web-development/responsive-images-and-preventing-page-reflow/474 */
+.product-card > figure {
+    @apply w-full m-0 block relative;
+    padding-bottom: 100%;
+    background: #dceff9;
+}
+
+.product-card > figure > img {
+    @apply absolute w-full h-full top-0 left-0;
+}
+
 .pic-card-info {
     @apply p-3 text-base font-semibold relative overflow-hidden;
     min-height: 140px;
