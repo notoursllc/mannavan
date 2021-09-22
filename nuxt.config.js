@@ -40,8 +40,6 @@ module.exports = {
         tenantApiKey: process.env.TENANT_API_KEY,
 
         stripePublishableKey: process.env.STRIPE_PUBLISHABLE_KEY,
-        stripeAccount: process.env.STRIPE_ACCOUNT,
-        stripeApiVersion: process.env.STRIPE_API_VERSION,
         locale: process.env.LOCALE
     },
 
