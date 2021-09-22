@@ -17,8 +17,6 @@ export default {
         product_mixin
     ],
 
-    layout: 'home',
-
     async asyncData({ params, store, app }) {
         // console.log("IN ASYNC DATA store", store.state.product)
         // console.log("IN ASYNC DATA", context.app.store)

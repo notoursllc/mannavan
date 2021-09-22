@@ -25,8 +25,6 @@ export default {
         FigContent
     },
 
-    layout: 'home',
-
     async asyncData({ params, store, app }) {
         // console.log("IN ASYNC DATA store", store.state.product)
         // console.log("IN ASYNC DATA", context.app.store)
@@ -74,8 +72,8 @@ export default {
 
 
 <template>
-    <div>
-        <fig-content class="pt-2">
+    <fig-content full-height class="pt-2">
+        <div class="pb-3">
             <hero-main :bg-image="bgImage">
                 <!-- <div class="heading-icon">
                     <icon-logo icon-name="logo" class="vam" width="125px" />
@@ -87,19 +85,17 @@ export default {
                     </div> -->
                 </div>
             </hero-main>
-        </fig-content>
+        </div>
 
-        <fig-content full-height>
-            <fig-product-grid :products="products">
-                <template v-slot:default="slotProps">
-                    <product-card
-                        class
-                        :product="slotProps.data.product"
-                        :image-loading="slotProps.data.index > 5 ? 'lazy' : 'eager'" />
-                </template>
-            </fig-product-grid>
-        </fig-content>
-    </div>
+        <fig-product-grid :products="products">
+            <template v-slot:default="slotProps">
+                <product-card
+                    class
+                    :product="slotProps.data.product"
+                    :image-loading="slotProps.data.index > 5 ? 'lazy' : 'eager'" />
+            </template>
+        </fig-product-grid>
+    </fig-content>
 </template>
 
 

@@ -136,8 +136,8 @@ footer dd {
 }
 
 .footer-badge {
-    @apply text-white inline-block py-1 px-2 rounded;
-    background-color: #ff7101;
+    @apply text-white font-bold inline-block py-1 px-2 rounded;
+    background-color: #ea700f;
 }
 
 .footer-base {
