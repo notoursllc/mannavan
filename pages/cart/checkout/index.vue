@@ -1,7 +1,5 @@
 <script>
 import { mapGetters } from 'vuex';
-import app_mixin from '@/mixins/app_mixin';
-import shopping_cart_mixin from '@/mixins/shopping_cart_mixin';
 import CartTotalsTable from '@/components/cart/CartTotalsTable';
 import CartItemMini from '@/components/cart/CartItemMini';
 import { parseIso8601 } from '@/utils/common';
@@ -54,11 +52,6 @@ export default {
         CartTotalsTable,
         CartItemMini
     },
-
-    mixins: [
-        app_mixin,
-        shopping_cart_mixin
-    ],
 
     data: function() {
         return {
@@ -223,7 +216,7 @@ export default {
                     stateData[`shipping_${key}`] = this.shippingForm.form[key];
                 }
 
-                const { data } = await this.$api.cart.setShippingAddress({
+                const { data } = await this.$api.cart.shipping.setAddress({
                     id: this.$store.state.cart.id,
                     ...stateData,
                     validate: this.shippingDataNeedsValidation()
@@ -308,7 +301,7 @@ export default {
             this.shippingRates.loading = true;
 
             try {
-                const { data } = await this.$api.cart.shipping.getEstimatesForCart(this.$store.state.cart.id);
+                const { data } = await this.$api.cart.shipping.getEstimates(this.$store.state.cart.id);
                 this.shippingRates.rates = data;
 
                 // Hopefully an unlikely scenario, but if no shipping rates were returned
@@ -447,13 +440,13 @@ export default {
             if(this.$store.state.cart.id) {
                 this.loading = true;
 
-                this.cart = await this.$api.cart.get({
+                const { data } = await this.$api.cart.get({
                     id: this.$store.state.cart.id,
                     relations: true
                 });
 
+                this.cart = data;
                 this.$store.dispatch('cart/CART', this.cart);
-
                 this.loading = false;
             }
         }

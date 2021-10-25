@@ -1,21 +1,8 @@
-import Products from '@/api/products';
-import ProductAccentMessages from '@/api/product_accent_messages';
-import MasterTypes from '@/api/master_types';
-import Cart from '@/api/cart';
-import Core from '@/api/core';
-
+import { BreadvanApi } from '@notoursllc/figleaf';
 
 export default (context, inject) => {
 
-    // Initialize API repositories
-    const repositories = {
-        cart: Cart(context.$axios),
-        core: Core(context.$axios),
-        masterTypes: MasterTypes(context.$axios),
-        productAccentMessages: ProductAccentMessages(context.$axios),
-        products: Products(context.$axios)
-    };
-
-    inject('api', repositories);
+    const api = BreadvanApi(context.$axios);
+    inject('api', { ...api });
 
 };

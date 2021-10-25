@@ -127,7 +127,7 @@ export default {
             this.isLoading = true;
 
             try {
-                const { data } = await this.$api.cart.deleteItem({
+                const { data } = await this.$api.cart.item.delete({
                     id: id,
                     clear_shipping_rate: true
                 });
@@ -143,20 +143,30 @@ export default {
         },
 
         // getProductQuantityMaxValue(selectedSize, product) {
-        //     return this.getInventoryCountForSize(selectedSize, product);
+        //     let inventoryCount = null;
+
+        //     if(selectedSize && Array.isArray(product.sizes)) {
+        //         product.sizes.forEach((size) => {
+        //             if(selectedSize === size.size && size.hasOwnProperty('inventory_count')) {
+        //                 inventoryCount = size.inventory_count;
+        //             }
+        //         });
+        //     }
+
+        //     return inventoryCount;
         // },
 
         async setSizeOptions() {
             try {
-                const variant = await this.$api.products.getVariant(
+                const { data } = await this.$api.product.variant.get(
                     this.cartItem.product_variant.id,
                     { skus: true }
                 );
 
                 const opts = [];
 
-                if(isObject(variant) && Array.isArray(variant.skus)) {
-                    variant.skus.forEach((sku) => {
+                if(isObject(data) && Array.isArray(data.skus)) {
+                    data.skus.forEach((sku) => {
                         opts.push({
                             label: sku.label,
                             value: sku.id
@@ -175,7 +185,7 @@ export default {
             this.isLoading = true;
 
             try {
-                const { data } = await this.$api.cart.updateItem({
+                const { data } = await this.$api.cart.item.update({
                     cart_id: this.$store.state.cart.id,
                     id: this.cartItem.id,
                     product_variant_sku_id: this.cartItem.product_variant_sku.id,

@@ -57,7 +57,7 @@ export default {
         async onSubmit() {
             try {
                 this.loading = true;
-                await this.$api.core.contactUs(this.form);
+                await this.$api.tenant.contactUs(this.form);
 
                 // TODO: add a success message and clear the form
             }

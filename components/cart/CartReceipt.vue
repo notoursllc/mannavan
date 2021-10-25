@@ -66,10 +66,12 @@ export default {
 
         async getCart() {
             try {
-                this.cart = await this.$api.cart.get({
+                const { data } = await this.$api.cart.get({
                     id: this.cartId,
                     relations: true
                 });
+
+                this.cart = data;
 
                 this.$emit('found', {
                     ...this.cart
@@ -86,7 +88,8 @@ export default {
 
         async getPayment() {
             try {
-                this.payment = await this.$api.cart.payment.getPayment(this.cart.id);
+                const { data } = await this.$api.cart.payment.get(this.cart.id);
+                this.payment = data;
             }
             catch(err) {
                 this.$figleaf.errorToast({

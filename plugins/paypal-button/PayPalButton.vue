@@ -34,11 +34,11 @@ export default {
     },
 
     methods: {
-        payment(data, actions) {
+        payment() {
             return new paypal.Promise(async (resolve, reject) => {
                 try {
-                    const res = await this.$api.cart.payment.paypal.create(this.$store.state.cart.id);
-                    resolve(res.paymentToken);
+                    const { data } = await this.$api.cart.payment.paypal.create(this.$store.state.cart.id);
+                    resolve(data.paymentToken);
                 }
                 catch(err) {
                     // this.onError(err);
@@ -50,13 +50,13 @@ export default {
         onAuthorize(data, actions) {
             return new paypal.Promise(async (resolve, reject) => {
                 try {
-                    const res = await this.$api.cart.payment.paypal.execute(
+                    const response = await this.$api.cart.payment.paypal.execute(
                         this.$store.state.cart.id,
                         data.paymentToken
                     );
 
                     // console.log('onAuthorize SUCCESS', res);
-                    this.$emit('success', res);
+                    this.$emit('success', response.data);
                     resolve(res);
                 }
                 catch(err) {

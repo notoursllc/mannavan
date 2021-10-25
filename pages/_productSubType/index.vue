@@ -1,5 +1,4 @@
 <script>
-import product_mixin from '@/mixins/product_mixin';
 import ProductCard from '@/components/product/ProductCard';
 import {
     FigProductGrid,
@@ -12,10 +11,6 @@ export default {
         FigProductGrid,
         FigContent
     },
-
-    mixins: [
-        product_mixin
-    ],
 
     async asyncData({ params, store, app }) {
         // console.log("IN ASYNC DATA store", store.state.product)
@@ -45,7 +40,7 @@ export default {
                 searchConfig.whereRaw = ['sub_type & ? > 0', [subTypeData.value]];
             }
 
-            const { data } = await app.$api.products.list(searchConfig);
+            const { data } = await app.$api.product.list(searchConfig);
 
             return {
                 products: data,

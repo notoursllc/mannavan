@@ -1,8 +1,6 @@
 <script>
 import isObject from 'lodash.isobject';
 import { email, required } from 'vuelidate/lib/validators';
-import product_mixin from '@/mixins/product_mixin';
-import shopping_cart_mixin from '@/mixins/shopping_cart_mixin';
 import ProductPrice from '@/components/product/ProductPrice';
 import ProductImageSlider from '@/components/product/ProductImageSlider';
 import ProductCardThumbs from '@/components/product/ProductCardThumbs';
@@ -35,17 +33,12 @@ export default {
         FigContent
     },
 
-    mixins: [
-        product_mixin,
-        shopping_cart_mixin
-    ],
-
     async asyncData({ route, store, app }) {
         try {
             const data = {};
-            // data.product = await product_mixin.methods.getProductBySeoUri.call(app, params.seouri);
-            data.product = await app.$api.products.get(route.params.id);
+            const response = await app.$api.product.get(route.params.id);
 
+            data.product = response.data;
             // if(!data.product) {
             //     return;
             // }
@@ -168,7 +161,7 @@ export default {
                 }
 
                 // Add item to  cart
-                const { data } = await this.$api.cart.addItem({
+                const { data } = await this.$api.cart.item.add({
                     cart_id: this.$store.state.cart.id,
                     product_variant_sku_id: this.form.selectedSku.id,
                     qty: 1,
@@ -243,8 +236,8 @@ export default {
 
         async getSkuInventoryCount(id) {
             try {
-                const sku = await this.$api.products.getVariantSku(id);
-                this.selectedSkuInventoryCount = isObject(sku) ? sku.inventory_count : 0;
+                const { data } = await this.$api.product.variant.getSku(id);
+                this.selectedSkuInventoryCount = isObject(data) ? data.inventory_count : 0;
             }
             catch(err) {
                 this.$figleaf.errorToast({

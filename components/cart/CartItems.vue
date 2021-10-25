@@ -38,13 +38,15 @@ export default {
             if(this.$store.state.cart.id) {
                 this.loading = true;
 
-                const res = await this.$api.cart.get({
+                console.log("GETTING CART", this.$store.state.cart.id)
+
+                const { data } = await this.$api.cart.get({
                     id: this.$store.state.cart.id,
                     relations: true
                 });
+                console.log("CART DATA", data)
 
-                this.cart_items = isObject(res) ? res.cart_items : [];
-
+                this.cart_items = isObject(data) ? data.cart_items : [];
                 this.loading = false;
             }
         }

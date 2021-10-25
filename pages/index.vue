@@ -32,7 +32,7 @@ export default {
         const randomImage = `/images/backgrounds/${bgImages[randomInt]}`;
 
         try {
-            const products = await app.$api.products.list({
+            const { data } = await app.$api.product.list({
                 where: ['published', '=', true],
                 // andWhere: [
                 //     ['total_inventory_count', '>', 0]  // doesn't work because 'total_inventory_count' is a virtual attribute
@@ -40,10 +40,9 @@ export default {
                 orderBy: 'updated_at',
                 orderDir: 'DESC'
             });
-            // console.log("PRODS", products)
 
             return {
-                products: products.data,
+                products: data,
                 bgImage: randomImage
             };
         }

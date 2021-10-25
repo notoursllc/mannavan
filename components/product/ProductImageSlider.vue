@@ -7,7 +7,6 @@
 import Vue from 'vue';
 import VueHotkey from 'v-hotkey';
 import throttle from 'lodash.throttle';
-import product_mixin from '@/mixins/product_mixin';
 
 Vue.use(VueHotkey);
 
@@ -38,10 +37,6 @@ export default Vue.extend({
             default: 500
         }
     },
-
-    mixins: [
-        product_mixin
-    ],
 
     data() {
         return {

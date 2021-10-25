@@ -1,5 +1,4 @@
 // import Cookie from 'cookie';
-// import shopping_cart_mixin from '@/mixins/shopping_cart_mixin';
 
 
 export const state = () => ({
