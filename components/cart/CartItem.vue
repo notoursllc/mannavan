@@ -160,7 +160,7 @@ export default {
             try {
                 const { data } = await this.$api.product.variant.get(
                     this.cartItem.product_variant.id,
-                    { skus: true }
+                    { _withRelated: '*' }
                 );
 
                 const opts = [];

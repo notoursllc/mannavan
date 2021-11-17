@@ -42,7 +42,7 @@ export default {
 
                 const { data } = await this.$api.cart.get({
                     id: this.$store.state.cart.id,
-                    relations: true
+                    _withRelated: '*'
                 });
                 console.log("CART DATA", data)
 

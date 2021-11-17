@@ -4,7 +4,7 @@ if(isDev) {
     require('dotenv').config();
 }
 
-module.exports = {
+export default {
     ssr: true,
 
     vue: {
@@ -225,7 +225,9 @@ module.exports = {
             // which a node server does not understand.   Since we are using nuxt in
             // ssr mode (thus using a node server), the figleaf code needs to be transpiled,
             // otherwise we will get an error "Unexpected token export"
-            '@notoursllc/figleaf'
+            '@notoursllc/figleaf',
+            '@notoursllc/breadvan-api',
+            'lodash-es'
         ],
 
         /*
@@ -239,4 +241,5 @@ module.exports = {
         name: 'fade',
         mode: 'out-in'
     }
+
 };

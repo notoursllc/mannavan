@@ -36,7 +36,10 @@ export default {
     async asyncData({ route, store, app }) {
         try {
             const data = {};
-            const response = await app.$api.product.get(route.params.id);
+            const response = await app.$api.product.get(
+                route.params.id,
+                { _withRelated: '*' }
+            );
 
             data.product = response.data;
             // if(!data.product) {

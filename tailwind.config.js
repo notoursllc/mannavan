@@ -5,13 +5,9 @@ const figleafTailwindConfig = require('@notoursllc/figleaf/tailwind.config.js');
 
 // Add our own paths:
 figleafTailwindConfig.purge.content.push(
-    'components/**/*.vue',
-    'layouts/**/*.vue',
-    'pages/**/*.vue',
+    './**/*.vue',
     'plugins/**/*.js',
-    'nuxt.config.js',
-    'node_modules/@notoursllc/figleaf/components/**/*.vue',
-    'node_modules/@notoursllc/figleaf/layouts/**/*.vue'
+    'node_modules/@notoursllc/figleaf/**/*.vue'
 );
 
 figleafTailwindConfig.jit = true;

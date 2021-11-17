@@ -68,7 +68,7 @@ export default {
             try {
                 const { data } = await this.$api.cart.get({
                     id: this.cartId,
-                    relations: true
+                    _withRelated: '*'
                 });
 
                 this.cart = data;

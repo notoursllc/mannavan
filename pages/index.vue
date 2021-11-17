@@ -33,12 +33,9 @@ export default {
 
         try {
             const { data } = await app.$api.product.list({
-                where: ['published', '=', true],
-                // andWhere: [
-                //     ['total_inventory_count', '>', 0]  // doesn't work because 'total_inventory_count' is a virtual attribute
-                // ],
-                orderBy: 'updated_at',
-                orderDir: 'DESC'
+                published: true,
+                _sort: 'updated_at:desc',
+                _withRelated: '*'
             });
 
             return {

@@ -1,4 +1,4 @@
-import { BreadvanApi } from '@notoursllc/figleaf';
+import { BreadvanApi } from '@notoursllc/breadvan-api';
 
 export default (context, inject) => {
 

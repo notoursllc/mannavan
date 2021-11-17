@@ -1,29 +1,14 @@
-// import queryString from 'query-string';
-
-// export default async ({ $axios, store }) => {
 export default async (ctx) => {
-    // const productTypeParams = queryString.stringify(
-    //     { where: ['object', '=', 'product_type'] },
-    //     { arrayFormat: 'bracket' }
-    // );
-
-    // const [ productTypes, productSubTypes ] = await Promise.all([
-    //     $axios.$get('master_types?object=product_type'),
-    //     $axios.$get('master_types?object=product_sub_type')
-    // ]);
-
     const promises = [
-        ctx.app.$api.masterType.all({
-            where: ['object', '=', 'product_type'],
-            sortBy: 'ordinal',
-            sortDesc: false
+        ctx.app.$api.masterType.list({
+            object: 'product_type',
+            _sort: 'ordinal:asc'
         }),
-        ctx.app.$api.masterType.all({
-            where: ['object', '=', 'product_sub_type'],
-            sortBy: 'ordinal',
-            sortDesc: false
+        ctx.app.$api.masterType.list({
+            object: 'product_sub_type',
+            _sort: 'ordinal:asc'
         }),
-        ctx.app.$api.product.accentMessage.all(),
+        ctx.app.$api.product.accentMessage.list(),
         ctx.app.$api.appConfig()
     ];
 
@@ -31,7 +16,7 @@ export default async (ctx) => {
         promises.push(
             ctx.app.$api.cart.get({
                 id: ctx.store.state.cart.id,
-                relations: true
+                _withRelated: '*'
             })
         );
     }
