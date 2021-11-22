@@ -21,7 +21,13 @@ export default async (ctx) => {
         );
     }
 
-    const [ productTypes, productSubTypes, productAccentMessages, appConfig, shoppingCart ] = await Promise.all(promises);
+    const [
+        productTypes,
+        productSubTypes,
+        productAccentMessages,
+        appConfig,
+        shoppingCart
+    ] = await Promise.all(promises);
 
     ctx.store.dispatch('product/PRODUCT_TYPES', productTypes?.data);
     ctx.store.dispatch('product/PRODUCT_SUBTYPES', productSubTypes?.data);
