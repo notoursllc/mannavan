@@ -211,7 +211,7 @@ export default Vue.extend({
         <button
             ref="prevButton"
             class="slider-nav-btn slider-nav-btn-prev"
-            :disabled="!canGoToPrev"
+            v-show="canGoToPrev"
             type="button"
             @click="goToPrev()">
             <div class="icon">
@@ -227,7 +227,7 @@ export default Vue.extend({
         <button
             ref="nextButton"
             class="slider-nav-btn slider-nav-btn-next"
-            :disabled="!canGoToNext"
+            v-show="canGoToNext"
             type="button"
             @click="goToNext()">
             <div class="icon">
@@ -285,7 +285,7 @@ export default Vue.extend({
 
 <style scoped>
 .slider-list {
-    @apply relative;
+    @apply relative pb-1;
 }
 .slider-list > ul {
     @apply list-none flex;
@@ -329,7 +329,8 @@ export default Vue.extend({
 }
 
 .slider-nav-dots-container {
-    @apply absolute bottom-0 w-full pb-2;
+    @apply absolute w-full pb-2;
+    bottom: -14px;
 }
 .slider-nav-dots {
     @apply flex items-center list-none whitespace-nowrap relative p-0 py-2 m-0;
@@ -340,7 +341,7 @@ export default Vue.extend({
     @apply mx-2 my-0;
 }
 .slider-nav-dot button {
-    @apply bg-transparent border border-gray-300 rounded-full cursor-pointer block m-0 p-0;
+    @apply bg-transparent border border-gray-400 rounded-full cursor-pointer block m-0 p-0;
     height: 10px;
     width: 10px;
     font-size: 0;
@@ -350,7 +351,7 @@ export default Vue.extend({
 
 .slider-nav-dot button:hover,
 .slider-nav-dot-current button {
-    @apply bg-gray-300;
+    @apply bg-gray-400;
 }
 
 .slider-disabled {
