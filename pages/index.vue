@@ -6,15 +6,9 @@ import {
     FigContent
 } from '@notoursllc/figleaf';
 
-const bgImages = [
-    'bg_silver_car.jpg',
-    'bg_black_5.jpg'
-    // 'bg_green_yellow_6.jpg'
-];
 
-function randomIntFromInterval(min, max) {
-    return Math.floor(Math.random()*(max-min+1)+min);
-}
+
+
 
 
 export default {
@@ -26,11 +20,6 @@ export default {
     },
 
     async asyncData({ params, store, app }) {
-        // console.log("IN ASYNC DATA store", store.state.product)
-        // console.log("IN ASYNC DATA", context.app.store)
-        const randomInt = randomIntFromInterval(0, (bgImages.length - 1));
-        const randomImage = `/images/backgrounds/${bgImages[randomInt]}`;
-
         try {
             const { data } = await app.$api.product.list({
                 published: true,
@@ -39,8 +28,7 @@ export default {
             });
 
             return {
-                products: data,
-                bgImage: randomImage
+                products: data
             };
         }
         catch(err) {
@@ -70,7 +58,7 @@ export default {
 <template>
     <fig-content full-height class="pt-2">
         <div class="pb-3">
-            <hero-main :bg-image="bgImage">
+            <hero-main bg-image="/images/backgrounds/bg_black_5.jpg">
                 <!-- <div class="heading-icon">
                     <icon-logo icon-name="logo" class="vam" width="125px" />
                 </div> -->
