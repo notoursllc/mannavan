@@ -33,7 +33,6 @@ export default {
                 _withRelated: '*'
             };
 
-            //TODO: this no longer works with new API request format
             if(subTypeData.value) {
             //     // searchConfig.whereRaw = ['sub_type & ? > 0', [subTypeData.value]];
                 searchConfig.sub_type = { bitwise_and_gt: { left: subTypeData.value, right: 0 } };
