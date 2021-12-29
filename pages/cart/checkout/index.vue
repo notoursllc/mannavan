@@ -671,8 +671,8 @@ export default {
                     <div class="text-sm">
                         <cart-totals-table
                             :cart="$store.state.cart"
-                            shipping
-                            sales-tax />
+                            :shipping="step > 1"
+                            :sales-tax="step > 1" />
 
                         <fig-divider />
 
