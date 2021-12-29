@@ -7,6 +7,7 @@
 import Vue from 'vue';
 import VueHotkey from 'v-hotkey';
 import throttle from 'lodash.throttle';
+import { FigNuxtImgBunny } from '@notoursllc/figleaf';
 
 Vue.use(VueHotkey);
 
@@ -36,6 +37,10 @@ export default Vue.extend({
             type: Number,
             default: 500
         }
+    },
+
+    components: {
+        FigNuxtImgBunny
     },
 
     data() {
@@ -174,7 +179,7 @@ export default Vue.extend({
             if(Array.isArray(this.product.variants)) {
                 this.product.variants.forEach((variant) => {
                     if(variant.id === variantId && Array.isArray(variant.images)) {
-                        images = variant.images.map(obj => obj.third_party_id);
+                        images = variant.images.map(obj => obj.url);
                     }
                 });
             }
@@ -197,12 +202,11 @@ export default Vue.extend({
                 :key="index"
                 :style="slideLiStyle">
                 <div class="relative overflow-hidden">
-                    <nuxt-img
+                    <fig-nuxt-img-bunny
                         v-if="url"
                         :src="url"
-                        provider="cloudflare"
                         loading="eager"
-                        sizes="lg:550px md:400px"></nuxt-img>
+                        sizes="lg:550px md:400px" />
                 </div>
             </li>
         </ul>
@@ -263,12 +267,10 @@ export default Vue.extend({
                 v-for="(url, index) in pics"
                 :key="index"
                 class="mb-2">
-                <nuxt-img
+                <fig-nuxt-img-bunny
                     v-if="url"
                     :src="url"
-                    provider="cloudflare"
-                    :loading="index > 1 ? 'lazy' : 'eager'"
-                    sizes="lg:100vw md:100vw sm:100vw"></nuxt-img>
+                    :loading="index > 1 ? 'lazy' : 'eager'" />
             </div>
 
             <button

@@ -2,19 +2,20 @@
 /**
  * Displays a thumbnail image for each product color
  */
-
 import isObject from 'lodash.isobject';
 import { getProductVariantCoverImage } from '@/utils/product';
-
 import {
-    FigTooltip
+    FigTooltip,
+    FigNuxtImgBunny
 } from '@notoursllc/figleaf';
+
 
 export default {
     name: 'ProductCardThumbs',
 
     components: {
-        FigTooltip
+        FigTooltip,
+        FigNuxtImgBunny
     },
 
     props: {
@@ -32,8 +33,8 @@ export default {
 
         preset: {
             type: String,
-            default: 'prod_thumb_xs',
-            validator: (value) => ['prod_thumb', 'prod_thumb_xs'].includes(value)
+            default: 'prodthumbxs',
+            validator: (value) => ['prodthumb', 'prodthumbxs'].includes(value)
         },
 
         selected: {
@@ -134,8 +135,7 @@ export default {
                     slot="toggler"
                     class="media-thumb"
                     :class="{ 'media-thumb-selected': selectedVariantId === obj.variant.id }">
-                    <nuxt-img
-                        provider="cloudflare"
+                    <fig-nuxt-img-bunny
                         :src="obj.url"
                         :preset="preset"
                         loading="lazy"

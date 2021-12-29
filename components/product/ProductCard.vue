@@ -3,12 +3,14 @@ import isObject from 'lodash.isobject';
 import ProductPrice from '@/components/product/ProductPrice';
 import ProductCardThumbs from '@/components/product/ProductCardThumbs';
 import VariantAccentMessage from '@/components/product/VariantAccentMessage';
+import { FigNuxtImgBunny } from '@notoursllc/figleaf';
 
 export default {
     components: {
         ProductPrice,
         ProductCardThumbs,
-        VariantAccentMessage
+        VariantAccentMessage,
+        FigNuxtImgBunny
     },
 
     props: {
@@ -81,7 +83,7 @@ export default {
 
         setVisibleVariant(variant) {
             this.visibleVariant.variant = variant;
-            this.visibleVariant.coverImageUrl = Array.isArray(variant.images) ? variant.images[0].third_party_id : null;
+            this.visibleVariant.coverImageUrl = Array.isArray(variant.images) ? variant.images[0].url : null;
         },
 
         // getSmallestMediaUrl(mediaObj) {
@@ -147,10 +149,9 @@ export default {
         @mouseleave="onCardMouseAction()">
 
         <figure>
-            <nuxt-img
+            <fig-nuxt-img-bunny
                 v-if="visibleVariant.coverImageUrl"
                 :src="visibleVariant.coverImageUrl"
-                provider="cloudflare"
                 :loading="imageLoading"
                 sizes="lg:575px md:375px sm:500px" />
         </figure>
@@ -159,7 +160,7 @@ export default {
             <product-card-thumbs
                 v-show="showThumbs"
                 :product="product"
-                preset="prod_thumb_xs"
+                preset="prodthumbxs"
                 :limit="maxVariantDisplay"
                 @numdisplayed="setNumVisibleThumbs"
                 @mouseover="setVisibleVariant"

@@ -2,10 +2,12 @@
 import isObject from 'lodash.isobject';
 import { getProductVariantCoverImage } from '@/utils/product';
 import ProductPrice from '@/components/product/ProductPrice';
+import { FigNuxtImgBunny } from '@notoursllc/figleaf';
 
 export default {
     components: {
-        ProductPrice
+        ProductPrice,
+        FigNuxtImgBunny
     },
 
     props: {
@@ -42,14 +44,11 @@ export default {
     <article class="flex items-start w-full my-2">
         <!-- pic -->
         <div class="mr-2 sm:mr-4">
-            <nuxt-img
+            <fig-nuxt-img-bunny
                 v-if="coverImage"
-                provider="cloudflare"
                 :src="coverImage"
-                preset="prod_thumb"
-                :loading="imageLoading"
-                width="75"
-                height="75" />
+                preset="prodthumb"
+                :loading="imageLoading" />
         </div>
 
         <div class="flex-grow text-sm">

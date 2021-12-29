@@ -6,7 +6,8 @@ import {
     FigButton,
     FigPopConfirm,
     FigOverlay,
-    FigFormSelectNative
+    FigFormSelectNative,
+    FigNuxtImgBunny
 } from '@notoursllc/figleaf';
 
 
@@ -18,7 +19,8 @@ export default {
         FigButton,
         FigPopConfirm,
         FigOverlay,
-        FigFormSelectNative
+        FigFormSelectNative,
+        FigNuxtImgBunny
     },
 
     props: {
@@ -219,14 +221,11 @@ export default {
         <div class="bg-white rounded p-2 sm:p-3 mb-2 sm:mb-4 flex items-start">
             <!-- image -->
             <div class="mr-2 sm:mr-4">
-                <nuxt-img
+                <fig-nuxt-img-bunny
                     v-if="coverImage"
-                    provider="cloudflare"
                     :src="coverImage"
-                    preset="prod_thumb"
-                    :loading="imageLoading"
-                    width="75"
-                    height="75" />
+                    preset="prodthumb"
+                    :loading="imageLoading" />
             </div>
 
             <div class="flex-grow">

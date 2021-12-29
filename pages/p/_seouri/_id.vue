@@ -6,7 +6,6 @@ import ProductImageSlider from '@/components/product/ProductImageSlider';
 import ProductCardThumbs from '@/components/product/ProductCardThumbs';
 import { getProductVariantCoverImage } from '@/utils/product';
 // import TshirtSizeChart from '@/components/product/TshirtSizeChart';
-
 import {
     FigButton,
     FigOverlay,
@@ -15,7 +14,8 @@ import {
     FigProductDetailsLayout,
     FigStockLevelWarning,
     FigTexasToast,
-    FigContent
+    FigContent,
+    FigNuxtImgBunny
 } from '@notoursllc/figleaf';
 
 export default {
@@ -30,7 +30,8 @@ export default {
         FigProductDetailsLayout,
         FigStockLevelWarning,
         FigTexasToast,
-        FigContent
+        FigContent,
+        FigNuxtImgBunny
     },
 
     async asyncData({ route, store, app }) {
@@ -319,7 +320,7 @@ export default {
             <template slot="thumbs">
                 <product-card-thumbs
                     :product="product"
-                    preset="prod_thumb"
+                    preset="prodthumb"
                     :selected="visibleVariant.id"
                     @click="onThumbClick" />
             </template>
@@ -387,13 +388,10 @@ export default {
                 <div class="flex items-start justify-start">
                     <!-- thumbnail -->
                     <div class="pr-5" v-if="atcConfirm.imageUrl">
-                        <nuxt-img
+                        <fig-nuxt-img-bunny
                             :src="atcConfirm.imageUrl"
-                            provider="cloudflare"
-                            preset="prod_thumb"
-                            loading="eager"
-                            width="75"
-                            height="75" />
+                            preset="prodthumb"
+                            loading="eager" />
                     </div>
 
                     <!-- message -->
