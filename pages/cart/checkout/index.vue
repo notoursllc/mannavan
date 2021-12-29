@@ -576,7 +576,7 @@ export default {
                                                     {{ $n(shippingRateTotal ? shippingRateTotal/100 : 0, 'currency') }}
                                                 </div>
                                                 <div class="inline-block text-gray-500 pl-3">
-                                                    {{ cart.selected_shipping_rate.service_type }}
+                                                    {{ cart.selected_shipping_rate ? cart.selected_shipping_rate.service_type : '' }}
                                                     <!-- {{ $t('Estimated arrival: {date}', { date: translateShippingDate(shippingRateEstimatedDeliveryDate) }) }} -->
                                                 </div>
                                             </template>
