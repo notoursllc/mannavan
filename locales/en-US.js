@@ -69,6 +69,7 @@ module.exports = {
     "OK": "OK",
     "Oops we could not find the order you are looking for.": "Oops we could not find the order you are looking for.",
     "Order Details": "Order Details",
+    "Order is a gift": "Order is a gift",
     "Order number": "Order number",
     "Order total": "Order total",
     "Out of stock": "Out of stock",

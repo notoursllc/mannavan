@@ -69,7 +69,8 @@ export default {
                 form: {
                     ...addressFormBase,
                     email: null,
-                    phone: null
+                    phone: null,
+                    is_gift: false
                 }
             },
             shippingRates: {
@@ -187,7 +188,7 @@ export default {
 
         setShippingFormFromCart() {
             for(const key in this.shippingForm.form) {
-                this.shippingForm.form[key] = this.cart[`shipping_${key}`];
+                this.shippingForm.form[key] = (key === 'is_gift' ? this.cart[key] : this.cart[`shipping_${key}`]);
             }
         },
 
@@ -213,7 +214,8 @@ export default {
                 const stateData = {};
 
                 for(const key in this.shippingForm.form) {
-                    stateData[`shipping_${key}`] = this.shippingForm.form[key];
+                    const dataKey = key === 'is_gift' ? key : `shipping_${key}`;
+                    stateData[dataKey] = this.shippingForm.form[key];
                 }
 
                 const { data } = await this.$api.cart.shipping.setAddress({
@@ -532,6 +534,20 @@ export default {
                                         :email="cart.shipping_email"
                                         :phone="cart.shipping_phone" />
 
+                                    <!-- is gift -->
+                                    <div class="mt-1" v-if="shippingForm.form.is_gift">
+                                        <div class="py-1 px-2 inline-block bg-gray-100 rounded">
+                                            <fig-icon-label>
+                                                <fig-icon
+                                                    slot="left"
+                                                    icon="gift"
+                                                    :width="20"
+                                                    :height="20" />
+                                                {{ $t('Order is a gift') }}
+                                            </fig-icon-label>
+                                        </div>
+                                    </div>
+
                                     <!-- validation warning -->
                                     <div v-if="shippingForm.validation.warning" class="p-1 mt-1 bg-yellow-100 rounded">
                                         <fig-icon-label>
@@ -560,7 +576,8 @@ export default {
                                                     {{ $n(shippingRateTotal ? shippingRateTotal/100 : 0, 'currency') }}
                                                 </div>
                                                 <div class="inline-block text-gray-500 pl-3">
-                                                    {{ $t('Estimated arrival: {date}', { date: translateShippingDate(shippingRateEstimatedDeliveryDate) }) }}
+                                                    {{ cart.selected_shipping_rate.service_type }}
+                                                    <!-- {{ $t('Estimated arrival: {date}', { date: translateShippingDate(shippingRateEstimatedDeliveryDate) }) }} -->
                                                 </div>
                                             </template>
                                         </template>
@@ -577,7 +594,8 @@ export default {
                                                     {{ $n(obj.shipping_amount.amount, 'currency') }}
                                                 </div>
                                                 <div class="inline-block text-gray-500 pl-3">
-                                                    {{ $t('Estimated arrival: {date}', { date: translateShippingDate(obj.estimated_delivery_date) }) }}
+                                                    {{ obj.service_type }}
+                                                    <!-- {{ $t('Estimated arrival: {date}', { date: translateShippingDate(obj.estimated_delivery_date) }) }} -->
                                                 </div>
                                             </fig-form-radio>
 
