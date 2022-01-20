@@ -84,7 +84,7 @@ export default {
 
             <!-- email info -->
             <div class="text-center p-4 bg-gray-200">
-                <div class="text-green-600">
+                <div class="text-emerald-600">
                     <span class="text-base">{{ $t('An email confirmation was sent to:') }}</span>
                     <div class="text-center">
                         <fig-icon

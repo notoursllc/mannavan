@@ -105,7 +105,8 @@ export default {
     */
     css: [
         '@/assets/css/base.scss',
-        '@/assets/css/base.css'
+        '@/assets/css/base.css',
+        '@/node_modules/@notoursllc/figleaf/assets/css/tailwind.css'
     ],
 
     /*
@@ -139,7 +140,7 @@ export default {
     ],
 
     buildModules: [
-        '@nuxtjs/tailwindcss',
+        '@nuxt/postcss8',
         '@nuxt/image'
     ],
 
@@ -164,10 +165,6 @@ export default {
         presets: {
             ...presets
         }
-    },
-
-    tailwindcss: {
-        cssPath: '@/node_modules/@notoursllc/figleaf/assets/css/tailwind.css'
     },
 
     router: {
@@ -208,6 +205,13 @@ export default {
      *  Build configuration
      */
     build: {
+        postcss: {
+            plugins: {
+                tailwindcss: {},
+                autoprefixer: {}
+            }
+        },
+
         transpile: [
             // Figleaf modules are written in ES6 javascript (using export/import)
             // which a node server does not understand.   Since we are using nuxt in

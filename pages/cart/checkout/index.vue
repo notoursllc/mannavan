@@ -549,7 +549,7 @@ export default {
                                     </div>
 
                                     <!-- validation warning -->
-                                    <div v-if="shippingForm.validation.warning" class="p-1 mt-1 bg-yellow-100 rounded">
+                                    <div v-if="shippingForm.validation.warning" class="p-1 mt-1 bg-amber-100 rounded">
                                         <fig-icon-label>
                                             <fig-icon
                                                 slot="left"
