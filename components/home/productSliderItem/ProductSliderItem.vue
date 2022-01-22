@@ -1,3 +1,5 @@
+
+
 <script>
 import isObject from 'lodash.isobject';
 import ProductPrice from '@/components/product/ProductPrice';
@@ -5,7 +7,10 @@ import ProductCardThumbs from '@/components/product/ProductCardThumbs';
 import VariantAccentMessage from '@/components/product/VariantAccentMessage';
 import { FigNuxtImgBunny } from '@notoursllc/figleaf';
 
+
 export default {
+    name: 'ProductSliderItem',
+
     components: {
         ProductPrice,
         ProductCardThumbs,
@@ -15,10 +20,10 @@ export default {
 
     props: {
         product: {
-            type: Object,
-            default: () => {
-                return {};
-            }
+            name: String,
+            title: String,
+            overview: String,
+            backdrop_path: String,
         },
 
         imageLoading: {
@@ -86,27 +91,6 @@ export default {
             this.visibleVariant.coverImageUrl = Array.isArray(variant.images) ? variant.images[0].url : null;
         },
 
-        // getSmallestMediaUrl(mediaObj) {
-        //     let smallestWidth;
-        //     let smallestUrl;
-
-        //     if(isObject(mediaObj)) {
-        //         smallestWidth = mediaObj.width || 9999;
-        //         smallestUrl = mediaObj.url;
-
-        //         if(Array.isArray(mediaObj.variants)) {
-        //             mediaObj.variants.forEach((variant) => {
-        //                 if(variant.width < smallestWidth) {
-        //                     smallestWidth = variant.width;
-        //                     smallestUrl = variant.url;
-        //                 }
-        //             });
-        //         }
-        //     }
-
-        //     return smallestUrl;
-        // },
-
         goToProductDetails(variantId) {
             const params = {
                 seouri: this.product.seo_uri,
@@ -129,36 +113,32 @@ export default {
             this.goToProductDetails(this.visibleVariant.variant.id);
         },
 
-        onCardMouseAction(isEnter) {
-            this.showThumbs = this.numVisibleThumbs ? !!isEnter : false;
-        },
-
         setNumVisibleThumbs(num) {
             this.numVisibleThumbs = num;
         }
     }
-};
+}
 </script>
 
 
 <template>
     <div
-        class="product-card"
-        @click="onCardClick"
-        @mouseenter="onCardMouseAction(true)"
-        @mouseleave="onCardMouseAction()">
+        class="product-slider-item"
+        @click="onCardClick">
 
-        <figure>
-            <fig-nuxt-img-bunny
-                v-if="visibleVariant.coverImageUrl"
-                :src="visibleVariant.coverImageUrl"
-                :loading="imageLoading"
-                sizes="lg:575px md:375px sm:500px" />
-        </figure>
+        <div
+            class="product-slider-pic"
+            :style="{ backgroundImage: `url(https://bv-pullzone-1.b-cdn.net/${visibleVariant.coverImageUrl}?class=w500)` }">
 
-        <div class="pic-card-info">
+            <div class="product-slider-pic-details">
+                <h3 class="text-white mb-1">
+                    {{ product.title || product.name }}
+                </h3>
+            </div>
+        </div>
+
+        <div class="bg-white py-1 px-2" style="height:100px;">
             <product-card-thumbs
-                v-show="showThumbs"
                 :product="product"
                 preset="prodthumbxs"
                 :limit="maxVariantDisplay"
@@ -166,41 +146,36 @@ export default {
                 @mouseover="setVisibleVariant"
                 @click="(variant) => goToProductDetails(variant.id)" />
 
-            <div v-show="!showThumbs">
+            <div>
                 <variant-accent-message
                     :variant="visibleVariant.variant"
                     class="text-orange-600 font-semibold" />
 
                 <div class="text-gray-700 font-semibold">{{ product.title }}</div>
-                <div class="text-gray-600">{{ product.caption }}</div>
+                <!-- <div class="text-gray-600">{{ product.caption }}</div> -->
             </div>
 
             <div class="text-gray-700 font-semibold pt-3">
                 <product-price :variant="visibleVariant.variant" />
             </div>
+
         </div>
+
     </div>
 </template>
 
 
-<style lang="postcss">
-.product-card {
-    @apply bg-white rounded-md cursor-pointer mx-1;
+<style>
+.product-slider-item {
+    @apply border-2 border-transparent my-0 mx-1;
+
+}
+.product-slider-pic {
+    @apply bg-cover bg-no-repeat bg-center rounded-t-sm;
+    height: 20rem;
 }
 
-/* https://www.codecaptain.io/blog/web-development/responsive-images-and-preventing-page-reflow/474 */
-.product-card > figure {
-    @apply w-full m-0 block relative;
-    padding-bottom: 100%;
-    background: #dceff9;
-}
-
-.product-card > figure > img {
-    @apply absolute w-full h-full top-0 left-0;
-}
-
-.pic-card-info {
-    @apply p-3 text-base font-semibold relative overflow-hidden;
-    min-height: 140px;
+.product-slider-pic-details {
+    @apply h-full flex flex-col justify-end py-2 px-4 opacity-100 sm:opacity-0 invisible transition-all ease-in-out duration-300 rounded-b-sm;
 }
 </style>
