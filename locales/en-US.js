@@ -100,6 +100,7 @@ module.exports = {
 
     "Sales tax will be displayed during checkout": "Sales tax will be displayed during checkout",
     "Save & Continue": "Save & Continue",
+    "SEE MORE": "SEE MORE",
     "Select a size": "Select a size",
     "SELECT PAYMENT METHOD": "SELECT PAYMENT METHOD",
     "shipping_address_validation_error_message": "This does not seem to be a valid shipping address.  Please make the necessary corrections below.",

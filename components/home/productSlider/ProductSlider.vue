@@ -1,6 +1,5 @@
 
 <script>
-import ProductSliderItem from '@/components/home/productSliderItem/ProductSliderItem.vue';
 import ProductCard from '@/components/product/ProductCard.vue';
 
 import {
@@ -14,7 +13,6 @@ export default {
     components: {
         FigSlider,
         FigOverlay,
-        ProductSliderItem,
         ProductCard
     },
 
@@ -41,8 +39,8 @@ export default {
             options: {
                 dots: false,
                 navButtons: true,
-                slidesToShow: 5,
-                slidesToScroll: 5,
+                slidesToShow: 3,
+                slidesToScroll: 3,
                 slideGrow: false,
                 mobileFirst: false,
                 infinite: false,
@@ -50,16 +48,14 @@ export default {
                 timing: 'ease-in-out',
                 extraClass: 'fig-product-slider',
                 responsive: [
-                    { breakpoint: 576, settings: { slidesToShow: 1, slidesToScroll: 1 } },
+                    { breakpoint: 576, settings: { slidesToShow: 2, slidesToScroll: 2 } },
                     { breakpoint: 768, settings: { slidesToShow: 2, slidesToScroll: 2 } },
-                    { breakpoint: 992, settings: { slidesToShow: 3, slidesToScroll: 3 } },
-                    { breakpoint: 1100, settings: { slidesToShow: 4, slidesToScroll: 4 } },
+                    { breakpoint: 992, settings: { slidesToShow: 2, slidesToScroll: 2 } },
+                    { breakpoint: 1100, settings: { slidesToShow: 3, slidesToScroll: 3 } },
                 ],
             }
         };
     },
-
-
 
     watch: {
         products: {
@@ -80,13 +76,17 @@ export default {
 
 <template>
     <div class="product-slider" v-if="products && products.length">
-        <h2 v-if="$slots.title"
-            class="text-xl sm:text-2xl font-semibold"><slot name="title"></slot></h2>
         <fig-overlay :show="loading" size="xl" variant="success" dark>
             <fig-slider ref="slider" :options="options">
+                <template v-slot:title>
+                    <h2 v-if="$slots.title"
+                        class="text-xl sm:text-2xl font-semibold"><slot name="title"></slot></h2>
+                </template>
+
                 <div v-for="(prod, index) in products" :key="index" :class="`slide--${index}`">
-                    <product-slider-item :product="prod" />
-                    <!-- <product-card :product="prod" class="product-slider-item" /> -->
+                    <product-card
+                        :product="prod"
+                        class="product-slider-item" />
                 </div>
             </fig-slider>
         </fig-overlay>
@@ -111,7 +111,7 @@ export default {
 @screen sm {
     .fig-product-slider:hover > * {
         /* transform: scale(1) translate3d(-2rem, 0, 0) !important; */
-        opacity: .3;
+        /* opacity: .3; */
     }
 
     .fig-product-slider .Slider__slide {

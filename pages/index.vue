@@ -1,34 +1,45 @@
 <script>
-import HeroMain from '@/components/HeroMain';
-import ProductCard from '@/components/product/ProductCard';
+import ProductSlider from '@/components/home/productSlider/ProductSlider.vue';
+import ProductSubtypeDataProvider from '@/components/product/ProductSubtypeDataProvider.js';
+
 import {
     FigProductGrid,
-    FigContent
+    FigContent,
+    FigOverlay,
+    FigSlider,
+    FigHeroSlider
 } from '@notoursllc/figleaf';
-
-
-
-
 
 
 export default {
     components: {
-        HeroMain,
-        ProductCard,
         FigProductGrid,
-        FigContent
+        FigContent,
+        FigSlider,
+        FigOverlay,
+        FigHeroSlider,
+        ProductSubtypeDataProvider,
+        ProductSlider
+    },
+
+    data() {
+        return {
+            products: {},
+            bgImage: null,
+            productSubTypes: [],
+            heros: []
+        };
     },
 
     async asyncData({ params, store, app }) {
         try {
-            const { data } = await app.$api.product.list({
+            const { data } = await app.$api.hero.list({
                 published: true,
-                _sort: 'updated_at:desc',
-                _withRelated: '*'
+                _sort: 'ordinal:asc',
             });
 
             return {
-                products: data
+                heros: data
             };
         }
         catch(err) {
@@ -36,11 +47,19 @@ export default {
         }
     },
 
-    data() {
-        return {
-            products: {},
-            bgImage: null
-        };
+    created() {
+        const subTypes = this.$store.state.product.subTypes;
+
+        for(const label in subTypes) {
+            const type = subTypes[label];
+
+            if(type.value && type.published) {
+                this.productSubTypes.push({
+                    label: this.$t(label),
+                    value: type.value
+                });
+            }
+        }
     },
 
     head() {
@@ -56,30 +75,28 @@ export default {
 
 
 <template>
-    <fig-content full-height class="pt-2">
-        <div class="pb-3">
-            <hero-main bg-image="/images/backgrounds/bg_black_5.jpg">
-                <!-- <div class="heading-icon">
-                    <icon-logo icon-name="logo" class="vam" width="125px" />
-                </div> -->
-                <div class="heading-text">
-                    <h1 class="heading"><mark>Everyday is race day.<br/>Dress like it.</mark></h1>
-                    <!-- <div class="sub-heading">
-                        This is what drivers wear off the track.
-                    </div> -->
-                </div>
-            </hero-main>
-        </div>
+    <div class="h-full">
+        <div class="Home">
+            <div class="Home__main-slider">
+                <fig-hero-slider :heros="heros" :options="{ infinite: false }" />
+            </div>
 
-        <fig-product-grid :products="products">
-            <template v-slot:default="slotProps">
-                <product-card
-                    class
-                    :product="slotProps.data.product"
-                    :image-loading="slotProps.data.index > 5 ? 'lazy' : 'eager'" />
-            </template>
-        </fig-product-grid>
-    </fig-content>
+            <div>
+                <product-subtype-data-provider
+                    v-for="(obj, idx) in productSubTypes"
+                    :key="idx"
+                    :subtype="obj.value">
+                    <template v-slot:default="{ products, loading }">
+                        <product-slider
+                            :loading="loading"
+                            :products="products">
+                            <template v-slot:title>{{ obj.label }}</template>
+                        </product-slider>
+                    </template>
+                </product-subtype-data-provider>
+            </div>
+        </div>
+    </div>
 </template>
 
 
@@ -87,5 +104,15 @@ export default {
 .hero-wrap,
 .card-list-wrap {
     padding-top: 20px;
+}
+
+.Home__main-slider {
+    height: 100vh;
+}
+
+@screen sm {
+    .Home__main-slider {
+        height: 80vh;
+    }
 }
 </style>

@@ -232,9 +232,9 @@ ul.disc {
     // }
 }
 
-.grow {
+.m-grow {
    @include grow()
 }
-.grow:hover {
+.m-grow:hover {
     @include growHover()
 }

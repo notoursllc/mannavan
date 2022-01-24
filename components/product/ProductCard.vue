@@ -3,14 +3,20 @@ import isObject from 'lodash.isobject';
 import ProductPrice from '@/components/product/ProductPrice';
 import ProductCardThumbs from '@/components/product/ProductCardThumbs';
 import VariantAccentMessage from '@/components/product/VariantAccentMessage';
-import { FigNuxtImgBunny } from '@notoursllc/figleaf';
+import {
+    FigNuxtImgBunny,
+    FigButton,
+    FigIconLabel
+} from '@notoursllc/figleaf';
 
 export default {
     components: {
         ProductPrice,
         ProductCardThumbs,
         VariantAccentMessage,
-        FigNuxtImgBunny
+        FigNuxtImgBunny,
+        FigButton,
+        FigIconLabel
     },
 
     props: {
@@ -144,7 +150,7 @@ export default {
 <template>
     <div
         class="product-card"
-        @click="onCardClick"
+
         @mouseenter="onCardMouseAction(true)"
         @mouseleave="onCardMouseAction()">
 
@@ -179,13 +185,27 @@ export default {
                 <product-price :variant="visibleVariant.variant" />
             </div>
         </div>
+
+        <div
+            @click="onCardClick"
+            class="border-t border-gray-300 flex justify-center py-3 cursor-pointer text-blue-600">
+            <fig-icon-label>
+                <template v-slot:left>
+                    <fig-icon
+                        icon="eye"
+                        :width="16"
+                        :height="16" />
+                </template>
+                <div class="pl-1">{{ $t('SEE MORE') }}</div>
+            </fig-icon-label>
+        </div>
     </div>
 </template>
 
 
-<style lang="postcss">
+<style>
 .product-card {
-    @apply bg-white rounded-md cursor-pointer mx-1;
+    @apply bg-white rounded-md mx-1;
 }
 
 /* https://www.codecaptain.io/blog/web-development/responsive-images-and-preventing-page-reflow/474 */
@@ -196,11 +216,11 @@ export default {
 }
 
 .product-card > figure > img {
-    @apply absolute w-full h-full top-0 left-0;
+    @apply absolute w-full h-auto top-0 left-0;
 }
 
 .pic-card-info {
     @apply p-3 text-base font-semibold relative overflow-hidden;
-    min-height: 140px;
+    min-height: 100px;
 }
 </style>
