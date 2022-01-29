@@ -81,7 +81,7 @@ export default {
                 <fig-hero-slider :heros="heros" :options="{ infinite: false }" />
             </div>
 
-            <div>
+            <div class="px-4">
                 <product-subtype-data-provider
                     v-for="(obj, idx) in productSubTypes"
                     :key="idx"

@@ -150,15 +150,16 @@ export default {
 <template>
     <div
         class="product-card"
-
+        @click="onCardClick"
         @mouseenter="onCardMouseAction(true)"
         @mouseleave="onCardMouseAction()">
 
-        <figure>
+        <figure class="rounded-t-md">
             <fig-nuxt-img-bunny
                 v-if="visibleVariant.coverImageUrl"
                 :src="visibleVariant.coverImageUrl"
                 :loading="imageLoading"
+                class="rounded-t"
                 sizes="lg:575px md:375px sm:500px" />
         </figure>
 
@@ -186,7 +187,7 @@ export default {
             </div>
         </div>
 
-        <div
+        <!-- <div
             @click="onCardClick"
             class="border-t border-gray-300 flex justify-center py-3 cursor-pointer text-blue-600">
             <fig-icon-label>
@@ -198,14 +199,14 @@ export default {
                 </template>
                 <div class="pl-1">{{ $t('SEE MORE') }}</div>
             </fig-icon-label>
-        </div>
+        </div> -->
     </div>
 </template>
 
 
 <style>
 .product-card {
-    @apply bg-white rounded-md mx-1;
+    @apply bg-white rounded cursor-pointer;
 }
 
 /* https://www.codecaptain.io/blog/web-development/responsive-images-and-preventing-page-reflow/474 */
