@@ -329,7 +329,7 @@ export default {
                 <fig-stock-level-warning
                     :qty="visibleVariant.total_inventory_count" />
 
-                <div class="mtl">
+                <div class="mt-6">
                     <div class="flex items-center font-medium mb-1 w-full">
                         <div class="text-black flex-grow">{{ $t('Select a size') }}:</div>
                         <!-- <div class="text-gray-500">{{ $t('Size guide') }}</div> -->

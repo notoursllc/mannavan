@@ -104,7 +104,6 @@ export default {
     ** Global CSS
     */
     css: [
-        '@/assets/css/base.scss',
         '@/assets/css/base.css',
         '@/node_modules/@notoursllc/figleaf/assets/css/tailwind.css'
     ],

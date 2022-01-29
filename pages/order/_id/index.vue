@@ -59,7 +59,7 @@ export default {
         </div>
 
         <template v-else>
-            <header class="hero tac">
+            <header class="hero text-center">
                 <div class="pt-7 pb-10">
                     <div class="flex items-center justify-center">
                         <div class="sway">

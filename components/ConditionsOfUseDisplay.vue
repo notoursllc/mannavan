@@ -21,7 +21,7 @@ export default {
         Welcome to the <brand-name /> website, operated by Not Ours, LLC. (<brand-name />) and located at
         {{ siteUrl }} (the "Site"). The following terms and conditions (“Terms”) govern your use of the Site.
 
-        <div class="mtl">
+        <div class="mt-6">
             By accessing, viewing, or using the content, material, products, or services available on or through the Site,
             you certify that you have read, understand, and agree to be legally bound by these Terms, as well as our
             Privacy Policy, each of which is incorporated by reference as if fully set forth herein. You further certify that
@@ -40,7 +40,7 @@ export default {
         secret, safe, and secure at all times. <brand-name /> will not be held responsible or liable for any misuse of your account
         in the event that a third party has access to and uses your password and account login in any way.
 
-        <div class="mtl">
+        <div class="mt-6">
             When placing an order through the Site, you will be required to provide other personal information, such as
             shipping address, billing address, and payment details. Additional information may be collected by <brand-name />
             or its third party providers at this time for security and anti-fraud purposes. You represent that the personal
@@ -50,7 +50,7 @@ export default {
             on the Site.
         </div>
 
-        <div class="mtl">
+        <div class="mt-6">
             Any personal information that you provide to us via the Site is subject to our Privacy Policy.
         </div>
 
@@ -73,7 +73,7 @@ export default {
         may only use the Site and Services for your non-commercial, non-exclusive, non-assignable, non-transferable and limited
         personal use, and for no other purposes.
 
-        <div class="mtl">
+        <div class="mt-6">
             You will not (and will not attempt to):
         </div>
 
@@ -102,7 +102,7 @@ export default {
         federal and state trademark law. Under no circumstances will you have any rights of any kind in or to the Site Content, other than the
         right to use the Site Content in accordance with these Terms.
 
-        <div class="mtl">
+        <div class="mt-6">
             Certain features of the Site may allow you to contribute feedback and other information to the Site for access, use,
             viewing, and commentary by other users of the Site (collectively, “Comments”). By posting Comments, you represent
             that you have the full legal right to provide the Comments and that use of the Comments by <brand-name /> on the
@@ -133,7 +133,7 @@ export default {
         We have made every effort to display as accurately as possible the colors of our products that appear at the Site, but we
         cannot guarantee that your computer monitor's display of any color will be accurate.
 
-        <div class="mtl">
+        <div class="mt-6">
             <brand-name /> expressly disclaims, to the fullest extent permitted by law, any express or implied warranties: (i) that the
             Site, Services, Site Content, goods, advice, information or links provided on the Site will meet your requirements; (ii) that
             the Services will be uninterrupted, timely, secure or free from error; (iii) that defects in the operation or functionality
@@ -144,7 +144,7 @@ export default {
             not expressly stated in these Terms.
         </div>
 
-        <div class="mtl">
+        <div class="mt-6">
             You understand that the technical processing and transmission of any Site Content and Comments may be transferred
             unencrypted and involve transmissions over various networks and changes to conform and adapt to technical requirements
             of connecting networks or devices. Please be advised that we do not guarantee that any information sent to or from our
@@ -158,7 +158,7 @@ export default {
             computer related to or resulting from use of the Services or the Site.
         </div>
 
-        <div class="mtl">
+        <div class="mt-6">
             No conditions, warranties or other terms (including any implied terms as to satisfactory quality, fitness for purpose
             or conformance with description) apply to the Site, Site Content and/or Services except to the extent that they are
             expressly set out in these Terms.
@@ -170,7 +170,7 @@ export default {
         OF THE CLAIM. IF ANY PART OF THIS LIMITATION OF LIABILITY IS FOUND TO BE INVALID OR UNENFORCEABLE FOR ANY REASON, THEN THE TOTAL
         LIABILITY OF <brand-name :uppercase="true" /> AND ITS LICENSORS SHALL NOT EXCEED TEN DOLLARS ($10).
 
-        <div class="mtl">
+        <div class="mt-6">
             Without limiting the foregoing, you understand and acknowledge that <brand-name /> shall not be liable to you for:
             <ul>
                 <li>Any indirect, incidental, consequential, punitive or exemplary losses which may be incurred by you arising out
@@ -187,12 +187,12 @@ export default {
             </ul>
         </div>
 
-        <div class="mtl">
+        <div class="mt-6">
             The limitations on <brand-name />’s liability to you in this Section 7 shall apply whether or not <brand-name /> has
             been advised of or should have been aware of the possibility of any such losses arising.
         </div>
 
-        <div class="mtl">
+        <div class="mt-6">
             IF YOU ARE DISSATISFIED WITH THE SITE, THE SERVICES, OR THE TERMS OF USE, YOUR SOLE AND EXCLUSIVE REMEDY IS TO
             DISCONTINUE USING THE SITE AND SERVICES.
         </div>
@@ -236,7 +236,7 @@ export default {
         enforceability of this agreement to arbitrate shall be for a court of competent jurisdiction to decide. Arbitration shall
         take place in San Francisco, California, unless <brand-name /> elects otherwise.
 
-        <div class="mtl">
+        <div class="mt-6">
             The arbitrator will decide the substance of all claims in accordance with the laws of the State of California. The
             arbitrator shall not be bound by rulings in prior arbitrations involving different <brand-name /> users, but is bound
             by rulings in prior arbitrations involving the same <brand-name /> user to the extent required by applicable law. The
@@ -256,7 +256,7 @@ export default {
             the other parts of this agreement to arbitrate shall still apply.
         </div>
 
-        <div class="mtl">
+        <div class="mt-6">
             You can choose to reject this agreement to arbitrate by mailing us a written opt-out notice (“Opt-Out Notice”). The Opt-Out
             Notice must be postmarked no later than thirty days after the date you accept these Terms for the first time. You must complete
             the Opt-Out Notice form by providing the information called for in the form, including your name, address (including street
@@ -280,7 +280,7 @@ export default {
         notices regarding changes to the Terms of Use. You understand that it is your responsibility to check the Terms regularly
         for changes.
 
-        <div class="mtl">
+        <div class="mt-6">
             You agree that if <brand-name /> does not exercise or enforce any legal right or remedy which is contained in these Terms
             of Use (or which <brand-name /> has the benefit of under any applicable law), this will not be taken to be a formal waiver
             of <brand-name />’s rights and that those rights or remedies will still be available to <brand-name />. If any court of
@@ -289,7 +289,7 @@ export default {
             provisions will continue to be valid and enforceable.
         </div>
 
-        <div class="mtl">
+        <div class="mt-6">
             The Site is controlled and operated from within the United States. Without limiting anything else, <brand-name /> makes
             no representation that the Site, Site Content, Comments, services, products, information or other materials available on,
             in, or through the Site is appropriate or available for use in other locations, and access to them from territories where

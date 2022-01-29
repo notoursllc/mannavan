@@ -591,9 +591,6 @@ export default {
 
 
 <style lang="scss">
-@import '~assets/css/components/_variables.scss';
-@import "~assets/css/components/_mixins.scss";
-
 .agile:focus,
 .agile:active,
 .agile *:focus,
@@ -658,12 +655,7 @@ export default {
     }
 
     .agile__slide {
-        @include flexbox();
-        @include justify-content(center);
-        @include align-items(center);
-        @include flex-grow(1);
-        flex-shrink: 0;
-        overflow: hidden;
+        @apply flex justify-center items-center grow shrink-0 overflow-hidden;
     }
 
     .agile__slide,
@@ -695,16 +687,8 @@ export default {
         justify-content: space-between;
 
         .agile__nav-button {
-            background: none;
+            @apply flex justify-center items-center absolute h-full cursor-pointer border-0 bg-none top-0;
             width: 90px;
-            border: none;
-            cursor: pointer;
-            height: 100%;
-            position: absolute;
-            top: 0;
-            @include flexbox();
-            @include justify-content(center);
-            @include align-items(center);
 
             &:hover {
                 background: rgba(255,255,255,0.2);
@@ -834,7 +818,7 @@ export default {
         }
     }
 
-    @media #{$medium-and-up} {
+    @media only screen and (min-width : 641px) {
         .agile_full {
             .agile_full_close {
                 top: 40px;
@@ -860,14 +844,11 @@ export default {
 
     @media only screen and (min-width: 1024px) {
         .agile__slides {
-            @include flexbox();
-            @include flex-wrap(wrap);
-            @include justify-content(space-between);
-            @include align-items(flex-start);
+            @apply flex flex-wrap justify-between items-start;
             padding: 10px 0 0 10px;
 
             .slide {
-                @include flex(none);
+                @apply flex-none;
                 width: 50% !important;
                 padding: 0 10px 10px 0;
             }

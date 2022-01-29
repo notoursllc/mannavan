@@ -42,22 +42,22 @@ export default {
                 <li>tailor our online or on-site offerings to your preferences</li>
             </ul>
 
-            <div class="mtl">
+            <div class="mt-6">
                 We may also collect and summarize customer information in a format that no longer identifies the individual for statistical purposes.
             </div>
 
-            <div class="mtl">
+            <div class="mt-6">
                 Personal information typically includes your name, address, phone number, and e-mail address. You can always choose
                 not to provide us with any of your personal information. However, if you make this choice we may not be able to provide
                 you with the product, service, or information that you requested.
             </div>
 
-            <div class="mtl">
+            <div class="mt-6">
                 Non-personal information does not identify you as an individual. For example, we may ask you for your postal code to assist us with
                 planning our advertising and promotional efforts.
             </div>
 
-            <div class="mtl">
+            <div class="mt-6">
                 In no event will your personal information be used or disclosed for purposes other than those for which we collect it, except with your
                 consent or as required by law.
             </div>
@@ -102,7 +102,7 @@ export default {
             will not be able to use certain features of the Web Sites and you will not be able to engage in transactions through the Web Sites.
         </div>
 
-        <div class="mtl">
+        <div class="mt-6">
             With any of the services on our Web Sites, we may also use your personal information to contact and correspond with you and
             to respond to your inquiries. With your consent, we may send to you, from time to time, email or other communications regarding goods
             or services we believe will interest you.
@@ -126,7 +126,7 @@ export default {
             are using, the sections of the Web Site you visit, the Web Site pages read and images viewed, and the content you download from the Web Site.
         </div>
 
-        <div class="mtl">
+        <div class="mt-6">
             This non-personal information is used for Web Site and system administration purposes and to improve the Web Site.
         </div>
 
@@ -157,7 +157,7 @@ export default {
             sites or Internet resources or their collection, use and disclosure of your personal information.
         </div>
 
-        <div class="mtl">
+        <div class="mt-6">
             We encourage you to read the privacy policies of those other sites to learn how they collect and use information about you.
         </div>
 
@@ -176,7 +176,7 @@ export default {
             to your address and credit card information, with third party service providers.
         </div>
 
-        <div class="mtl">
+        <div class="mt-6">
             We will use reasonable efforts to ensure that your personal information is used in a manner that is consistent with this Policy. If you
             do not wish us to provide your personal information to those service providers, we may be unable to process your transaction.
         </div>
@@ -193,7 +193,7 @@ export default {
             publicly available on the Site or what others do with information you share with them on the Site.
         </div>
 
-        <div class="mtl">
+        <div class="mt-6">
             Name and Likeness. - We may also publish your name, voice, likeness and other Personal Information that is part of your User
             Content, and we may use the content, or any portion of the content, for advertising, marketing, publicity and promotional activities.
             By connecting with the {{ brandName }} brands through our social media pages or accounts, or by posting content using {{ brandName }}-created hashtags
@@ -248,7 +248,7 @@ export default {
             the accuracy and completeness of the information and to have it amended as appropriate.
         </div>
 
-        <div class="mtl">
+        <div class="mt-6">
             You can also ask us to change your preferences regarding how we use or disclose your information, or let us know that you do not
             wish to receive any further communication from us.
         </div>
@@ -260,7 +260,7 @@ export default {
             longer needed, or we remove your personally identifiable information.
         </div>
 
-        <div class="mtl">
+        <div class="mt-6">
             You can also request that we remove your information from our records. Subject to our requirements for continued retention of
             your information, for example, for billing, audit, or warranty purposes, we will make every reasonable effort to honour your request.
         </div>
@@ -271,7 +271,7 @@ export default {
             complaints about the privacy policies please contact us at {{ helpEmailAddress }}
         </div>
 
-        <div class="mtl">
+        <div class="mt-6">
             We will respond to your request or investigate your concern as quickly as we can.
         </div>
 
@@ -285,6 +285,24 @@ export default {
 </template>
 
 
-<style lang="scss">
-    @import "~assets/css/components/_privacy.scss";
+<style>
+.priv h2 {
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 35px;
+    margin-top: 20px;
+}
+
+.priv p {
+    margin-top: 15px;
+}
+
+.priv ul {
+    margin: 14px 0 14px 28px;
+    padding-left: 0;
+}
+
+.priv ul li {
+    list-style: disc;
+}
 </style>

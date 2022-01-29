@@ -55,10 +55,10 @@ export default Vue.extend({
 </template>
 
 
-<style lang="postcss" scoped>
+<style scoped>
 #__nuxt,
 #__layout,
 .layoutContainer {
-    @apply flex flex-col h-screen;
+    @apply flex flex-col h-screen text-gray-700;
 }
 </style>

@@ -4,7 +4,6 @@ module.exports = {
     ...figleafTranslations,
 
     "2A server error occurred while setting the shipping rates": "A server error occurred while setting the shipping rates",
-    "About Billing and Shipping Addresses": "About Billing and Shipping Addresses",
     "accept_privacy_and_tos": "By placing your order, you agree to our {linkPrivacy} and {linkTos}.",
     "Add Company, C/O, Apt, Suite, Unit": "Add Company, C/O, Apt, Suite, Unit",
     "Add To Your Order": "Add To Your Order",
@@ -26,16 +25,12 @@ module.exports = {
     "Cart": "Cart",
     "cart_product_qty_limit": "Sorry, you have reached the quantity limit. Please remove an item and try again.",
     "Checkout": "Checkout",
-    "Chest": "Chest",
-    "Chest measurement": "Chest measurement",
-    "chest_measurement_description": "The chest is measured around the circumference of the body, 1 inch below the armpit.",
     "Close": "Close",
     "Color": "Color",
     "Company": "Company",
     "Conditions of Use": "Conditions of Use",
     "Contact BreadVan": "Contact BreadVan",
     "Continue to payment": "Continue to payment",
-    "correct_address_statement": "If the address contains typos or other errors, your package may be undeliverable.",
     "cvv_info": "3-digit security code usually found on the back of your card. American Express cards have a 4-digit code located on the front.",
 
     "Delete": "Delete",
@@ -51,19 +46,10 @@ module.exports = {
     "footer_cart_secure": "We never store your card details.  Our cart is protected by 256-bit encrypted connection.",
 
     "Hats": "Hats",
-    "Hip": "Hip",
-    "Hip measurement": "Hip measurement",
-    "hip_measurement_description": "The hip is measured around the circumference of the body, at the bottom of the shirt.",
 
-    "In inches": "In inches",
     "invalid email address format": "invalid email address format",
     "Item": "Item",
 
-    "Length": "Length",
-    "Length measurement": "Length measurement",
-    "length_measurement_description": "The length is measured down the entire height of the shirt, from the hight point of the shoulder to the bottom.",
-
-    "Make sure your address is correct": "Make sure your address is correct",
     "Message": "Message",
 
     "OK": "OK",
@@ -109,8 +95,6 @@ module.exports = {
     "Shopping Cart": "Shopping Cart",
     "Size": "Size",
     "Size guide": "Size guide",
-    "Sleeve measurement": "Sleeve measurement",
-    "sleeve_measurement_description": "The sleeve length is measured from the shoulder seam to the end of the sleeve.",
     "Sorry, this size is out of stock": "Sorry, this size is out of stock",
     "Stay in checkout": "Stay in checkout",
     "Submit": "Submit",
@@ -118,7 +102,6 @@ module.exports = {
     "subtotal_tooltip": "The subtotal reflects the total price of your order before shipping costs and taxes.",
 
     "TERMS": "TERMS",
-    "Tips for entering addresses": "Tips for entering addresses",
     "Tops": "Tops",
 
     "Unavailable": "Unavailable",

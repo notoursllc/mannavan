@@ -148,7 +148,7 @@ export default {
 </template>
 
 
-<style lang="postcss">
+<style>
 .media-thumb {
     @apply cursor-pointer;
 }
