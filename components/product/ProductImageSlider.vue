@@ -206,7 +206,8 @@ export default Vue.extend({
                         v-if="url"
                         :src="url"
                         loading="eager"
-                        sizes="lg:550px md:400px" />
+                        sizes="lg:550px md:400px"
+                        class="w-full" />
                 </div>
             </li>
         </ul>
@@ -332,7 +333,7 @@ export default Vue.extend({
 
 .slider-nav-dots-container {
     @apply absolute w-full pb-2;
-    bottom: -14px;
+    bottom: 0;
 }
 .slider-nav-dots {
     @apply flex items-center list-none whitespace-nowrap relative p-0 py-2 m-0;
@@ -343,7 +344,7 @@ export default Vue.extend({
     @apply mx-2 my-0;
 }
 .slider-nav-dot button {
-    @apply bg-transparent border border-gray-400 rounded-full cursor-pointer block m-0 p-0;
+    @apply bg-transparent border border-white rounded-full cursor-pointer block m-0 p-0;
     height: 10px;
     width: 10px;
     font-size: 0;
@@ -353,7 +354,7 @@ export default Vue.extend({
 
 .slider-nav-dot button:hover,
 .slider-nav-dot-current button {
-    @apply bg-gray-400;
+    @apply bg-white;
 }
 
 .slider-disabled {
