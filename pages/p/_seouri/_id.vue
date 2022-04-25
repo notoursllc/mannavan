@@ -15,7 +15,10 @@ import {
     FigStockLevelWarning,
     FigTexasToast,
     FigContent,
-    FigNuxtImgBunny
+    FigNuxtImgBunny,
+    FigAddress,
+    FigIcon,
+    FigIconLabel
 } from '@notoursllc/figleaf';
 
 export default {
@@ -31,7 +34,10 @@ export default {
         FigStockLevelWarning,
         FigTexasToast,
         FigContent,
-        FigNuxtImgBunny
+        FigNuxtImgBunny,
+        FigAddress,
+        FigIcon,
+        FigIconLabel
     },
 
     async asyncData({ route, store, app }) {
@@ -298,7 +304,7 @@ export default {
     <fig-content class="pt-4">
         <fig-product-details-layout v-if="product">
             <!-- pics -->
-            <template slot="pics">
+            <template v-slot:pics>
                 <client-only placeholder="Carousel loading...">
                     <product-image-slider
                         ref="slider"
@@ -307,17 +313,17 @@ export default {
                 </client-only>
             </template>
 
-            <template slot="title">{{ product.title }}</template>
+            <template v-slot:title>{{ product.title }}</template>
 
-            <template slot="description">{{ product.description }}</template>
+            <template v-slot:description>{{ product.description }}</template>
 
-            <template slot="price">
+            <template v-slot:price>
                 <product-price
                     :variant="visibleVariant"
                     :sku="form.selectedSku" />
             </template>
 
-            <template slot="thumbs">
+            <template v-slot:thumbs>
                 <product-card-thumbs
                     :product="product"
                     preset="prodthumb"
@@ -325,7 +331,7 @@ export default {
                     @click="onThumbClick" />
             </template>
 
-            <template slot="sizes">
+            <template v-slot:sizes>
                 <fig-stock-level-warning
                     :qty="visibleVariant.total_inventory_count" />
 
@@ -342,7 +348,7 @@ export default {
                 </div>
             </template>
 
-            <template slot="button">
+            <template v-slot:button>
                 <fig-overlay :show="cartButtonLoading">
                     <div v-if="!visibleVariant">{{ $t('Unavailable') }}</div>
                     <template v-else>
@@ -363,6 +369,44 @@ export default {
                             :loading="isLoading">{{ $t('Add To Your Order') }}</fig-button>
                     </template>
                 </fig-overlay>
+            </template>
+
+            <template v-if="product.artist" v-slot:artist>
+                <div class="p-4 border border-gray-200 rounded-sm">
+                    <div class="text-gray-600 text-xs font-semibold mb-2">{{ $t('PHOTOGRAPHER') }}</div>
+                    <div class="flex flex-wrap">
+                        <div class="pr-2" v-if="product.artist.image">
+                            <fig-nuxt-img-bunny
+                                :src="product.artist.image"
+                                preset="prodthumb"
+                                loading="eager" />
+                        </div>
+                        <div>
+                            <div class="font-semibold">{{ product.artist.name }}</div>
+                            <div>
+                                <fig-icon-label>
+                                    <template v-slot:left>
+                                        <fig-icon
+                                            icon="map-pin"
+                                            :width="18"
+                                            :height="18"
+                                            stroke="#a19e9e" />
+                                    </template>
+
+                                    <div class="text-sm text-gray-400">
+                                        <fig-address
+                                            :city="product.artist.city"
+                                            :state="product.artist.state"
+                                            :country-code="product.artist.countryCodeAlpha2"
+                                            country-code-inline />
+                                    </div>
+                                </fig-icon-label>
+
+                                <div v-if="product.artist.description" class="pt-1">{{ product.artist.description }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </template>
         </fig-product-details-layout>
 
