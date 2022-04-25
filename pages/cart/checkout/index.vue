@@ -20,6 +20,9 @@ import {
     FigContent
 } from '@notoursllc/figleaf';
 
+import { loadStripe } from '@stripe/stripe-js/pure';
+loadStripe.setLoadParameters({ advancedFraudSignals: false }) // https://github.com/stripe/stripe-js#disabling-advanced-fraud-detection-signals
+
 
 const addressFormBase = {
     firstName: null,
@@ -119,7 +122,8 @@ export default {
     },
 
     async mounted() {
-        this.Stripe = Stripe(this.$config.stripePublishableKey);
+        this.Stripe = await loadStripe(this.$config.stripePublishableKey);
+
         await this.getCart();
         this.setShippingFormFromCart();
     },
@@ -388,19 +392,19 @@ export default {
                         card: cardElement,
 
                         //https://stripe.com/docs/api/payment_methods/create#create_payment_method-billing_details
-                        billing_details: {
-                            address: {
-                                city: billingAddressSource.city,
-                                country: billingAddressSource.countryCodeAlpha2,
-                                line1: billingAddressSource.streetAddress,
-                                line2: billingAddressSource.extendedAddress,
-                                postal_code: billingAddressSource.postalCode,
-                                state: billingAddressSource.state
-                            },
-                            name: `${billingAddressSource.firstName} ${billingAddressSource.lastName}`.trim()
-                            // email: null,
-                            // phone: null
-                        },
+                        // billing_details: {
+                        //     address: {
+                        //         city: billingAddressSource.city,
+                        //         country: billingAddressSource.countryCodeAlpha2,
+                        //         line1: billingAddressSource.streetAddress,
+                        //         line2: billingAddressSource.extendedAddress,
+                        //         postal_code: billingAddressSource.postalCode,
+                        //         state: billingAddressSource.state
+                        //     },
+                        //     name: `${billingAddressSource.firstName} ${billingAddressSource.lastName}`.trim()
+                        //     // email: null,
+                        //     // phone: null
+                        // },
 
                         // https://stripe.com/docs/api/payment_methods/create#create_payment_method-metadata
                         metadata: {

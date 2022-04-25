@@ -64,12 +64,6 @@ export default {
             { rel: 'icon', type: 'image/x-icon', href: '/images/favicon.ico' }
         ],
         script: [
-            {
-                src: 'https://js.stripe.com/v3/',
-                body: true,
-                async: false
-            }
-
             // NOTE: Putting this in the head() of the cart/checkout/index.vue file, instead of here,
             // causes this to be loaded only for that route.  That's a good thing, but it caused a race
             // condition resulting in a javascript error: SqPaymentForm is not defined
