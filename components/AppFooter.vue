@@ -1,9 +1,13 @@
 <script>
-import { FigContent } from '@notoursllc/figleaf';
+import {
+    FigContent,
+    FigIconLabel
+} from '@notoursllc/figleaf';
 
 export default {
     components: {
-        FigContent
+        FigContent,
+        FigIconLabel
     },
 
     data: function() {
@@ -93,10 +97,15 @@ export default {
         <div class="footer-base">
             <fig-content>
                 <div class="flex flex-row items-center justify-between text-gray-700">
-                    <div>
-                        <span class="pr-1"><fig-icon icon="shield-check" width="24" height="24" /></span>
-                        <span>{{ $t('footer_cart_secure') }}</span>
-                    </div>
+                    <fig-icon-label>
+                        <template v-slot:left>
+                            <fig-icon
+                                icon="shield-check"
+                                width="24"
+                                height="24" />
+                        </template>
+                        {{ $t('footer_cart_secure') }}
+                    </fig-icon-label>
 
                     <div>&#169; {{ year }} {{ siteName }}, {{ $t('All Rights Reserved') }}.</div>
                 </div>
