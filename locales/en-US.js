@@ -50,6 +50,8 @@ module.exports = {
     "invalid email address format": "invalid email address format",
     "Item": "Item",
 
+    "Loading images...": "Loading images...",
+
     "Message": "Message",
 
     "OK": "OK",

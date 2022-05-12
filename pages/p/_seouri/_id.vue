@@ -18,7 +18,8 @@ import {
     FigNuxtImgBunny,
     FigAddress,
     FigIcon,
-    FigIconLabel
+    FigIconLabel,
+    FigYouTube
 } from '@notoursllc/figleaf';
 
 export default {
@@ -37,7 +38,8 @@ export default {
         FigNuxtImgBunny,
         FigAddress,
         FigIcon,
-        FigIconLabel
+        FigIconLabel,
+        FigYouTube
     },
 
     async asyncData({ route, store, app }) {
@@ -305,7 +307,7 @@ export default {
         <fig-product-details-layout v-if="product">
             <!-- pics -->
             <template v-slot:pics>
-                <client-only placeholder="Carousel loading...">
+                <client-only :placeholder="$t('Loading images...')">
                     <product-image-slider
                         ref="slider"
                         :product="product"
@@ -407,6 +409,12 @@ export default {
                         </div>
                     </div>
                 </div>
+            </template>
+
+            <template v-if="product.video_url" v-slot:video>
+                <fig-you-tube
+                    :url="product.video_url"
+                    fit-parent />
             </template>
         </fig-product-details-layout>
 
