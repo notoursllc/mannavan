@@ -59,7 +59,7 @@
     "vue-jest": "^3.0.4"
   },
   "engines": {
-    "node": ">=16.15.0"
+    "node": "16.15.0"
   },
   "browserslist": [
     "> 1%",
