@@ -1,14 +1,18 @@
 <script>
 import {
     FigContent,
-    FigIconLabel
+    FigIconLabel,
+    FigBvLogo
 } from '@notoursllc/figleaf';
+import Divider from '@notoursllc/figleaf/components/divider/Divider.vue';
 
 export default {
     components: {
-        FigContent,
-        FigIconLabel
-    },
+    FigContent,
+    FigIconLabel,
+    FigBvLogo,
+    Divider
+},
 
     data: function() {
         return {
@@ -26,96 +30,93 @@ export default {
 </script>
 
 <template>
-    <footer class="footerm">
-        <div class="px-3 py-5 mx-auto mt-3 max-w-7xl">
-            <fig-content class="flex flex-row justify-between items-start flex-wrap">
-                <nav class="nav-item">
-                    <dl>
-                        <dt>
-                            <div class="footer-badge">{{ $t('PRODUCTS') }}</div>
-                        </dt>
+    <footer class="footer">
+        <fig-content class="py-10 px-6">
+            <div class="sm:grid sm:grid-cols-4 sm:gap-8">
+                <div>
+                    <fig-bv-logo />
+                </div>
 
-                        <dd v-for="(obj, type) in productSubTypes" :key="obj.id">
+                <!-- PRODUCTS -->
+                <div class="mt-10 md:mt-0">
+                    <h3 class="footer-badge">{{ $t('PRODUCTS') }}</h3>
+                    <ul role="list" class="mt-4 space-y-2">
+                        <li v-for="(obj, type) in productSubTypes" :key="obj.id">
                             <nuxt-link
                                 tag="a"
                                 :to="{ name: 'productSubType', params: { productSubType: obj.slug } }">{{ $t(type) }}</nuxt-link>
-                        </dd>
-                        <dd>
+                        </li>
+                        <li>
                             <nuxt-link
                                 :to="{ name: 'index' }"
                                 tag="a">{{ $t('All') }}</nuxt-link>
-                        </dd>
-                    </dl>
-                </nav>
+                        </li>
+                    </ul>
+                </div>
 
-                <nav class="nav-item">
-                    <dl>
-                        <dt>
-                            <div class="footer-badge">{{ $t('TERMS') }}</div>
-                        </dt>
-
-                        <dd>
+                <!-- TERMS -->
+                <div class="mt-10 md:mt-0">
+                    <h3 class="footer-badge">{{ $t('TERMS') }}</h3>
+                    <ul role="list" class="mt-4 space-y-2">
+                        <li>
                             <nuxt-link
                                 tag="a"
                                 class="underline"
                                 :to="{name: 'returns'}"
                                 data-testid="footer-link-returns">{{ $t('Returns / Exchanges') }}</nuxt-link>
-                        </dd>
-                        <dd>
+                        </li>
+                        <li>
                             <nuxt-link
                                 :to="{name: 'privacy'}"
                                 data-testid="footer-link-privacy">{{ $t('Privacy') }}</nuxt-link>
-                        </dd>
-                        <dd>
+                        </li>
+                        <li>
                             <nuxt-link
                                 :to="{name: 'conditions-of-use'}"
                                 data-testid="footer-link-conditions">{{ $t('Conditions of Use') }}</nuxt-link>
-                        </dd>
-                        <dd>
+                        </li>
+                        <li>
                             <nuxt-link
                                 :to="{name: 'use-of-cookies'}"
                                 data-testid="use-of-cookies">{{ $t('Use of Cookies') }}</nuxt-link>
-                        </dd>
-                    </dl>
-                </nav>
+                        </li>
+                    </ul>
+                </div>
 
-                <nav class="nav-item">
-                    <dl>
-                        <dt>
-                            <div class="footer-badge">{{ $t('BREADVAN') }}</div>
-                        </dt>
-                        <dd>
+                <!-- BREADVAN -->
+                <div class="mt-10 md:mt-0">
+                    <h3 class="footer-badge">{{ $t('BREADVAN') }}</h3>
+                    <ul role="list" class="mt-4 space-y-2">
+                        <li>
                             <nuxt-link
                                 :to="{name: 'contact-us'}"
                                 data-testid="footer-link-contactus">{{ $t('Contact BreadVan') }}</nuxt-link>
-                        </dd>
-                    </dl>
-                </nav>
-            </fig-content>
-        </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </fig-content>
 
         <div class="footer-base">
-            <fig-content>
-                <div class="flex flex-row items-center justify-between text-gray-700">
-                    <fig-icon-label>
-                        <template v-slot:left>
-                            <fig-icon
-                                icon="shield-check"
-                                width="24"
-                                height="24" />
-                        </template>
-                        {{ $t('footer_cart_secure') }}
-                    </fig-icon-label>
+            <fig-content class="sm:grid sm:grid-cols-2 sm:gap-8 text-gray-700">
+                <fig-icon-label>
+                    <template v-slot:left>
+                        <fig-icon
+                            icon="shield-check"
+                            width="24"
+                            height="24" />
+                    </template>
+                    {{ $t('footer_cart_secure') }}
+                </fig-icon-label>
 
-                    <div>&#169; {{ year }} {{ siteName }}, {{ $t('All Rights Reserved') }}.</div>
-                </div>
+                <div class="mt-4 md:mt-0 md:text-right">&#169; {{ year }} {{ siteName }}, {{ $t('All Rights Reserved') }}.</div>
             </fig-content>
         </div>
     </footer>
 </template>
 
 
-<style lang="postcss" scoped>
+<style scoped>
 footer {
     @apply mt-24 text-sm;
     background: #cceaf1;
@@ -124,24 +125,8 @@ footer a {
     @apply text-gray-700;
     text-decoration: none !important;
 }
-footer a:hover { text-decoration: underline !important; }
-
-footer .nav-item {
-    @apply items-center justify-center flex-grow max-w-xs px-4;
-}
-
-footer dt {
-    @apply mb-4 font-semibold;
-}
-
-footer dd {
-    @apply leading-4;
-}
-
-@screen lg {
-    footer dd {
-        @apply leading-6;
-    }
+footer a:hover {
+    text-decoration: underline !important;
 }
 
 .footer-badge {

@@ -66,6 +66,7 @@ module.exports = {
     "PAYPAL_ACCOUNT_TOKENIZATION_FAILED": "PayPal tokenization failed",
     "PAYPAL_FLOW_FAILED": "Unable to initialize PayPal flow. Are your options correct?",
     "PAYPAL_WINDOW_IS_OPEN": "The PayPal secure payment popup window is open. It may appear behind this window (so look there if you do not see it).",
+    "PHOTOGRAPHER": "PHOTOGRAPHER",
     "PLACE YOUR ORDER": "PLACE YOUR ORDER",
     "Please allow a few minutes for email delivery.": "Please allow a few minutes for email delivery.",
     "Please confirm": "Please confirm",
