@@ -34,6 +34,7 @@ export default {
     data() {
         return {
             loading: false,
+            showSuccess: false,
             form: {
                 name: null,
                 company: null,
@@ -59,7 +60,11 @@ export default {
                 this.loading = true;
                 await this.$api.tenant.contactUs(this.form);
 
-                // TODO: add a success message and clear the form
+                this.showSuccess = true;
+                this.form.name = null;
+                this.form.company = null;
+                this.form.email = null;
+                this.form.message = null;
             }
             catch(err) {
                 this.$figleaf.errorToast({
@@ -77,71 +82,92 @@ export default {
 
 <template>
     <fig-content size="sm" class="pt-10">
-        <div class="text-center">
-            <div class="flex justify-center">
-                <fig-icon icon="mail" stroke-width="1px" width="80" height="80" />
-            </div>
-            <div class="mt-1 text-2xl">{{ $t('We want to hear from you!') }}</div>
-            <div class="text-base">{{ $t("We'll get back to you within 1 business day.") }}</div>
-        </div>
 
-        <fig-overlay :show="loading">
-            <div class="mt-6 text-left">
-                <fig-label-value-group
-                    density="lg"
-                    block>
-
-                    <!-- Your name -->
-                    <fig-label-value required>
-                        <template v-slot:label>{{ $t('Your name') }}:</template>
-                        <fig-form-input
-                            v-model="form.name"
-                            maxlength="100"
-                            @input="$v.$touch()" />
-                        <template v-slot:error v-if="$v.form.name.$dirty && !$v.form.name.required">{{ $t('required') }}</template>
-                    </fig-label-value>
-
-                    <!-- Company -->
-                    <fig-label-value>
-                        <template v-slot:label>{{ $t('Company') }}:</template>
-                        <fig-form-input
-                            v-model="form.company"
-                            maxlength="100" />
-                    </fig-label-value>
-
-                    <!-- Email -->
-                    <fig-label-value required>
-                        <template v-slot:label>{{ $t('Email') }}:</template>
-                        <fig-form-input
-                            v-model="form.email"
-                            maxlength="100"
-                            @input="$v.$touch()" />
-
-                        <template v-slot:error v-if="$v.form.email.$dirty && $v.form.email.$invalid">
-                            <div v-if="!$v.form.email.required">{{ $t('required') }}</div>
-                            <div v-if="$v.form.email.$dirty && !$v.form.email.email">{{ $t('invalid email address format') }}</div>
-                        </template>
-                    </fig-label-value>
-
-                    <!-- Message -->
-                    <fig-label-value required>
-                        <template v-slot:label>{{ $t('Message') }}:</template>
-                        <fig-form-textarea
-                            v-model="form.message"
-                            maxlength="10000"
-                            @input="$v.$touch()" />
-
-                        <template v-slot:error v-if="$v.form.name.$dirty && !$v.form.message.required">{{ $t('required') }}</template>
-                    </fig-label-value>
-                </fig-label-value-group>
-
-                <div class="pt-5">
-                    <fig-button
-                        variant="primary"
-                        @click="onSubmit"
-                        :disabled="$v.form.$invalid > 0">{{ $t('Submit') }}</fig-button>
+        <!-- success message -->
+        <template v-if="showSuccess">
+            <div class="text-center">
+                <div class="flex justify-center">
+                    <fig-icon
+                        icon="check-circle"
+                        stroke-width="1.5"
+                        width="80"
+                        height="80"
+                        variant="success" />
                 </div>
+                <div class="mt-1 text-2xl">{{ $t('Thank you!') }}</div>
+                <div class="text-base">{{ $t("Your message has been sent.") }}</div>
             </div>
-        </fig-overlay>
+        </template>
+
+        <!-- form -->
+        <template v-else>
+            <div class="text-center">
+                <div class="flex justify-center">
+                    <fig-icon icon="mail" stroke-width="1px" width="80" height="80" />
+                </div>
+                <div class="mt-1 text-2xl">{{ $t('We want to hear from you!') }}</div>
+                <div class="text-base">{{ $t("We'll get back to you within 1 business day.") }}</div>
+            </div>
+
+                <fig-overlay :show="loading">
+                    <div class="mt-6 text-left">
+                        <fig-label-value-group
+                            density="lg"
+                            block>
+
+                            <!-- Your name -->
+                            <fig-label-value required>
+                                <template v-slot:label>{{ $t('Your name') }}:</template>
+                                <fig-form-input
+                                    v-model="form.name"
+                                maxlength="100"
+                                @input="$v.$touch()" />
+                            <template v-slot:error v-if="$v.form.name.$dirty && !$v.form.name.required">{{ $t('required') }}</template>
+                        </fig-label-value>
+
+                        <!-- Company -->
+                        <fig-label-value>
+                            <template v-slot:label>{{ $t('Company') }}:</template>
+                            <fig-form-input
+                                v-model="form.company"
+                                maxlength="100" />
+                        </fig-label-value>
+
+                        <!-- Email -->
+                        <fig-label-value required>
+                            <template v-slot:label>{{ $t('Email') }}:</template>
+                            <fig-form-input
+                                v-model="form.email"
+                                maxlength="100"
+                                @input="$v.$touch()" />
+
+                            <template v-slot:error v-if="$v.form.email.$dirty && $v.form.email.$invalid">
+                                <div v-if="!$v.form.email.required">{{ $t('required') }}</div>
+                                <div v-if="$v.form.email.$dirty && !$v.form.email.email">{{ $t('invalid email address format') }}</div>
+                            </template>
+                        </fig-label-value>
+
+                        <!-- Message -->
+                        <fig-label-value required>
+                            <template v-slot:label>{{ $t('Message') }}:</template>
+                            <fig-form-textarea
+                                v-model="form.message"
+                                maxlength="10000"
+                                @input="$v.$touch()" />
+
+                            <template v-slot:error v-if="$v.form.name.$dirty && !$v.form.message.required">{{ $t('required') }}</template>
+                        </fig-label-value>
+                    </fig-label-value-group>
+
+                    <div class="pt-5">
+                        <fig-button
+                            variant="primary"
+                            @click="onSubmit"
+                            :disabled="$v.form.$invalid > 0">{{ $t('Submit') }}</fig-button>
+                    </div>
+                </div>
+            </fig-overlay>
+        </template>
+
     </fig-content>
 </template>

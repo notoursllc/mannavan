@@ -105,6 +105,7 @@ module.exports = {
     "subtotal_tooltip": "The subtotal reflects the total price of your order before shipping costs and taxes.",
 
     "TERMS": "TERMS",
+    "Thank you!": "Thank you!",
     "Tops": "Tops",
 
     "Unavailable": "Unavailable",
@@ -121,6 +122,7 @@ module.exports = {
     "We'll get back to you within 1 business day.": "We'll get back to you within 1 business day.",
 
     "Your cart": "Your cart",
+    "Your message has been sent.": "Your message has been sent.",
     "Your name": "Your name",
     "Your shopping cart does not contain any items.": "Your shopping cart does not contain any items.",
 
