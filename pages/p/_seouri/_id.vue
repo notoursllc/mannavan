@@ -110,8 +110,25 @@ export default {
     },
 
     computed: {
+        visibleVariantHasSizes() {
+            if (!Array.isArray(this.visibleVariant.skus)) {
+                return false;
+            }
+
+            let hasSize = false;
+
+            for(let i=0, l=this.visibleVariant.skus.length; i<l; i++) {
+                if(this.visibleVariant.skus[i].label) {
+                    hasSize = true;
+                    break;
+                }
+            }
+
+            return hasSize;
+        },
+
         addToCartButtonDisabled() {
-            return !this.form.selectedSku;
+            return this.visibleVariantHasSizes && !this.form.selectedSku;
         }
     },
 
@@ -160,6 +177,11 @@ export default {
             this.isLoading = true;
 
             try {
+                // Manually set the selectedSku if visibleVariantHasSizes is false
+                if (!this.visibleVariantHasSizes) {
+                    this.form.selectedSku = this.visibleVariant.skus[0];
+                }
+
                 // Check stock
                 await this.getSkuInventoryCount(this.form.selectedSku.id);
 
@@ -211,7 +233,9 @@ export default {
                 }
             }
             catch(err) {
-                if(err.response && err.response.data && err.response.data.message === 'INVALID_QUANTITY') {
+                const errorMsg = err?.response?.data?.message;
+
+                if(errorMsg === 'INVALID_QUANTITY') {
                     // TODO: use FigModal here instead
                     this.$refs.invalid_qty_modal.show();
                     return;
@@ -219,9 +243,10 @@ export default {
 
                 this.$figleaf.errorToast({
                     title: this.$t('Error'),
-                    text: err.response.data.message
+                    text: errorMsg || this.$t('An unknown error occurred')
                 });
 
+                console.error(err);
                 this.$bugsnag.notify(err);
             }
 
@@ -317,7 +342,13 @@ export default {
 
             <template v-slot:title>{{ product.title }}</template>
 
-            <template v-slot:description>{{ product.description }}</template>
+            <template v-slot:description>
+                {{ product.description }}
+
+                <div class="mt-4 text-sm" v-if="product.copyright">
+                    {{ product.copyright }}
+                </div>
+            </template>
 
             <template v-slot:price>
                 <product-price
@@ -337,7 +368,7 @@ export default {
                 <fig-stock-level-warning
                     :qty="visibleVariant.total_inventory_count" />
 
-                <div class="mt-6">
+                <div v-if="visibleVariantHasSizes" class="mt-6">
                     <div class="flex items-center font-medium mb-1 w-full">
                         <div class="text-black flex-grow">{{ $t('Select a size') }}:</div>
                         <!-- <div class="text-gray-500">{{ $t('Size guide') }}</div> -->

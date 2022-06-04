@@ -1,5 +1,4 @@
 <script>
-import { mapGetters } from 'vuex';
 import {
     FigHeader,
     FigVictoryIcon
@@ -12,9 +11,9 @@ export default {
     },
 
     computed: {
-        ...mapGetters({
-            inCheckoutFlow: 'ui/inCheckoutFlow'
-        }),
+        inCheckoutFlow() {
+            return this.$route.path?.substring(0, 5) === '/cart';
+        },
 
         productSubTypes() {
             return this.$store.state.product.subTypes;

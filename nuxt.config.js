@@ -160,11 +160,10 @@ export default {
         }
     },
 
-    router: {
-        middleware: [
-            'store-dispatch'
-        ]
-    },
+    // router: {
+    //     middleware: [
+    //     ]
+    // },
 
     /*
     ** Nuxt.js modules
@@ -203,6 +202,12 @@ export default {
                 tailwindcss: {},
                 autoprefixer: {}
             }
+        },
+
+        babel: {
+            plugins: [
+                '@babel/plugin-proposal-optional-chaining'
+            ]
         },
 
         transpile: [

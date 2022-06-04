@@ -233,13 +233,13 @@ export default {
                 <div class="font-semibold mb-1">{{ cartItem.product.title }}</div>
 
                 <!-- color -->
-                <div class="text-gray-600 mb-1">
+                <div v-if="selectedColor" class="text-gray-600 mb-1">
                     <div class="inline-block pr-1">{{ $t('Color') }}:</div>
                     <div class="inline-block">{{ selectedColor }}</div>
                 </div>
 
                 <!-- selected size -->
-                <div class="text-gray-600 mb-3 sm:mb-4">
+                <div v-if="selectedSize" class="text-gray-600 mb-3 sm:mb-4">
                     <div class="inline-block pr-1">{{ $t('Size') }}:</div>
                     <div class="inline-block">
                         <template v-if="!canEdit">{{ selectedSize }}</template>

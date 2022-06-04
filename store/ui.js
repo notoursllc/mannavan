@@ -8,7 +8,6 @@ export const state = () => ({
     isMobile: false,
     locales: ['en-US', 'fr-FR'],
     locale: 'en-US',
-    inCheckoutFlow: false,
     infoEmailAddress: `info@${domainName}`,
     brandName: 'BreadVan',
     siteName: domainName,
@@ -48,10 +47,6 @@ export const mutations = {
         }
     },
 
-    IN_CHECKOUT_FLOW: (state, inCheckoutFlow) => {
-        state.inCheckoutFlow = inCheckoutFlow;
-    },
-
     APP_CONFIG: (state, config) => {
         if(isObject(config)) {
             for(const prop in config) {
@@ -78,10 +73,6 @@ export const actions = {
         commit('WINDOW_RESIZE');
     },
 
-    IN_CHECKOUT_FLOW: ({ commit }, inCheckoutFlow) => {
-        commit('IN_CHECKOUT_FLOW', inCheckoutFlow);
-    },
-
     APP_CONFIG ({ commit }, config) {
         commit('APP_CONFIG', config);
     }
@@ -89,7 +80,5 @@ export const actions = {
 
 
 export const getters = {
-    inCheckoutFlow: (state) => {
-        return state.inCheckoutFlow;
-    }
+
 };

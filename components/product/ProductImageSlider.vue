@@ -270,7 +270,7 @@ export default Vue.extend({
                 class="mb-2">
                 <fig-nuxt-img-bunny
                     v-if="url"
-                    :src="url"
+                    :src="`${url}?class=w1280`"
                     :loading="index > 1 ? 'lazy' : 'eager'" />
             </div>
 

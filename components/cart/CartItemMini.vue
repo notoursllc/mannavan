@@ -56,12 +56,12 @@ export default {
             <div class="font-semibold mb-1">{{ item.product.title }}</div>
 
             <!-- color -->
-            <div class="text-gray-600">
+            <div v-if="selectedColor" class="text-gray-600">
                 {{ $t('Color') }}: {{ selectedColor }}
             </div>
 
             <!-- selected size -->
-            <div class="text-gray-600">
+            <div v-if="selectedSize" class="text-gray-600">
                 {{ $t('Size') }}: {{ selectedSize }}
             </div>
 

@@ -15,6 +15,7 @@ module.exports = {
     "An error occurred": "An error occurred",
     "An error occurred when processing your card": "An error occurred when processing your card",
     "An error occurred while processing the PayPal transaction": "An error occurred while processing the PayPal transaction",
+    "An unknown error occurred": "An unknown error occurred",
 
     "Billing": "Billing",
     "Billing address": "Billing address",
@@ -53,6 +54,7 @@ module.exports = {
     "Loading images...": "Loading images...",
 
     "Message": "Message",
+    "Mugs": "Mugs",
 
     "OK": "OK",
     "Oops we could not find the order you are looking for.": "Oops we could not find the order you are looking for.",
