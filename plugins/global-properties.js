@@ -2,10 +2,12 @@ export default async (ctx) => {
     const promises = [
         ctx.app.$api.masterType.list({
             object: 'product_type',
+            published: true,
             _sort: 'ordinal:asc'
         }),
         ctx.app.$api.masterType.list({
             object: 'product_sub_type',
+            published: true,
             _sort: 'ordinal:asc'
         }),
         ctx.app.$api.product.accentMessage.list(),

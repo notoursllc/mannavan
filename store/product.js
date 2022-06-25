@@ -8,25 +8,31 @@ export const state = () => ({
 export const mutations = {
     PRODUCT_TYPES: (state, productTypes) => {
         if(Array.isArray(productTypes)) {
+            const types = {};
             productTypes.forEach((obj) => {
-                state.types[obj.name] = obj;
+                types[obj.name] = obj;
             });
+            state.types = types;
         }
     },
 
     PRODUCT_SUBTYPES: (state, subTypes) => {
         if(Array.isArray(subTypes)) {
+            const val = {};
             subTypes.forEach((obj) => {
-                state.subTypes[obj.name] = obj;
+                val[obj.name] = obj;
             });
+            state.subTypes = val;
         }
     },
 
     PRODUCT_SKU_ACCENT_MESSAGES: (state, accentMessages) => {
         if(Array.isArray(accentMessages)) {
+            const messages = {};
             accentMessages.forEach((obj) => {
-                state.skuAccentMessages[obj.id] = obj.message;
+                messages[obj.id] = obj.message;
             });
+            state.skuAccentMessages = messages;
         }
     }
 };
