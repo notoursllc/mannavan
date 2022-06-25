@@ -407,14 +407,14 @@ export default {
             <template v-if="product.artist" v-slot:artist>
                 <div class="p-4 border border-gray-200 rounded-sm">
                     <div class="text-gray-600 text-xs font-semibold mb-2">{{ $t('PHOTOGRAPHER') }}</div>
-                    <div class="flex flex-wrap">
-                        <div class="pr-2" v-if="product.artist.image">
+                    <div class="table">
+                        <div class="table-cell align-top pr-2" v-if="product.artist.image">
                             <fig-nuxt-img-bunny
                                 :src="product.artist.image"
                                 preset="prodthumb"
                                 loading="eager" />
                         </div>
-                        <div>
+                        <div class="table-cell align-top">
                             <div class="font-semibold">{{ product.artist.name }}</div>
                             <div>
                                 <fig-icon-label>
@@ -428,17 +428,16 @@ export default {
 
                                     <div class="text-sm text-gray-400">
                                         <fig-address
-                                            :city="product.artist.city"
-                                            :state="product.artist.state"
+                                            :city="product.artist.city !== 'null' ? product.artist.city : null"
+                                            :state="product.artist.state !== 'null' ? product.artist.state : null"
                                             :country-code="product.artist.countryCodeAlpha2"
                                             country-code-inline />
                                     </div>
                                 </fig-icon-label>
-
-                                <div v-if="product.artist.description" class="pt-1">{{ product.artist.description }}</div>
                             </div>
                         </div>
                     </div>
+                    <div v-if="product.artist.description" class="pt-1 text-sm">{{ product.artist.description }}</div>
                 </div>
             </template>
 
