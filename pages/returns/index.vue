@@ -20,6 +20,30 @@ export default {
     computed: {
         returnsEmailAddress() {
             return this.$store.state.ui.infoEmailAddress;
+        },
+
+        company() {
+            return this.$config.shippingFromCompany;
+        },
+
+        address1() {
+            return this.$config.shippingFromAddress1;
+        },
+
+        city() {
+            return this.$config.shippingFromCity;
+        },
+
+        state() {
+            return this.$config.shippingFromState;
+        },
+
+        zip() {
+            return this.$config.shippingFromZip;
+        },
+
+        country() {
+            return this.$config.shippingFromCountryCode;
         }
     }
 };
@@ -40,8 +64,11 @@ export default {
                 <ol class="mt-4 orderedList">
                     <li>Include a copy of the packing slip or confirmation email from your order.</li>
                     <li>
-                        Mail your return to:<br>
-                        TBD Mailing address
+                        <div class="pb-1 font-semibold">Mail your return to:</div>
+                        <div>{{ company }}</div>
+                        <div>{{ address1 }}</div>
+                        <div>{{ city }}, {{ state }} {{ zip }}</div>
+                        <div>{{ country }}</div>
                     </li>
                     <li>We will issue your refund when the return is received</li>
                 </ol>
