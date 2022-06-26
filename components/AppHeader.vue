@@ -12,7 +12,7 @@ export default {
 
     computed: {
         inCheckoutFlow() {
-            return this.$route.path?.substring(0, 5) === '/cart';
+            return this.$route.path?.substring(0, 14) === '/cart/checkout';
         },
 
         productSubTypes() {
