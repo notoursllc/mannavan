@@ -179,7 +179,7 @@ export default {
                     class="text-orange-600 font-semibold" />
 
                 <div class="text-gray-700 font-semibold">{{ product.title }}</div>
-                <div class="text-gray-500 text-sm">{{ product.caption }}</div>
+                <div class="text-gray-500 text-sm font-normal">{{ product.caption }}</div>
             </div>
 
             <div class="text-gray-700 font-semibold pt-3">
