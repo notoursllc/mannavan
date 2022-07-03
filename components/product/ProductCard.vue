@@ -115,7 +115,6 @@ export default {
 
         goToProductDetails(variantId) {
             const params = {
-                seouri: this.product.seo_uri,
                 id: this.product.id
             };
 
@@ -125,7 +124,7 @@ export default {
             }
 
             this.$router.push({
-                name: 'p-seouri-id',
+                name: 'p-id',
                 params,
                 query
             });

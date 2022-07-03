@@ -51,18 +51,21 @@ export default {
             );
 
             data.product = response.data;
-            // if(!data.product) {
-            //     return;
-            // }
+            console.log("ROUTE", route)
+            console.log("PRODUCT", data.product)
+            console.log("ROUTE QUERY VARIANT", route.query.variant)
+            console.log("NUM VARIANTS", data.product.variants.length)
 
-            if(route.query.variant && Array.isArray(data.product.variants)) {
-                for(let i=0, l=data.product.variants.length; i<l; i++) {
-                    if(data.product.variants[i].id === route.query.variant) {
-                        data.visibleVariant = data.product.variants[i];
-                        break;
+            if(route.query.variant) {
+                data.product?.variants?.forEach((obj) => {
+                    console.log("LOOP VARIANT", obj)
+                    if(obj.id === route.query.variant) {
+                        data.visibleVariant = obj;
                     }
-                }
+                });
             }
+
+            console.log("VISIBLE VARIANT", data.visibleVariant)
 
             // if the visibleVariant has only one SKU,
             // then set form.selectedSku as that SKU
