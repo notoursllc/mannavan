@@ -64,6 +64,14 @@ export default {
                 }
             }
 
+            // if the visibleVariant has only one SKU,
+            // then set form.selectedSku as that SKU
+            if(data.visibleVariant?.skus?.length === 1) {
+                data.form = {
+                    selectedSku: data.visibleVariant.skus[0]
+                }
+            }
+
             return data;
         }
         catch(err) {
@@ -255,7 +263,6 @@ export default {
         },
 
         onThumbClick(variant) {
-            // console.log("ON THUMNB CLIKC", variant)
             this.setVisibleVariant(variant);
             this.$refs.slider.goTo(0);
         },
@@ -270,6 +277,12 @@ export default {
 
         setVisibleVariant(variant) {
             this.visibleVariant = variant || {};
+
+            // if the visibleVariant has only one SKU,
+            // then set form.selectedSku as that SKU
+            if(this.visibleVariant?.skus?.length === 1) {
+                this.form.selectedSku = this.visibleVariant.skus[0];
+            }
         },
 
         async getSkuInventoryCount(id) {
