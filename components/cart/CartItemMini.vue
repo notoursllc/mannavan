@@ -62,7 +62,7 @@ export default {
 
             <!-- selected size -->
             <div v-if="selectedSize" class="text-gray-600">
-                {{ $t('Size') }}: {{ selectedSize }}
+                {{ $t(item.product_variant.sku_label_type === 'size' ? 'Size' : 'Label') }}: {{ selectedSize }}
             </div>
 
             <!-- quantity -->

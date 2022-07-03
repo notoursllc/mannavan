@@ -88,7 +88,8 @@ export default {
             atcConfirm: {
                 title: null,
                 imageUrl: null,
-                productSize: null,
+                skuLabel: null,
+                skuLabelType: null,
                 productPrice: null
             }
         };
@@ -110,25 +111,25 @@ export default {
     },
 
     computed: {
-        visibleVariantHasSizes() {
+        visibleVariantHasSkus() {
             if (!Array.isArray(this.visibleVariant.skus)) {
                 return false;
             }
 
-            let hasSize = false;
+            let hasSku = false;
 
             for(let i=0, l=this.visibleVariant.skus.length; i<l; i++) {
                 if(this.visibleVariant.skus[i].label) {
-                    hasSize = true;
+                    hasSku = true;
                     break;
                 }
             }
 
-            return hasSize;
+            return hasSku;
         },
 
         addToCartButtonDisabled() {
-            return this.visibleVariantHasSizes && !this.form.selectedSku;
+            return this.visibleVariantHasSkus && !this.form.selectedSku;
         }
     },
 
@@ -177,8 +178,8 @@ export default {
             this.isLoading = true;
 
             try {
-                // Manually set the selectedSku if visibleVariantHasSizes is false
-                if (!this.visibleVariantHasSizes) {
+                // Manually set the selectedSku if visibleVariantHasSkus is false
+                if (!this.visibleVariantHasSkus) {
                     this.form.selectedSku = this.visibleVariant.skus[0];
                 }
 
@@ -273,7 +274,7 @@ export default {
 
         async getSkuInventoryCount(id) {
             try {
-                const { data } = await this.$api.product.variant.getSku(id);
+                const { data } = await this.$api.product.variant.sku.get(id);
                 this.selectedSkuInventoryCount = isObject(data) ? data.inventory_count : 0;
             }
             catch(err) {
@@ -303,14 +304,16 @@ export default {
                 return;
             }
 
+            console.log("cartItem", cartItem)
+
             // this.atcConfirm.cartItem = cartItem;
             this.atcConfirm.imageUrl = cartItem ? getProductVariantCoverImage(cartItem.product_variant) : null;
             this.atcConfirm.title = isObject(cartItem.product) ? cartItem.product.title : null;
-            this.atcConfirm.productSize = isObject(cartItem.product_variant_sku) ? cartItem.product_variant_sku.label : null;
+            this.atcConfirm.skuLabel = isObject(cartItem.product_variant_sku) ? cartItem.product_variant_sku.label : null;
+            this.atcConfirm.skuLabelType = isObject(cartItem.product_variant) ? cartItem.product_variant.sku_label_type : null;
 
-
-            if(isObject(cartItem.product_variant)) {
-                const intPrice = parseInt(cartItem.product_variant.display_price, 10);
+            if(isObject(cartItem.product_variant_sku)) {
+                const intPrice = parseInt(cartItem.product_variant_sku.display_price, 10);
                 if(!isNaN(intPrice)) {
                     this.atcConfirm.productPrice = intPrice / 100;
                 }
@@ -352,7 +355,6 @@ export default {
 
             <template v-slot:price>
                 <product-price
-                    :variant="visibleVariant"
                     :sku="form.selectedSku" />
             </template>
 
@@ -368,9 +370,11 @@ export default {
                 <fig-stock-level-warning
                     :qty="visibleVariant.total_inventory_count" />
 
-                <div v-if="visibleVariantHasSizes" class="mt-6">
+                <div v-if="visibleVariantHasSkus" class="mt-6">
                     <div class="flex items-center font-medium mb-1 w-full">
-                        <div class="text-black flex-grow">{{ $t('Select a size') }}:</div>
+                        <div class="text-black flex-grow">
+                            {{ $t(visibleVariant.sku_label_type === 'size' ? 'Select a size' : 'Select') }}:
+                        </div>
                         <!-- <div class="text-gray-500">{{ $t('Size guide') }}</div> -->
                     </div>
 
@@ -481,9 +485,9 @@ export default {
                         <!-- title -->
                         <div v-if="atcConfirm.title" class="text-gray-800 font-medium mb-1">{{ atcConfirm.title }}</div>
 
-                        <!-- size -->
-                        <div v-if="atcConfirm.productSize" class="text-gray-500 mb-1">
-                            {{ $t('Size') }}: {{ atcConfirm.productSize }}
+                        <!-- SKU label -->
+                        <div v-if="atcConfirm.skuLabel" class="text-gray-500 mb-1">
+                            {{ $t(atcConfirm.skuLabelType === 'size' ? 'Size' : 'Label') }}: {{ atcConfirm.skuLabel }}
                         </div>
 
                         <!-- price -->

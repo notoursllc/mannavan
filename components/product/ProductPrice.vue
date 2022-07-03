@@ -3,11 +3,6 @@ import isObject from 'lodash.isobject';
 
 export default {
     props: {
-        variant: {
-            type: Object,
-            required: true
-        },
-
         sku: {
             type: Object,
             default: () => {
@@ -30,11 +25,6 @@ export default {
         basePrice: function() {
             let price = null;
 
-            if (isObject(this.variant) && this.variant.base_price !== null) {
-                price = this.variant.base_price;
-            }
-
-            // The SKU data gets prescident if it exists
             if(isObject(this.sku) && this.sku.base_price !== null) {
                 price = this.sku.base_price;
             }
@@ -45,13 +35,6 @@ export default {
         salePrice: function() {
             let price = null;
 
-            if (isObject(this.variant)
-                && this.variant.is_on_sale
-                && this.variant.sale_price !== null) {
-                price = this.variant.sale_price;
-            }
-
-            // The SKU data gets prescident if it exists
             if(isObject(this.sku)
                 && this.sku.is_on_sale
                 && this.sku.sale_price !== null) {

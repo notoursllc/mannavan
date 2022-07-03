@@ -240,7 +240,9 @@ export default {
 
                 <!-- selected size -->
                 <div v-if="selectedSize" class="text-gray-600 mb-3 sm:mb-4">
-                    <div class="inline-block pr-1">{{ $t('Size') }}:</div>
+                    <div class="inline-block pr-1">
+                        {{ $t(cartItem.product_variant.sku_label_type === 'size' ? 'Size' : 'Label') }}:
+                    </div>
                     <div class="inline-block">
                         <template v-if="!canEdit">{{ selectedSize }}</template>
                         <template v-else>
