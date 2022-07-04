@@ -313,8 +313,6 @@ export default {
                 return;
             }
 
-            console.log("cartItem", cartItem)
-
             // this.atcConfirm.cartItem = cartItem;
             this.atcConfirm.imageUrl = cartItem ? getProductVariantCoverImage(cartItem.product_variant) : null;
             this.atcConfirm.title = isObject(cartItem.product) ? cartItem.product.title : null;
@@ -409,7 +407,7 @@ export default {
                             v-else
                             variant="success"
                             size="lg"
-                            class="w-full block"
+                            block
                             @click="addToCart"
                             :disabled="addToCartButtonDisabled"
                             :loading="isLoading">{{ $t('Add To Your Order') }}</fig-button>
