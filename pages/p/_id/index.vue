@@ -51,21 +51,14 @@ export default {
             );
 
             data.product = response.data;
-            console.log("ROUTE", route)
-            console.log("PRODUCT", data.product)
-            console.log("ROUTE QUERY VARIANT", route.query.variant)
-            console.log("NUM VARIANTS", data.product.variants.length)
 
             if(route.query.variant) {
                 data.product?.variants?.forEach((obj) => {
-                    console.log("LOOP VARIANT", obj)
                     if(obj.id === route.query.variant) {
                         data.visibleVariant = obj;
                     }
                 });
             }
-
-            console.log("VISIBLE VARIANT", data.visibleVariant)
 
             // if the visibleVariant has only one SKU,
             // then set form.selectedSku as that SKU
