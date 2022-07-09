@@ -32,12 +32,7 @@ export default {
 <template>
     <footer class="footer">
         <fig-content class="py-10 px-6">
-            <div class="grid grid-cols-2 gap-4 md:gap-8">
-
-                <div>
-                    <fig-bv-logo />
-                </div>
-
+            <div class="block sm:grid grid-cols-2 gap-4 md:gap-8">
                 <div class="sm:grid sm:grid-cols-3 sm:gap-8">
                     <!-- PRODUCTS -->
                     <div>
@@ -96,6 +91,10 @@ export default {
                             </li>
                         </ul>
                     </div>
+                </div>
+
+                <div class="text-left sm:text-right mt-10 sm:mt-0">
+                    <fig-bv-logo class="inline-block" />
                 </div>
             </div>
         </fig-content>
