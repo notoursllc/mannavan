@@ -48,12 +48,14 @@ module.exports = {
 
     "Hats": "Hats",
 
+    "Include a copy of the packing slip or confirmation email from your order.": "Include a copy of the packing slip or confirmation email from your order.",
     "invalid email address format": "invalid email address format",
     "Item": "Item",
 
     "Label": "Label",
     "Loading images...": "Loading images...",
 
+    "Mail your return to:": "Mail your return to:",
     "Message": "Message",
     "Mugs": "Mugs",
 
@@ -82,13 +84,14 @@ module.exports = {
     "Qty": "Qty",
     "Qty / Price": "Qty / Price",
     "Quantity": "Quantity",
+    "Questions?": "Questions?",
 
     "Remove": "Remove",
     "Remove this item?": "Remove this item?",
     "required": "required",
     "Return to cart": "Return to cart",
     "Returns / Exchanges": "Returns / Exchanges",
-    "returns_help": "For help with Exchanging or Returning an item, please contact us at",
+    "returns_help": "Items can be returned within 30 days of delivery as long as they are unwashed, unworn, and undamaged. Please note that shipping charges are non-refundable.",
 
     "Sales tax will be displayed during checkout": "Sales tax will be displayed during checkout",
     "Save & Continue": "Save & Continue",
@@ -110,6 +113,7 @@ module.exports = {
 
     "TERMS": "TERMS",
     "Thank you!": "Thank you!",
+    "To return an item:": "To return an item:",
     "Tops": "Tops",
 
     "Unavailable": "Unavailable",
@@ -123,6 +127,7 @@ module.exports = {
     "We have a winner!": "We have a winner!",
     "We have received your order.": "We have received your order.",
     "We want to hear from you!": "We want to hear from you!",
+    "We will issue your refund when the return is received.": "We will issue your refund when the return is received.",
     "We'll get back to you within 1 business day.": "We'll get back to you within 1 business day.",
 
     "Your cart": "Your cart",

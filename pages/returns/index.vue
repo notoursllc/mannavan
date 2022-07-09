@@ -1,11 +1,17 @@
 <script>
 import PageTitle from '@/components/PageTitle';
-import { FigContent } from '@notoursllc/figleaf';
+import ContentCard from '@/components/ContentCard.vue';
+import {
+    FigContent,
+    FigAddress
+} from '@notoursllc/figleaf';
 
 export default {
     components: {
         PageTitle,
-        FigContent
+        ContentCard,
+        FigContent,
+        FigAddress
     },
 
     head() {
@@ -54,31 +60,35 @@ export default {
     <fig-content size="lg">
         <page-title>{{ $t('Returns / Exchanges') }}</page-title>
 
-        <div>
-            <!-- {{ this.$t('returns_help')}}: -->
-            Items can be returned within 30 days of delivery as long as they are unwashed, unworn, and undamaged. Please note that shipping charges are non-refundable.
+        <content-card>
+            {{ $t('returns_help')}}
 
             <div class="mt-6">
-                <div class="font-bold">To return an item:</div>
+                <div class="font-bold">{{ $t('To return an item:')}}</div>
 
                 <ol class="mt-4 orderedList">
-                    <li>Include a copy of the packing slip or confirmation email from your order.</li>
+                    <li>{{ $t('Include a copy of the packing slip or confirmation email from your order.') }}</li>
                     <li>
-                        <div class="pb-1 font-semibold">Mail your return to:</div>
-                        <div>{{ company }}</div>
-                        <div>{{ address1 }}</div>
-                        <div>{{ city }}, {{ state }} {{ zip }}</div>
-                        <div>{{ country }}</div>
+                        <div class="pb-1 pt-2 font-semibold">{{ $t('Mail your return to:') }}</div>
+                        <div class="bg-white rounded px-6 py-2 inline-block">
+                            <fig-address
+                                :company="company"
+                                :street-address="address1"
+                                :city="city"
+                                :state="state"
+                                :zip="zip + ''"
+                                :country-code="country" />
+                        </div>
                     </li>
-                    <li>We will issue your refund when the return is received</li>
+                    <li>{{ $t('We will issue your refund when the return is received.') }}</li>
                 </ol>
             </div>
 
             <div class="mt-6">
-                <h2 class="font-bold">Questions?</h2>
+                <h2 class="font-bold">{{ $t('Questions?') }}</h2>
                 <div><a :href="`mailto:${returnsEmailAddress}`">{{ returnsEmailAddress }}</a></div>
             </div>
-        </div>
+        </content-card>
     </fig-content>
 </template>
 

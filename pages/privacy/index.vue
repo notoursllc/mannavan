@@ -1,12 +1,14 @@
 <script>
 import PageTitle from '@/components/PageTitle';
 import PrivacyDisplay from '@/components/PrivacyDisplay';
+import ContentCard from '@/components/ContentCard.vue';
 import { FigContent } from '@notoursllc/figleaf';
 
 export default {
     components: {
         PageTitle,
         PrivacyDisplay,
+        ContentCard,
         FigContent
     },
 
@@ -26,8 +28,10 @@ export default {
     <fig-content size="lg">
         <page-title>{{ $t('Privacy Notice') }}</page-title>
 
-        <div class="priv">
-            <privacy-display />
-        </div>
+        <content-card>
+            <div class="priv">
+                <privacy-display />
+            </div>
+        </content-card>
     </fig-content>
 </template>

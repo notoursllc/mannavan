@@ -1,11 +1,15 @@
 <script>
+import ContentCard from '@/components/ContentCard.vue';
 import { FigContent } from '@notoursllc/figleaf';
+import PageTitle from '@/components/PageTitle';
+import ConditionsOfUseDisplay from '@/components/ConditionsOfUseDisplay';
 
 export default {
     components: {
+        ContentCard,
         FigContent,
-        PageTitle: () => import('@/components/PageTitle'),
-        ConditionsOfUseDisplay: () => import('@/components/ConditionsOfUseDisplay')
+        PageTitle,
+        ConditionsOfUseDisplay
     },
 
     head() {
@@ -24,8 +28,10 @@ export default {
     <fig-content size="lg">
         <page-title>{{ $t('Conditions of Use') }}</page-title>
 
-        <div class="priv">
-            <conditions-of-use-display />
-        </div>
+        <content-card>
+            <div class="priv">
+                <conditions-of-use-display />
+            </div>
+        </content-card>
     </fig-content>
 </template>
