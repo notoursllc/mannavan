@@ -75,7 +75,6 @@ module.exports = {
     "PLACE YOUR ORDER": "PLACE YOUR ORDER",
     "Please allow a few minutes for email delivery.": "Please allow a few minutes for email delivery.",
     "Please confirm": "Please confirm",
-    "Please double-check this address for accuracy": "Please double-check this address for accuracy",
     "Privacy": "Privacy",
     "Privacy Notice": "Privacy Notice",
     "Product not found": "Product not found",

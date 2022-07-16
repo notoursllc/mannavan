@@ -2,6 +2,9 @@
 import { mapGetters } from 'vuex';
 import CartTotalsTable from '@/components/cart/CartTotalsTable';
 import CartItemMini from '@/components/cart/CartItemMini';
+import CheckoutAddressForm from '@/components/cart/CheckoutAddressForm.vue';
+import CartShippingAddressDetails from '@/components/cart/CartShippingAddressDetails.vue';
+import CheckoutShippingRates from '@/components/cart/CheckoutShippingRates.vue';
 import { parseIso8601 } from '@/utils/common';
 import {
     FigButton,
@@ -17,7 +20,8 @@ import {
     FigAddressForm,
     FigStripeForm,
     FigPaymentTypeChooser,
-    FigContent
+    FigContent,
+    FigModal,
 } from '@notoursllc/figleaf';
 
 import { loadStripe } from '@stripe/stripe-js/pure';
@@ -52,8 +56,12 @@ export default {
         FigStripeForm,
         FigPaymentTypeChooser,
         FigContent,
+        FigModal,
         CartTotalsTable,
-        CartItemMini
+        CartItemMini,
+        CheckoutAddressForm,
+        CartShippingAddressDetails,
+        CheckoutShippingRates
     },
 
     data: function() {
@@ -62,20 +70,6 @@ export default {
             step: 1,
             Stripe: null,
             cart: {},
-            shippingForm: {
-                loading: false,
-                isInvalid: true,
-                validation: {
-                    error: false,
-                    warning: false
-                },
-                form: {
-                    ...addressFormBase,
-                    email: null,
-                    phone: null,
-                    is_gift: false
-                }
-            },
             shippingRates: {
                 loading: false,
                 rates: [],
@@ -123,9 +117,7 @@ export default {
 
     async mounted() {
         this.Stripe = await loadStripe(this.$config.stripePublishableKey);
-
         await this.getCart();
-        this.setShippingFormFromCart();
     },
 
     methods: {
@@ -154,10 +146,6 @@ export default {
         onStripeTokenGenerated(token) {
             console.log("onStripeTokenGenerated", token)
             //TODO: send token to server
-        },
-
-        onShippingAddressFormInvalid(isInvalid) {
-            this.shippingForm.isInvalid = isInvalid;
         },
 
         onBillingAddressFormInvalid(isInvalid) {
@@ -190,82 +178,10 @@ export default {
             this.shippingRates.loading = false;
         },
 
-        setShippingFormFromCart() {
-            for(const key in this.shippingForm.form) {
-                this.shippingForm.form[key] = (key === 'is_gift' ? this.cart[key] : this.cart[`shipping_${key}`]);
-            }
-        },
-
-        shippingDataNeedsValidation() {
-            let needValidation = false;
-
-            ['streetAddress', 'city', 'state', 'postalCode', 'countryCodeAlpha2'].forEach((attr) => {
-                const formAttr = (this.shippingForm.form[attr] + '').toLowerCase().trim();
-                const cartAttr = (this.cart[`shipping_${attr}`] + '').toLowerCase().trim();
-
-                if(formAttr !== cartAttr) {
-                    needValidation = true;
-                }
-            });
-
-            return needValidation;
-        },
-
-        async saveShippingForm() {
-            this.shippingForm.loading = true;
-
-            try {
-                const stateData = {};
-
-                for(const key in this.shippingForm.form) {
-                    const dataKey = key === 'is_gift' ? key : `shipping_${key}`;
-                    stateData[dataKey] = this.shippingForm.form[key];
-                }
-
-                const { data } = await this.$api.cart.shipping.setAddress({
-                    id: this.$store.state.cart.id,
-                    ...stateData,
-                    validate: this.shippingDataNeedsValidation()
-                });
-
-                // https://www.shipengine.com/docs/addresses/validation/#address-status-meanings
-                switch(data.validation_status) {
-                    case 'error':
-                        this.shippingForm.validation.error = true;
-                        this.shippingForm.validation.warning = false;
-                        break;
-
-                    case 'warning':
-                        this.shippingForm.validation.error = false;
-                        this.shippingForm.validation.warning = true;
-                        break;
-
-                    default:
-                        this.shippingForm.validation.error = false;
-                        this.shippingForm.validation.warning = false;
-                }
-
-                if(!this.shippingForm.validation.error) {
-                    this.cart = data.cart;
-                    await this.$store.dispatch('cart/CART', this.cart);
-
-                    this.setShippingFormFromCart();
-                    this.goToStep(2);
-                    this.getShippingRates();
-                }
-            }
-            catch(err) {
-                console.log('ERR', err);
-
-                this.$figleaf.errorToast({
-                    title: this.$t('Error')
-                    // text: err.response.data.message
-                });
-
-                this.$bugsnag.notify(err);
-            }
-
-            this.shippingForm.loading = false;
+        onCheckoutAddressFormDone(updatedCart) {
+            this.cart = { ...updatedCart };
+            this.goToStep(2);
+            this.getShippingRates();
         },
 
         saveBillingForm() {
@@ -303,33 +219,33 @@ export default {
             }
         },
 
-        async getShippingRates() {
-            this.shippingRates.loading = true;
+        // async getShippingRates() {
+        //     this.shippingRates.loading = true;
 
-            try {
-                const { data } = await this.$api.cart.shipping.getEstimates(this.$store.state.cart.id);
-                this.shippingRates.rates = data;
+        //     try {
+        //         const { data } = await this.$api.cart.shipping.getEstimates(this.$store.state.cart.id);
+        //         this.shippingRates.rates = data;
 
-                // Hopefully an unlikely scenario, but if no shipping rates were returned
-                // then we should probably consider it as 'free' and move on to the next step.
-                if(!this.shippingRates.rates.length) {
-                    this.continueToPayment();
-                }
-                else if(this.shippingRates.rates.length === 1) {
-                    this.shippingRates.selectedRate = this.shippingRates.rates[0].rate_id;
-                }
-            }
-            catch(err) {
-                this.$figleaf.errorToast({
-                    title: this.$t('A server error occurred while setting the shipping rates'),
-                    text: err.message
-                });
+        //         // Hopefully an unlikely scenario, but if no shipping rates were returned
+        //         // then we should probably consider it as 'free' and move on to the next step.
+        //         if(!this.shippingRates.rates.length) {
+        //             this.continueToPayment();
+        //         }
+        //         else if(this.shippingRates.rates.length === 1) {
+        //             this.shippingRates.selectedRate = this.shippingRates.rates[0].rate_id;
+        //         }
+        //     }
+        //     catch(err) {
+        //         this.$figleaf.errorToast({
+        //             title: this.$t('A server error occurred while setting the shipping rates'),
+        //             text: err.message
+        //         });
 
-                this.$bugsnag.notify(err);
-            }
+        //         this.$bugsnag.notify(err);
+        //     }
 
-            this.shippingRates.loading = false;
-        },
+        //     this.shippingRates.loading = false;
+        // },
 
         async onClickPlaceOrder(cardElement) {
             this.payment.loading = true;
@@ -383,7 +299,7 @@ export default {
         },
 
         sendStripeCardPayment(clientSecret, cardElement) {
-            const billingAddressSource = this.payment.billing_same_as_shipping ? this.shippingForm.form : this.billingForm.form;
+            // const billingAddressSource = this.payment.billing_same_as_shipping ? this.shippingForm.form : this.billingForm.form;
 
             return this.Stripe.confirmCardPayment(
                 clientSecret,
@@ -494,77 +410,20 @@ export default {
 
                     <div class="p-2">
                         <!-- shipping address form view -->
-                        <template v-if="step === 1">
-                            <fig-overlay :show="shippingForm.loading">
-                                <!-- validation error -->
-                                <div v-if="shippingForm.validation.error" class="p-1 mb-2 bg-red-100 text-red-800 rounded text-sm">
-                                    <fig-icon-label>
-                                        <fig-icon
-                                            slot="left"
-                                            icon="alert-circle"
-                                            :width="24"
-                                            :height="24"
-                                            variant="danger" />
-                                        {{ $t('shipping_address_validation_error_message') }}
-                                    </fig-icon-label>
-                                </div>
-
-                                <fig-address-form
-                                    v-model="shippingForm.form"
-                                    @invalid="onShippingAddressFormInvalid" />
-
-
-                                <div class="mt-4 w-full">
-                                    <fig-button
-                                        variant="primary"
-                                        @click="saveShippingForm"
-                                        :disabled="shippingForm.isInvalid">{{ $t('Save & Continue') }}</fig-button>
-                                </div>
-                            </fig-overlay>
-                        </template>
+                        <checkout-address-form
+                            v-if="step === 1"
+                            :cart="cart"
+                            @done="onCheckoutAddressFormDone" />
 
                         <!-- shipping address details && rate selection view -->
                         <template v-else>
                             <fig-overlay :show="shippingRates.loading">
                                 <div class="text-gray-700 text-sm border border-gray-200 p-2 rounded">
-                                    <fig-address
-                                        :first-name="cart.shipping_firstName"
-                                        :last-name="cart.shipping_lastName"
-                                        :street-address="cart.shipping_streetAddress"
-                                        :extended-address="cart.shipping_extendedAddress"
-                                        :city="cart.shipping_city"
-                                        :state="cart.shipping_state"
-                                        :zip="cart.shipping_postalCode"
-                                        :email="cart.shipping_email"
-                                        :phone="cart.shipping_phone" />
-
-                                    <!-- is gift -->
-                                    <div class="mt-1" v-if="shippingForm.form.is_gift">
-                                        <div class="py-1 px-2 inline-block bg-gray-100 rounded">
-                                            <fig-icon-label>
-                                                <fig-icon
-                                                    slot="left"
-                                                    icon="gift"
-                                                    :width="20"
-                                                    :height="20" />
-                                                {{ $t('Order is a gift') }}
-                                            </fig-icon-label>
-                                        </div>
-                                    </div>
-
-                                    <!-- validation warning -->
-                                    <div v-if="shippingForm.validation.warning" class="p-1 mt-1 bg-amber-100 rounded">
-                                        <fig-icon-label>
-                                            <fig-icon
-                                                slot="left"
-                                                icon="urgent"
-                                                :width="24"
-                                                :height="24"
-                                                variant="warning" />
-                                            {{ $t('Please double-check this address for accuracy') }}
-                                        </fig-icon-label>
-                                    </div>
+                                    <cart-shipping-address-details :cart="cart" />
                                 </div>
+
+                                <checkout-shipping-rates />
+
 
                                 <!-- Shipping estimates -->
                                 <div class="mt-4">
