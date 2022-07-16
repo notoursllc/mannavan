@@ -1,5 +1,4 @@
 <script>
-import { mapGetters } from 'vuex';
 import CartTotalsTable from '@/components/cart/CartTotalsTable';
 import CartItemMini from '@/components/cart/CartItemMini';
 import CheckoutAddressForm from '@/components/cart/CheckoutAddressForm.vue';
@@ -70,12 +69,6 @@ export default {
             step: 1,
             Stripe: null,
             cart: {},
-            shippingRates: {
-                loading: false,
-                rates: [],
-                selectedRate: null,
-                showDetails: false
-            },
             billingForm: {
                 isInvalid: true,
                 form: {
@@ -101,11 +94,6 @@ export default {
     },
 
     computed: {
-        ...mapGetters({
-            shippingRateTotal: 'cart/shippingRateTotal',
-            shippingRateEstimatedDeliveryDate: 'cart/shippingRateEstimatedDeliveryDate'
-        }),
-
         numCartItems() {
             return this.$store.state.cart.num_items;
         },
@@ -152,36 +140,9 @@ export default {
             this.billingForm.isInvalid = isInvalid;
         },
 
-        async continueToPayment() {
-            this.shippingRates.loading = true;
-
-            try {
-                if(this.shippingRates.selectedRate) {
-                    const { data } = await this.$api.cart.shipping.selectRate(
-                        this.$store.state.cart.id,
-                        this.shippingRates.selectedRate
-                    );
-
-                    this.$store.dispatch('cart/CART', data);
-                }
-
-                this.goToStep(3);
-            }
-            catch(err) {
-                this.$figleaf.errorToast({
-                    title: this.$t('An error occurred')
-                });
-
-                this.$bugsnag.notify(err);
-            }
-
-            this.shippingRates.loading = false;
-        },
-
         onCheckoutAddressFormDone(updatedCart) {
             this.cart = { ...updatedCart };
             this.goToStep(2);
-            this.getShippingRates();
         },
 
         saveBillingForm() {
@@ -219,33 +180,10 @@ export default {
             }
         },
 
-        // async getShippingRates() {
-        //     this.shippingRates.loading = true;
-
-        //     try {
-        //         const { data } = await this.$api.cart.shipping.getEstimates(this.$store.state.cart.id);
-        //         this.shippingRates.rates = data;
-
-        //         // Hopefully an unlikely scenario, but if no shipping rates were returned
-        //         // then we should probably consider it as 'free' and move on to the next step.
-        //         if(!this.shippingRates.rates.length) {
-        //             this.continueToPayment();
-        //         }
-        //         else if(this.shippingRates.rates.length === 1) {
-        //             this.shippingRates.selectedRate = this.shippingRates.rates[0].rate_id;
-        //         }
-        //     }
-        //     catch(err) {
-        //         this.$figleaf.errorToast({
-        //             title: this.$t('A server error occurred while setting the shipping rates'),
-        //             text: err.message
-        //         });
-
-        //         this.$bugsnag.notify(err);
-        //     }
-
-        //     this.shippingRates.loading = false;
-        // },
+        onShippingRatesDone() {
+            console.log("ON SHIPPING RATES DOEN")
+            this.goToStep(3);
+        },
 
         async onClickPlaceOrder(cardElement) {
             this.payment.loading = true;
@@ -417,62 +355,14 @@ export default {
 
                         <!-- shipping address details && rate selection view -->
                         <template v-else>
-                            <fig-overlay :show="shippingRates.loading">
-                                <div class="text-gray-700 text-sm border border-gray-200 p-2 rounded">
-                                    <cart-shipping-address-details :cart="cart" />
-                                </div>
+                            <div class="text-gray-700 text-sm border border-gray-200 p-2 rounded">
+                                <cart-shipping-address-details :cart="cart" />
+                            </div>
 
-                                <checkout-shipping-rates />
-
-
-                                <!-- Shipping estimates -->
-                                <div class="mt-4">
-                                    <div class="text-gray-900 font-semibold mb-2" v-if="shippingRates.rates.length">
-                                        {{ shippingRates.rates.length > 1 ? $t('Choose your shipping speed') : $t('Shipping') }}:
-                                    </div>
-
-                                    <div>
-                                        <!-- selected rate details -->
-                                        <template v-if="step === 3">
-                                            <template v-if="shippingRates.selectedRate">
-                                                <div class="inline-block text-black">
-                                                    {{ $n(shippingRateTotal ? shippingRateTotal/100 : 0, 'currency') }}
-                                                </div>
-                                                <div class="inline-block text-gray-500 pl-3">
-                                                    {{ cart.selected_shipping_rate ? cart.selected_shipping_rate.service_type : '' }}
-                                                    <!-- {{ $t('Estimated arrival: {date}', { date: translateShippingDate(shippingRateEstimatedDeliveryDate) }) }} -->
-                                                </div>
-                                            </template>
-                                        </template>
-
-                                        <!-- rate selection -->
-                                        <template v-else>
-                                            <fig-form-radio
-                                                v-for="obj in shippingRates.rates"
-                                                :key="obj.rate_id"
-                                                name="selectedShipping"
-                                                :checked-value="obj.rate_id"
-                                                v-model="shippingRates.selectedRate">
-                                                <div class="inline-block text-black">
-                                                    {{ $n(obj.shipping_amount.amount, 'currency') }}
-                                                </div>
-                                                <div class="inline-block text-gray-500 pl-3">
-                                                    {{ obj.service_type }}
-                                                    <!-- {{ $t('Estimated arrival: {date}', { date: translateShippingDate(obj.estimated_delivery_date) }) }} -->
-                                                </div>
-                                            </fig-form-radio>
-
-                                            <div class="mt-4">
-                                                <fig-button
-                                                    variant="primary"
-                                                    size="md"
-                                                    @click="continueToPayment"
-                                                    :disabled="!shippingRates.selectedRate">{{ $t('Continue to payment') }}</fig-button>
-                                            </div>
-                                        </template>
-                                    </div>
-                                </div>
-                            </fig-overlay>
+                            <checkout-shipping-rates
+                                :cart="cart"
+                                @done="onShippingRatesDone"
+                                :show-selected-rate="step === 3" />
                         </template>
                     </div>
                 </fig-text-card>
