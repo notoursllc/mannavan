@@ -1,42 +1,22 @@
 <script>
 import CartTotalsTable from '@/components/cart/CartTotalsTable';
 import CartItemMini from '@/components/cart/CartItemMini';
-import CheckoutAddressForm from '@/components/cart/CheckoutAddressForm.vue';
 import CartShippingAddressDetails from '@/components/cart/CartShippingAddressDetails.vue';
-import CheckoutShippingRates from '@/components/cart/CheckoutShippingRates.vue';
-import { parseIso8601 } from '@/utils/common';
+import CheckoutAddressForm from '@/components/cart/checkout/CheckoutAddressForm.vue';
+import CheckoutShippingRates from '@/components/cart/checkout/CheckoutShippingRates.vue';
+import CheckoutPaymentForm from '@/components/cart/checkout/CheckoutPaymentForm.vue';
 import {
     FigButton,
     FigOverlay,
     FigTextCard,
     FigCartCtaLayout,
     FigDivider,
-    FigAddress,
-    FigFormRadio,
     FigIcon,
-    FigIconLabel,
-    FigFormCheckbox,
-    FigAddressForm,
-    FigStripeForm,
-    FigPaymentTypeChooser,
-    FigContent,
-    FigModal,
+    FigContent
 } from '@notoursllc/figleaf';
 
 import { loadStripe } from '@stripe/stripe-js/pure';
 loadStripe.setLoadParameters({ advancedFraudSignals: false }) // https://github.com/stripe/stripe-js#disabling-advanced-fraud-detection-signals
-
-
-const addressFormBase = {
-    firstName: null,
-    lastName: null,
-    streetAddress: null,
-    extendedAddress: null,
-    countryCodeAlpha2: null,
-    city: null,
-    state: null,
-    postalCode: null
-};
 
 
 export default {
@@ -46,41 +26,23 @@ export default {
         FigTextCard,
         FigCartCtaLayout,
         FigDivider,
-        FigAddress,
-        FigFormRadio,
         FigIcon,
-        FigIconLabel,
-        FigFormCheckbox,
-        FigAddressForm,
-        FigStripeForm,
-        FigPaymentTypeChooser,
         FigContent,
-        FigModal,
         CartTotalsTable,
         CartItemMini,
         CheckoutAddressForm,
         CartShippingAddressDetails,
-        CheckoutShippingRates
+        CheckoutShippingRates,
+        CheckoutPaymentForm
     },
 
     data: function() {
         return {
+            Stripe: null,
             loading: false,
             step: 1,
             Stripe: null,
-            cart: {},
-            billingForm: {
-                isInvalid: true,
-                form: {
-                    ...addressFormBase
-                }
-            },
-            payment: {
-                loading: false,
-                billing_same_as_shipping: true,
-                stripeFormIsValid: false,
-                paymentType: 'cc'
-            }
+            cart: {}
         };
     },
 
@@ -98,8 +60,9 @@ export default {
             return this.$store.state.cart.num_items;
         },
 
-        canShowPlaceOrderButton() {
-            return (this.payment.billing_same_as_shipping || !this.billingForm.isInvalid) && this.payment.stripeFormIsValid;
+        cartFromState() {
+            console.log("CART FROM STATE", this.$store.state.cart)
+            return this.$store.state.cart;
         }
     },
 
@@ -109,14 +72,6 @@ export default {
     },
 
     methods: {
-        translateShippingDate(isoDate) {
-            const parsed = parseIso8601(isoDate);
-
-            if(parsed.month && parsed.day) {
-                return this.$t(`month_${parsed.month}_short`) + ' ' + parsed.day;
-            }
-        },
-
         /**
          * Steps:
          * 1) Shipping form view
@@ -127,173 +82,14 @@ export default {
             this.step = stepNumber;
         },
 
-        onStripeFormValid(isValid) {
-            this.payment.stripeFormIsValid = isValid;
-        },
-
-        onStripeTokenGenerated(token) {
-            console.log("onStripeTokenGenerated", token)
-            //TODO: send token to server
-        },
-
-        onBillingAddressFormInvalid(isInvalid) {
-            this.billingForm.isInvalid = isInvalid;
+        onUpdatedCart(data) {
+            this.cart = { ...data };
+            this.$store.dispatch('cart/CART', data);
         },
 
         onCheckoutAddressFormDone(updatedCart) {
-            this.cart = { ...updatedCart };
+            this.onUpdatedCart(updatedCart);
             this.goToStep(2);
-        },
-
-        saveBillingForm() {
-            try {
-                // If billing is the same as shipping then
-                // set all billing form values to null
-                if(this.payment.billing_same_as_shipping) {
-                    this.billingForm.form = {
-                        ...addressFormBase
-                    };
-                }
-
-                // append 'billing_' to all of the keys
-                const billingData = {
-                    billing_same_as_shipping: this.payment.billing_same_as_shipping
-                };
-                for(const key in this.billingForm.form) {
-                    billingData[`billing_${key}`] = this.billingForm.form[key];
-                }
-
-                return this.$api.cart.update({
-                    id: this.$store.state.cart.id,
-                    ...billingData
-                });
-            }
-            catch(err) {
-                console.error('ERR', err);
-
-                this.$figleaf.errorToast({
-                    title: this.$t('Error')
-                    // text: err.response.data.message
-                });
-
-                this.$bugsnag.notify(err);
-            }
-        },
-
-        onShippingRatesDone() {
-            console.log("ON SHIPPING RATES DOEN")
-            this.goToStep(3);
-        },
-
-        async onClickPlaceOrder(cardElement) {
-            this.payment.loading = true;
-
-            // this may be a second attempt at processing payment
-            // if the first attempt resulted in an error, so closing
-            // any previous message instances
-            this.$figleaf.clearToasts();
-
-
-            const cartId = this.$store.state.cart.id;
-
-            try {
-                // first save the billing data
-                await this.saveBillingForm();
-
-                const { data } = await this.$api.cart.payment.intent(cartId);
-
-                const stripeResponse = await this.sendStripeCardPayment(
-                    data.clientSecret,
-                    cardElement
-                );
-
-                // console.log("STRIPE RESPONSE", stripeResponse);
-
-                if(stripeResponse.error) {
-                    this.$figleaf.errorToast({
-                        title: this.$t('An error occurred when processing your card'),
-                        text: stripeResponse.error ? stripeResponse.error.message : null
-                    });
-                }
-                else {
-                    await this.$api.cart.payment.success(
-                        cartId,
-                        stripeResponse.paymentIntent.id
-                    );
-
-                    this.afterTransactionSuccess();
-                }
-            }
-            catch(err) {
-                this.$figleaf.errorToast({
-                    title: this.$t('An error occurred'),
-                    text: err.message
-                });
-
-                this.$bugsnag.notify(err);
-            }
-
-            this.payment.loading = false;
-        },
-
-        sendStripeCardPayment(clientSecret, cardElement) {
-            // const billingAddressSource = this.payment.billing_same_as_shipping ? this.shippingForm.form : this.billingForm.form;
-
-            return this.Stripe.confirmCardPayment(
-                clientSecret,
-                {
-                    payment_method: {
-                        card: cardElement,
-
-                        //https://stripe.com/docs/api/payment_methods/create#create_payment_method-billing_details
-                        // billing_details: {
-                        //     address: {
-                        //         city: billingAddressSource.city,
-                        //         country: billingAddressSource.countryCodeAlpha2,
-                        //         line1: billingAddressSource.streetAddress,
-                        //         line2: billingAddressSource.extendedAddress,
-                        //         postal_code: billingAddressSource.postalCode,
-                        //         state: billingAddressSource.state
-                        //     },
-                        //     name: `${billingAddressSource.firstName} ${billingAddressSource.lastName}`.trim()
-                        //     // email: null,
-                        //     // phone: null
-                        // },
-
-                        // https://stripe.com/docs/api/payment_methods/create#create_payment_method-metadata
-                        metadata: {
-                            cart_id: this.cart.id
-                        }
-                    }
-                    // receipt_email: 'gregbruins@gmail.com'
-                }
-            );
-        },
-
-        paypalCompleted(data) {
-            // console.log("paypalCompleted", data);
-            return this.afterTransactionSuccess();
-        },
-
-        paypalCancelled(data) {
-            // console.log("paypalCancelled", data);
-        },
-
-        paypalError(data) {
-            this.$figleaf.errorToast({
-                title: this.$t('Error'),
-                text: this.$t('An error occurred while processing the PayPal transaction')
-            });
-        },
-
-        async afterTransactionSuccess() {
-            const cartId = this.$store.state.cart.id;
-            await this.$store.dispatch('cart/CART_RESET');
-
-            return this.$router.push({
-                name: 'order-id',
-                params: { id: cartId }
-            });
         },
 
         async getCart() {
@@ -305,8 +101,7 @@ export default {
                     _withRelated: '*'
                 });
 
-                this.cart = data;
-                this.$store.dispatch('cart/CART', this.cart);
+                this.onUpdatedCart(data);
                 this.loading = false;
             }
         }
@@ -347,13 +142,11 @@ export default {
                         @click="goToStep(1)">{{ $t('Edit') }}</fig-button>
 
                     <div class="p-2">
-                        <!-- shipping address form view -->
                         <checkout-address-form
                             v-if="step === 1"
                             :cart="cart"
                             @done="onCheckoutAddressFormDone" />
 
-                        <!-- shipping address details && rate selection view -->
                         <template v-else>
                             <div class="text-gray-700 text-sm border border-gray-200 p-2 rounded">
                                 <cart-shipping-address-details :cart="cart" />
@@ -361,7 +154,8 @@ export default {
 
                             <checkout-shipping-rates
                                 :cart="cart"
-                                @done="onShippingRatesDone"
+                                @updatedCart="onUpdatedCart"
+                                @done="goToStep(3)"
                                 :show-selected-rate="step === 3" />
                         </template>
                     </div>
@@ -375,58 +169,9 @@ export default {
                     class="mb-4">
                     <div slot="header-left" class="font-semibold p-1 uppercase">2. {{ $t('Payment') }}</div>
                     <div class="p-2">
-
-                        <div class="pb-6">
-                            <div class="font-medium text-black">{{ $t('SELECT PAYMENT METHOD') }}</div>
-                            <fig-payment-type-chooser v-model="payment.paymentType" />
-                        </div>
-
-                        <!-- credit card payment form -->
-                        <div v-show="payment.paymentType === 'cc'">
-                            <fig-overlay :show="payment.loading">
-                                <fig-stripe-form
-                                    :stripe="Stripe"
-                                    @valid="onStripeFormValid"
-                                    @token="onStripeTokenGenerated">
-
-                                    <template v-slot:content="props">
-                                        <!-- billing same as shipping checkbox -->
-                                        <div class="mt-4">
-                                            <fig-form-checkbox
-                                                class="mr-3"
-                                                v-model="payment.billing_same_as_shipping">{{ $t('Billing address same as shipping') }}</fig-form-checkbox>
-                                        </div>
-
-                                        <!-- billing address form -->
-                                        <div v-if="!payment.billing_same_as_shipping" class="mt-4">
-                                            <div class="text-black">{{ $t('Billing address') }}:</div>
-                                            <fig-address-form
-                                                v-model="billingForm.form"
-                                                @invalid="onBillingAddressFormInvalid"
-                                                hide-email
-                                                hide-phone />
-                                        </div>
-
-                                        <!-- place order button -->
-                                        <div class="pt-6">
-                                            <fig-button
-                                                variant="primary"
-                                                size="lg"
-                                                @click="onClickPlaceOrder(props.cardElement)"
-                                                :disabled="!canShowPlaceOrderButton">{{ $t('PLACE YOUR ORDER') }}</fig-button>
-                                        </div>
-                                    </template>
-                                </fig-stripe-form>
-                            </fig-overlay>
-                        </div>
-
-                        <!-- paypal payment form -->
-                        <div v-if="payment.paymentType === 'paypal'" class="text-center">
-                            <paypal-button
-                                @success="paypalCompleted"
-                                @cancelled="paypalCancelled"
-                                @error="paypalError" />
-                        </div>
+                        <checkout-payment-form
+                            :cart="cart"
+                            :stripe="Stripe" />
                     </div>
                 </fig-text-card>
             </template>
@@ -441,7 +186,7 @@ export default {
 
                     <div class="text-sm">
                         <cart-totals-table
-                            :cart="$store.state.cart"
+                            :cart="cart"
                             :shipping="step > 1"
                             :sales-tax="step > 1" />
 

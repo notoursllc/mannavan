@@ -122,7 +122,7 @@ export default {
                 // console.log("setAddressData", setAddressData);
 
                 const setAddressResponse = await this.$api.cart.shipping.setAddress({
-                    id: this.$store.state.cart.id,
+                    id: this.cart.id,
                     ...setAddressData
                 });
 
@@ -167,15 +167,16 @@ export default {
                     if(diffs.length) {
                         this.original_address = setAddressResponse.data.validation_response.original_address;
                         this.matched_address = setAddressResponse.data.validation_response.matched_address;
+                        this.showMatchedAddress = true;
                         this.showCompareModal();
                         return;
                     }
                 }
 
-                this.$emit('done', setAddressResponse.data.cart)
+                this.$emit('done', setAddressResponse.data.cart);
             }
             catch(err) {
-                console.log('ERR', err);
+                console.error('ERR', err);
 
                 this.$figleaf.errorToast({
                     title: this.$t('Error')

@@ -1,10 +1,13 @@
 <script>
 import { mapGetters } from 'vuex';
+import { parseIso8601 } from '@/utils/common';
 import {
     FigFormRadio,
     FigButton,
     FigOverlay
 } from '@notoursllc/figleaf';
+
+
 export default {
     name: 'CheckoutShippingRates',
 
@@ -42,10 +45,6 @@ export default {
     },
 
     methods: {
-        emitDone() {
-            this.$emit('done')
-        },
-
         async getShippingRates() {
             this.loading = true;
 
@@ -85,10 +84,10 @@ export default {
                         this.selectedRate
                     );
 
-                    this.$store.dispatch('cart/CART', data);
+                    this.$emit('updatedCart', data)
                 }
 
-                this.emitDone();
+                this.$emit('done');
             }
             catch(err) {
                 this.$figleaf.errorToast({
@@ -100,11 +99,17 @@ export default {
 
             this.loading = false;
         },
+
+        translateShippingDate(isoDate) {
+            const parsed = parseIso8601(isoDate);
+
+            if(parsed.month && parsed.day) {
+                return this.$t(`month_${parsed.month}_short`) + ' ' + parsed.day;
+            }
+        }
     },
 
-
     mounted() {
-        console.log("MOUNTED SHIPPING RATES")
         this.getShippingRates();
     }
 }
