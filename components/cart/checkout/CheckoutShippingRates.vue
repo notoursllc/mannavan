@@ -41,7 +41,11 @@ export default {
         ...mapGetters({
             shippingRateTotal: 'cart/shippingRateTotal',
             shippingRateEstimatedDeliveryDate: 'cart/shippingRateEstimatedDeliveryDate'
-        })
+        }),
+
+        buttonDisabled() {
+            return (this.rates.length && !this.selectedRate) ? true : false;
+        }
     },
 
     methods: {
@@ -55,7 +59,9 @@ export default {
                 // Hopefully an unlikely scenario, but if no shipping rates were returned
                 // then we should probably consider it as 'free' and move on to the next step.
                 if(!this.rates.length) {
-                    this.continueToPayment();
+                    this.selectedRate = null;
+                    await this.continueToPayment();
+                    return;
                 }
 
                 if(this.rates.length === 1) {
@@ -78,16 +84,13 @@ export default {
             this.loading = true;
 
             try {
-                if(this.selectedRate) {
-                    const { data } = await this.$api.cart.shipping.selectRate(
-                        this.cart.id,
-                        this.selectedRate
-                    );
+                const { data } = await this.$api.cart.shipping.selectRate(
+                    this.cart.id,
+                    this.selectedRate
+                );
 
-                    this.$emit('updatedCart', data)
-                }
-
-                this.$emit('done');
+                this.selectedRate = null;
+                this.$emit('done', data);
             }
             catch(err) {
                 this.$figleaf.errorToast({
@@ -117,7 +120,7 @@ export default {
 
 <template>
     <fig-overlay :show="loading">
-        <div class="text-gray-900 font-semibold mb-2" v-if="rates.length">
+        <div class="text-gray-900 font-semibold mb-2 mt-4" v-if="rates.length">
             {{ rates.length > 1 ? $t('Choose your shipping speed') : $t('Shipping') }}:
         </div>
 
@@ -157,7 +160,7 @@ export default {
                         variant="primary"
                         size="md"
                         @click="continueToPayment"
-                        :disabled="!selectedRate">{{ $t('Continue to payment') }}</fig-button>
+                        :disabled="buttonDisabled">{{ $t('Continue to payment') }}</fig-button>
                 </div>
             </template>
         </div>

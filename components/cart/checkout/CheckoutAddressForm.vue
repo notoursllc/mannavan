@@ -94,85 +94,107 @@ export default {
             return needValidation;
         },
 
+        setShippingDataFromForm() {
+            const setAddressData = {};
+
+            for(const key in this.form) {
+                const dataKey = key === 'is_gift' ? key : `shipping_${key}`;
+                setAddressData[dataKey] = this.form[key];
+            }
+
+            return setAddressData;
+        },
+
+
+        async validateShippingForm() {
+            this.validationAttempts++;
+            let modalVisible = false;
+
+            const validateAddressReply = await this.$api.cart.shipping.validateAddress({
+                id: this.cart.id,
+                ...this.setShippingDataFromForm()
+            });
+
+            /*
+            * Process validation errors:
+            */
+            const validationResponse = validateAddressReply.data?.validation_response;
+            const status = validationResponse?.status;
+            const original_address = validationResponse?.original_address;
+            const matched_address = validationResponse?.matched_address;
+
+            // Show the compare modal if there are issues
+            // https://www.shipengine.com/docs/addresses/validation/#address-status-meanings
+            if(['unverified', 'warning', 'error'].includes(status)) {
+                this.original_address = original_address;
+                this.matched_address = {};
+                this.showMatchedAddress = false;
+                this.showCompareModal();
+
+                modalVisible = true;
+            }
+            else if(status === 'verified' && matched_address && original_address) {
+                // if the status is 'verified' BUT the matched address is not identical
+                // to the provided address, then we want to get user acceptance:
+
+                let diffs = 0;
+
+                [
+                    'address_line1',
+                    'address_line2',
+                    'city_locality',
+                    'state_province',
+                    'postal_code',
+                    'country_code'
+                ].forEach((key) => {
+                    if( !stringsAreEqual(matched_address[key], original_address[key]) ) {
+                        diffs++;
+                    };
+                });
+
+                // Show the compare modal if there are differences
+                if(diffs) {
+                    this.original_address = original_address;
+                    this.matched_address = matched_address;
+                    this.showMatchedAddress = true;
+                    this.showCompareModal();
+                    modalVisible = true;
+                }
+            }
+
+            return modalVisible;
+        },
+
+
         async saveShippingForm(validate) {
             try {
                 this.loading = true;
-                const setAddressData = {
-                    validate: (validate === true || validate === false) ? validate : this.shippingDataNeedsValidation()
-                };
-
                 const maxValidationAttempts = this.$config.shippingAddressMaxValidationAttempts ? parseInt(this.$config.shippingAddressMaxValidationAttempts) : 10;
+                const doValidate = (validate === true || validate === false) ? validate : this.shippingDataNeedsValidation();
 
                 // Force turn off validation if the user has reached their limit
                 if(this.validationAttempts >= maxValidationAttempts) {
-                    setAddressData.validate = false;
+                    doValidate = false;
                 }
 
-                for(const key in this.form) {
-                    const dataKey = key === 'is_gift' ? key : `shipping_${key}`;
-                    setAddressData[dataKey] = this.form[key];
-                }
+                if(doValidate) {
+                    const modalVisible = await this.validateShippingForm();
 
-                if(setAddressData.validate) {
-                    this.validationAttempts++;
-                }
-
-                // console.log("MAX VALIDATION ATT CONFIG", maxValidationAttempts);
-                // console.log("validationAttempts", this.validationAttempts);
-                // console.log("setAddressData", setAddressData);
-
-                const setAddressResponse = await this.$api.cart.shipping.setAddress({
-                    id: this.cart.id,
-                    ...setAddressData
-                });
-
-                /*
-                * Process validation errors:
-                */
-
-                // https://www.shipengine.com/docs/addresses/validation/#address-status-meanings
-                const validationStatus = setAddressResponse.data?.validation_response?.status;
-                if(['unverified', 'warning', 'error'].includes(validationStatus)) {
-                    this.original_address = setAddressResponse.data.validation_response.original_address;
-                    this.matched_address = {};
-                    this.showMatchedAddress = false;
-                    this.showCompareModal();
-                    return;
-                }
-
-                // if the status is 'verified' BUT the matched address is not identical
-                // to the provided address, then we want to get user acceptance:
-                if(validationStatus === 'verified'
-                    && setAddressResponse.data?.validation_response?.matched_address
-                    && setAddressResponse.data?.validation_response?.original_address) {
-
-                    const diffs = [];
-
-                    [
-                        'address_line1',
-                        'address_line2',
-                        'city_locality',
-                        'state_province',
-                        'postal_code',
-                        'country_code'
-                    ].forEach((key) => {
-                        if(!stringsAreEqual(
-                            setAddressResponse.data.validation_response.matched_address[key],
-                            setAddressResponse.data?.validation_response?.original_address[key]
-                        )) {
-                            diffs.push(key);
-                        };
-                    });
-
-                    if(diffs.length) {
-                        this.original_address = setAddressResponse.data.validation_response.original_address;
-                        this.matched_address = setAddressResponse.data.validation_response.matched_address;
-                        this.showMatchedAddress = true;
-                        this.showCompareModal();
+                    // If the modal is visible, then we need further
+                    // user input before we can persist the shipping address,
+                    // so we stop here
+                    if(modalVisible) {
                         return;
                     }
                 }
 
+                const setAddressResponse = await this.$api.cart.shipping.setAddress({
+                    id: this.cart.id,
+                    ...this.setShippingDataFromForm()
+                });
+
+                // If we got here then either no validation was performed
+                // or the validation was clean
                 this.$emit('done', setAddressResponse.data.cart);
             }
             catch(err) {

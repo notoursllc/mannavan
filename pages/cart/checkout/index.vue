@@ -92,6 +92,11 @@ export default {
             this.goToStep(2);
         },
 
+        onShippingRateSelectDone(updatedCart) {
+            this.onUpdatedCart(updatedCart);
+            this.goToStep(3);
+        },
+
         async getCart() {
             if(this.$store.state.cart.id) {
                 this.loading = true;
@@ -154,8 +159,7 @@ export default {
 
                             <checkout-shipping-rates
                                 :cart="cart"
-                                @updatedCart="onUpdatedCart"
-                                @done="goToStep(3)"
+                                @done="onShippingRateSelectDone"
                                 :show-selected-rate="step === 3" />
                         </template>
                     </div>
