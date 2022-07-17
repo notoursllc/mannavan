@@ -191,7 +191,7 @@ export default {
                     <div class="text-sm">
                         <cart-totals-table
                             :cart="cart"
-                            :shipping="step > 1"
+                            :shipping="step > 2"
                             :sales-tax="step > 1" />
 
                         <fig-divider />

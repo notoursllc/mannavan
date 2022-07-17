@@ -1,6 +1,7 @@
 <script>
 import { mapGetters } from 'vuex';
 import { parseIso8601 } from '@/utils/common';
+import CheckoutDeliveryEstimate  from '@/components/cart/checkout/CheckoutDeliveryEstimate.vue';
 import {
     FigFormRadio,
     FigButton,
@@ -26,7 +27,8 @@ export default {
     components: {
         FigFormRadio,
         FigButton,
-        FigOverlay
+        FigOverlay,
+        CheckoutDeliveryEstimate
     },
 
     data() {
@@ -127,13 +129,13 @@ export default {
         <div>
             <!-- selected rate details -->
             <template v-if="showSelectedRate">
-                <template v-if="selectedRate">
+                <template v-if="cart.selected_shipping_rate">
                     <div class="inline-block text-black">
                         {{ $n(shippingRateTotal ? shippingRateTotal/100 : 0, 'currency') }}
                     </div>
                     <div class="inline-block text-gray-500 pl-3">
-                        {{ cart.selected_shipping_rate ? cart.selected_shipping_rate.service_type : '' }}
-                        <!-- {{ $t('Estimated arrival: {date}', { date: translateShippingDate(shippingRateEstimatedDeliveryDate) }) }} -->
+                        <checkout-delivery-estimate
+                            :arrival-date="shippingRateEstimatedDeliveryDate" />
                     </div>
                 </template>
             </template>
@@ -146,12 +148,14 @@ export default {
                     name="selectedShipping"
                     :checked-value="obj.rate_id"
                     v-model="selectedRate">
-                    <div class="inline-block text-black">
-                        {{ $n(obj.shipping_amount.amount, 'currency') }}
-                    </div>
-                    <div class="inline-block text-gray-500 pl-3">
-                        {{ obj.service_type }}
-                        <!-- {{ $t('Estimated arrival: {date}', { date: translateShippingDate(obj.estimated_delivery_date) }) }} -->
+                    <div class="flex items-center">
+                        <div class="text-black">
+                            {{ $n(obj.shipping_amount.amount, 'currency') }}
+                        </div>
+                        <div class="text-gray-500 pl-3">
+                            <checkout-delivery-estimate
+                                :arrival-date="obj.estimated_delivery_date" />
+                        </div>
                     </div>
                 </fig-form-radio>
 

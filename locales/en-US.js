@@ -3,6 +3,9 @@ const figleafTranslations = require('@notoursllc/figleaf/locales/en-US.js');
 module.exports = {
     ...figleafTranslations,
 
+    "{from}-{to} business days": "{from}-{to} business days",
+    "{num} business days": "{num} business days",
+
     "2A server error occurred while setting the shipping rates": "A server error occurred while setting the shipping rates",
     "accept_privacy_and_tos": "By placing your order, you agree to our {linkPrivacy} and {linkTos}.",
     "Add Company, C/O, Apt, Suite, Unit": "Add Company, C/O, Apt, Suite, Unit",
@@ -40,7 +43,6 @@ module.exports = {
     "Edit": "Edit",
     "Email": "Email",
     "Error": "Error",
-    "Estimated arrival: {date}": "Estimated arrival: {date}",
     "Estimated tax": "Estimated tax",
     "Expiration": "Expiration",
 

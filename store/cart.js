@@ -127,12 +127,6 @@ export const getters = {
     },
 
     shippingRateEstimatedDeliveryDate: (state) => {
-        const rate = state.selected_shipping_rate;
-
-        if(isObject(rate)) {
-            return rate.estimated_delivery_date;
-        }
-
-        return null;
+        return state.selected_shipping_rate?.estimated_delivery_date;
     }
 };

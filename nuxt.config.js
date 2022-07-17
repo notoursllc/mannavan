@@ -36,8 +36,9 @@ export default {
         shippingFromPhone: process.env.SHIPPING_ADDRESS_FROM_PHONE,
         shippingFromState: process.env.SHIPPING_ADDRESS_FROM_STATE,
         shippingFromZip: process.env.SHIPPING_ADDRESS_FROM_ZIP,
-
         shippingAddressMaxValidationAttempts: process.env.SHIPPING_ADDRESS_MAX_VALIDATION_ATTEMPTS,
+        shippinEstimateArrivalStartIncrement: process.env.SHIPPING_ESTIMATE_ARRIVAL_START_INCREMENT,
+        shippingEstimateArrivalEndRange: process.env.SHIPPING_ESTIMATE_ARRIVAL_END_RANGE,
 
         // this needs to be public because it's used by axios plugin
         tenantId: process.env.TENANT_ID,
