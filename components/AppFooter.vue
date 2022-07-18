@@ -31,65 +31,63 @@ export default {
 
 <template>
     <footer class="footer">
-        <fig-content class="py-10 px-10">
-            <div class="grid gap-3 md:gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-                <!-- PRODUCTS -->
-                <div>
-                    <h3 class="footer-badge">{{ $t('PRODUCTS') }}</h3>
-                    <ul role="list" class="mt-4 space-y-2">
-                        <li v-for="(obj, type) in productSubTypes" :key="obj.id">
-                            <nuxt-link
-                                tag="a"
-                                :to="{ name: 'productSubType', params: { productSubType: obj.slug } }">{{ $t(type) }}</nuxt-link>
-                        </li>
-                        <li>
-                            <nuxt-link
-                                :to="{ name: 'index' }"
-                                tag="a">{{ $t('All') }}</nuxt-link>
-                        </li>
-                    </ul>
-                </div>
+        <fig-content class="p-10 grid gap-3 md:gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5" nopad>
+            <!-- PRODUCTS -->
+            <div>
+                <h3 class="footer-badge">{{ $t('PRODUCTS') }}</h3>
+                <ul role="list" class="mt-4 space-y-2">
+                    <li v-for="(obj, type) in productSubTypes" :key="obj.id">
+                        <nuxt-link
+                            tag="a"
+                            :to="{ name: 'productSubType', params: { productSubType: obj.slug } }">{{ $t(type) }}</nuxt-link>
+                    </li>
+                    <li>
+                        <nuxt-link
+                            :to="{ name: 'index' }"
+                            tag="a">{{ $t('All') }}</nuxt-link>
+                    </li>
+                </ul>
+            </div>
 
-                <!-- TERMS -->
-                <div class="mt-10 sm:mt-0">
-                    <h3 class="footer-badge">{{ $t('TERMS') }}</h3>
-                    <ul role="list" class="mt-4 space-y-2">
-                        <li>
-                            <nuxt-link
-                                tag="a"
-                                class="underline"
-                                :to="{name: 'returns'}"
-                                data-testid="footer-link-returns">{{ $t('Returns / Exchanges') }}</nuxt-link>
-                        </li>
-                        <li>
-                            <nuxt-link
-                                :to="{name: 'privacy'}"
-                                data-testid="footer-link-privacy">{{ $t('Privacy') }}</nuxt-link>
-                        </li>
-                        <li>
-                            <nuxt-link
-                                :to="{name: 'conditions-of-use'}"
-                                data-testid="footer-link-conditions">{{ $t('Conditions of Use') }}</nuxt-link>
-                        </li>
-                        <li>
-                            <nuxt-link
-                                :to="{name: 'use-of-cookies'}"
-                                data-testid="use-of-cookies">{{ $t('Use of Cookies') }}</nuxt-link>
-                        </li>
-                    </ul>
-                </div>
+            <!-- TERMS -->
+            <div class="mt-10 sm:mt-0">
+                <h3 class="footer-badge">{{ $t('TERMS') }}</h3>
+                <ul role="list" class="mt-4 space-y-2">
+                    <li>
+                        <nuxt-link
+                            tag="a"
+                            class="underline"
+                            :to="{name: 'returns'}"
+                            data-testid="footer-link-returns">{{ $t('Returns / Exchanges') }}</nuxt-link>
+                    </li>
+                    <li>
+                        <nuxt-link
+                            :to="{name: 'privacy'}"
+                            data-testid="footer-link-privacy">{{ $t('Privacy') }}</nuxt-link>
+                    </li>
+                    <li>
+                        <nuxt-link
+                            :to="{name: 'conditions-of-use'}"
+                            data-testid="footer-link-conditions">{{ $t('Conditions of Use') }}</nuxt-link>
+                    </li>
+                    <li>
+                        <nuxt-link
+                            :to="{name: 'use-of-cookies'}"
+                            data-testid="use-of-cookies">{{ $t('Use of Cookies') }}</nuxt-link>
+                    </li>
+                </ul>
+            </div>
 
-                <!-- BREADVAN -->
-                <div class="mt-10 sm:mt-0">
-                    <h3 class="footer-badge">{{ $t('BREADVAN') }}</h3>
-                    <ul role="list" class="mt-4 space-y-2">
-                        <li>
-                            <nuxt-link
-                                :to="{name: 'contact-us'}"
-                                data-testid="footer-link-contactus">{{ $t('Contact BreadVan') }}</nuxt-link>
-                        </li>
-                    </ul>
-                </div>
+            <!-- BREADVAN -->
+            <div class="mt-10 sm:mt-0">
+                <h3 class="footer-badge">{{ $t('BREADVAN') }}</h3>
+                <ul role="list" class="mt-4 space-y-2">
+                    <li>
+                        <nuxt-link
+                            :to="{name: 'contact-us'}"
+                            data-testid="footer-link-contactus">{{ $t('Contact BreadVan') }}</nuxt-link>
+                    </li>
+                </ul>
             </div>
         </fig-content>
 
