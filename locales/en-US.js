@@ -46,8 +46,6 @@ module.exports = {
     "Estimated tax": "Estimated tax",
     "Expiration": "Expiration",
 
-    "footer_cart_secure": "We never store your card details.  Our cart is protected by 256-bit encrypted connection.",
-
     "Hats": "Hats",
 
     "Include a copy of the packing slip or confirmation email from your order.": "Include a copy of the packing slip or confirmation email from your order.",
@@ -67,6 +65,7 @@ module.exports = {
     "Order is a gift": "Order is a gift",
     "Order number": "Order number",
     "Order total": "Order total",
+    "Our cart is protected by 256-bit encrypted connection.": "Our cart is protected by 256-bit encrypted connection.",
     "Out of stock": "Out of stock",
 
     "Payment": "Payment",
@@ -127,6 +126,7 @@ module.exports = {
 
     "We have a winner!": "We have a winner!",
     "We have received your order.": "We have received your order.",
+    "We never store your card details.": "We never store your card details.",
     "We want to hear from you!": "We want to hear from you!",
     "We will issue your refund when the return is received.": "We will issue your refund when the return is received.",
     "We'll get back to you within 1 business day.": "We'll get back to you within 1 business day.",
