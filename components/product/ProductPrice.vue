@@ -1,5 +1,6 @@
 <script>
 import isObject from 'lodash.isobject';
+import Currency from '@/components/Currency.vue';
 
 export default {
     props: {
@@ -21,98 +22,50 @@ export default {
         }
     },
 
-    computed: {
-        basePrice: function() {
-            let price = null;
-
-            if(isObject(this.sku) && this.sku.base_price !== null) {
-                price = this.sku.base_price;
-            }
-
-            return this.formatPrice(price);
-        },
-
-        salePrice: function() {
-            let price = null;
-
-            if(isObject(this.sku)
-                && this.sku.is_on_sale
-                && this.sku.sale_price !== null) {
-                price = this.sku.sale_price;
-            }
-
-            return this.formatPrice(price);
-        }
+    components: {
+        Currency
     },
 
-    methods: {
-        formatPrice(price) {
-            if(price !== null) {
-                price = parseInt(price, 10);
-
-                if(price && !isNaN(price)) {
-                    return this.$n(price/100, 'currency');
-                }
+    computed: {
+        basePrice: function() {
+            if(isObject(this.sku)
+                && this.sku.base_price !== null) {
+                return this.sku.base_price;
             }
 
             return null;
-        }
-    },
+        },
 
+        salePrice: function() {
+            if(isObject(this.sku)
+                && this.sku.is_on_sale
+                && this.sku.sale_price !== null) {
+                return this.sku.sale_price;
+            }
 
-    render: function(h) {
-        if(this.showStrikethrough && this.salePrice && this.basePrice) {
-            return h(
-                'div',
-                {},
-                [
-                    h(
-                        'div',
-                        {
-                            class: {
-                                'text-gray-500 mr-1 line-through basePrice': true,
-                                'inline-block': !this.stacked
-                            }
-                        },
-                        this.basePrice
-                    ),
-                    h(
-                        'div',
-                        {
-                            class: 'inline-block'
-                        },
-                        this.salePrice
-                    )
-                ]
-            );
-        }
-        else if(this.salePrice) {
-            return h(
-                'span',
-                {},
-                this.salePrice
-            );
-        }
-        else {
-            return h(
-                'span',
-                {},
-                this.basePrice
-            );
+            return null;
         }
     }
 };
 </script>
 
 
-<style scoped>
-.basePrice {
-    @apply hidden;
-}
-
-@screen sm {
-    .basePrice {
-        @apply inline-block;
-    }
-}
-</style>
+<template>
+    <div class="inline-block">
+        <!-- base price (with strikethrough) over sale price -->
+        <template v-if="showStrikethrough && salePrice && basePrice">
+            <currency
+                :price="basePrice"
+                tag="div"
+                class="text-gray-500 mr-1 line-through hidden"
+                :class="{'sm:inline-block': !stacked, 'sm:block': stacked}" />
+            <currency :price="salePrice" />
+        </template>
+        <currency
+            v-else-if="salePrice"
+            :price="salePrice" />
+        <currency
+            v-else
+            :price="basePrice" />
+    </div>
+</template>

@@ -1,3 +1,5 @@
+import isObject from 'lodash.isobject';
+
 export default async (ctx) => {
     const promises = [
         ctx.app.$api.masterType.list({
@@ -34,7 +36,14 @@ export default async (ctx) => {
     ctx.store.dispatch('product/PRODUCT_TYPES', productTypes?.data);
     ctx.store.dispatch('product/PRODUCT_SUBTYPES', productSubTypes?.data);
     ctx.store.dispatch('product/PRODUCT_SKU_ACCENT_MESSAGES', productAccentMessages?.data);
-    ctx.store.dispatch('ui/APP_CONFIG', appConfig?.data);
+
+    if(isObject(appConfig?.data)) {
+        // Separating out exchange_rates
+        ctx.store.dispatch('ui/EXCHANGE_RATES', { ...appConfig.data.exchange_rates });
+        delete appConfig.data.exchange_rates;
+
+        ctx.store.dispatch('ui/APP_CONFIG', appConfig.data);
+    }
 
     if(!ctx.store.state.cart.id || !shoppingCart?.data) {
         ctx.store.dispatch('cart/CART_RESET');

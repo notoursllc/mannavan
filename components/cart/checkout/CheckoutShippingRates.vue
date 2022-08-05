@@ -2,6 +2,7 @@
 import { mapGetters } from 'vuex';
 import { parseIso8601 } from '@/utils/common';
 import CheckoutDeliveryEstimate  from '@/components/cart/checkout/CheckoutDeliveryEstimate.vue';
+import Currency from '@/components/Currency.vue';
 import {
     FigFormRadio,
     FigButton,
@@ -28,6 +29,7 @@ export default {
         FigFormRadio,
         FigButton,
         FigOverlay,
+        Currency,
         CheckoutDeliveryEstimate
     },
 
@@ -131,7 +133,7 @@ export default {
             <template v-if="showSelectedRate">
                 <template v-if="cart.selected_shipping_rate">
                     <div class="inline-block text-black">
-                        {{ $n(shippingRateTotal ? shippingRateTotal/100 : 0, 'currency') }}
+                        <currency :price="shippingRateTotal" />
                     </div>
                     <div class="inline-block text-gray-500 pl-3">
                         <checkout-delivery-estimate
@@ -150,7 +152,7 @@ export default {
                     v-model="selectedRate">
                     <div class="flex items-center">
                         <div class="text-black">
-                            {{ $n(obj.shipping_amount.amount, 'currency') }}
+                            <currency :price="obj.shipping_amount.amount * 100" />
                         </div>
                         <div class="text-gray-500 pl-3">
                             <checkout-delivery-estimate

@@ -70,6 +70,11 @@ export const mutations = {
 
         for(const key in state) {
             if(cartData.hasOwnProperty(key)) {
+                // If there is no currency value from the cart
+                // then don't overwrite what might have already been set by the user
+                if(key === 'currency' && !cartData.currency) {
+                    continue;
+                }
                 state[key] = cartData[key];
             }
         }
@@ -79,8 +84,16 @@ export const mutations = {
         const defaults = getCartDefaults();
 
         for(const key in defaults) {
+            // If the currency is set then dont wipe it out
+            if(key === 'currency' && state.currency) {
+                continue;
+            }
             state[key] = defaults[key];
         }
+    },
+
+    CART_CURRENCY: (state, currency) => {
+        state.currency = currency;
     }
 };
 
@@ -92,6 +105,10 @@ export const actions = {
 
     CART_RESET: ({ commit }) => {
         commit('CART_RESET');
+    },
+
+    CART_CURRENCY: ({ commit }, currency) => {
+        commit('CART_CURRENCY', currency);
     }
 };
 

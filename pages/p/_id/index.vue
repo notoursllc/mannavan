@@ -5,6 +5,7 @@ import ProductPrice from '@/components/product/ProductPrice';
 import ProductImageSlider from '@/components/product/ProductImageSlider';
 import ProductCardThumbs from '@/components/product/ProductCardThumbs';
 import { getProductVariantCoverImage } from '@/utils/product';
+import Currency from '@/components/Currency.vue';
 // import TshirtSizeChart from '@/components/product/TshirtSizeChart';
 import {
     FigButton,
@@ -24,6 +25,7 @@ import {
 
 export default {
     components: {
+        Currency,
         FigButton,
         FigOverlay,
         ProductPrice,
@@ -499,7 +501,7 @@ export default {
 
                         <!-- price -->
                         <div v-if="atcConfirm.productPrice" class="text-gray-800">
-                            {{ $n(atcConfirm.productPrice, 'currency') }}
+                            <currency :price="atcConfirm.productPrice * 100" />
                         </div>
                     </div>
                 </div>

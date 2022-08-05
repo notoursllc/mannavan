@@ -14,7 +14,8 @@ export const state = () => ({
     siteUrlLong: process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : `https://www.${domainName}`,
     siteUrlShort: process.env.NODE_ENV === 'development' ? 'localhost:3000' : `www.${domainName}`,
     twitterUser: 'gmnstLife',
-    appConfig: {}
+    appConfig: {},
+    exchangeRates: {},
 });
 
 export const mutations = {
@@ -53,6 +54,14 @@ export const mutations = {
                 state.appConfig[prop] = config[prop];
             }
         }
+    },
+
+    EXCHANGE_RATES: (state, data) => {
+        if(isObject(data)) {
+            for(const prop in data) {
+                state.exchangeRates[prop] = data[prop];
+            }
+        }
     }
 };
 
@@ -75,6 +84,10 @@ export const actions = {
 
     APP_CONFIG ({ commit }, config) {
         commit('APP_CONFIG', config);
+    },
+
+    EXCHANGE_RATES ({ commit }, data) {
+        commit('EXCHANGE_RATES', data);
     }
 };
 

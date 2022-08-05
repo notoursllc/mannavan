@@ -1,4 +1,5 @@
 <script>
+import Currency from '@/components/Currency.vue';
 import {
     FigTooltip,
     FigIcon,
@@ -9,6 +10,7 @@ export default {
     name: 'CartTotalsTable',
 
     components: {
+        Currency,
         FigTooltip,
         FigIcon,
         FigIconLabel
@@ -76,7 +78,9 @@ export default {
                     </template>
                 </fig-icon-label>
             </div>
-            <div class="cart-totals-cell-value">{{ $n(cart.sub_total/100, 'currency') }}</div>
+            <div class="cart-totals-cell-value">
+                <currency :price="cart.sub_total" />
+            </div>
         </div>
 
         <!-- shipping -->
@@ -100,7 +104,9 @@ export default {
             </div>
             <div class="cart-totals-cell-value">
                 <template v-if="shippingOnNextStep">--</template>
-                <template v-else>{{ $n(cart.shipping_total/100, 'currency') }}</template>
+                <template v-else>
+                    <currency :price="cart.shipping_total" />
+                </template>
             </div>
         </div>
 
@@ -125,14 +131,18 @@ export default {
             </div>
             <div class="cart-totals-cell-value">
                 <template v-if="salesTaxOnNextStep">--</template>
-                <template v-else>{{ $n(cart.sales_tax/100, 'currency') }}</template>
+                <template v-else>
+                    <currency :price="cart.sales_tax" />
+                </template>
             </div>
         </div>
 
         <!-- order total -->
         <div class="table-row" v-if="shipping && salesTax">
             <div class="cart-totals-cell-label pt-2 font-medium" :class="labelClass">{{ $t('Order total') }}:</div>
-            <div class="cart-totals-cell-value text-green-700 pt-2 font-medium">{{ $n(cart.grand_total/100, 'currency') }}</div>
+            <div class="cart-totals-cell-value text-green-700 pt-2 font-medium">
+                <currency :price="cart.grand_total" />
+            </div>
         </div>
     </div>
 </template>

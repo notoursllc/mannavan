@@ -61,6 +61,12 @@ export default {
 
         numProductSkus() {
             return this.product.skus.length;
+        },
+
+        visibleVariantSku() {
+            return Array.isArray(this.visibleVariant.variant.skus)
+                ? this.visibleVariant.variant.skus[0]
+                : null
         }
     },
 
@@ -182,7 +188,7 @@ export default {
             </div>
 
             <div class="text-gray-700 font-semibold pt-3">
-                <product-price :variant="visibleVariant.variant" />
+                <product-price :sku="visibleVariantSku" />
             </div>
         </div>
 

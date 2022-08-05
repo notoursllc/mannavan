@@ -1,13 +1,21 @@
 <script>
+import CurrencySymbol from '@/components/CurrencySymbol.vue';
 import {
     FigHeader,
-    FigVictoryIcon
+    FigVictoryIcon,
+    FigDropdown,
+    FigDropdownButton,
+    FigButton
 } from '@notoursllc/figleaf';
 
 export default {
     components: {
+        CurrencySymbol,
         FigHeader,
-        FigVictoryIcon
+        FigVictoryIcon,
+        FigDropdown,
+        FigDropdownButton,
+        FigButton
     },
 
     computed: {
@@ -21,6 +29,26 @@ export default {
 
         numCartItems() {
             return this.$store.state.cart.num_items;
+        },
+
+        cartCurrency() {
+            return this.$store.state.cart.currency || this.defaultExchangeRate;
+        },
+
+        defaultExchangeRate() {
+            return this.$store.state.ui.exchangeRates?.default || 'USD';
+        },
+
+        exchangeRates() {
+            const rates = this.$store.state.ui.exchangeRates?.rates || {};
+            let filteredRates = {};
+
+            if(rates) {
+                filteredRates = { ...rates };
+                delete filteredRates[this.cartCurrency];
+            }
+
+            return Object.keys(filteredRates);
         }
     },
 
@@ -35,6 +63,31 @@ export default {
 
         onLogoClick() {
             this.$router.push({ name: 'index' });
+        },
+
+        async onExchangeRateClick(val) {
+            if(this.exchangeRates.includes(val)) {
+                this.$store.dispatch('cart/CART_CURRENCY', val);
+
+                const cartId = this.$store.state.cart.id;
+
+                if(cartId) {
+                    try {
+                        const { data } = await this.$api.cart.currency({
+                            id: cartId,
+                            currency: val
+                        });
+
+                        await Promise.all([
+                            this.$store.dispatch('cart/CART', data.cart),
+                            this.$store.dispatch('ui/EXCHANGE_RATES', data.exchange_rates)
+                        ]);
+                    }
+                    catch(err) {
+                        // no action
+                    }
+                }
+            }
         }
     }
 };
@@ -46,28 +99,55 @@ export default {
         :num-cart-items="numCartItems"
         @cartClick="onCartButtonClick"
         @sidebarOpen="onSidebarOpen">
-        <div slot="logo" @click="onLogoClick">
-            <fig-victory-icon
-                class="cursor-pointer"
-                fill="#565656"
-                :width="60"
-                :height="30" />
-        </div>
+        <template v-slot:top>
+            <!-- currency chooser -->
+            <div class="flex px-2 py-2">
+                <div class="flex-grow"></div>
+                <div>
+                    <fig-dropdown>
+                        <template v-slot:toggler>
+                            <fig-button variant="naked">
+                                <currency-symbol :currency="cartCurrency" /> {{ cartCurrency }}
+                            </fig-button>
+                        </template>
 
-        <nav slot="middle">
-            <nuxt-link
-                v-for="(obj, type) in productSubTypes"
-                :key="obj.id"
-                :to="{ name: 'productSubType', params: { productSubType: obj.slug } }"
-                tag="a"
-                class="bv-header-nav-item font-semibold relative text-center mr-5"
-                active-class="active">{{ $t(type) }}</nuxt-link>
-        </nav>
+                        <fig-dropdown-button
+                            v-for="(rate, idx) in exchangeRates"
+                            :key="idx"
+                            @click="onExchangeRateClick(rate)">
+                            <currency-symbol :currency="rate" /> {{ rate }}
+                        </fig-dropdown-button>
+                    </fig-dropdown>
+                </div>
+            </div>
+        </template>
+
+        <template v-slot:logo>
+            <div @click="onLogoClick">
+                <fig-victory-icon
+                    class="cursor-pointer"
+                    fill="#565656"
+                    :width="60"
+                    :height="30" />
+            </div>
+        </template>
+
+        <template v-slot:middle>
+            <nav>
+                <nuxt-link
+                    v-for="(obj, type) in productSubTypes"
+                    :key="obj.id"
+                    :to="{ name: 'productSubType', params: { productSubType: obj.slug } }"
+                    tag="a"
+                    class="bv-header-nav-item font-semibold relative text-center mr-5"
+                    active-class="active">{{ $t(type) }}</nuxt-link>
+            </nav>
+        </template>
     </fig-header>
 </template>
 
 
-<style lang="postcss">
+<style>
 .fig-header {
     @apply bg-white border-b border-gray-300;
 }
@@ -88,5 +168,10 @@ export default {
 .fig-header nav a.nuxt-link-exact-active {
     @apply text-white;
     background: #ff7101;
+}
+
+.fig-header-top {
+    @apply text-sm;
+    background: #cceaf1;
 }
 </style>
