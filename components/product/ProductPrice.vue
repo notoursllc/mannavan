@@ -1,6 +1,6 @@
 <script>
 import isObject from 'lodash.isobject';
-import Currency from '@/components/Currency.vue';
+import Currency from '@/components/currency/Currency.vue';
 
 export default {
     props: {

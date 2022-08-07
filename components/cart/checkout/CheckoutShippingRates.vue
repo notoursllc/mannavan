@@ -2,7 +2,7 @@
 import { mapGetters } from 'vuex';
 import { parseIso8601 } from '@/utils/common';
 import CheckoutDeliveryEstimate  from '@/components/cart/checkout/CheckoutDeliveryEstimate.vue';
-import Currency from '@/components/Currency.vue';
+import Currency from '@/components/currency/Currency.vue';
 import {
     FigFormRadio,
     FigButton,

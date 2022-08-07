@@ -25,6 +25,7 @@ module.exports = {
     "Billing address same as shipping": "Billing address same as shipping",
     "BREADVAN": "BREADVAN",
 
+    "calculated at checkout": "calculated at checkout",
     "Cancel": "Cancel",
     "Cart": "Cart",
     "cart_product_qty_limit": "Sorry, you have reached the quantity limit. Please remove an item and try again.",
@@ -93,7 +94,6 @@ module.exports = {
     "Returns / Exchanges": "Returns / Exchanges",
     "returns_help": "Items can be returned within 30 days of delivery as long as they are unwashed, unworn, and undamaged. Please note that shipping charges are non-refundable.",
 
-    "Sales tax will be displayed during checkout": "Sales tax will be displayed during checkout",
     "Save & Continue": "Save & Continue",
     "SEE MORE": "SEE MORE",
     "Select": "Select",
@@ -101,7 +101,6 @@ module.exports = {
     "SELECT PAYMENT METHOD": "SELECT PAYMENT METHOD",
     "shipping_address_validation_error_message": "This does not seem to be a valid shipping address.  Please make the necessary corrections below.",
     "Shipping": "Shipping",
-    "Shipping cost will be displayed during checkout": "Shipping cost will be displayed during checkout",
     "Shopping Cart": "Shopping Cart",
     "Size": "Size",
     "Size guide": "Size guide",

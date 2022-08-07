@@ -1,21 +1,21 @@
 <script>
-import CurrencySymbol from '@/components/CurrencySymbol.vue';
 import {
     FigHeader,
     FigVictoryIcon,
     FigDropdown,
     FigDropdownButton,
-    FigButton
+    FigButton,
+    FigCurrencySymbol
 } from '@notoursllc/figleaf';
 
 export default {
     components: {
-        CurrencySymbol,
         FigHeader,
         FigVictoryIcon,
         FigDropdown,
         FigDropdownButton,
-        FigButton
+        FigButton,
+        FigCurrencySymbol
     },
 
     computed: {
@@ -107,7 +107,7 @@ export default {
                     <fig-dropdown>
                         <template v-slot:toggler>
                             <fig-button variant="naked">
-                                <currency-symbol :currency="cartCurrency" /> {{ cartCurrency }}
+                                <fig-currency-symbol :currency="cartCurrency" /> {{ cartCurrency }}
                             </fig-button>
                         </template>
 
@@ -115,7 +115,7 @@ export default {
                             v-for="(rate, idx) in exchangeRates"
                             :key="idx"
                             @click="onExchangeRateClick(rate)">
-                            <currency-symbol :currency="rate" /> {{ rate }}
+                            <fig-currency-symbol :currency="rate" /> {{ rate }}
                         </fig-dropdown-button>
                     </fig-dropdown>
                 </div>

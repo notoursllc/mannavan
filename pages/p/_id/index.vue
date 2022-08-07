@@ -5,7 +5,7 @@ import ProductPrice from '@/components/product/ProductPrice';
 import ProductImageSlider from '@/components/product/ProductImageSlider';
 import ProductCardThumbs from '@/components/product/ProductCardThumbs';
 import { getProductVariantCoverImage } from '@/utils/product';
-import Currency from '@/components/Currency.vue';
+import Currency from '@/components/currency/Currency.vue';
 // import TshirtSizeChart from '@/components/product/TshirtSizeChart';
 import {
     FigButton,

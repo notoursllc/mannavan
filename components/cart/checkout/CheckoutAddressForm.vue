@@ -110,9 +110,12 @@ export default {
             this.validationAttempts++;
             let modalVisible = false;
 
+            const shippingParams = this.setShippingDataFromForm();
+            delete shippingParams.is_gift;
+
             const validateAddressReply = await this.$api.cart.shipping.validateAddress({
                 id: this.cart.id,
-                ...this.setShippingDataFromForm()
+                ...shippingParams
             });
 
             /*

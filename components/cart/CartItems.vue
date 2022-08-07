@@ -13,42 +13,29 @@ export default {
         allowEdit: {
             type: Boolean,
             default: true
-        }
-    },
+        },
 
-    data() {
-        return {
-            loading: false,
-            cart_items: []
-        };
+        cart: {
+            type: Object,
+            default() {
+                return {}
+            }
+        }
     },
 
     computed: {
         numCartItems() {
             return isObject(this.$store.state.cart) ? this.$store.state.cart.num_items : 0;
+        },
+
+        cartItems() {
+            return this.cart.cart_items || []
         }
     },
 
-    created() {
-        this.getCart();
-    },
-
     methods: {
-        async getCart() {
-            if(this.$store.state.cart.id) {
-                this.loading = true;
-
-                // console.log("GETTING CART", this.$store.state.cart.id)
-
-                const { data } = await this.$api.cart.get({
-                    id: this.$store.state.cart.id,
-                    _withRelated: '*'
-                });
-                // console.log("CART DATA", data)
-
-                this.cart_items = isObject(data) ? data.cart_items : [];
-                this.loading = false;
-            }
+        emitUpdated() {
+            this.$emit('updated');
         }
     }
 };
@@ -58,11 +45,11 @@ export default {
 <template>
     <div v-if="numCartItems">
         <cart-item
-            v-for="(item, index) in cart_items"
+            v-for="(item, index) in cartItems"
             :key="item.id"
             :item="item"
             :edit-mode="allowEdit"
             :image-loading="index > 5 ? 'lazy' : 'eager'"
-            @updated="getCart" />
+            @updated="emitUpdated" />
     </div>
 </template>

@@ -22,7 +22,8 @@ export default {
 
     data() {
         return {
-            loading: true
+            loading: true,
+            cart: null
         };
     },
 
@@ -37,17 +38,32 @@ export default {
 
     computed: {
         numCartItems() {
-            return this.$store.state.cart.num_items;
+            return this.cart.num_items;
         }
     },
 
     mounted() {
-        this.loading = false;
+        this.getCart();
     },
 
     methods: {
         onClickCheckout() {
             this.$router.push({ name: 'cart-checkout' });
+        },
+
+        async getCart() {
+            if(this.$store.state.cart.id) {
+                this.loading = true;
+
+                const response = await this.$api.cart.get({
+                    id: this.$store.state.cart.id,
+                    _withRelated: '*'
+                });
+
+                // this.cart_items = isObject(data) ? data.cart_items : [];
+                this.cart = response.data
+                this.loading = false;
+            }
         }
     }
 };
@@ -69,13 +85,15 @@ export default {
 
             <fig-cart-cta-layout v-else>
                 <template slot="left">
-                    <cart-items />
+                    <cart-items
+                        :cart="cart"
+                        @updated="getCart" />
                 </template>
 
                 <template slot="right">
                     <div class="mb-4">
                         <cart-totals-table
-                            :cart="$store.state.cart"
+                            :cart="cart"
                             sales-tax-on-next-step
                             shipping-on-next-step />
                     </div>
