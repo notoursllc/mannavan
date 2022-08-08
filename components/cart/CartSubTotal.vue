@@ -38,6 +38,12 @@ export default {
         subtotal() {
             return cartSubTotal(this.cart, this.exchangeRate)
         }
+    },
+
+    methods: {
+        onExchangeRatePrice(val) {
+            this.$emit('exchangeRatePrice', val)
+        }
     }
 };
 </script>
@@ -46,5 +52,6 @@ export default {
 <template>
     <currency
         :price="subtotal"
-        :apply-exchange-rate="false" />
+        :apply-exchange-rate="false"
+        @exchangeRatePrice="onExchangeRatePrice" />
 </template>

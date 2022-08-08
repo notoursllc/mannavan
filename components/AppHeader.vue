@@ -152,9 +152,11 @@ export default {
     @apply bg-white border-b border-gray-300;
 }
 .fig-header:after {
+    /* background: linear-gradient(to right, #e14e2c 10%, #eb7d32 21%, #eb7d32 56%, #efc243 67%, #efc243 100%); */
     /* background: linear-gradient(to right, #e14e2c 30%, #eb7d32 31%, #eb7d32 66%, #efc243 67%, #efc243 100%); */
     /* background: linear-gradient(to right, #7ec3d4 30% ,#cceaf1 31%, #cceaf1 66%, #7ec3d4 67%, #7ec3d4 100%); */
-    background: #9cdff0;
+    /* background: #9cdff0; */
+    /* background: #f9c19b; */
     content: '';
     height: 1px;
     @apply right-0 left-0 top-0 absolute;

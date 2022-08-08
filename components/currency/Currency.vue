@@ -38,6 +38,12 @@ export default {
         exchangeRateTable() {
             return this.$store.state.ui.exchangeRates?.rates || {};
         }
+    },
+
+    methods: {
+        onExchangeRatePrice(val) {
+            this.$emit('exchangeRatePrice', val);
+        }
     }
 };
 </script>
@@ -49,5 +55,6 @@ export default {
         :currency="cartCurrency"
         :exchange-rates="exchangeRateTable"
         :apply-exchange-rate="applyExchangeRate"
-        :tag="tag" />
+        :tag="tag"
+        @exchangeRatePrice="onExchangeRatePrice" />
 </template>
