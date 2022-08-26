@@ -154,6 +154,79 @@ export default {
                 other features at any time, with or without notice in our sole discretion.
 
                 <!--  -->
+
+                <h2>6. Disclaimers and Warranties</h2>
+                <brand-name /> reserves the right to change the assortment of items offered and to limit the quantity of items that may be
+                purchased from time to time and at any time, without prior notice. We also reserve the right to alter the terms or duration
+                of any special offers or sale promotion. <brand-name /> is not liable in case of stock outage or unavailability of products.
+                We have made every effort to display as accurately as possible the colors of our products that appear at the Site, but we
+                cannot guarantee that your computer monitor's display of any color will be accurate.
+
+                <div class="mt-6">
+                    <brand-name /> expressly disclaims, to the fullest extent permitted by law, any express or implied warranties: (i) that the
+                    Site, Services, Site Content, goods, advice, information or links provided on the Site will meet your requirements; (ii) that
+                    the Services will be uninterrupted, timely, secure or free from error; (iii) that defects in the operation or functionality
+                    of any software provided to you as part of the Services will be corrected; (iv) regarding the Site Content, goods, services,
+                    advice, information or links provided by any third parties or users; (v) that the Site, Site Content, goods, services, advice,
+                    or information displayed on the Site will meet your requirements; and (vi) that the Site will be error-free or that any errors
+                    will be corrected. No advice or information, whether oral or written, obtained by you from the Site shall create any warranty
+                    not expressly stated in these Terms.
+                </div>
+
+                <div class="mt-6">
+                    You understand that the technical processing and transmission of any Site Content and Comments may be transferred
+                    unencrypted and involve transmissions over various networks and changes to conform and adapt to technical requirements
+                    of connecting networks or devices. Please be advised that we do not guarantee that any information sent to or from our
+                    Site will be secure during transmission, nor can we guarantee the confidentiality of any communication or material
+                    transmitted to us via the Site or the Internet, including, for example, personal information such as your name or
+                    address. <brand-name /> assumes no responsibility for: (a) any error, omission, interruption, deletion, defect, delay
+                    in operation or transmission, communications line failure, theft or destruction or unauthorized access to, or alteration
+                    of, any communication; and (b) any problems or technical malfunction of any telephone network or lines, computer online
+                    systems, servers or providers, computer equipment, software, failure of any email or players due to technical problems
+                    or traffic congestion on the Internet or on any of the Site, including any injury or damage to you or to any person’s
+                    computer related to or resulting from use of the Services or the Site.
+                </div>
+
+                <div class="mt-6">
+                    No conditions, warranties or other terms (including any implied terms as to satisfactory quality, fitness for purpose
+                    or conformance with description) apply to the Site, Site Content and/or Services except to the extent that they are
+                    expressly set out in these Terms.
+                </div>
+
+                <h2>7. Limitation of Liability</h2>
+                IN NO EVENT WILL <brand-name :uppercase="true" /> BE LIABLE FOR DAMAGES OTHER THAN ACTUAL AND DIRECT DAMAGES PROVEN IN A COURT
+                OF LAW. IN NO EVENT SHALL <brand-name :uppercase="true" />’S LIABILITY EXCEED THE PRICE YOU PAID FOR THE PRODUCT OR SERVICE THAT IS THE SUBJECT
+                OF THE CLAIM. IF ANY PART OF THIS LIMITATION OF LIABILITY IS FOUND TO BE INVALID OR UNENFORCEABLE FOR ANY REASON, THEN THE TOTAL
+                LIABILITY OF <brand-name :uppercase="true" /> AND ITS LICENSORS SHALL NOT EXCEED TEN DOLLARS ($10).
+
+                <div class="mt-6">
+                    Without limiting the foregoing, you understand and acknowledge that <brand-name /> shall not be liable to you for:
+                    <ul>
+                        <li>Any indirect, incidental, consequential, punitive or exemplary losses which may be incurred by you arising out
+                            of your use of, or inability to use, the Site or the Services, including any loss of profit (whether incurred directly
+                            or indirectly), any loss of goodwill or business reputation, or any loss of data suffered by you; or</li>
+                        <li>Any loss or damage which may be incurred by you as a result of: (i) any reliance placed by you on the completeness,
+                            accuracy or existence of any advertising, or as a result of any relationship or transaction between you and any
+                            advertiser or sponsor whose advertising appears on the Site or the Services; (ii) any changes that <brand-name />
+                            may make to the Site or Services, or for any permanent or temporary cessation in the provision of the Services
+                            (or any features within the Services); (iii) the deletion of, corruption of, unauthorized access to, or failure
+                            to store, any content and other communications data maintained or transmitted by or through your use of the Site
+                            or the Services; (iv) the use of any products or services obtained on or through the Site; or (v) any other matter
+                            relating to the Site, the Services, the Site Content, or the Comments.</li>
+                    </ul>
+                </div>
+
+                <div class="mt-6">
+                    The limitations on <brand-name />’s liability to you in this Section 7 shall apply whether or not <brand-name /> has
+                    been advised of or should have been aware of the possibility of any such losses arising.
+                </div>
+
+                <div class="mt-6">
+                    IF YOU ARE DISSATISFIED WITH THE SITE, THE SERVICES, OR THE TERMS OF USE, YOUR SOLE AND EXCLUSIVE REMEDY IS TO
+                    DISCONTINUE USING THE SITE AND SERVICES.
+                </div>
+
+                <!--  -->
             </div>
         </content-card>
     </fig-content>
