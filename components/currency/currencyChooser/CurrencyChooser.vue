@@ -1,4 +1,5 @@
 <script>
+import isString from 'lodash.isstring';
 import {
     FigDropdown,
     FigDropdownButton,
@@ -19,7 +20,8 @@ export default {
 
     computed: {
         cartCurrency() {
-            return this.$store.state.cart.currency || this.defaultExchangeRate;
+            const currency = this.$store.state.cart.currency || this.defaultExchangeRate;
+            return isString(currency) ? currency.toUpperCase() : '';
         },
 
         defaultExchangeRate() {
