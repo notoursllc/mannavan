@@ -194,12 +194,12 @@ export default {
                 </div>
 
                 <h2>7. Limitation of Liability</h2>
-                IN NO EVENT WILL <brand-name :uppercase="true" /> BE LIABLE FOR DAMAGES OTHER THAN ACTUAL AND DIRECT DAMAGES PROVEN IN A COURT
+                <!-- IN NO EVENT WILL <brand-name :uppercase="true" /> BE LIABLE FOR DAMAGES OTHER THAN ACTUAL AND DIRECT DAMAGES PROVEN IN A COURT
                 OF LAW. IN NO EVENT SHALL <brand-name :uppercase="true" />’S LIABILITY EXCEED THE PRICE YOU PAID FOR THE PRODUCT OR SERVICE THAT IS THE SUBJECT
                 OF THE CLAIM. IF ANY PART OF THIS LIMITATION OF LIABILITY IS FOUND TO BE INVALID OR UNENFORCEABLE FOR ANY REASON, THEN THE TOTAL
-                LIABILITY OF <brand-name :uppercase="true" /> AND ITS LICENSORS SHALL NOT EXCEED TEN DOLLARS ($10).
+                LIABILITY OF <brand-name :uppercase="true" /> AND ITS LICENSORS SHALL NOT EXCEED TEN DOLLARS ($10). -->
 
-                <div class="mt-6">
+                <!-- <div class="mt-6">
                     Without limiting the foregoing, you understand and acknowledge that <brand-name /> shall not be liable to you for:
                     <ul>
                         <li>Any indirect, incidental, consequential, punitive or exemplary losses which may be incurred by you arising out
@@ -224,7 +224,7 @@ export default {
                 <div class="mt-6">
                     IF YOU ARE DISSATISFIED WITH THE SITE, THE SERVICES, OR THE TERMS OF USE, YOUR SOLE AND EXCLUSIVE REMEDY IS TO
                     DISCONTINUE USING THE SITE AND SERVICES.
-                </div>
+                </div> -->
 
                 <!--  -->
             </div>
