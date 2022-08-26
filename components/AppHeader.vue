@@ -48,6 +48,16 @@ export default {
         :num-cart-items="numCartItems"
         @cartClick="onCartButtonClick"
         @sidebarOpen="onSidebarOpen">
+        <template v-slot:top>
+            <!-- currency chooser -->
+            <div class="flex px-2 py-2">
+                <div class="flex-grow"></div>
+                <div>
+                    <currency-chooser />
+                </div>
+            </div>
+        </template>
+
         <template v-slot:logo>
             <div @click="onLogoClick">
                 <fig-victory-icon
@@ -67,16 +77,6 @@ export default {
                     class="bv-header-nav-item font-semibold relative text-center mr-5"
                     active-class="active">{{ $t(type) }}</nuxt-link>
             </nav>
-        </template>
-
-        <template v-slot:top>
-            <!-- currency chooser -->
-            <div class="flex px-2 py-2">
-                <div class="flex-grow"></div>
-                <div>
-                    <currency-chooser />
-                </div>
-            </div>
         </template>
     </fig-header>
 </template>

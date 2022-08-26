@@ -32,7 +32,7 @@ export default {
             const rates = this.$store.state.ui.exchangeRates?.rates || {};
             let filteredRates = {};
 
-            if(rates) {
+            if(rates && this.cartCurrency) {
                 filteredRates = { ...rates };
                 delete filteredRates[this.cartCurrency];
             }
