@@ -7,9 +7,10 @@ export default {
         }
     },
 
-    data: function() {
-        return {
-            brandName: this.uppercase ? this.$store.state.ui.brandName.toUpperCase() : this.$store.state.ui.brandName
+    computed: {
+        brandName() {
+            const name = this.$store.state.ui.brandName || '';
+            return this.uppercase ? name.toUpperCase() : name;
         }
     }
 }
