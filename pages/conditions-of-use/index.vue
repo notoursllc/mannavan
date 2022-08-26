@@ -162,7 +162,7 @@ export default {
                 We have made every effort to display as accurately as possible the colors of our products that appear at the Site, but we
                 cannot guarantee that your computer monitor's display of any color will be accurate.
 
-                <div class="mt-6">
+                <!-- <div class="mt-6">
                     <brand-name /> expressly disclaims, to the fullest extent permitted by law, any express or implied warranties: (i) that the
                     Site, Services, Site Content, goods, advice, information or links provided on the Site will meet your requirements; (ii) that
                     the Services will be uninterrupted, timely, secure or free from error; (iii) that defects in the operation or functionality
@@ -194,7 +194,7 @@ export default {
                 </div>
 
                 <h2>7. Limitation of Liability</h2>
-                <!-- IN NO EVENT WILL <brand-name :uppercase="true" /> BE LIABLE FOR DAMAGES OTHER THAN ACTUAL AND DIRECT DAMAGES PROVEN IN A COURT
+                IN NO EVENT WILL <brand-name :uppercase="true" /> BE LIABLE FOR DAMAGES OTHER THAN ACTUAL AND DIRECT DAMAGES PROVEN IN A COURT
                 OF LAW. IN NO EVENT SHALL <brand-name :uppercase="true" />’S LIABILITY EXCEED THE PRICE YOU PAID FOR THE PRODUCT OR SERVICE THAT IS THE SUBJECT
                 OF THE CLAIM. IF ANY PART OF THIS LIMITATION OF LIABILITY IS FOUND TO BE INVALID OR UNENFORCEABLE FOR ANY REASON, THEN THE TOTAL
                 LIABILITY OF <brand-name :uppercase="true" /> AND ITS LICENSORS SHALL NOT EXCEED TEN DOLLARS ($10). -->
