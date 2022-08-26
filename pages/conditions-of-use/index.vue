@@ -118,7 +118,42 @@ export default {
 
                 <!--  -->
 
+                <h2>4. Content</h2>
+                As between you and <brand-name />, <brand-name /> owns or licenses all information and materials, including logos, designs, titles,
+                phrases, product names, images, illustrations, icons, photographs, and the copyrights, trademarks, service marks, trade dress, and other
+                intellectual property rights associated therewith, in or made available through the Site (“Site Content”), as well as the selection,
+                coordination, arrangement, and organization and enhancement of the Site Content. All Site Content is protected pursuant to copyright,
+                trademark, patent, and other applicable laws. You agree not to remove or alter any copyright notice or any other proprietary notice on
+                any Site Content. As between you and <brand-name />, all names, trademarks, symbols, slogans, or logos appearing on the Site are proprietary
+                to <brand-name /> or its affiliates, licensors, or suppliers. Use or misuse of these trademarks is expressly prohibited and may violate
+                federal and state trademark law. Under no circumstances will you have any rights of any kind in or to the Site Content, other than the
+                right to use the Site Content in accordance with these Terms.
 
+                <div class="mt-6">
+                    Certain features of the Site may allow you to contribute feedback and other information to the Site for access, use,
+                    viewing, and commentary by other users of the Site (collectively, “Comments”). By posting Comments, you represent
+                    that you have the full legal right to provide the Comments and that use of the Comments by <brand-name /> on the
+                    Site, and all other persons and entities, will not: (a) infringe any intellectual property rights of any person or
+                    entity or any rights of publicity, personality, or privacy of any person or entity, including as a result of your
+                    failure to obtain consent to post personally identifying or otherwise private information about a person; (b) violate
+                    any law, statute, ordinance, regulation, or agreement; or (c) constitute disclosure of any confidential information
+                    owned by any third party. Upon your submission of Comments or other material or information to <brand-name />,
+                    you grant <brand-name /> a worldwide, perpetual, irrevocable, transferable, license to access, use, distribute,
+                    reproduce, display, modify, create derivative works based upon, and sublicense the Comments, all without any
+                    compensation to you whatsoever. For avoidance of doubt, <brand-name /> shall be under no obligation: (1) to maintain
+                    any Comments in confidence; (2) to compensate you in any way for your Comments; or (3) to respond to any Comments.
+                </div>
+
+                <h2>5. Errors, Inaccuracies, and Omissions</h2>
+                Occasionally there may be information on the Site that contains typographical errors, inaccuracies, or omissions that may
+                relate to product descriptions, pricing, promotions, offers, and availability. We reserve the right to correct any errors,
+                inaccuracies or omissions and to change or update information or cancel orders if any information on the Site is inaccurate
+                at any time without prior notice (including after you have submitted your order). We cannot and do not review all communications,
+                products, or services made available on or through the Site, but, although not obligated to, may review, verify, make changes
+                to or remove any Comments, Site Content, or the Site, including information submitted in connection with the Site Content or
+                other features at any time, with or without notice in our sole discretion.
+
+                <!--  -->
             </div>
         </content-card>
     </fig-content>
