@@ -3,7 +3,7 @@ export default {
     props: {
         uppercase: {
             type: Boolean,
-            default: false,
+            default: false
         }
     },
 
