@@ -38,13 +38,11 @@ export default {
                 <ul role="list" class="mt-4 space-y-2">
                     <li v-for="(obj, type) in productSubTypes" :key="obj.id">
                         <nuxt-link
-                            tag="a"
                             :to="{ name: 'productSubType', params: { productSubType: obj.slug } }">{{ $t(type) }}</nuxt-link>
                     </li>
                     <li>
                         <nuxt-link
-                            :to="{ name: 'index' }"
-                            tag="a">{{ $t('All') }}</nuxt-link>
+                            :to="{ name: 'index' }">{{ $t('All') }}</nuxt-link>
                     </li>
                 </ul>
             </div>
@@ -55,7 +53,6 @@ export default {
                 <ul role="list" class="mt-4 space-y-2">
                     <li>
                         <nuxt-link
-                            tag="a"
                             class="underline"
                             :to="{name: 'returns'}"
                             data-testid="footer-link-returns">{{ $t('Returns / Exchanges') }}</nuxt-link>

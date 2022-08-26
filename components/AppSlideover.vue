@@ -32,7 +32,6 @@ export default {
             <div v-for="(obj, type) in productSubTypes" :key="obj.id" class="my-4">
                 <nuxt-link
                     :to="{ name: 'productSubType', params: { productSubType: obj.slug } }"
-                    tag="a"
                     class="slideover-link"
                     active-class="active"
                     @click.native="onLinkClick">{{ $t(type) }}</nuxt-link>
@@ -41,7 +40,6 @@ export default {
             <div class="my-4">
                 <nuxt-link
                     :to="{ name: 'index' }"
-                    tag="a"
                     class="slideover-link"
                     @click.native="onLinkClick">{{ $t('All') }}</nuxt-link>
             </div>

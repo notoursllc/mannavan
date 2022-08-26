@@ -64,7 +64,6 @@ export default {
                     v-for="(obj, type) in productSubTypes"
                     :key="obj.id"
                     :to="{ name: 'productSubType', params: { productSubType: obj.slug } }"
-                    tag="a"
                     class="bv-header-nav-item font-semibold relative text-center mr-5"
                     active-class="active">{{ $t(type) }}</nuxt-link>
             </nav>
