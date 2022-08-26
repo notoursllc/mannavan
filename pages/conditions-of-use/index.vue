@@ -38,7 +38,10 @@ export default {
         <page-title>{{ $t('Conditions of Use') }}</page-title>
 
         <content-card>
-
+            <div class="priv">
+                Welcome to the <brand-name /> website, operated by Not Ours, LLC. (<brand-name />) and located at
+                {{ siteUrl }} (the "Site"). The following terms and conditions (“Terms”) govern your use of the Site.
+            </div>
         </content-card>
     </fig-content>
 </template>
