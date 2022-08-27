@@ -75,7 +75,8 @@ export default {
 
     methods: {
         onExchangeRatePrice(key, val) {
-            this.totals[key] = parseInt(val, 10);
+            const price = parseInt(val, 10);
+            this.totals[key] = !isNaN(price) ? price : 0;
         }
     }
 };
