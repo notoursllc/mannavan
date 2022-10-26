@@ -454,9 +454,9 @@ export default {
                 </div>
             </template>
 
-            <template v-if="product.video_url" v-slot:video>
+            <template v-if="product.youtube_video_url" v-slot:video>
                 <fig-you-tube
-                    :url="product.video_url"
+                    :url="product.youtube_video_url"
                     fit-parent />
             </template>
         </fig-product-details-layout>
