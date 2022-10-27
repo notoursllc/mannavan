@@ -20,7 +20,8 @@ import {
     FigAddress,
     FigIcon,
     FigIconLabel,
-    FigYouTube
+    FigYouTube,
+    FigBunnyVideoPlayer
 } from '@notoursllc/figleaf';
 
 export default {
@@ -41,7 +42,8 @@ export default {
         FigAddress,
         FigIcon,
         FigIconLabel,
-        FigYouTube
+        FigYouTube,
+        FigBunnyVideoPlayer
     },
 
     async asyncData({ route, store, app }) {
@@ -454,7 +456,13 @@ export default {
                 </div>
             </template>
 
-            <template v-if="product.youtube_video_url" v-slot:video>
+            <template v-if="product.video && product.video.third_party_id" v-slot:video>
+                <fig-bunny-video-player
+                    :video-id="product.video.third_party_id"
+                    :video-library-id="product.video.streamLibraryId" />
+            </template>
+
+            <template v-if="product.youtube_video_url" v-slot:youtube>
                 <fig-you-tube
                     :url="product.youtube_video_url"
                     fit-parent />
