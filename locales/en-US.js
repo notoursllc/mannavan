@@ -98,7 +98,6 @@ module.exports = {
     "SEE MORE": "SEE MORE",
     "Select": "Select",
     "Select a size": "Select a size",
-    "SELECT PAYMENT METHOD": "SELECT PAYMENT METHOD",
     "shipping_address_validation_error_message": "This does not seem to be a valid shipping address.  Please make the necessary corrections below.",
     "Shipping": "Shipping",
     "Shopping Cart": "Shopping Cart",
