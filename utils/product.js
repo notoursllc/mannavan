@@ -7,5 +7,8 @@ import isObject from 'lodash.isobject';
  * @param Number width
  */
 export const getProductVariantCoverImage = (variant) => {
-    return isObject(variant) && Array.isArray(variant.images) ? variant.images[0].url : null;
+    if(isObject(variant)) {
+        return variant.images?.[0]?.url || null;
+    }
+    return null;
 };
