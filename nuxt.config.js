@@ -57,7 +57,7 @@ export default {
     ** Common headers are already provided by @nuxtjs/pwa preset
     */
     head: {
-        title: process.env.npm_package_name || '',
+        title: 'Breadvan',
         meta: [
             { charset: 'utf-8' },
             { name: 'viewport', content: 'width=device-width, initial-scale=1' },
