@@ -165,6 +165,7 @@ export default {
                 :src="visibleVariant.coverImageUrl"
                 :loading="imageLoading"
                 class="rounded-t"
+                format="webp"
                 sizes="lg:575px md:375px sm:500px" />
         </figure>
 

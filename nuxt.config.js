@@ -136,16 +136,17 @@ export default {
     ],
 
     buildModules: [
-        '@nuxt/postcss8',
-        '@nuxt/image'
+        '@nuxt/postcss8'
     ],
 
     // Nuxt image config
     // https://image.nuxtjs.org/api/options/
     image: {
         providers: {
-            bunny: {
-                provider: '@/node_modules/@notoursllc/figleaf/components/nuxtImgBunny/bunnyProvider.js'
+            customProvider: {
+                name: 'bunny',
+                provider: '@/node_modules/@notoursllc/figleaf/components/nuxtImgBunny/bunnyProvider.js',
+                baseURL: 'https://bv-pullzone-1.b-cdn.net',
             }
         },
         // The screen sizes predefined by `@nuxt/image`:
