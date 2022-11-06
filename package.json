@@ -42,7 +42,6 @@
     "query-string": "^4.3.4",
     "vue-horizontal": "^0.8.12",
     "vue-i18n": "^8.25.0",
-    "vue-observe-visibility": "^1.0.0",
     "vuex-persistedstate": "^3.2.1",
     "vuex-router-sync": "^5.0.0"
   },
