@@ -183,7 +183,7 @@ export default Vue.extend({
             if(Array.isArray(this.product.variants)) {
                 this.product.variants.forEach((variant) => {
                     if(variant.id === variantId && Array.isArray(variant.images)) {
-                        images = variant.images.map(obj => obj.url);
+                        images = variant.images;
                     }
                 });
             }
@@ -202,13 +202,14 @@ export default Vue.extend({
             :style="slideUlStyle"
             @click="onSlidesClick">
             <li
-                v-for="(url, index) in pics"
+                v-for="(obj, index) in pics"
                 :key="index"
                 :style="slideLiStyle">
                 <div class="relative overflow-hidden">
                     <fig-nuxt-img-bunny
-                        v-if="url"
-                        :src="url"
+                        v-if="obj.url"
+                        :src="obj.url"
+                        :alt="obj.alt_text"
                         loading="eager"
                         sizes="lg:550px md:400px"
                         class="w-full" />
@@ -269,12 +270,13 @@ export default Vue.extend({
             v-if="fullscreen.show"
             v-hotkey="{'esc': onFullScreenCloseClick}">
             <div
-                v-for="(url, index) in pics"
+                v-for="(obj, index) in pics"
                 :key="index"
                 class="mb-2">
                 <fig-nuxt-img-bunny
-                    v-if="url"
-                    :src="url"
+                    v-if="obj.url"
+                    :src="obj.url"
+                    :alt="obj.alt_text"
                     preset="w1280"
                     :loading="index > 1 ? 'lazy' : 'eager'" />
             </div>

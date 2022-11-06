@@ -43,7 +43,7 @@ export default {
         return {
             visibleVariant: {
                 variant: {},
-                coverImageUrl: null,
+                coverImage: {},
                 accentMessage: null
             },
             showThumbs: false,
@@ -95,7 +95,7 @@ export default {
 
         setVisibleVariant(variant) {
             this.visibleVariant.variant = variant;
-            this.visibleVariant.coverImageUrl = Array.isArray(variant.images) ? variant.images[0].url : null;
+            this.visibleVariant.coverImage = Array.isArray(variant.images) ? variant.images[0] : null;
         },
 
         // getSmallestMediaUrl(mediaObj) {
@@ -161,8 +161,9 @@ export default {
 
         <figure class="rounded-t-md">
             <fig-nuxt-img-bunny
-                v-if="visibleVariant.coverImageUrl"
-                :src="visibleVariant.coverImageUrl"
+                v-if="visibleVariant.coverImage.url"
+                :src="visibleVariant.coverImage.url"
+                :alt="visibleVariant.coverImage.alt_text"
                 :loading="imageLoading"
                 class="rounded-t"
                 format="webp"

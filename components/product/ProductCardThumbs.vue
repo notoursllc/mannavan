@@ -94,11 +94,11 @@ export default {
 
             if(Array.isArray(product.variants)) {
                 product.variants.forEach((variant) => {
-                    const url = getProductVariantCoverImage(variant);
+                    const coverImage = getProductVariantCoverImage(variant);
 
-                    if(url) {
+                    if(coverImage?.url) {
                         images.push({
-                            url: url,
+                            ...coverImage,
                             variant: variant
                         });
                     }

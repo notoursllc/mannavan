@@ -318,7 +318,7 @@ export default {
             }
 
             // this.atcConfirm.cartItem = cartItem;
-            this.atcConfirm.imageUrl = cartItem ? getProductVariantCoverImage(cartItem.product_variant) : null;
+            this.atcConfirm.image = cartItem ? getProductVariantCoverImage(cartItem.product_variant) : null;
             this.atcConfirm.title = isObject(cartItem.product) ? cartItem.product.title : null;
             this.atcConfirm.skuLabel = isObject(cartItem.product_variant_sku) ? cartItem.product_variant_sku.label : null;
             this.atcConfirm.skuLabelType = isObject(cartItem.product_variant) ? cartItem.product_variant.sku_label_type : null;
@@ -490,9 +490,10 @@ export default {
             <template v-slot:message>
                 <div class="flex items-start justify-start">
                     <!-- thumbnail -->
-                    <div class="pr-5" v-if="atcConfirm.imageUrl">
+                    <div class="pr-5" v-if="atcConfirm.image && atcConfirm.image.url">
                         <fig-nuxt-img-bunny
-                            :src="atcConfirm.imageUrl"
+                            :src="atcConfirm.image.url"
+                            :alt="atcConfirm.image.alt_text"
                             preset="prodthumb"
                             loading="eager" />
                     </div>

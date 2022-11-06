@@ -45,8 +45,9 @@ export default {
         <!-- pic -->
         <div class="mr-2 sm:mr-4">
             <fig-nuxt-img-bunny
-                v-if="coverImage"
-                :src="coverImage"
+                v-if="coverImage && coverImage.url"
+                :src="coverImage.url"
+                :alt="coverImage.alt_text"
                 preset="prodthumb"
                 :loading="imageLoading" />
         </div>
