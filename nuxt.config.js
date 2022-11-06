@@ -128,7 +128,6 @@ export default {
         '@/plugins/filters.js',
         '@/node_modules/@notoursllc/figleaf/components/toaster',
         '@/node_modules/@notoursllc/figleaf/components/confirm',
-        // '@/plugins/vue-placeholders.js',
         // '@/plugins/vue-observe-visibility.client.js',
 
     ],
