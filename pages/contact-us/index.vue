@@ -9,7 +9,8 @@ import {
     FigFormInput,
     FigFormTextarea,
     FigButton,
-    FigOverlay
+    FigOverlay,
+    FigIcon
 } from '@notoursllc/figleaf';
 
 export default {
@@ -21,7 +22,8 @@ export default {
         FigFormInput,
         FigFormTextarea,
         FigButton,
-        FigOverlay
+        FigOverlay,
+        FigIcon
     },
 
     head() {

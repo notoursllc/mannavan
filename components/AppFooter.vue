@@ -2,17 +2,19 @@
 import {
     FigContent,
     FigIconLabel,
-    FigBvLogo
+    FigBvLogo,
+    FigIcon
 } from '@notoursllc/figleaf';
 import Divider from '@notoursllc/figleaf/components/divider/Divider.vue';
 
 export default {
     components: {
-    FigContent,
-    FigIconLabel,
-    FigBvLogo,
-    Divider
-},
+        FigContent,
+        FigIconLabel,
+        FigBvLogo,
+        FigIcon,
+        Divider
+    },
 
     data: function() {
         return {

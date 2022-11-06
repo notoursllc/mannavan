@@ -7,7 +7,10 @@
 import Vue from 'vue';
 import VueHotkey from 'v-hotkey';
 import throttle from 'lodash.throttle';
-import { FigNuxtImgBunny } from '@notoursllc/figleaf';
+import {
+    FigNuxtImgBunny,
+    FigIcon
+} from '@notoursllc/figleaf';
 
 Vue.use(VueHotkey);
 
@@ -40,7 +43,8 @@ export default Vue.extend({
     },
 
     components: {
-        FigNuxtImgBunny
+        FigNuxtImgBunny,
+        FigIcon
     },
 
     data() {
