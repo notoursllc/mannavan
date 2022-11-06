@@ -38,7 +38,6 @@
     "lodash.orderby": "^4.6.0",
     "lodash.throttle": "^4.1.1",
     "nuxt": "^2.15.8",
-    "paypal-checkout": "^4.0.325",
     "query-string": "^4.3.4",
     "vue-horizontal": "^0.8.12",
     "vue-i18n": "^8.25.0",

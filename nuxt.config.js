@@ -121,7 +121,6 @@ export default {
         '@/plugins/global-properties',
         '@/plugins/vuelidate',
         '@/node_modules/@notoursllc/figleaf/components/toaster'
-
     ],
 
     buildModules: [
