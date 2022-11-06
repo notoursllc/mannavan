@@ -33,7 +33,7 @@ export default {
 
 <template>
     <footer class="footer">
-        <fig-content class="p-10 grid gap-3 md:gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5" nopad>
+        <fig-content class="p-10 grid gap-3 md:gap-8 sm:grid-cols-2 md:grid-cols-3" nopad>
             <!-- PRODUCTS -->
             <div>
                 <h3 class="footer-badge">{{ $t('PRODUCTS') }}</h3>
@@ -92,18 +92,22 @@ export default {
 
         <div class="footer-base">
             <fig-content class="grid md:grid-cols-2 gap-8 text-gray-700">
-                <fig-icon-label>
-                    <template v-slot:left>
-                        <fig-icon
-                            icon="shield-check"
-                            width="30"
-                            height="30" />
-                    </template>
-                    <div class="pl-2">{{ $t('We never store your card details.')}}</div>
-                    <div class="pl-2">{{ $t('Our cart is protected by 256-bit encrypted connection.') }}</div>
-                </fig-icon-label>
+                <div class="sm:mx-auto">
+                    <fig-icon-label>
+                        <template v-slot:left>
+                            <fig-icon
+                                icon="shield-check"
+                                width="30"
+                                height="30" />
+                        </template>
+                        <div class="pl-2">
+                            <div>{{ $t('We never store your card details.')}}</div>
+                            <div>{{ $t('Our cart is protected by 256-bit encrypted connection.') }}</div>
+                        </div>
+                    </fig-icon-label>
+                </div>
 
-                <div class="text-center md:text-right sm:pt-4">
+                <div class="text-center md:text-right">
                     &#169; {{ year }} {{ siteName }}, {{ $t('All Rights Reserved') }}.
                 </div>
             </fig-content>
