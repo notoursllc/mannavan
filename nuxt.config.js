@@ -116,7 +116,6 @@ export default {
         '@/plugins/bugsnag',
         '@/plugins/axios.js',
         { src: '@/plugins/api.js', ssr: true },
-        '@/plugins/confirm.js',
         '@/plugins/i18n.js',
         '@/plugins/persistedState.client.js',
         '@/plugins/global-properties',
