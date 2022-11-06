@@ -16,15 +16,14 @@ export default {
     data() {
         return {
             productSubTypes: [],
-            heros: [],
-            heroImageClass: 'w375'
+            heros: []
         };
     },
 
     computed: {
         heroImageUrl() {
             return this.heros[0]?.url
-                ? `${this.heros[0].url}?class=${this.heroImageClass}`
+                ? `${this.heros[0].url}`
                 : '';
         },
 
@@ -34,6 +33,10 @@ export default {
 
         heroCaption() {
             return this.heros[0]?.caption
+        },
+
+        heroAltText() {
+            return this.heros[0]?.alt_text
         }
     },
 
@@ -50,20 +53,6 @@ export default {
         }
         catch(err) {
             console.error('Error getting hero images', err);
-        }
-    },
-
-    methods: {
-        onHeroResize(e) {
-            if(e.offsetWidth <= 640) {
-                this.heroImageClass = 'w375';
-            }
-            else if(e.offsetWidth <= 768) {
-                this.heroImageClass = 'w550';
-            }
-            else {
-                this.heroImageClass = 'w1280';
-            }
         }
     },
 
@@ -99,8 +88,9 @@ export default {
         <fig-hero
             v-if="heroImageUrl"
             :url="heroImageUrl"
-            @resize="onHeroResize">
-            <div class="w-full h-full p-4 md:pl-40 flex items-center">
+            image-sizes="lg:1280px md:550px sm:375px"
+            :alt-text="heroAltText">
+            <div class="w-full h-full p-4 md:pl-20 lg:pl-40 flex items-center">
                 <div>
                     <h1
                         v-if="heroTitle"
@@ -112,7 +102,7 @@ export default {
             </div>
         </fig-hero>
 
-        <div class="px-4">
+        <div class="px-4 border-t border-gray-300">
             <product-subtype-data-provider
                 v-for="(obj, idx) in productSubTypes"
                 :key="idx"
