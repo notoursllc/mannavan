@@ -37,16 +37,8 @@ export default {
     },
 
     computed: {
-        isPaypalTransaction() {
-            return this.payment.payment_method_details && this.payment.payment_method_details.type === 'paypal';
-        },
-
         paymentMethodCard() {
             return this.payment.payment_method_details ? this.payment.payment_method_details.card : {};
-        },
-
-        responsiveColumnWidthClass() {
-            return this.isPaypalTransaction ? 'sm:w-1/2' : 'sm:w-1/3';
         }
     },
 
@@ -121,7 +113,7 @@ export default {
                 <div class="flex flex-wrap -mx-2 pt-5">
 
                     <!-- shipping -->
-                    <div class="my-2 px-2 w-full" :class="responsiveColumnWidthClass">
+                    <div class="my-2 px-2 w-full sm:w-1/3">
                         <div class="font-semibold">{{ $t('Shipping') }}:</div>
                         <div class="pt-2">
                             <fig-address
@@ -136,11 +128,8 @@ export default {
                     </div>
 
                     <!-- billing -->
-                    <!-- NOTE: there is no billing address if the payment type is paypal -->
                     <div
-                        v-if="!isPaypalTransaction"
-                        class="my-2 px-2 w-full sm:w-1/3"
-                        :class="responsiveColumnWidthClass">
+                        class="my-2 px-2 w-full sm:w-1/3">
                         <div class="font-semibold">{{ $t('Billing') }}:</div>
                         <div class="pt-2">
                             <fig-address
@@ -155,28 +144,21 @@ export default {
                     </div>
 
                     <!-- payment -->
-                    <div class="my-2 px-2 w-full sm:w-1/3" :class="responsiveColumnWidthClass">
+                    <div class="my-2 px-2 w-full sm:w-1/3">
                         <div class="font-semibold">{{ $t('Payment') }}:</div>
                         <div class="pt-2">
-
-                            <!-- paypal -->
-                            <div v-if="isPaypalTransaction" class="flex items-center">
-                                <fig-credit-card-icon type="paypal" style="width:50px" />
-                                <div class="pl-2">{{ payment.payer.email_address }}</div>
+                            <div>
+                                {{ `${getBillingAddressProperty('firstName')} ${getBillingAddressProperty('lastName')}`.trim() }}
                             </div>
-
-                            <!-- card -->
-                            <template v-else>
-                                <div>{{ `${getBillingAddressProperty('firstName')} ${getBillingAddressProperty('lastName')}`.trim() }}</div>
-                                <div>
-                                    <div class="flex items-center">
-                                        <fig-credit-card-icon :type="paymentMethodCard.brand" style="width:50px" />
-                                        <div class="pl-2">**** {{ paymentMethodCard.last4 }}</div>
-                                    </div>
+                            <div>
+                                <div class="flex items-center">
+                                    <fig-credit-card-icon :type="paymentMethodCard.brand" style="width:50px" />
+                                    <div class="pl-2">**** {{ paymentMethodCard.last4 }}</div>
                                 </div>
-                                <div>{{ $t('Expiration') }}: {{ paymentMethodCard.exp_month }}/{{ paymentMethodCard.exp_year }}</div>
-                            </template>
-
+                            </div>
+                            <div>
+                                {{ $t('Expiration') }}: {{ paymentMethodCard.exp_month }}/{{ paymentMethodCard.exp_year }}
+                            </div>
                         </div>
                     </div>
                 </div>
