@@ -120,8 +120,7 @@ export default {
         '@/plugins/persistedState.client.js',
         '@/plugins/global-properties',
         '@/plugins/vuelidate',
-        '@/node_modules/@notoursllc/figleaf/components/toaster',
-        '@/node_modules/@notoursllc/figleaf/components/confirm',
+        '@/node_modules/@notoursllc/figleaf/components/toaster'
 
     ],
 
