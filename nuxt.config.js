@@ -130,8 +130,6 @@ export default {
         '@/node_modules/@notoursllc/figleaf/components/confirm',
         // '@/plugins/vue-placeholders.js',
         // '@/plugins/vue-observe-visibility.client.js',
-        // { src: '@/plugins/youtube', ssr: false },
-        { src: '@/plugins/paypal-button/paypal-button.js', ssr: false }
 
     ],
 
