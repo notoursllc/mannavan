@@ -208,7 +208,6 @@ export default {
                     cart_id: this.$store.state.cart.id,
                     product_variant_sku_id: this.form.selectedSku.id,
                     qty: 1,
-                    clear_shipping_rate: true
                 });
 
                 await this.$store.dispatch('cart/CART', data);

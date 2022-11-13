@@ -161,7 +161,7 @@ export default {
 
         <figure class="rounded-t-md">
             <fig-nuxt-img-bunny
-                v-if="visibleVariant.coverImage.url"
+                v-if="visibleVariant && visibleVariant.coverImage && visibleVariant.coverImage.url"
                 :src="visibleVariant.coverImage.url"
                 :alt="visibleVariant.coverImage.alt_text"
                 :loading="imageLoading"

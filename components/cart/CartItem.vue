@@ -130,8 +130,7 @@ export default {
 
             try {
                 const { data } = await this.$api.cart.item.delete({
-                    id: id,
-                    clear_shipping_rate: true
+                    id: id
                 });
 
                 this.emitUpdated();
