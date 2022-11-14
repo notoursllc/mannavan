@@ -1,6 +1,6 @@
 <script>
 import PageTitle from '@/components/PageTitle';
-import CartItems from '@/components/cart/CartItems';
+import CartItem from '@/components/cart/CartItem';
 import CartTotalsTable from '@/components/cart/CartTotalsTable';
 import {
     FigButton,
@@ -12,7 +12,7 @@ import {
 export default {
     components: {
         PageTitle,
-        CartItems,
+        CartItem,
         CartTotalsTable,
         FigButton,
         FigCartCtaLayout,
@@ -38,7 +38,7 @@ export default {
 
     computed: {
         numCartItems() {
-            return this.cart.num_items;
+            return this.cart?.num_items;
         }
     },
 
@@ -85,9 +85,15 @@ export default {
 
             <fig-cart-cta-layout v-else>
                 <template slot="left">
-                    <cart-items
-                        :cart="cart"
-                        @updated="getCart" />
+                    <div v-if="numCartItems">
+                        <cart-item
+                            v-for="(item, index) in cart.cart_items"
+                            :key="item.id"
+                            :item="item"
+                            :edit-mode="true"
+                            :image-loading="index > 5 ? 'lazy' : 'eager'"
+                            @updated="getCart" />
+                    </div>
                 </template>
 
                 <template slot="right">
