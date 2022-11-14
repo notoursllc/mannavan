@@ -89,17 +89,6 @@ export default {
             }
 
             return opts;
-        },
-
-        canEdit() {
-            // can't edit if there are no options,
-            // or if there is just one option and that option is the sku already selected
-            if(!this.sizeOptions.length
-                || (this.sizeOptions.length === 1 && this.sizeOptions[0].value === this.cartItem.product_variant_sku.id)) {
-                return false;
-            }
-
-            return true;
         }
     },
 
@@ -243,15 +232,7 @@ export default {
                     <div class="inline-block pr-1">
                         {{ $t(cartItem.product_variant.sku_label_type === 'size' ? 'Size' : 'Label') }}:
                     </div>
-                    <div class="inline-block">
-                        <template v-if="!canEdit">{{ selectedSize }}</template>
-                        <template v-else>
-                            <fig-form-select-native
-                                v-model="cartItem.product_variant_sku.id"
-                                @input="updateCartItem"
-                                :options="sizeOptions" />
-                        </template>
-                    </div>
+                    <div class="inline-block">{{ selectedSize }}</div>
                 </div>
 
                 <div>
