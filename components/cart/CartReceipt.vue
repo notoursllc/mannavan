@@ -4,7 +4,7 @@ import CartTotalsTable from '@/components/cart/CartTotalsTable';
 import {
     FigOverlay,
     FigAddress,
-    FigCreditCardIcon,
+    FigCardLastFour,
     FigTableSimple,
     FigTh,
     FigTd
@@ -16,7 +16,7 @@ export default {
         CartTotalsTable,
         FigOverlay,
         FigAddress,
-        FigCreditCardIcon,
+        FigCardLastFour,
         FigTableSimple,
         FigTh,
         FigTd
@@ -151,10 +151,9 @@ export default {
                                 {{ `${getBillingAddressProperty('firstName')} ${getBillingAddressProperty('lastName')}`.trim() }}
                             </div>
                             <div>
-                                <div class="flex items-center">
-                                    <fig-credit-card-icon :type="paymentMethodCard.brand" style="width:50px" />
-                                    <div class="pl-2">**** {{ paymentMethodCard.last4 }}</div>
-                                </div>
+                                <fig-card-last-four
+                                    :type="paymentMethodCard.brand"
+                                    :last-four="paymentMethodCard.last4" />
                             </div>
                             <div>
                                 {{ $t('Expiration') }}: {{ paymentMethodCard.exp_month }}/{{ paymentMethodCard.exp_year }}
