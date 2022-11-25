@@ -425,6 +425,7 @@ export default {
                         <div class="table-cell align-top pr-2" v-if="product.artist.image">
                             <fig-nuxt-img-bunny
                                 :src="product.artist.image"
+                                :alt="product.artist.alt_text"
                                 preset="prodthumb"
                                 loading="eager" />
                         </div>
